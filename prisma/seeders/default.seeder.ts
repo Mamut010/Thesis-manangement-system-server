@@ -10,7 +10,7 @@ function hash(toHash: string) {
 export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
     const roles = ['Admin', 'Student', 'Lecturer1.1', 'Lecturer1.2', 'Lecturer2'] as const;
 
-    const roleIds = roles.reduce((res, role, index) => { 
+    const roleIds: { readonly [role in typeof roles[number]]: number } = roles.reduce((res, role, index) => { 
         res[role] = index + 1; 
         return res; 
     }, {} as { [role in typeof roles[number]]: number });
