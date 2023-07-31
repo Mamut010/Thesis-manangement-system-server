@@ -1,0 +1,6 @@
+# Ignore built files
+dist/*
+# Ignore prisma files
+prisma/*
+
+src/decorators/*

@@ -1,0 +1,99 @@
+import { injectable } from "inversify";
+import { 
+    AdminInfoDto,
+    BachelorThesisAssessmentDto, 
+    BachelorThesisRegistrationDto, 
+    LecturerInfoDto, 
+    OralDefenseAssessmentDto, 
+    OralDefenseRegistrationDto, 
+    StudentInfoDto,
+    ThesisInfoDto
+} from "../../shared/dtos";
+import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
+import { flattenObject } from "../../utils/object-helpers";
+import { 
+    PlainAdmin,
+    PlainBachelorThesisAssessment,
+    PlainBachelorThesisRegistration, 
+    PlainLecturer, 
+    PlainOralDefenseAssessment, 
+    PlainOralDefenseRegistration, 
+    PlainStudent,
+    PlainThesis
+} from "../../shared/types/plain-types";
+import { getFullName } from "../../utils/name-helpers";
+import { PlainTransformerServiceInterface } from "../interfaces";
+
+@injectable()
+export class PlainTransformerService implements PlainTransformerServiceInterface {
+    private static readonly registrationAndAssessmentRelations: string[] = ['thesis', 'supervisor1', 'supervisor2'];
+
+    public toAdminInfo(plain: PlainAdmin): AdminInfoDto {
+        const dto = plainToInstanceExactMatch(AdminInfoDto, flattenObject(plain));
+        dto.adminId = plain.userId;
+
+        return dto;
+    }
+
+    public toStudentInfo(plain: PlainStudent): StudentInfoDto {
+        const dto = plainToInstanceExactMatch(StudentInfoDto, flattenObject(plain));
+        dto.studentId = plain.userId;
+        dto.fullname = getFullName(plain.user.forename, plain.user.surname);
+
+        return dto;
+    }
+
+    public toLecturerInfo(plain: PlainLecturer): LecturerInfoDto {
+        const dto = plainToInstanceExactMatch(LecturerInfoDto, flattenObject(plain));
+        dto.lecturerId = plain.userId;
+        
+        return dto;
+    }
+
+    public toThesisInfo(plain: PlainThesis): ThesisInfoDto {
+        const dto = plainToInstanceExactMatch(ThesisInfoDto, flattenObject(plain, {
+            transformedProps: ['topic', 'field'],
+        }));
+
+        return dto;
+    }
+
+    public toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto {
+        const dto = plainToInstanceExactMatch(BachelorThesisRegistrationDto, flattenObject(plain, {
+            keepDuplicate: true,
+            transformedProps: PlainTransformerService.registrationAndAssessmentRelations,
+        }));
+        
+        dto.thesisType =  plain.thesis.field?.description ?? null;
+        return dto;
+    }
+
+    public toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto {
+        const dto = plainToInstanceExactMatch(OralDefenseRegistrationDto, flattenObject(plain, {
+            keepDuplicate: true,
+            transformedProps: PlainTransformerService.registrationAndAssessmentRelations,
+        }));
+        
+        dto.areSpectatorsAllowed = (plain.spectatorsPresent ?? 0) > 1;
+        return dto;
+    }
+
+    public toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto {
+        const dto = plainToInstanceExactMatch(BachelorThesisAssessmentDto, flattenObject(plain, {
+            keepDuplicate: true,
+            transformedProps: PlainTransformerService.registrationAndAssessmentRelations,
+        }));
+        
+        dto.thesisType =  plain.thesis.field?.description ?? null;
+        return dto;
+    }
+
+    public toOralDefenseAssessment(plain: PlainOralDefenseAssessment): OralDefenseAssessmentDto {
+        const dto = plainToInstanceExactMatch(OralDefenseAssessmentDto, flattenObject(plain, {
+            keepDuplicate: true,
+            transformedProps: PlainTransformerService.registrationAndAssessmentRelations,
+        }));
+
+        return dto;
+    }
+}

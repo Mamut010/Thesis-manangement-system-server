@@ -1,0 +1,252 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model User {
+    id                      Int             @id @default(autoincrement())
+    userId                  Int             @unique
+    roleId                  Int
+    username                String          @unique
+    password                String
+    email                   String?
+    surname                 String?         @db.VarChar(255)
+    forename                String?         @db.VarChar(255)
+    signature               String?         @db.MediumText
+    socketId                String?         @db.VarChar(255)
+    createdAt               DateTime        @default(now()) @db.Timestamp(6)
+    updatedAt               DateTime        @updatedAt @db.Timestamp(6)
+
+    // Table inheritance
+    admin                   Admin?           
+    lecturer                Lecturer?
+    student                 Student?
+
+    refreshToken            RefreshToken?   
+    role                    Role            @relation(fields: [roleId], references: [id])
+    sentNotifications       Notification[]
+    receivedNotifications   Notification[]  @relation("usersReceivedNotifications")
+}
+
+model RefreshToken {
+    id      Int         @id @default(autoincrement())
+    userId  Int         @unique
+    token   String      @db.VarChar(255)
+    exp     DateTime    @db.Timestamp(6)
+
+    user    User        @relation(fields: [userId], references: [userId], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Role {
+    id      Int         @id @default(autoincrement())
+    name    String      @unique
+    
+    users   User[]
+}
+
+model Notification {
+    id          Int         @id @default(autoincrement())
+    senderId    Int
+    title       String?     
+    content     String?
+    isRead      Boolean     @default(false)
+    createdAt   DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt   DateTime    @updatedAt @db.Timestamp(6)
+
+    sender      User        @relation(fields: [senderId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    receivers   User[]      @relation("usersReceivedNotifications")
+}
+
+model Admin {
+    id                            Int                           @id @default(autoincrement())
+    userId                        Int                           @unique
+    contact                       String?
+
+    user                          User                          @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)                        
+    bachelorThesisRegistrations   BachelorThesisRegistration[]
+}
+
+model Lecturer {
+    id                               Int                             @id @default(autoincrement())
+    userId                           Int                             @unique
+    title                            String?                         @db.VarChar(255)
+    numberOfTheses                   Int                             @default(0)
+    bio                              String?                         @db.Text
+
+    user                             User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    sup1BachelorThesisRegistrations  BachelorThesisRegistration[]    @relation("supervisor1BachelorThesisRegistrations")
+    sup2BachelorThesisRegistrations  BachelorThesisRegistration[]    @relation("supervisor2BachelorThesisRegistrations")
+    sup1OralDefenseRegistrations     OralDefenseRegistration[]       @relation("supervisor1OralDefenseRegistrations")
+    sup2OralDefenseRegistrations     OralDefenseRegistration[]       @relation("supervisor2OralDefenseRegistrations")
+    sup1BachelorThesisAssessments    BachelorThesisAssessment[]      @relation("supervisor1BachelorThesisAssessments")
+    sup2BachelorThesisAssessments    BachelorThesisAssessment[]      @relation("supervisor2BachelorThesisAssessments")
+    sup1OralDefenseAssessments       OralDefenseAssessment[]         @relation("supervisor1OralDefenseAssessments")
+    sup2OralDefenseAssessments       OralDefenseAssessment[]         @relation("supervisor2OralDefenseAssessments")
+}
+
+model Student {
+    id                            Int                             @id @default(autoincrement())
+    userId                        Int                             @unique
+    intake                        String?
+    ects                          Int                             @default(0)
+
+    user                          User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    bachelorThesisRegistration    BachelorThesisRegistration?
+    oralDefenseRegistration       OralDefenseRegistration?
+    bachelorThesisAssessment      BachelorThesisAssessment?
+    oralDefenseAssessment         OralDefenseAssessment?
+}
+
+model Topic {
+    id              Int         @id @default(autoincrement())
+    title           String
+    description     String?     @db.Text
+
+    thesis          Thesis[]
+}
+
+model Field {
+    id              Int         @id @default(autoincrement())
+    title           String
+    description     String?     @db.Text
+
+    thesis          Thesis[]
+}
+        
+model Thesis {
+    id                            Int                                 @id @default(autoincrement())
+    topicId                       Int?
+    fieldId                       Int?
+    title                         String?                             @db.VarChar(255)       
+    slot                          Int                                 @default(0)
+    slotLimit                     Int?                                @default(2)
+    activateRegistration          Boolean                             @default(false)
+    activateDefense               Boolean                             @default(false)
+    submissionDeadline            DateTime?                           @db.DateTime
+    numberHardCopies              Int?                
+    printRequirements             String?                             @db.VarChar(255)
+    templateFiles                 String?                             @db.VarChar(255)
+    step                          Int?                                @default(0)
+    createdAt                     DateTime                            @default(now()) @db.Timestamp(6)
+    updatedAt                     DateTime                            @updatedAt @db.Timestamp(6)
+
+    topic                         Topic?                              @relation(fields: [topicId], references: [id])
+    field                         Field?                              @relation(fields: [fieldId], references: [id])
+    bachelorThesisRegistrations   BachelorThesisRegistration[]
+    oralDefenseRegistrations      OralDefenseRegistration[]
+    bachelorThesisAssessments     BachelorThesisAssessment[]
+    oralDefenseAssessments        OralDefenseAssessment[]
+}
+
+model Location {
+    id                        Int                             @id @default(autoincrement())
+    title                     String
+    description               String?                         @db.Text
+}
+
+model BachelorThesisRegistration {
+    id                      Int         @id @default(autoincrement())
+    thesisId                Int
+    studentId               Int         @unique
+    supervisor1Id           Int?
+    supervisor2Id           Int?
+    adminId                 Int?
+    dateOfBirth             DateTime?   @db.Date
+    placeOfBirth            String?     @db.VarChar(255)
+    studentDate             DateTime?   @db.Date
+    furtherParticipants     String?     @db.Text
+    supervisor1Date         DateTime?   @db.Date
+    supervisor1Confirmed    Boolean?    @default(false)
+    supervisor2Date         DateTime?   @db.Date
+    supervisor2Confirmed    Boolean?    @default(false)
+    adminConfirmed          Boolean?    @default(false)
+    issued                  DateTime?   @db.Date
+    deadlineCopy            DateTime?   @db.Date
+    extensionGranted        DateTime?   @db.Date
+    chairmanOfExamination   String?     @db.VarChar(255)
+    dateOfIssue             DateTime?   @db.Date
+    step                    Int?        @default(0)
+    createdAt               DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt               DateTime    @updatedAt @db.Timestamp(6)
+
+    student                 Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    thesis                  Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    supervisor1             Lecturer?   @relation("supervisor1BachelorThesisRegistrations", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor2             Lecturer?   @relation("supervisor2BachelorThesisRegistrations", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    admin                   Admin?      @relation(fields: [adminId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model OralDefenseRegistration {
+    id                     Int         @id @default(autoincrement())
+    studentId              Int         @unique
+    thesisId               Int
+    supervisor1Id          Int?
+    supervisor2Id          Int?
+    room                   String?     
+    spectatorsPresent      Int?        @default(0)
+    weekdate               String?     @db.VarChar(255)
+    proposedDate           DateTime?   @db.DateTime
+    actualDate             DateTime?   @db.DateTime
+    concernedAgreed        Int?        @default(0)
+    receivingDate          DateTime?   @db.DateTime
+    submissionDate         DateTime?   @db.DateTime
+    step                   Int?        @default(0)
+    createdAt              DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt              DateTime    @updatedAt @db.Timestamp(6)
+
+    student                Student     @relation(fields: [studentId], references: [userId], onUpdate: Cascade)
+    thesis                 Thesis      @relation(fields: [thesisId], references: [id], onUpdate: Cascade)
+    supervisor1            Lecturer?   @relation("supervisor1OralDefenseRegistrations", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor2            Lecturer?   @relation("supervisor2OralDefenseRegistrations", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model BachelorThesisAssessment {
+    id                     Int         @id @default(autoincrement())
+    studentId              Int         @unique
+    thesisId               Int
+    supervisor1Id          Int
+    supervisor2Id          Int
+    furtherParticipants    String?     @db.VarChar(255)
+    supervisor1Grade       Float?      @db.Float
+    supervisor2Grade       Float?      @db.Float
+    assessmentDescription  String?     @db.VarChar(255)
+    assessmentDate         DateTime?   @db.Date
+    step                   Int?        @default(0)
+    createdAt              DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt              DateTime    @updatedAt @db.Timestamp(6)
+
+    student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    supervisor1            Lecturer    @relation("supervisor1BachelorThesisAssessments", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor2            Lecturer    @relation("supervisor2BachelorThesisAssessments", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model OralDefenseAssessment {
+    id                     Int         @id @default(autoincrement())
+    studentId              Int         @unique
+    thesisId               Int
+    supervisor1Id          Int
+    supervisor2Id          Int
+    dateDefense            DateTime?   @db.Date
+    placeDefense           String?     @db.VarChar(255)
+    startDate              DateTime?   @db.Date
+    finishDate             DateTime?   @db.Date
+    stateOfHealth          Boolean?
+    supervisor1Grade       Float?      @db.Float
+    supervisor2Grade       Float?      @db.Float
+    record                 String?     @db.Text
+    assessmentDate         DateTime?   @db.Date
+    step                   Int?        @default(0)
+    createdAt              DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt              DateTime    @updatedAt @db.Timestamp(6)
+
+    student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    supervisor1            Lecturer    @relation("supervisor1OralDefenseAssessments", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor2            Lecturer    @relation("supervisor2OralDefenseAssessments", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+}

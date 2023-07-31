@@ -1,0 +1,17 @@
+import { makeImmutable } from "../../utils/object-helpers";
+
+const NOT_FOUND_ERROR_MESSAGES = {
+    RoleNotFound: 'Role not found',
+    AdminNotFound: 'Admin not found',
+    StudentNotFound: 'Student not found',
+    LecturerNotFound: 'Lecturer not found',
+    ThesisNotFound: 'Thesis not found',
+    BachelorThesisRegistrationNotFound: 'Bachelor thesis registration not found',
+    OralDefenseRegistrationNotFound: 'Oral defense registration not found',
+    BachelorThesisAssessmentNotFound: 'Bachelor thesis assessment not found',
+    OralDefenseAssessmentNotFound: 'Oral defense assessment not found',
+};
+
+makeImmutable(NOT_FOUND_ERROR_MESSAGES);
+
+export { NOT_FOUND_ERROR_MESSAGES }

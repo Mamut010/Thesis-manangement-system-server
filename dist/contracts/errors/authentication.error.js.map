@@ -1,0 +1,1 @@
+{"version":3,"file":"authentication.error.js","sourceRoot":"","sources":["../../../src/contracts/errors/authentication.error.ts"],"names":[],"mappings":";;;AAAA,6DAAgD;AAChD,4DAAwD;AAExD,MAAa,mBAAoB,SAAQ,+BAAS;IAC9C,YAAY,UAAkB,qCAAqC;QAC/D,KAAK,CAAC,sBAAS,CAAC,QAAQ,EAAE,OAAO,CAAC,CAAC;IACvC,CAAC;CACJ;AAJD,kDAIC"}

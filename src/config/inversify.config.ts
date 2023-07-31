@@ -1,0 +1,159 @@
+import { Container, interfaces } from 'inversify';
+import { Logger, LoggerInterface, LoggerFactory, DefaultLoggerFactory } from '../lib/logger';
+import { INJECTION_TOKENS } from '../core/constants/injection-tokens';
+import { PrismaClient } from '@prisma/client';
+import { BootstrapSettingInterface } from '../lib/bootstrapper';
+import { Configuration } from './configuration';
+import { 
+    AuthService,
+    HashService,
+    JwtService
+} from '../auth/services';
+import { 
+    AuthServiceInterface, 
+    HashServiceInterface, 
+    JwtServiceInterface
+} from '../auth/interfaces';
+import { JwtExtractorInterface, AuthHeaderJwtExtractor } from '../auth/utils/jwt-extractors';
+import { JwtCookieHandler, JwtCookieHandlerInterface } from '../auth/utils/jwt-cookie-handlers';
+import { 
+    AdminLecturerServiceInterface,
+    AdminServiceInterface, 
+    AdminStudentServiceInterface, 
+    AdminThesisServiceInterface, 
+    PlainTransformerServiceInterface
+} from '../api/interfaces';
+import { 
+    AdminLecturerService,
+    AdminService, 
+    AdminStudentService, 
+    AdminThesisService, 
+    PlainTransformerService
+} from '../api/services';
+import { 
+    UserRepoInterface,
+    RefreshTokenRepoInterface 
+} from '../shared/interfaces';
+import { 
+    UserRepo,
+    RefreshTokenRepo
+} from '../shared/repositories';
+
+export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
+    configConstants(container, settings);
+    configLogger(container, settings);
+    configPrisma(container, settings);
+    configRepos(container, settings);
+    configServices(container, settings);
+    configUtils(container, settings);
+}
+
+function configConstants(container: Container, settings?: BootstrapSettingInterface) {
+    container
+        .bind<Container>(INJECTION_TOKENS.DiContainer)
+        .toConstantValue(container);
+}
+
+function configLogger(container: Container, settings?: BootstrapSettingInterface) {
+    container
+        .bind<LoggerInterface>(INJECTION_TOKENS.Logger)
+        .toDynamicValue((context: interfaces.Context) => (settings?.getData('logger') ?? new Logger()) as LoggerInterface)
+        .inSingletonScope();
+
+    container
+        .bind<LoggerFactory>(INJECTION_TOKENS.LoggerFactory)
+        .toFactory<LoggerInterface, [string?]>((context: interfaces.Context) => {
+            return (scope?: string) => {
+                if (typeof scope !== 'undefined') {
+                    return DefaultLoggerFactory(scope);
+                }
+                else {
+                    const logger: LoggerInterface = context.container.get(INJECTION_TOKENS.Logger);
+                    return logger;
+                }
+            };
+        });
+}
+
+function configPrisma(container: Container, settings?: BootstrapSettingInterface) {
+    /**
+     * Prisma manages the connection pool automatically so it is better to let it live alongside the Express app
+     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/connection-management
+     */
+    container
+        .bind<PrismaClient>(INJECTION_TOKENS.Prisma)
+        .toDynamicValue((context: interfaces.Context) => new PrismaClient())
+        .inSingletonScope();
+}
+
+function configRepos(container: Container, settings?: BootstrapSettingInterface) {
+    container
+        .bind<UserRepoInterface>(INJECTION_TOKENS.UserRepo)
+        .to(UserRepo)
+        .inRequestScope();
+
+    container
+        .bind<RefreshTokenRepoInterface>(INJECTION_TOKENS.RefreshTokenRepo)
+        .to(RefreshTokenRepo)
+        .inRequestScope();
+}
+
+function configServices(container: Container, settings?: BootstrapSettingInterface) {
+    /**
+     * Auth Server's Services
+     */
+    container
+        .bind<JwtServiceInterface>(INJECTION_TOKENS.JwtService)
+        .to(JwtService)
+        .inRequestScope();
+    
+    container
+        .bind<HashServiceInterface>(INJECTION_TOKENS.HashService)
+        .to(HashService)
+        .inRequestScope();
+
+    container
+        .bind<AuthServiceInterface>(INJECTION_TOKENS.AuthService)
+        .to(AuthService)
+        .inRequestScope();
+
+    /**
+     * REST Server's Services
+     */
+    container
+        .bind<PlainTransformerServiceInterface>(INJECTION_TOKENS.PlainTransformer)
+        .to(PlainTransformerService)
+        .inRequestScope();
+
+    container
+        .bind<AdminServiceInterface>(INJECTION_TOKENS.AdminService)
+        .to(AdminService)
+        .inRequestScope();
+
+    container
+        .bind<AdminStudentServiceInterface>(INJECTION_TOKENS.AdminStudentService)
+        .to(AdminStudentService)
+        .inRequestScope();
+
+    container
+        .bind<AdminLecturerServiceInterface>(INJECTION_TOKENS.AdminLecturerService)
+        .to(AdminLecturerService)
+        .inRequestScope();
+
+    container
+        .bind<AdminThesisServiceInterface>(INJECTION_TOKENS.AdminThesisService)
+        .to(AdminThesisService)
+        .inRequestScope();
+}
+
+function configUtils(container: Container, settings?: BootstrapSettingInterface) {
+    container
+        .bind<JwtExtractorInterface>(INJECTION_TOKENS.JwtExtractor)
+        .to(AuthHeaderJwtExtractor)
+        .inRequestScope();
+
+    container
+        .bind<JwtCookieHandlerInterface>(INJECTION_TOKENS.JwtCookieHandler)
+        .to(JwtCookieHandler)
+        .inRequestScope();
+}
