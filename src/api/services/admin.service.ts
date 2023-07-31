@@ -3,19 +3,15 @@ import {
     AdminServiceInterface, 
     AdminStudentServiceInterface,
     AdminLecturerServiceInterface,
-    PlainTransformerServiceInterface,
     AdminThesisServiceInterface,
+    AdminSelfServiceInterface,
 } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
-import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
 
 @injectable()
 export class AdminService implements AdminServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.AdminSelfService) private adminSelfService: AdminSelfServiceInterface,
         @inject(INJECTION_TOKENS.AdminStudentService) private adminStudentService: AdminStudentServiceInterface,
         @inject(INJECTION_TOKENS.AdminLecturerService) private adminLecturerService: AdminLecturerServiceInterface,
         @inject(INJECTION_TOKENS.AdminThesisService) private adminThesisService: AdminThesisServiceInterface) {
@@ -23,20 +19,7 @@ export class AdminService implements AdminServiceInterface {
     }
 
     async getAdminInfo(adminId: number) {
-        const admin = await this.prisma.admin.findUnique({
-            where: {
-                userId: adminId
-            },
-            include: {
-                user: true,
-            }
-        });
-
-        if (!admin) {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.AdminNotFound);
-        }
-
-        return this.plainTransformer.toAdminInfo(admin);
+        return this.adminSelfService.getAdminInfo(adminId);
     }
 
     async getStudentDetail(studentId: number) {
