@@ -3,6 +3,7 @@ import { ArrayMinSize, IsDefined, IsNumber, IsString, ValidateNested} from "clas
 import { JwtRefreshContextDto } from "./jwt-refresh-context.dto";
 
 export class JwtRefreshPayloadDto {
+    @Expose()
     @IsDefined()
     @ValidateNested()
     @Type(() => JwtRefreshContextDto)
