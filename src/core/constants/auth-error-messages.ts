@@ -1,4 +1,4 @@
-const AUTH_ERROR_MESSAGES = {
+export const AUTH_ERROR_MESSAGES = {
     InvalidLoginCredentials: 'Wrong username or password',
     InvalidEmbeddedCredentials: 'Invalid embedded credentials',
     InvalidRefreshToken: 'Invalid refresh token',
@@ -9,5 +9,3 @@ const AUTH_ERROR_MESSAGES = {
 
     RefreshTokenNotFound: 'Refresh token not found',
 } as const;
-
-export { AUTH_ERROR_MESSAGES }

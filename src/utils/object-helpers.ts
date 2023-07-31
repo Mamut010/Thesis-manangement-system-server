@@ -43,7 +43,7 @@ export enum DefaultCases {
     camelCase = 'camelCase',
     snakeCase = 'snakeCase',
     pascalCase = 'pascalCase',
-};
+}
 
 export const DefaultKeyTransformers: { readonly [key in DefaultCases]: KeyTransformer } = {
     camelCase: {
@@ -64,7 +64,7 @@ export interface FlatteningOptions {
     /**
      * Max nested level. Any property beyond this level is kept as is.
      * 
-     * The level starts from 1.
+     * The level starts from 0.
      */
     maxDepth?: number,
 
@@ -128,7 +128,7 @@ export function flattenObject<T>(obj: T, flatteningOptions?: FlatteningOptions):
         }
     }
 
-    return flattenObjectImpl(obj, options, 1, options.initialKey);
+    return flattenObjectImpl(obj, options, 0, options.initialKey);
 }
 
 function flattenObjectImpl<T>(obj: T, flatteningOptions: FlatteningOptions, currentDepth: number, currentProp?: string) {

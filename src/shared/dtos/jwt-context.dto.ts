@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import { ArrayMaxSize, ArrayMinSize, IsDefined, IsEmail, IsIn, IsNumber, IsOptional, IsString } from "class-validator"
-import { Roles } from "../../core/enums/roles";
+import { ROLES } from "../../core/constants/roles";
 
 export class JwtAccessContextDto {
     @Expose()
@@ -29,7 +29,7 @@ export class JwtAccessContextDto {
     @IsString({ each: true })
     @ArrayMinSize(1)
     @ArrayMaxSize(1)
-    @IsIn(Object.values(Roles), { each: true })
+    @IsIn(Object.values(ROLES), { each: true })
     @Type(() => String)
     roles!: string[];
 }

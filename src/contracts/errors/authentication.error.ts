@@ -1,8 +1,8 @@
 import { HttpError } from "routing-controllers";
-import { HttpCodes } from "../../core/enums/http-codes";
+import { HTTP_CODES } from "../../core/constants/http-codes";
 
 export class AuthenticationError extends HttpError {
     constructor(message: string = 'An authentication error has occured') {
-        super(HttpCodes.Conflict, message);
+        super(HTTP_CODES.Conflict, message);
     }
 }
