@@ -19,7 +19,6 @@ import { JwtCookieHandler, JwtCookieHandlerInterface } from '../auth/utils/jwt-c
 import { 
     AdminLecturerServiceInterface,
     AdminSelfServiceInterface,
-    AdminServiceInterface, 
     AdminStudentServiceInterface, 
     AdminThesisServiceInterface, 
     PlainTransformerServiceInterface
@@ -27,7 +26,6 @@ import {
 import { 
     AdminLecturerService,
     AdminSelfService,
-    AdminService, 
     AdminStudentService, 
     AdminThesisService, 
     PlainTransformerService
@@ -125,11 +123,6 @@ function configServices(container: Container, settings?: BootstrapSettingInterfa
     container
         .bind<PlainTransformerServiceInterface>(INJECTION_TOKENS.PlainTransformer)
         .to(PlainTransformerService)
-        .inRequestScope();
-
-    container
-        .bind<AdminServiceInterface>(INJECTION_TOKENS.AdminService)
-        .to(AdminService)
         .inRequestScope();
 
     container

@@ -25,7 +25,6 @@ const SERVICE_TOKENS = {
     AuthService: Symbol.for('AuthService'),
 
     // REST
-    AdminService: Symbol.for('AdminService'),
     AdminSelfService: Symbol.for('AdminSelfService'),
     AdminStudentService: Symbol.for('AdminStudentService'),
     AdminLecturerService: Symbol.for('AdminLecturerService'),
