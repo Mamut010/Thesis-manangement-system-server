@@ -24,6 +24,31 @@ export class AdminStudentService implements AdminStudentServiceInterface {
 
     }
 
+    async getStudents(): Promise<StudentInfoDto[]> {
+        const students = await this.prisma.student.findMany({
+            where: {
+                id: {
+                    lt: 100
+                },
+                user: {
+                    username: {
+                        contains: 'student'
+                    }
+                }
+            },
+            include: {
+                user: true
+            },
+            orderBy: {
+                id: 'desc',
+            },
+            skip: 0,
+            take: 30,
+        });
+
+        return students.map(item => this.plainTransformer.toStudentInfo(item));
+    }
+
     async getStudentDetail(studentId: number): Promise<StudentDetailResponse> {
         const response = new StudentDetailResponse();
         response.studentInfo = await this.getStudentInfo(studentId);
