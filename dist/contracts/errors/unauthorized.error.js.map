@@ -1,1 +1,0 @@
-{"version":3,"file":"unauthorized.error.js","sourceRoot":"","sources":["../../../src/contracts/errors/unauthorized.error.ts"],"names":[],"mappings":";;;AAAA,6DAAgD;AAChD,4DAAwD;AAExD,MAAa,iBAAkB,SAAQ,+BAAS;IAC5C,YAAY,UAAkB,oCAAoC;QAC9D,KAAK,CAAC,sBAAS,CAAC,YAAY,EAAE,OAAO,CAAC,CAAC;IAC3C,CAAC;CACJ;AAJD,8CAIC"}

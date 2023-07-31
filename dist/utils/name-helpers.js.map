@@ -1,1 +1,0 @@
-{"version":3,"file":"name-helpers.js","sourceRoot":"","sources":["../../src/utils/name-helpers.ts"],"names":[],"mappings":";;;AAAA,SAAgB,WAAW,CAAC,QAAuB,EAAE,OAAsB;IACvE,IAAI,CAAC,QAAQ,EAAE;QACX,OAAO,OAAO,CAAC;KAClB;SACI;QACD,OAAO,QAAQ,GAAG,CAAC,OAAO,CAAC,CAAC,CAAC,GAAG,GAAG,OAAO,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC;KACpD;AACL,CAAC;AAPD,kCAOC"}
