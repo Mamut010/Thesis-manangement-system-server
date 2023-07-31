@@ -39,20 +39,26 @@ export interface KeyTransformer {
     transformOutward(key: string, outerProp: string): string;
 }
 
-export const camelCaseKeyTransformer: KeyTransformer = {
-    transformInward: (key, innerProp) => innerProp + capitalize(key),
-    transformOutward: (key, outerProp) => uncapitalize(trimPrefix(key, outerProp)),
+export enum DefaultCases {
+    camelCase = 'camelCase',
+    snakeCase = 'snakeCase',
+    pascalCase = 'pascalCase',
 };
 
-export const snakeCaseKeyTransformer: KeyTransformer = {
-    transformInward: (key, innerProp) => innerProp + '_' + key,
-    transformOutward: (key, outerProp) => trimPrefix(key, `${outerProp}_`),
-};
-
-export const pascalCaseKeyTransformer: KeyTransformer = {
-    transformInward: (key, innerProp) => capitalize(innerProp) + capitalize(key),
-    transformOutward: (key, outerProp) => uncapitalize(trimPrefix(key, capitalize(outerProp))),
-};
+export const DefaultKeyTransformers: { readonly [key in DefaultCases]: KeyTransformer } = {
+    camelCase: {
+        transformInward: (key: string, innerProp: string) => innerProp + capitalize(key),
+        transformOutward: (key: string, outerProp: string) => uncapitalize(trimPrefix(key, outerProp)),
+    },
+    snakeCase: {
+        transformInward: (key: string, innerProp: string) => innerProp + capitalize(key),
+        transformOutward: (key: string, outerProp: string) => uncapitalize(trimPrefix(key, outerProp)),
+    },
+    pascalCase: {
+        transformInward: (key: string, innerProp: string) => capitalize(innerProp) + capitalize(key),
+        transformOutward: (key: string, outerProp: string) => uncapitalize(trimPrefix(key, capitalize(outerProp))),
+    }
+} as const;
 
 export interface FlatteningOptions {
     /**
@@ -106,7 +112,7 @@ export interface FlatteningOptions {
  */
 export function flattenObject<T>(obj: T, flatteningOptions?: FlatteningOptions): Record<string, any> {
     const defaultOptions: FlatteningOptions = {
-        keyTransformer: camelCaseKeyTransformer,
+        keyTransformer: DefaultKeyTransformers['camelCase'],
     };
 
     let options: FlatteningOptions;
