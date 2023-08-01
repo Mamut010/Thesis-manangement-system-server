@@ -33,6 +33,7 @@ const UTIL_TOKENS = {
     JwtExtractor: Symbol.for('JwtExtractor'),
     JwtCookieHandler: Symbol.for('JwtCookieHandler'),
     PlainTransformer: Symbol.for('PlainTransformer'),
+    PrismaQueryCreator: Symbol.for('PrismaQueryCreator'),
 }
 
 export const INJECTION_TOKENS = {
