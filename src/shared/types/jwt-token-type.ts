@@ -1,4 +1,2 @@
 import { JWT_TOKEN_TYPES } from "../../core/constants/jwt-token-types";
-
-const tokenTypes = Object.values(JWT_TOKEN_TYPES);
-export type JwtTokenType = typeof tokenTypes[number];
+export type JwtTokenType = (typeof JWT_TOKEN_TYPES)[keyof typeof JWT_TOKEN_TYPES];

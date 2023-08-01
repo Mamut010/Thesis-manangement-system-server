@@ -1,4 +1,3 @@
-import { ROLES } from "../../core/constants/roles";
+import { RoleValues } from "../../core/constants/roles";
 
-const roles = Object.values(ROLES);
-export type Role = typeof roles[number];
+export type Role = typeof RoleValues[number];
