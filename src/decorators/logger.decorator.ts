@@ -13,6 +13,7 @@ function getServiceIdentifier(scope?: string) {
 
 /**
  * Inject an instance of LoggerInterface using LoggerFactory with the provided scope.
+ * Can be used as a property decorator as well as a parameter decorator.
  *
  * @param scope Scope of the injected logger.
  */
