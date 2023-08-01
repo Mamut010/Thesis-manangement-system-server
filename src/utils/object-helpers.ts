@@ -74,14 +74,15 @@ export interface FlatteningOptions {
     initialKey?: string,
 
     /**
-     * If set to true, duplicate inner keys are transformed with KeyTransformer.transformInward() method instead of being discarded.
+     * If set to true, duplicate inner keys are transformed with KeyTransformer.transformInward() method 
+     * instead of being discarded.
      */
     keepDuplicate?: boolean,
 
     /**
      * The transformer used to transform key in inward and outward cases.
      * 
-     * Defaulted to using camelCase.
+     * @default DefaultCases.camelCase
      */
     keyTransformer?: KeyTransformer,
 
