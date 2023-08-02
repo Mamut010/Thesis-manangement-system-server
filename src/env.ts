@@ -61,6 +61,9 @@ export const env = {
             port: normalizePort(process.env.APP_SOCKET_PORT ?? getOsEnv('SOCKET_PORT')) as number,
         }
     },
+    cors: {
+        allowOrigins: getOsEnv('ALLOW_ORIGINS').split(';')
+    },
     log: {
         level: getOsEnv('LOG_LEVEL'),
         json: toBool(getOsEnvOptional('LOG_JSON')),

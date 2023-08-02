@@ -1,5 +1,5 @@
 import express, { Application } from 'express';
-import { useExpressServer } from 'routing-controllers';
+import { RoutingControllersOptions, useExpressServer } from 'routing-controllers';
 import { env } from '../../env';
 import { BootstrapSettingInterface, Bootstrapper } from '../../lib/bootstrapper';
 import { preconfigApp, postconfigApp } from '../../config/app.config';
@@ -24,12 +24,13 @@ export const bootstrapAuthServer: Bootstrapper = (settings?: BootstrapSettingInt
     /**
      * Add routing-controllers options to express app
      */
-    const routingControllersOptions = {
-        cors: true,
+    const routingControllersOptions: RoutingControllersOptions = {
+        cors: {
+            origin: env.cors.allowOrigins,
+            credentials: true,
+        },
         classTransformer: true,
-        // validation: {
-        //     validationError: { target: false }
-        // },
+        plainToClassTransformOptions: { exposeDefaultValues: true },
         validation: true,
         routePrefix: env.app.servers.auth.routePrefix,
         defaultErrorHandler: false,

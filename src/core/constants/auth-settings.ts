@@ -4,7 +4,7 @@ export const AUTH_SETTINGS = {
     Jwt: {
         AccessTokenSecret: env.secrets.accessToken,
         RefreshTokenSecret: env.secrets.refreshToken,
-        RefreshTokenCookie: 'jwt-refresh',
+        RefreshTokenCookie: 'thesis-system$refresh',
         AccessTokenTtl: '10m',
         RefreshTokenTtl: '30d',
     },

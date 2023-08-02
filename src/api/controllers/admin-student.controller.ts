@@ -4,7 +4,8 @@ import {
     Get, 
     HttpCode, 
     JsonController, 
-    Param
+    Param,
+    QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { ROLES } from "../../core/constants/roles";
@@ -20,7 +21,6 @@ import {
     StudentInfoDto 
 } from "../../shared/dtos";
 import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
-import { QueryParamsWithDefault } from "../../decorators";
 
 @JsonController('admin/students')
 //@Authorized(ROLES.Admin)
@@ -37,7 +37,7 @@ export class AdminStudentController {
     @HttpCode(HTTP_CODES.Ok)
     @Get()
     @ResponseSchema(StudentDetailResponse)
-    getStudents(@QueryParamsWithDefault() studentsQuery: StudentsQueryRequest) {
+    getStudents(@QueryParams() studentsQuery: StudentsQueryRequest) {
         return this.adminStudentService.getStudents(studentsQuery);
     }
 

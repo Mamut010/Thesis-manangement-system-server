@@ -18,7 +18,6 @@ import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
-import { Student, User } from "../../core/models";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
