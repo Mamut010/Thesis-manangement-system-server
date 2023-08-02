@@ -21,7 +21,6 @@ import {
     PlainStudent,
     PlainThesis
 } from "../../shared/types/plain-types";
-import { getFullName } from "../../utils/name-helpers";
 import { PlainTransformerServiceInterface } from "../interfaces";
 
 @injectable()
@@ -38,8 +37,7 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
     public toStudentInfo(plain: PlainStudent): StudentInfoDto {
         const dto = plainToInstanceExactMatch(StudentInfoDto, flattenObject(plain));
         dto.studentId = plain.userId;
-        dto.fullname = getFullName(plain.user.forename, plain.user.surname);
-
+        
         return dto;
     }
 
