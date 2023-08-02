@@ -9,9 +9,11 @@ export * from './filters/string.filter';
 export * from './filters/number.filter';
 export * from './filters/date.filter';
 export * from './filters/bool.filter';
+export * from './filters/email.filter';
 export * from './filters/string-list.filter';
 export * from './filters/number-list.filter';
 export * from './filters/date-list.filter';
+export * from './filters/email-list.filter';
 
 // interfaces
 export * from './interfaces/binary-filter';
