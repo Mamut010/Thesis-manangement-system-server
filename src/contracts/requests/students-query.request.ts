@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { EmailFilter, NumberFilter, OrderBy, Pagination, StringFilter } from "../../lib/query";
+import { NumberFilter, OrderBy, Pagination, StringFilter } from "../../lib/query";
 import { IsOptional, ValidateNested } from "class-validator";
 
 export class StudentsQueryRequest {
@@ -30,8 +30,8 @@ export class StudentsQueryRequest {
     @Expose()
     @IsOptional()
     @ValidateNested()
-    @Type(() => EmailFilter)
-    emailFilter?: EmailFilter;
+    @Type(() => StringFilter)
+    emailFilter?: StringFilter;
 
     @Expose()
     @IsOptional()
