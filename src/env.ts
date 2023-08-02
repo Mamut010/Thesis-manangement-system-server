@@ -7,7 +7,6 @@ import * as path from 'path';
 import {
     getOsEnv, getOsEnvOptional, getOsPaths, normalizePort, toBool, toNumber
 } from './lib/env';
-import { makeImmutable } from './utils/object-helpers';
 
 /**
  * Load .env file or for tests the .env.test file.
@@ -17,7 +16,7 @@ dotenv.config({ path: path.join(process.cwd(), `.env${((process.env.NODE_ENV ===
 /**
  * Environment variables
  */
-const env = {
+export const env = {
     node: process.env.NODE_ENV ?? 'development',
     isProduction: process.env.NODE_ENV === 'production',
     isTest: process.env.NODE_ENV === 'test',
@@ -81,8 +80,4 @@ const env = {
         username: getOsEnv('SWAGGER_USERNAME'),
         password: getOsEnv('SWAGGER_PASSWORD'),
     },
-};
-
-makeImmutable(env);
-
-export { env }
+} as const;

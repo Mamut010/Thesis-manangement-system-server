@@ -4,7 +4,7 @@ import { ValidationError } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
 import { injectable } from 'inversify';
 import { Middleware, ExpressErrorMiddlewareInterface } from 'routing-controllers';
-import { HttpCodes } from '../../core/enums/http-codes';
+import { HTTP_CODES } from '../../core/constants/http-codes';
 
 @Middleware({ type: 'after' })
 @injectable()
@@ -22,7 +22,7 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
 
 function getErrorStatus(error: any): number {
   if (Array.isArray(error) && error.length > 0 && error.every(err => err instanceof ValidationError)) {
-    return HttpCodes.BadRequest;
+    return HTTP_CODES.BadRequest;
   }
   else {
     const possibleStatusProperties = ['status', 'httpCode'];
@@ -32,7 +32,7 @@ function getErrorStatus(error: any): number {
       }
     }
 
-    return HttpCodes.InternalServerError;
+    return HTTP_CODES.InternalServerError;
   }
 }
 

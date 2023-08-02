@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 import { ITXClientDenyList } from '@prisma/client/runtime/library';
 import { UserCreatingRequestDto } from "../dtos/user-creating-request.dto";
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
-import { Roles } from "../../core/enums/roles";
+import { ROLES } from "../../core/constants/roles";
 import { UNEXPECTED_ERROR_MESSAGES } from "../../core/constants/unexpected-error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { UserRepoInterface } from "../interfaces";
@@ -57,13 +57,13 @@ export class UserRepo implements UserRepoInterface {
         const roleName = request.role.name;
         let associatedRepo: string = '';
         
-        if (roleName === Roles.Admin.valueOf()) {
+        if (roleName === ROLES.Admin.valueOf()) {
             associatedRepo = 'admin';
         }
-        else if (roleName === Roles.Student.valueOf()) {
+        else if (roleName === ROLES.Student.valueOf()) {
             associatedRepo = 'student';
         }
-        else if ([Roles.Lecturer1_1, Roles.Lecturer1_2, Roles.Lecturer2].find(role => role.valueOf() === roleName)) {
+        else if ([ROLES.Lecturer1_1, ROLES.Lecturer1_2, ROLES.Lecturer2].find(role => role.valueOf() === roleName)) {
             associatedRepo = 'lecturer';
         }
 

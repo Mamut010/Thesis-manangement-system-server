@@ -1,8 +1,8 @@
 import { HttpError } from "routing-controllers";
-import { HttpCodes } from "../../core/enums/http-codes";
+import { HTTP_CODES } from "../../core/constants/http-codes";
 
 export class UnexpectedError extends HttpError {
     constructor(message: string = 'An unexpected error has occured') {
-        super(HttpCodes.InternalServerError, message);
+        super(HTTP_CODES.InternalServerError, message);
     }
 }

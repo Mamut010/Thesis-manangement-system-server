@@ -1,6 +1,4 @@
-import { makeImmutable } from "../../utils/object-helpers";
-
-const NOT_FOUND_ERROR_MESSAGES = {
+export const NOT_FOUND_ERROR_MESSAGES = {
     RoleNotFound: 'Role not found',
     AdminNotFound: 'Admin not found',
     StudentNotFound: 'Student not found',
@@ -10,8 +8,4 @@ const NOT_FOUND_ERROR_MESSAGES = {
     OralDefenseRegistrationNotFound: 'Oral defense registration not found',
     BachelorThesisAssessmentNotFound: 'Bachelor thesis assessment not found',
     OralDefenseAssessmentNotFound: 'Oral defense assessment not found',
-};
-
-makeImmutable(NOT_FOUND_ERROR_MESSAGES);
-
-export { NOT_FOUND_ERROR_MESSAGES }
+} as const;

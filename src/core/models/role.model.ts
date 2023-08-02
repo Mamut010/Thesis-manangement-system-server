@@ -1,6 +1,7 @@
 import { IsDefined, IsIn, IsNumber, IsString } from "class-validator";
-import { Roles } from "../enums/roles";
+import { RoleValues } from "../constants/roles";
 import { Expose } from "class-transformer";
+import * as type from './../../shared/types/roles';
 
 export class Role {
     @Expose()
@@ -11,6 +12,6 @@ export class Role {
     @Expose()
     @IsDefined()
     @IsString()
-    @IsIn(Object.values(Roles))
-    name!: string;
+    @IsIn(RoleValues)
+    name!: type.Role;
 }

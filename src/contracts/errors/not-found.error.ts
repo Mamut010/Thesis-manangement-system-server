@@ -1,8 +1,8 @@
 import { HttpError } from "routing-controllers";
-import { HttpCodes } from "../../core/enums/http-codes";
+import { HTTP_CODES } from "../../core/constants/http-codes";
 
 export class NotFoundError extends HttpError {
     constructor(message: string = NotFoundError.name) {
-        super(HttpCodes.NotFound, message);
+        super(HTTP_CODES.NotFound, message);
     }
 }

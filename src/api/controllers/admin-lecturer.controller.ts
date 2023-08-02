@@ -7,10 +7,10 @@ import {
     Param
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
-import { Roles } from "../../core/enums/roles";
+import { ROLES } from "../../core/constants/roles";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AdminLecturerServiceInterface } from "../interfaces";
-import { HttpCodes } from "../../core/enums/http-codes";
+import { HTTP_CODES } from "../../core/constants/http-codes";
 import { 
     BachelorThesisAssessmentDto,
     BachelorThesisRegistrationDto, 
@@ -21,7 +21,7 @@ import {
 import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
 
 @JsonController('admin/lecturers')
-//@Authorized(Roles.Admin)
+//@Authorized(ROLES.Admin)
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
@@ -32,42 +32,42 @@ export class AdminLecturerController {
 
     }
 
-    @HttpCode(HttpCodes.Ok)
+    @HttpCode(HTTP_CODES.Ok)
     @Get('/:id')
     @ResponseSchema(LecturerDetailResponse)
     getLecturerDetail(@Param('id') id: number) {
         return this.adminLecturerService.getLecturerDetail(id);
     }
 
-    @HttpCode(HttpCodes.Ok)
+    @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/lecturer-info')
     @ResponseSchema(LecturerInfoDto)
     getLecturerInfo(@Param('id') id: number) {
         return this.adminLecturerService.getLecturerInfo(id);
     }
 
-    @HttpCode(HttpCodes.Ok)
+    @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-registrations')
     @ResponseSchema(BachelorThesisRegistrationDto, { isArray: true })
     getLecturerBachelorThesisRegistrations(@Param('id') id: number) {
         return this.adminLecturerService.getLecturerBachelorThesisRegistrations(id);
     }
 
-    @HttpCode(HttpCodes.Ok)
+    @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-registrations')
     @ResponseSchema(OralDefenseRegistrationDto, { isArray: true })
     getLecturerOralDefenseRegistrations(@Param('id') id: number) {
         return this.adminLecturerService.getLecturerOralDefenseRegistrations(id);
     }
 
-    @HttpCode(HttpCodes.Ok)
+    @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-assessments')
     @ResponseSchema(BachelorThesisAssessmentDto, { isArray: true })
     getLecturerBachelorThesisAssessments(@Param('id') id: number) {
         return this.adminLecturerService.getLecturerBachelorThesisAssessments(id);
     }
 
-    @HttpCode(HttpCodes.Ok)
+    @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-assessments')
     @ResponseSchema(OralDefenseAssessmentDto, { isArray: true })
     getLecturerOralDefenseAssessments(@Param('id') id: number) {

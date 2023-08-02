@@ -13,12 +13,12 @@ import {
     Res
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
-import { HttpCodes } from "../../core/enums/http-codes";
+import { HTTP_CODES } from "../../core/constants/http-codes";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { LoginRequest } from "../../contracts/requests/login.request";
 import { SignUpRequest } from "../../contracts/requests/sign-up.request";
 import { AuthServiceInterface } from "../interfaces";
-import { Roles } from '../../core/enums/roles';
+import { ROLES } from '../../core/constants/roles';
 import { StringResponse } from '../../contracts/responses/string.response';
 import { StringArrayResponse } from '../../contracts/responses/string-array.response';
 
@@ -32,29 +32,29 @@ export class AuthController {
 
     }
 
-    @HttpCode(HttpCodes.Created)
+    @HttpCode(HTTP_CODES.Created)
     @Post('login')
     @ResponseSchema(StringResponse)
     public login(@Res() res: Response, @Body() loginRequest: LoginRequest) {
         return this.authService.login(loginRequest, res);
     }
 
-    @Authorized(Roles.Admin)
+    @Authorized(ROLES.Admin)
     @Post('signup')
-    @OnUndefined(HttpCodes.Created)
+    @OnUndefined(HTTP_CODES.Created)
     public signUp(@Body() signUpRequest: SignUpRequest) {
         return this.authService.signUp(signUpRequest);
     }
 
     @Authorized()
-    @HttpCode(HttpCodes.Ok)
+    @HttpCode(HTTP_CODES.Ok)
     @Get('roles')
     @ResponseSchema(StringArrayResponse)
     public roles(@Req() req: Request) {
         return this.authService.getRoles(req);
     }
 
-    @HttpCode(HttpCodes.Ok)
+    @HttpCode(HTTP_CODES.Ok)
     @Post('token')
     @ResponseSchema(StringResponse)
     public token(@Req() req: Request, @Res() res: Response) {
@@ -63,7 +63,7 @@ export class AuthController {
 
     @Authorized()
     @Delete('logout')
-    @OnUndefined(HttpCodes.NoContent)
+    @OnUndefined(HTTP_CODES.NoContent)
     public logout(@Req() req: Request, @Res() res: Response) {
         return this.authService.logout(req, res);
     }

@@ -15,12 +15,22 @@ export class StudentInfoDto {
     @Expose()
     @IsOptional()
     @IsString()
-    fullname!: string | null;
+    surname!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    forename!: string | null;
 
     @Expose()
     @IsOptional()
     @IsEmail()
     email!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    signature!: string | null;
 
     @Expose()
     @IsOptional()

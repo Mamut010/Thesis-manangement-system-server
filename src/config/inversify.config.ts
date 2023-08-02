@@ -38,6 +38,7 @@ import {
     UserRepo,
     RefreshTokenRepo
 } from '../shared/repositories';
+import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -155,5 +156,10 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<JwtCookieHandlerInterface>(INJECTION_TOKENS.JwtCookieHandler)
         .to(JwtCookieHandler)
+        .inRequestScope();
+
+    container
+        .bind<PrismaQueryCreatorInterface>(INJECTION_TOKENS.PrismaQueryCreator)
+        .to(PrismaQueryCreator)
         .inRequestScope();
 }

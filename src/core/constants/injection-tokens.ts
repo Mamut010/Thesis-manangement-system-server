@@ -1,5 +1,3 @@
-import { makeImmutable } from "../../utils/object-helpers";
-
 const CONSTANT_TOKENS = {
     DiContainer: Symbol.for('DiContainer'),
 }
@@ -35,17 +33,14 @@ const UTIL_TOKENS = {
     JwtExtractor: Symbol.for('JwtExtractor'),
     JwtCookieHandler: Symbol.for('JwtCookieHandler'),
     PlainTransformer: Symbol.for('PlainTransformer'),
+    PrismaQueryCreator: Symbol.for('PrismaQueryCreator'),
 }
 
-const INJECTION_TOKENS = {
+export const INJECTION_TOKENS = {
     ...CONSTANT_TOKENS,
     ...LOGGER_TOKENS,
     ...PRISMA_TOKENS,
     ...REPOSITORY_TOKENS,
     ...SERVICE_TOKENS,
     ...UTIL_TOKENS,
-}
-
-makeImmutable(INJECTION_TOKENS);
-
-export { INJECTION_TOKENS };
+} as const;

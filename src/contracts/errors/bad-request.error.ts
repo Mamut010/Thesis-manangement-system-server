@@ -1,8 +1,8 @@
 import { HttpError } from "routing-controllers";
-import { HttpCodes } from "../../core/enums/http-codes";
+import { HTTP_CODES } from "../../core/constants/http-codes";
 
 export class BadRequestError extends HttpError {
     constructor(message: string = BadRequestError.name) {
-        super(HttpCodes.BadRequest, message);
+        super(HTTP_CODES.BadRequest, message);
     }
 }
