@@ -15,13 +15,47 @@ import {
     StudentInfoDto
 } from "../../shared/dtos";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
+import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
+import { PrismaQueryCreatorInterface } from "../../lib/query";
+import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
+import { Student, User } from "../../core/models";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface) {
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface) {
 
+    }
+
+    async getStudents(studentsQuery: StudentsQueryRequest): Promise<StudentsQueryResponse> {
+        const model = {
+            userId: true,
+            intake: true,
+            ects: true,
+            user: {
+                username: true,
+                surname: true,
+                forename: true,
+                email: true,
+                signature: true
+            }
+        };
+        const prismaQuery = this.queryCreator.createQueryObject(model, studentsQuery, { fieldAlias: { studentId: 'userId' } });
+
+        const count = await this.prisma.student.count({ ...prismaQuery, skip: undefined, take: undefined });
+        const students = await this.prisma.student.findMany({ 
+            ...prismaQuery,
+            include: {
+                user: true
+            }
+        });
+
+        const response = new StudentsQueryResponse();
+        response.content = students.map(item => this.plainTransformer.toStudentInfo(item));
+        response.count = count;
+        return response;
     }
 
     async getStudentDetail(studentId: number): Promise<StudentDetailResponse> {

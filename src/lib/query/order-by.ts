@@ -1,8 +1,8 @@
 import { Expose } from "class-transformer";
 import { IsDefined, IsIn, IsOptional, IsString } from "class-validator";
-import { SortDir } from "./types";
-import { SortDirValues, SortDirs } from "./constants/sort-dirs";
+import { SortDirValues } from "./constants/sort-dirs";
 import { DefaultQuerySettings } from "./constants/settings";
+import { SortDir } from "./types/sort-dir";
 
 export class OrderBy {
     @Expose()

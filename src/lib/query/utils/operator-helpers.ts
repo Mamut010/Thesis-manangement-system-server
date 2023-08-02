@@ -1,15 +1,12 @@
-import { BinaryFilter } from "../interfaces/binary-filter";
 import {
     GeneralFilterNotOperators,
     GeneralFilterOperators,
     StringFilterNotOperators,
     StringFilterOperators
 } from "../constants/filter-operators";
-import { FilterActualOperator, FilterOperator } from "../types";
+import { FilterActualOperator, FilterOperator } from "../types/filter-operator";
 
-export function getActualOperatorFromNotOperator<TOperator = FilterOperator>
-    (operator: TOperator): FilterActualOperator | void {
-
+export function getActualOperatorFromNotOperator(operator: FilterOperator): FilterActualOperator | void {
     switch(operator) {
         case GeneralFilterNotOperators.NotEquals:
             return GeneralFilterOperators.Equals;

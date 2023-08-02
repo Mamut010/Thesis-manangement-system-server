@@ -1,5 +1,5 @@
 import { IsEmail } from "class-validator";
-import { StringFilter } from "./string.filter";
+import { StringFilter } from "./../basic/string.filter";
 
 export class EmailFilter extends StringFilter {
     @IsEmail()

@@ -8,6 +8,13 @@ export function makeImmutable<T>(obj: T): Readonly<T> {
     return Object.freeze<T>(obj);
 }
 
+export function isEnumerableObject(obj: any): obj is { [property: PropertyKey]: any } {
+    return typeof obj === 'object' 
+        && obj !== null 
+        && !Array.isArray(obj)
+        && !(obj instanceof Date);
+}
+
 /**
  * Check if a given object owns a property.
  * @param obj The object to operate on.
@@ -16,6 +23,33 @@ export function makeImmutable<T>(obj: T): Readonly<T> {
  */
 export function objectHasOwnProperty<T>(obj: T, property: PropertyKey): boolean {
     return Object.prototype.hasOwnProperty.call(obj, property);
+}
+
+export interface DefaultOrGivenOptions {
+    skipNestedEnumeration?: string[]
+}
+
+export function defaultOrGiven<T>(defaulted: T, given?: T, options?: DefaultOrGivenOptions) {
+    const result = { ...defaulted };
+    if (!given) {
+        return result;
+    }
+
+    for(const key in defaulted) {
+        if (!objectHasOwnProperty(given, key)) {
+            continue;
+        }
+
+        const givenValue = given[key];
+        if(isEnumerableObject(givenValue) && !options?.skipNestedEnumeration?.includes(key)) {
+            result[key] = defaultOrGiven(defaulted[key], givenValue, options);
+        }
+        else {
+            result[key] = givenValue;
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -39,20 +73,20 @@ export interface KeyTransformer {
     transformOutward(key: string, outerProp: string): string;
 }
 
-export enum DefaultCases {
-    camelCase = 'camelCase',
-    snakeCase = 'snakeCase',
-    pascalCase = 'pascalCase',
-}
+export const DefaultCases = {
+    camelCase: 'camelCase',
+    snakeCase: 'snakeCase',
+    pascalCase: 'pascalCase',
+} as const;
 
-export const DefaultKeyTransformers: { readonly [key in DefaultCases]: KeyTransformer } = {
+export const DefaultKeyTransformers: { readonly [key in keyof typeof DefaultCases]: KeyTransformer } = {
     camelCase: {
         transformInward: (key: string, innerProp: string) => innerProp + capitalize(key),
         transformOutward: (key: string, outerProp: string) => uncapitalize(trimPrefix(key, outerProp)),
     },
     snakeCase: {
-        transformInward: (key: string, innerProp: string) => innerProp + capitalize(key),
-        transformOutward: (key: string, outerProp: string) => uncapitalize(trimPrefix(key, outerProp)),
+        transformInward: (key: string, innerProp: string) => innerProp + '_' + key,
+        transformOutward: (key: string, outerProp: string) => trimPrefix(key, outerProp + '_'),
     },
     pascalCase: {
         transformInward: (key: string, innerProp: string) => capitalize(innerProp) + capitalize(key),
@@ -113,21 +147,16 @@ export interface FlatteningOptions {
  */
 export function flattenObject<T>(obj: T, flatteningOptions?: FlatteningOptions): Record<string, any> {
     const defaultOptions: FlatteningOptions = {
+        maxDepth: undefined,
+        initialKey: undefined,
+        keepDuplicate: undefined,
         keyTransformer: DefaultKeyTransformers['camelCase'],
+        skip: undefined,
+        transformedProps: undefined,
+        transformedDepths: undefined,
     };
 
-    let options: FlatteningOptions;
-    if (!flatteningOptions) {
-        options = defaultOptions;
-    }
-    else {
-        options = flatteningOptions;
-        for(const key in defaultOptions) {
-            (options as Record<string, unknown>)[key] = 
-                    (flatteningOptions as Record<string, unknown>)[key]
-                    ?? (defaultOptions as Record<string, unknown>)[key]
-        }
-    }
+    const options = defaultOrGiven(defaultOptions, flatteningOptions);
 
     return flattenObjectImpl(obj, options, 0, options.initialKey);
 }
@@ -141,9 +170,7 @@ function flattenObjectImpl<T>(obj: T, flatteningOptions: FlatteningOptions, curr
 
         if (isNestable 
             && !(currentDepth === 1 && flatteningOptions.skip?.includes(key))
-            && typeof value === 'object' 
-            && value !== null 
-            && !(value instanceof Date)) {
+            && isEnumerableObject(value)) {
 
             const nestedFlattened = flattenObjectImpl(value, flatteningOptions, currentDepth + 1, key);
             flattened = assignNestedFlattened(flatteningOptions, currentDepth, flattened, nestedFlattened, key, currentProp);
@@ -219,4 +246,35 @@ function assignNestedFlattened<T>(options: FlatteningOptions, depth: number, tar
 function shouldTransformInnerKey(options: FlatteningOptions, depth: number, nestedProp: string) {
     return (!options.transformedDepths || options.transformedDepths.includes(depth))
         && options.transformedProps?.includes(nestedProp);
+}
+
+export function flipMap<T extends PropertyKey, U extends PropertyKey>(map: Record<T, U>): Record<string, T> {
+    return Object.fromEntries(
+        Object
+            .entries(map)
+            .map(([key, value]) => [value, key])
+    ) as Record<string, T>;
+}
+
+export type NestedNotatedObject<T> = { [property: string]: T | NestedNotatedObject<T> };
+
+export function assignObjectByDotNotation<T>(obj: NestedNotatedObject<T>, dotNotation: string, value: T)
+    : NestedNotatedObject<T> {
+    const dot = '.'
+    const nestedProps = dotNotation.split(dot);
+    const result: NestedNotatedObject<T> = obj;
+    let current: NestedNotatedObject<T> = result;
+    let i = 0;
+    while (i < nestedProps.length - 1) {
+        const inner: NestedNotatedObject<T> = {};
+        current[nestedProps[i]] = inner;
+        current = inner;
+        i++;
+    }
+    current[nestedProps[i]] = value;
+    return result;
+}
+
+export function createObjectByDotNotation<T>(dotNotation: string, value: T): NestedNotatedObject<T> {
+    return assignObjectByDotNotation({}, dotNotation, value);
 }

@@ -4,8 +4,7 @@ import {
     Get, 
     HttpCode, 
     JsonController, 
-    Param,
-    QueryParams
+    Param
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { ROLES } from "../../core/constants/roles";
@@ -20,6 +19,8 @@ import {
     OralDefenseRegistrationDto, 
     StudentInfoDto 
 } from "../../shared/dtos";
+import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
+import { QueryParamsWithDefault } from "../../decorators";
 
 @JsonController('admin/students')
 //@Authorized(ROLES.Admin)
@@ -31,6 +32,13 @@ export class AdminStudentController {
     constructor(
         @inject(INJECTION_TOKENS.AdminStudentService) private adminStudentService: AdminStudentServiceInterface) {
 
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Get()
+    @ResponseSchema(StudentDetailResponse)
+    getStudents(@QueryParamsWithDefault() studentsQuery: StudentsQueryRequest) {
+        return this.adminStudentService.getStudents(studentsQuery);
     }
 
     @HttpCode(HTTP_CODES.Ok)

@@ -5,20 +5,22 @@ export * from './constants/settings';
 export * from './constants/sort-dirs';
 
 // filters
-export * from './filters/string.filter';
-export * from './filters/number.filter';
-export * from './filters/date.filter';
-export * from './filters/bool.filter';
-export * from './filters/email.filter';
-export * from './filters/string-list.filter';
-export * from './filters/number-list.filter';
-export * from './filters/date-list.filter';
-export * from './filters/email-list.filter';
+export * from './filters/basic/string.filter';
+export * from './filters/basic/number.filter';
+export * from './filters/basic/date.filter';
+export * from './filters/basic/bool.filter';
+export * from './filters/basic/string-list.filter';
+export * from './filters/basic/number-list.filter';
+export * from './filters/basic/date-list.filter';
+export * from './filters/derived/email.filter';
+export * from './filters/derived/email-list.filter';
 
 // interfaces
+export * from './interfaces/prisma-query-creator.interface';
 export * from './interfaces/binary-filter';
 export * from './interfaces/list-filter';
-export * from './interfaces/prisma-query-creater.interface';
+export * from './types/auto-query';
+export * from './types/prisma-query-object';
 
 // types
 export * from './types/filter-operator';
