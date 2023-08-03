@@ -8,7 +8,7 @@ import { getActualOperatorFromNotOperator } from "./utils/operator-helpers";
 import { Pagination } from "./pagination";
 import { ListFilter } from "./interfaces/list-filter";
 import { FilterActualOperator, FilterOperator } from "./types/filter-operator";
-import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel } from "./types/auto-query";
+import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, OrderByOptions } from "./types/query-creator-utility";
 import { ConcreteBinaryFilter, ConcreteListFilter } from "./types/concrete-filter";
 import { assignObjectByDotNotation, createObjectByDotNotation, defaultOrGiven, flipMap, isEnumerableObject } from "../../utils/object-helpers";
 import { trimPrefix, trimSuffix } from "../../utils/string-helpers";
@@ -20,7 +20,7 @@ import {
     WhereBinaryFilterObject, 
     WhereListFilterObject, 
     WhereQueryObject 
-} from "./types/prisma-query-object";
+} from "./types/query-object";
 
 @injectable()
 export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
@@ -32,7 +32,6 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             filterSuffix: 'Filter',
             filterPrefix: undefined,
             fieldAlias: undefined,
-            skipOrderByCheck: undefined,
         };
 
         const options = defaultOrGiven(defaultOptions, creationOptions, { skipNestedEnumeration: ['fieldAlias'] });
@@ -42,14 +41,9 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         
         const binaryAndListFilters = this.getFilterFieldsFromQuery(query, options);
         const { where, fieldMap } = this.createWhereObjectWithFieldMap(model, query, binaryAndListFilters, options);
-        
-        let orderBy = this.createOrderByObject(query.orderBy, fieldMap);
-        if (!options.skipOrderByCheck) {
-            const dotNotatedFields = new Set(Object.values(fieldMap));
-            orderBy = this.checkOrderByQueryObject(dotNotatedFields, orderBy);
-        }
-
+        const orderBy = this.createOrderByObject(query.orderBy, { fieldMap, ignoreUnmapped: true });
         const { skip, take } = this.createPaginationObject(query.pagination);
+
         return {
             where: Object.keys(where).length > 0 ? where : undefined,
             orderBy,
@@ -93,19 +87,25 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
     }
 
-    createOrderByObject(orderBy?: OrderBy | OrderBy[], fieldMap?: Record<string, string>)
-        : OrderByQueryObject | OrderByQueryObject[] | undefined {
+    createOrderByObject(orderBy?: OrderBy | OrderBy[], orderByOptions?: OrderByOptions)
+        : OrderByQueryObject | OrderByQueryObject[] | undefined {  
         if (!orderBy) {
             return undefined;
         }
-        else if (Array.isArray(orderBy)) {
+        const defaultOptions: OrderByOptions = {
+            fieldMap: undefined,
+            ignoreUnmapped: false,
+        }
+        const options = defaultOrGiven(defaultOptions, orderByOptions, { skipNestedEnumeration: ['fieldMap'] });
+
+        if (Array.isArray(orderBy)) {
             const orderBys = orderBy
-                    .map(item => this.constructOrderBySingle(item, fieldMap))
+                    .map(item => this.constructOrderBySingle(item, options))
                     .filter((item): item is OrderByQueryObject => typeof item !== 'undefined');
             return orderBys.length > 0 ? orderBys : undefined;
         }
         else {
-            return this.constructOrderBySingle(orderBy, fieldMap);
+            return this.constructOrderBySingle(orderBy, options);
         }
     }
 
@@ -210,46 +210,6 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
     }
 
-    private checkOrderByQueryObject(dotNotatedFields: Set<string>, orderBy?: OrderByQueryObject | OrderByQueryObject[])
-        : OrderByQueryObject | OrderByQueryObject[] | undefined {
-        if (!orderBy) {
-            return undefined;
-        }
-        else if(Array.isArray(orderBy)) {
-            const checkedOrderBys = orderBy
-                    .map(item => this.checkOrderByQueryObjectSingle(dotNotatedFields, item))
-                    .filter((item): item is OrderByQueryObject => typeof item !== 'undefined');
-            return checkedOrderBys.length > 0 ? checkedOrderBys : undefined;
-        }
-        else {
-            return this.checkOrderByQueryObjectSingle(dotNotatedFields, orderBy);
-        }
-    }
-
-    private checkOrderByQueryObjectSingle(dotNotatedFields: Set<string>, orderBy: OrderByQueryObject)
-        : OrderByQueryObject | undefined {
-        let dotNotation = '';
-        let current = orderBy;
-
-        let isActualOrderBy = false; 
-        while (!isActualOrderBy) {
-            for(const key in current) {
-                const value = current[key];
-                if (typeof value !== 'string') {
-                    current = value;
-                    dotNotation += key + PrismaQueryCreator.DOT;
-                }
-                else {
-                    dotNotation += key;
-                    isActualOrderBy = true;
-                    break;
-                }
-            }
-        }
-
-        return dotNotatedFields.has(dotNotation) ? orderBy : undefined;
-    }
-
     private constructActualFilteringObject<TValue, TOperator extends FilterOperator>
         (binaryFilter: BinaryFilter<TValue, TOperator>) : Partial<Record<FilterActualOperator, TValue>> {
         return {
@@ -257,13 +217,17 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
     }
 
-    private constructOrderBySingle(orderBy: OrderBy, fieldMap?: Record<string, string>): OrderByQueryObject {
-        const actualLocation = fieldMap?.[orderBy.field];
-        const simpleOrderBy = {
-            [orderBy.field]: orderBy.dir
-        };
-        
-        return actualLocation ? createObjectByDotNotation(actualLocation, orderBy.dir) : simpleOrderBy;
+    private constructOrderBySingle(orderBy: OrderBy, orderByOptions: OrderByOptions): OrderByQueryObject | undefined {
+        const actualLocation = orderByOptions.fieldMap?.[orderBy.field];
+        if (!orderByOptions.ignoreUnmapped) {
+            const simpleOrderBy = {
+                [orderBy.field]: orderBy.dir
+            };
+            return actualLocation ? createObjectByDotNotation(actualLocation, orderBy.dir) : simpleOrderBy;
+        }
+        else {
+            return actualLocation ? createObjectByDotNotation(actualLocation, orderBy.dir) : undefined;
+        }
     }
 }
 

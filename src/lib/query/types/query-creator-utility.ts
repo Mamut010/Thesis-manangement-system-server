@@ -34,13 +34,13 @@ export interface AutoQueryCreationOptions {
      * Field name mapped from filter fields and orderBy fields to actual model's fields.
      */
     fieldAlias?: Record<string, string>,
-
-    /**
-     * If set to true, skip OrderBy query checking phase.
-     */
-    skipOrderByCheck?: boolean
 }
 
 export type AutoQueryModel = {
     [property: string]: boolean | AutoQueryModel
+}
+
+export interface OrderByOptions {
+    fieldMap?: Record<string, string>,
+    ignoreUnmapped?: boolean,
 }

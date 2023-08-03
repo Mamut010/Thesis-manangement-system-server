@@ -9,8 +9,8 @@ import {
     PrismaQueryObject, 
     WhereBinaryFilterObject, 
     WhereListFilterObject 
-} from "../types/prisma-query-object";
-import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel } from "../types/auto-query";
+} from "../types/query-object";
+import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, OrderByOptions } from "../types/query-creator-utility";
 
 export interface PrismaQueryCreatorInterface {
     createQueryObject<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
@@ -22,7 +22,7 @@ export interface PrismaQueryCreatorInterface {
     createListFilteringObject<TValue>(listFilter?: ListFilter<TValue>)
         : WhereListFilterObject<TValue> | undefined;
 
-    createOrderByObject(orderBy?: OrderBy | OrderBy[], fieldMap?: Record<string, string>)
+    createOrderByObject(orderBy?: OrderBy | OrderBy[], orderByOptions?: OrderByOptions)
         : OrderByQueryObject | OrderByQueryObject[] | undefined;
 
     createPaginationObject(pagination?: Pagination)

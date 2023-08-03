@@ -19,8 +19,8 @@ export * from './filters/derived/email-list.filter';
 export * from './interfaces/prisma-query-creator.interface';
 export * from './interfaces/binary-filter';
 export * from './interfaces/list-filter';
-export * from './types/auto-query';
-export * from './types/prisma-query-object';
+export * from './types/query-creator-utility';
+export * from './types/query-object';
 
 // types
 export * from './types/filter-operator';
