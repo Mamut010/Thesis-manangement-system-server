@@ -11,4 +11,6 @@ export const DefaultQuerySettings = {
     SortDir: SortDirs.Ascending,
     Skip: 0,
     Take: 30,
+    MinTake: 1,
+    MaxTake: 100,
 } as const;
