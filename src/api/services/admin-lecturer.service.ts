@@ -15,13 +15,46 @@ import {
 } from "../../shared/dtos";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
+import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
+import { PrismaQueryCreatorInterface } from "../../lib/query";
+import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface) {
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface) {
 
+    }
+
+    async getLecturers(lecturersQuery: LecturersQueryRequest): Promise<LecturersQueryResponse> {
+        const model = {
+            userId: true,
+            title: true,
+            user: {
+                username: true,
+                email: true,
+            }
+        }
+        const prismaQuery = this.queryCreator.createQueryObject(model, lecturersQuery, { 
+            fieldAlias: { 
+                lecturerId: 'userId' 
+            } 
+        });
+
+        const count = await this.prisma.lecturer.count({ ...prismaQuery, skip: undefined, take: undefined });
+        const lecturers = await this.prisma.lecturer.findMany({
+            ...prismaQuery,
+            include: {
+                user: true
+            }
+        })
+
+        const response = new LecturersQueryResponse();
+        response.content = lecturers.map(item => this.plainTransformer.toLecturerInfo(item));
+        response.count = count;
+        return response;
     }
 
     async getLecturerDetail(lecturerId: number): Promise<LecturerDetailResponse> {

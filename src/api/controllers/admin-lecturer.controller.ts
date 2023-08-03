@@ -4,7 +4,8 @@ import {
     Get, 
     HttpCode, 
     JsonController, 
-    Param
+    Param,
+    QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { ROLES } from "../../core/constants/roles";
@@ -19,6 +20,8 @@ import {
     LecturerInfoDto 
 } from "../../shared/dtos";
 import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
+import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
+import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
 
 @JsonController('admin/lecturers')
 //@Authorized(ROLES.Admin)
@@ -30,6 +33,13 @@ export class AdminLecturerController {
     constructor(
         @inject(INJECTION_TOKENS.AdminLecturerService) private adminLecturerService: AdminLecturerServiceInterface) {
 
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Get()
+    @ResponseSchema(LecturersQueryResponse)
+    getLecturers(@QueryParams() lecturersQuery: LecturersQueryRequest) {
+        return this.adminLecturerService.getLecturers(lecturersQuery);
     }
 
     @HttpCode(HTTP_CODES.Ok)
