@@ -1,65 +1,34 @@
-import { Expose, Type } from "class-transformer";
 import { NumberFilter, OrderBy, Pagination, StringFilter } from "../../lib/query";
-import { IsOptional, ValidateNested } from "class-validator";
+import { IsEmailFilter, IsNumberFilter, IsOrderByArray, IsPagination, IsStringFilter } from "../../decorators";
 
 export class StudentsQueryRequest {
-    @Expose()
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => NumberFilter)
+    @IsNumberFilter()
     studentIdFilter?: NumberFilter;
 
-    @Expose()
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => StringFilter)
+    @IsStringFilter()
     usernameFilter?: StringFilter;
 
-    @Expose()
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => StringFilter)
+    @IsStringFilter()
     surnameFilter?: StringFilter;
 
-    @Expose()
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => StringFilter)
+    @IsStringFilter()
     forenameFilter?: StringFilter;
 
-    @Expose()
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => StringFilter)
+    @IsEmailFilter()
     emailFilter?: StringFilter;
 
-    @Expose()
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => StringFilter)
+    @IsStringFilter()
     signatureFilter?: StringFilter;
 
-    @Expose()
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => StringFilter)
+    @IsStringFilter()
     intakeFilter?: StringFilter;
 
-    @Expose()
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => NumberFilter)
+    @IsNumberFilter()
     ectsFilter?: NumberFilter;
 
-    @Expose()
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => Pagination)
+    @IsPagination()
     pagination: Pagination = new Pagination();
 
-    @Expose()
-    @IsOptional()
-    @ValidateNested({ each: true })
-    @Type(() => OrderBy)
+    @IsOrderByArray()
     orderBy?: OrderBy[];
 }
