@@ -6,13 +6,13 @@ export class LecturersQueryRequest {
     lecturerIdFilter?: NumberFilter;
 
     @IsStringFilter()
-    username?: StringFilter;
+    usernameFilter?: StringFilter;
 
     @IsStringFilter()
-    title?: StringFilter;
+    titleFilter?: StringFilter;
 
     @IsStringFilter()
-    email?: StringFilter;
+    emailFilter?: StringFilter;
 
     @IsPagination()
     pagination: Pagination = new Pagination();
