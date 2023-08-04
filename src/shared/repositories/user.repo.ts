@@ -4,7 +4,6 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { ITXClientDenyList } from '@prisma/client/runtime/library';
-import { UserCreateRequestDto } from "../dtos/user-create-request.dto";
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { ROLES } from "../../core/constants/roles";
 import { UNEXPECTED_ERROR_MESSAGES } from "../../core/constants/unexpected-error-messages";
@@ -13,6 +12,8 @@ import { UserRepoInterface } from "../interfaces";
 import { User } from "../../core/models";
 import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
+import { UserCreateRequestDto, UserUpdateRequestDto } from "../dtos";
+import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 
 @injectable()
 export class UserRepo implements UserRepoInterface {
@@ -29,7 +30,11 @@ export class UserRepo implements UserRepoInterface {
                         username: request.username,
                         password: request.password,
                         email: request.email,
-                        roleId: request.role.id
+                        role: {
+                            connect: {
+                                id: request.role.id
+                            }
+                        }
                     }
                 });
 
@@ -40,12 +45,42 @@ export class UserRepo implements UserRepoInterface {
 
                 await recordCreatingPromise;
 
-                return user;
+                return plainToInstanceExactMatch(User, user);
             });
         }
         catch (err) {
             throw new UnexpectedError(UNEXPECTED_ERROR_MESSAGES.UserCreationFailed);
         }
+    }
+
+    async update(request: UserUpdateRequestDto): Promise<User> {
+        try {
+            await this.prisma.user.findUniqueOrThrow({
+                where: {
+                    userId: request.userId,
+                }
+            });
+        }
+        catch {
+            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.UserNotFound);
+        }
+
+        const user = await this.prisma.user.update({
+            where: {
+                userId: request.userId,
+            },
+            data: {
+                ...request,
+                roleId: undefined,
+                role: {
+                    connect: {
+                        id: request.roleId
+                    }
+                }
+            }
+        });
+
+        return plainToInstanceExactMatch(User, user);
     }
 
     async delete(userId: number): Promise<void> {
@@ -65,6 +100,7 @@ export class UserRepo implements UserRepoInterface {
             throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.UserNotFound);
         }
     }
+
     private createRecordInAssociatedRepoByRole(tx: Omit<PrismaClient, ITXClientDenyList>, request: UserCreateRequestDto) {
         const associatedRepo = this.getAssociatedRepoByRole(request.role.name);
 
