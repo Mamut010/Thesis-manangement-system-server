@@ -28,13 +28,7 @@ export class UserRepo implements UserRepoInterface {
                         username: request.username,
                         password: request.password,
                         email: request.email,
-                        roleId: request.role.id,
-
-                        student: {
-                            create: [
-                                { userId: 2 }
-                            ]
-                        }
+                        roleId: request.role.id
                     }
                 });
 
