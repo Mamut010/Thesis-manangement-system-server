@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 
 import { injectable } from "inversify";
 import { BinaryFilter } from "./interfaces/binary-filter";
 import { OrderBy } from "./order-by";
 import { PrismaQueryCreatorInterface } from "./interfaces/prisma-query-creator.interface";
-import { getActualOperatorFromNotOperator } from "./utils/operator-helpers";
+import { getActualOperatorFromNotOperator, isFilterActualOperator } from "./utils/operator-helpers";
 import { Pagination } from "./pagination";
 import { ListFilter } from "./interfaces/list-filter";
 import { FilterActualOperator, FilterOperator } from "./types/filter-operator";
@@ -14,6 +14,7 @@ import { assignObjectByDotNotation, createObjectByDotNotation, defaultOrGiven, f
 import { trimPrefix, trimSuffix } from "../../utils/string-helpers";
 import { isBinaryFilter, isListFilter } from "./utils/filter-helper";
 import { 
+    ActualFilteringObject,
     OrderByQueryObject, 
     PaginationQueryObject, 
     PrismaQueryObject, 
@@ -28,28 +29,22 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
 
     createQueryObject<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
         : PrismaQueryObject {
-        const defaultOptions: AutoQueryCreationOptions = {
-            filterSuffix: 'Filter',
-            filterPrefix: undefined,
-            fieldAlias: undefined,
-        };
-
-        const options = defaultOrGiven(defaultOptions, creationOptions, { skipNestedEnumeration: ['fieldAlias'] });
-        if (!options.filterSuffix && !options.filterPrefix) {
-            throw new Error('Either a filter suffix or prefix must be specified for auto query creation process');
-        }
-        
-        const binaryAndListFilters = this.getFilterFieldsFromQuery(query, options);
-        const { where, fieldMap } = this.createWhereObjectWithFieldMap(model, query, binaryAndListFilters, options);
+        const { where, fieldMap } = this.createWhereWithFieldMap(model, query, creationOptions);
         const orderBy = this.createOrderByObject(query.orderBy, { fieldMap, ignoreUnmapped: true });
         const { skip, take } = this.createPaginationObject(query.pagination);
 
         return {
-            where: Object.keys(where).length > 0 ? where : undefined,
+            where: this.finalizeWhere(where),
             orderBy,
             skip,
             take,
         }
+    }
+
+    createWhereObject<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
+        : WhereQueryObject | undefined {
+        const { where } = this.createWhereWithFieldMap(model, query, creationOptions);
+        return this.finalizeWhere(where);
     }
 
     createFilteringObject<TValue, TOperator extends FilterOperator>(binaryFilter?: BinaryFilter<TValue, TOperator>)
@@ -61,7 +56,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
 
         // Deal with 'not' operator
         const actualOperator = getActualOperatorFromNotOperator(binaryFilter.operator);
-        // If 'not' operator
+        // If there is a 'not' operator, actual operator would be not undefined
         if (actualOperator) {
             return {
                 not: this.constructActualFilteringObject({
@@ -70,21 +65,19 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
                 })
             };
         }
-        // Else, process as usual
-        else {
-            return this.constructActualFilteringObject(binaryFilter);
+
+        // Type guard used here so compiler won't complain
+        if (isFilterActualOperator(binaryFilter.operator)) {
+            return this.constructActualFilteringObject({
+                value: binaryFilter.value,
+                operator: binaryFilter.operator,
+            });
         }
     }
 
     createListFilteringObject<TValue>(listFilter?: ListFilter<TValue>)
         : WhereListFilterObject<TValue> | undefined {
-        if (!listFilter) {
-            return;
-        }
-
-        return {
-            [listFilter.operator]: listFilter.value
-        }
+        return listFilter ? this.constructActualListFilteringObject(listFilter) : undefined;
     }
 
     createOrderByObject(orderBy?: OrderBy | OrderBy[], orderByOptions?: OrderByOptions)
@@ -159,16 +152,37 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
     }
 
-    private createWhereObjectWithFieldMap<T>(model: T, query: AutoQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
+    private createWhereWithFieldMap<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, 
+        creationOptions?: AutoQueryCreationOptions) : WhereWithFieldMap {
+        const defaultOptions: AutoQueryCreationOptions = {
+            filterSuffix: 'Filter',
+            filterPrefix: undefined,
+            fieldAlias: undefined,
+        };
+
+        const options = defaultOrGiven(defaultOptions, creationOptions, { skipNestedEnumeration: ['fieldAlias'] });
+        if (!options.filterSuffix && !options.filterPrefix) {
+            throw new Error('Either a filter suffix or prefix must be specified for auto query creation process');
+        }
+        
+        const binaryAndListFilters = this.getFilterFieldsFromQuery(query, options);
+        return this.constructActualWhereWithFieldMap(model, query, binaryAndListFilters, options);
+    }
+
+    private finalizeWhere(where: WhereQueryObject): WhereQueryObject | undefined {
+        return Object.keys(where).length > 0 ? where : undefined;
+    }
+
+    private constructActualWhereWithFieldMap<T>(model: T, query: AutoQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
         creationOptions: AutoQueryCreationOptions): WhereWithFieldMap {
         const initialConfig: WhereObjectCreationConfig = {
             fieldNamePrefix: '',
             reversedFieldMap: creationOptions.fieldAlias ? flipMap(creationOptions.fieldAlias) : undefined,
         };
-        return this.createWhereObjectWithFieldMapImpl(model, query, binaryAndListFilters, creationOptions, initialConfig);
+        return this.constructActualWhereWithFieldMapImpl(model, query, binaryAndListFilters, creationOptions, initialConfig);
     }
 
-    private createWhereObjectWithFieldMapImpl<T>(model: T, query: AutoQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
+    private constructActualWhereWithFieldMapImpl<T>(model: T, query: AutoQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
         creationOptions: AutoQueryCreationOptions, config: WhereObjectCreationConfig): WhereWithFieldMap {
         let where: WhereQueryObject = {};
         let fieldMap: Record<string, string> = {};
@@ -180,7 +194,8 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
                     ...config,
                     fieldNamePrefix: config.fieldNamePrefix + key + PrismaQueryCreator.DOT 
                 };
-                const inner = this.createWhereObjectWithFieldMapImpl(value, query, binaryAndListFilters, creationOptions, innerConfig);
+                const inner = this.constructActualWhereWithFieldMapImpl(value, query, binaryAndListFilters, creationOptions, 
+                    innerConfig);
                 where = { ...inner.where, ...where };
                 fieldMap = { ...inner.fieldMap, ...fieldMap };
                 continue;
@@ -210,11 +225,17 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
     }
 
-    private constructActualFilteringObject<TValue, TOperator extends FilterOperator>
-        (binaryFilter: BinaryFilter<TValue, TOperator>) : Partial<Record<FilterActualOperator, TValue>> {
+    private constructActualFilteringObject<TValue, TOperator extends FilterActualOperator>
+        (binaryFilter: BinaryFilter<TValue, TOperator>): ActualFilteringObject<TValue> {
         return {
             [binaryFilter.operator]: binaryFilter.value
-        }
+        } as any;
+    }
+
+    private constructActualListFilteringObject<TValue>(listFilter: ListFilter<TValue>): ActualFilteringObject<TValue[]> {
+        return {
+            [listFilter.operator]: listFilter.value
+        } as any;
     }
 
     private constructOrderBySingle(orderBy: OrderBy, orderByOptions: OrderByOptions): OrderByQueryObject | undefined {

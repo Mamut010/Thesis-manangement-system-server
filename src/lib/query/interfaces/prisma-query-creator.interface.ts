@@ -8,13 +8,17 @@ import {
     PaginationQueryObject, 
     PrismaQueryObject, 
     WhereBinaryFilterObject, 
-    WhereListFilterObject 
+    WhereListFilterObject, 
+    WhereQueryObject
 } from "../types/query-object";
 import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, OrderByOptions } from "../types/query-creator-utility";
 
 export interface PrismaQueryCreatorInterface {
     createQueryObject<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
         : PrismaQueryObject;
+
+    createWhereObject<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
+        : WhereQueryObject | undefined;
         
     createFilteringObject<TValue, TOperator extends FilterOperator>(binaryFilter?: BinaryFilter<TValue, TOperator>)
         : WhereBinaryFilterObject<TValue> | undefined;

@@ -1,4 +1,5 @@
 import {
+    FilterNotOperatorValues,
     GeneralFilterNotOperators,
     GeneralFilterOperators,
     StringFilterNotOperators,
@@ -6,7 +7,7 @@ import {
 } from "../constants/filter-operators";
 import { FilterActualOperator, FilterOperator } from "../types/filter-operator";
 
-export function getActualOperatorFromNotOperator(operator: FilterOperator): FilterActualOperator | void {
+export function getActualOperatorFromNotOperator(operator: FilterOperator): FilterActualOperator | undefined {
     switch(operator) {
         case GeneralFilterNotOperators.NotEquals:
             return GeneralFilterOperators.Equals;
@@ -17,6 +18,10 @@ export function getActualOperatorFromNotOperator(operator: FilterOperator): Filt
         case StringFilterNotOperators.NotEndsWith:
             return StringFilterOperators.EndsWith;
         default:
-            return;
+            return undefined;
     }
+}
+
+export function isFilterActualOperator(operator: FilterOperator): operator is FilterActualOperator {
+    return !FilterNotOperatorValues.find(item => item === operator);
 }

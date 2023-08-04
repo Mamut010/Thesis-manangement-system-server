@@ -1,16 +1,16 @@
+import { RequireOnlyOne } from "../../../utils/types";
 import { FilterActualOperator } from "./filter-operator";
-import { ListFilterOperator } from "./list-filter-operator";
 import { SortDir } from "./sort-dir";
 
 export type OrderByQueryObject = { 
     [property: string]: SortDir | OrderByQueryObject 
 };
 
-export type WhereBinaryFilterObject<TValue> = 
-    Partial<Record<FilterActualOperator, TValue>> 
-    | { not: Partial<Record<FilterActualOperator, TValue>>; }
+export type ActualFilteringObject<TValue> = RequireOnlyOne<{ [operator in FilterActualOperator]: TValue }>;
 
-export type WhereListFilterObject<TValue> = Partial<Record<ListFilterOperator, TValue[]>>;
+export type WhereBinaryFilterObject<TValue> = ActualFilteringObject<TValue> | { not: ActualFilteringObject<TValue> }
+
+export type WhereListFilterObject<TValue> = ActualFilteringObject<TValue[]>;
 
 export type WhereQueryObject = { 
     [property: string]: WhereBinaryFilterObject<any> | WhereListFilterObject<any> | WhereQueryObject
