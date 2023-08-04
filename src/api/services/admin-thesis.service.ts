@@ -114,13 +114,19 @@ export class AdminThesisService implements AdminThesisServiceInterface {
     }
 
     async deleteThesis(thesisId: number): Promise<void> {
-        const { count } = await this.prisma.thesis.deleteMany({
-            where: {
-                id: thesisId
-            }
-        });
+        try {
+            await this.prisma.thesis.findUniqueOrThrow({
+                where: {
+                    id: thesisId
+            }});
 
-        if (!count) {
+            await this.prisma.thesis.delete({
+                where: {
+                    id: thesisId
+                }
+            });
+        }
+        catch {
             throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.ThesisNotFound);
         }
     }

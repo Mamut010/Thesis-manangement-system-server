@@ -2,7 +2,7 @@ import { IsDefined, IsEmail, IsNumber, IsOptional, IsString, ValidateNested } fr
 import { Role } from "../../core/models";
 import { Expose, Type } from "class-transformer";
 
-export class UserCreatingRequestDto {
+export class UserCreateRequestDto {
     @Expose()
     @IsDefined()
     @IsNumber()

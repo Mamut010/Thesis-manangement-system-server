@@ -6,7 +6,7 @@ import {
     JwtAccessPayloadDto, 
     JwtRefreshContextDto, 
     JwtRefreshPayloadDto, 
-    UserCreatingRequestDto 
+    UserCreateRequestDto 
 } from '../../shared/dtos';
 import { 
     AuthServiceInterface, 
@@ -59,7 +59,7 @@ export class AuthService implements AuthServiceInterface {
             throw new UnexpectedError(NOT_FOUND_ERROR_MESSAGES.RoleNotFound);
         }
 
-        const userCreatingRequest = new UserCreatingRequestDto();
+        const userCreatingRequest = new UserCreateRequestDto();
         userCreatingRequest.userId = signUpRequest.id;
         userCreatingRequest.username = signUpRequest.username;
         userCreatingRequest.password = await this.hashService.hash(signUpRequest.password);

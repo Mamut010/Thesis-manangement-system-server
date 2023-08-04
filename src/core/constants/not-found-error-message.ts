@@ -1,4 +1,5 @@
 export const NOT_FOUND_ERROR_MESSAGES = {
+    UserNotFound: 'User not found',
     RoleNotFound: 'Role not found',
     AdminNotFound: 'Admin not found',
     StudentNotFound: 'Student not found',

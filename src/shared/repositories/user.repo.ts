@@ -4,7 +4,7 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { ITXClientDenyList } from '@prisma/client/runtime/library';
-import { UserCreatingRequestDto } from "../dtos/user-creating-request.dto";
+import { UserCreateRequestDto } from "../dtos/user-create-request.dto";
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { ROLES } from "../../core/constants/roles";
 import { UNEXPECTED_ERROR_MESSAGES } from "../../core/constants/unexpected-error-messages";
@@ -12,6 +12,7 @@ import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { UserRepoInterface } from "../interfaces";
 import { User } from "../../core/models";
 import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
+import { NotFoundError } from "../../contracts/errors/not-found.error";
 
 @injectable()
 export class UserRepo implements UserRepoInterface {
@@ -19,7 +20,7 @@ export class UserRepo implements UserRepoInterface {
 
     }
 
-    async create(request: UserCreatingRequestDto): Promise<User> {
+    async create(request: UserCreateRequestDto): Promise<User> {
         try {
             return await this.prisma.$transaction(async (tx) => {
                 const user = await tx.user.create({
@@ -47,19 +48,25 @@ export class UserRepo implements UserRepoInterface {
         }
     }
 
-    private createRecordInAssociatedRepoByRole(tx: Omit<PrismaClient, ITXClientDenyList>, request: UserCreatingRequestDto) {
-        const roleName = request.role.name;
-        let associatedRepo: string = '';
-        
-        if (roleName === ROLES.Admin.valueOf()) {
-            associatedRepo = 'admin';
+    async delete(userId: number): Promise<void> {
+        try {
+            await this.prisma.user.findUniqueOrThrow({
+                where: {
+                    userId: userId
+            }});
+
+            await this.prisma.user.delete({
+                where: {
+                    userId: userId
+                }
+            });
         }
-        else if (roleName === ROLES.Student.valueOf()) {
-            associatedRepo = 'student';
+        catch {
+            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.UserNotFound);
         }
-        else if ([ROLES.Lecturer1_1, ROLES.Lecturer1_2, ROLES.Lecturer2].find(role => role.valueOf() === roleName)) {
-            associatedRepo = 'lecturer';
-        }
+    }
+    private createRecordInAssociatedRepoByRole(tx: Omit<PrismaClient, ITXClientDenyList>, request: UserCreateRequestDto) {
+        const associatedRepo = this.getAssociatedRepoByRole(request.role.name);
 
         if (associatedRepo) {
             const prismaRepo: any = tx[associatedRepo as never];
@@ -69,5 +76,19 @@ export class UserRepo implements UserRepoInterface {
                 }
             }) as Promise<any>;
         }
+    }
+
+    private getAssociatedRepoByRole(roleName: string): string | undefined {
+        if (roleName === ROLES.Admin) {
+            return 'admin';
+        }
+        else if (roleName === ROLES.Student) {
+            return 'student';
+        }
+        else if ([ROLES.Lecturer1_1, ROLES.Lecturer1_2, ROLES.Lecturer2].find(role => role === roleName)) {
+            return 'lecturer';
+        }
+
+        return undefined;
     }
 }

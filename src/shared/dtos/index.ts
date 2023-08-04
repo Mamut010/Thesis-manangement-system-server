@@ -2,7 +2,7 @@ export * from './jwt-payload.dto';
 export * from './jwt-context.dto';
 export * from './jwt-refresh-payload.dto';
 export * from './jwt-refresh-context.dto';
-export * from './user-creating-request.dto';
+export * from './user-create-request.dto';
 export * from './admin-info.dto';
 export * from './student-info.dto';
 export * from './lecturer-info.dto';
