@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { AdminThesisServiceInterface, PlainTransformerServiceInterface } from "../interfaces";
 import { ThesisInfoDto } from "../../shared/dtos";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
 import { PrismaQueryCreatorInterface } from "../../lib/query";
@@ -19,7 +19,7 @@ export class AdminThesisService implements AdminThesisServiceInterface {
     }
 
     async getTheses(thesesQuery: ThesesQueryRequest): Promise<ThesesQueryResponse> {
-        const where = {
+        const where: Prisma.ThesisWhereInput = {
             id: this.queryCreator.createFilteringObject(thesesQuery.thesisIdFilter),
             title: this.queryCreator.createFilteringObject(thesesQuery.titleFilter),
             slot: this.queryCreator.createFilteringObject(thesesQuery.slotFilter),
