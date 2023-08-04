@@ -8,6 +8,7 @@ import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-m
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { ThesesQueryRequest } from "../../contracts/requests/theses-query.request";
 import { ThesesQueryResponse } from "../../contracts/responses/theses-query.response";
+import { ThesisCreateRequest } from "../../contracts/requests/thesis-create.request";
 
 @injectable()
 export class AdminThesisService implements AdminThesisServiceInterface {
@@ -73,5 +74,54 @@ export class AdminThesisService implements AdminThesisServiceInterface {
         }
 
         return this.plainTransformer.toThesisInfo(thesis);
+    }
+
+    async createThesis(createRequest: ThesisCreateRequest): Promise<ThesisInfoDto> {
+        const thesis = await this.prisma.thesis.create({
+            data: createRequest,
+            include: {
+                topic: true,
+                field: true,
+            }
+        });
+
+        return this.plainTransformer.toThesisInfo(thesis);
+    }
+
+    async updateThesis(thesisId: number, updateRequest: ThesisCreateRequest): Promise<ThesisInfoDto> {
+        try {
+            await this.prisma.thesis.findUniqueOrThrow({
+                where: {
+                    id: thesisId
+            }});
+
+            const thesis = await this.prisma.thesis.update({
+                where: {
+                    id: thesisId
+                },
+                data: updateRequest,
+                include: {
+                    topic: true,
+                    field: true
+                }
+            });
+
+            return this.plainTransformer.toThesisInfo(thesis);
+        }
+        catch {
+            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.ThesisNotFound);
+        }
+    }
+
+    async deleteThesis(thesisId: number): Promise<void> {
+        const { count } = await this.prisma.thesis.deleteMany({
+            where: {
+                id: thesisId
+            }
+        });
+
+        if (!count) {
+            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.ThesisNotFound);
+        }
     }
 }
