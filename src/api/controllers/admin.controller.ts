@@ -9,20 +9,20 @@ import { ROLES } from "../../core/constants/roles";
 import { inject, injectable } from "inversify";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { AdminSelfServiceInterface } from "../interfaces";
+import { AdminServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
 import { AdminInfoDto } from "../../shared/dtos";
 import { User } from "../../core/models";
 
-@JsonController('admin/self')
+@JsonController('admin')
 @Authorized(ROLES.Admin)
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
 })
-export class AdminSelfController {
+export class AdminController {
     constructor(
-        @inject(INJECTION_TOKENS.AdminSelfService) private adminSelfService: AdminSelfServiceInterface) {
+        @inject(INJECTION_TOKENS.AdminService) private adminService: AdminServiceInterface) {
 
     }
 
@@ -30,6 +30,6 @@ export class AdminSelfController {
     @Get('/info')
     @ResponseSchema(AdminInfoDto)
     getAdminInfo(@CurrentUser({ required: true }) user: User) {
-        return this.adminSelfService.getAdminInfo(user.userId);
+        return this.adminService.getAdminInfo(user.userId);
     }
 }

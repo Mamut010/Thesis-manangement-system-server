@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { 
-    AdminSelfServiceInterface, 
+    AdminServiceInterface, 
     PlainTransformerServiceInterface 
 } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
@@ -10,7 +10,7 @@ import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-m
 import { AdminInfoDto } from "../../shared/dtos";
 
 @injectable()
-export class AdminSelfService implements AdminSelfServiceInterface {
+export class AdminService implements AdminServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface) {

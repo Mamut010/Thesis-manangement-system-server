@@ -18,14 +18,14 @@ import { JwtExtractorInterface, AuthHeaderJwtExtractor } from '../auth/utils/jwt
 import { JwtCookieHandler, JwtCookieHandlerInterface } from '../auth/utils/jwt-cookie-handlers';
 import { 
     AdminLecturerServiceInterface,
-    AdminSelfServiceInterface,
+    AdminServiceInterface,
     AdminStudentServiceInterface, 
     AdminThesisServiceInterface, 
     PlainTransformerServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
-    AdminSelfService,
+    AdminService,
     AdminStudentService, 
     AdminThesisService, 
     PlainTransformerService
@@ -127,8 +127,8 @@ function configServices(container: Container, settings?: BootstrapSettingInterfa
         .inRequestScope();
 
     container
-        .bind<AdminSelfServiceInterface>(INJECTION_TOKENS.AdminSelfService)
-        .to(AdminSelfService)
+        .bind<AdminServiceInterface>(INJECTION_TOKENS.AdminService)
+        .to(AdminService)
         .inRequestScope();
 
     container

@@ -1,5 +1,5 @@
 import { AdminInfoDto } from "../../shared/dtos";
 
-export interface AdminSelfServiceInterface {
+export interface AdminServiceInterface {
     getAdminInfo(adminId: number): Promise<AdminInfoDto>;
 }
