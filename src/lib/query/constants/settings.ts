@@ -9,7 +9,6 @@ export const DefaultQuerySettings = {
     BoolFilterOperator: GeneralFilterOperators.Equals,
     ListFilterOperator: ListFilterOperators.In,
     SortDir: SortDirs.Ascending,
-    Skip: 0,
     Take: 30,
     MinTake: 1,
     MaxTake: 100,

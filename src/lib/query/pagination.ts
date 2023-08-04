@@ -8,7 +8,7 @@ export class Pagination {
     @IsNumber()
     @Min(0)
     @Type(() => Number)
-    skip: number = DefaultQuerySettings.Skip;
+    skip: number = 0;
 
     @Expose()
     @IsOptional()
