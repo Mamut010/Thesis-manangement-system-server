@@ -5,6 +5,12 @@ import { NextFunction, Request, Response } from 'express';
 import { injectable } from 'inversify';
 import { Middleware, ExpressErrorMiddlewareInterface } from 'routing-controllers';
 import { HTTP_CODES } from '../../core/constants/http-codes';
+import { Prisma } from '@prisma/client';
+import { UNEXPECTED_ERROR_MESSAGES } from '../../core/constants/unexpected-error-messages';
+import { env } from '../../env';
+import { container } from '../../core/bootstrappers';
+import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';
+import { Logger } from '../../lib/logger';
 
 @Middleware({ type: 'after' })
 @injectable()
@@ -37,6 +43,19 @@ function getErrorStatus(error: any): number {
 }
 
 function getErrorMessage(error: any): string {
+  // Swallow database messages on production environment
+  if (env.isProduction && (
+    error instanceof Prisma.PrismaClientInitializationError
+    || error instanceof Prisma.PrismaClientKnownRequestError
+    || error instanceof Prisma.PrismaClientRustPanicError
+    || error instanceof Prisma.PrismaClientUnknownRequestError
+    || error instanceof Prisma.PrismaClientValidationError
+  )) {
+    const logger: Logger = container.get(INJECTION_TOKENS.Logger);
+    logger.error(error.message);
+    return UNEXPECTED_ERROR_MESSAGES.DefaultMessage;
+  }
+
   const possibleMsgProperties = ['errors', 'message'];
   for(const prop of possibleMsgProperties) {
     if (error[prop]) {
@@ -44,6 +63,6 @@ function getErrorMessage(error: any): string {
     }
   }
 
-  return 'Unexpected error has occurred!';
+  return UNEXPECTED_ERROR_MESSAGES.DefaultMessage;
 }
 
