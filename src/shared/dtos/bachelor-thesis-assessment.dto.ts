@@ -5,6 +5,11 @@ export class BachelorThesisAssessmentDto {
     @Expose()
     @IsDefined()
     @IsNumber()
+    id!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
     studentId!: number;
 
     @Expose()
