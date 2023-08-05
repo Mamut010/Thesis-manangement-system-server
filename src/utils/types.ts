@@ -43,4 +43,5 @@ export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<
  * @author Mathias Remshardt
  * @see https://dev.to/remshams/derive-union-of-string-literal-types-with-lookup-types-in-typescript-1kkf
  */
-type KeysOfType<T, K> = { [P in keyof T]: T[P] extends K ? P : never }[keyof T];
+export type KeysOfType<T, K> = { [P in keyof T]: T[P] extends K ? P : never }[keyof T];
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

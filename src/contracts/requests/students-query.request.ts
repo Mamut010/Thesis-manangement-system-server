@@ -1,5 +1,5 @@
 import { NumberFilter, OrderBy, Pagination, StringFilter } from "../../lib/query";
-import { IsEmailFilter, IsNumberFilter, IsOrderByArray, IsPagination, IsStringFilter } from "../../decorators";
+import { IsNumberFilter, IsOrderByArray, IsPagination, IsStringFilter } from "../../decorators";
 
 export class StudentsQueryRequest {
     @IsNumberFilter()
@@ -14,7 +14,7 @@ export class StudentsQueryRequest {
     @IsStringFilter()
     forenameFilter?: StringFilter;
 
-    @IsEmailFilter()
+    @IsStringFilter()
     emailFilter?: StringFilter;
 
     @IsStringFilter()
