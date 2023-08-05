@@ -248,7 +248,7 @@ function shouldTransformInnerKey(options: FlatteningOptions, depth: number, nest
         && options.transformedProps?.includes(nestedProp);
 }
 
-export function flipMap<T extends PropertyKey, U extends PropertyKey>(map: Record<T, U>): Record<string, T> {
+export function flipMap<T extends PropertyKey, U extends Exclude<PropertyKey, symbol>>(map: Record<T, U>): Record<string, T> {
     return Object.fromEntries(
         Object
             .entries(map)
