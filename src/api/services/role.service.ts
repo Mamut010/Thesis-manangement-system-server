@@ -13,6 +13,7 @@ import { RoleCreateRequest } from "../../contracts/requests/role-create.request"
 import { RoleUpdateRequest } from "../../contracts/requests/role-update.request";
 import { UNIQUE_CONSTRAINT_ERROR_MESSAGES } from "../../core/constants/unique-constraint-error-messages";
 import { ConflictError } from "../../contracts/errors/conflict.error";
+import { Role } from "../../core/models";
 
 @injectable()
 export class RoleService implements RoleServiceInterface {
@@ -25,10 +26,7 @@ export class RoleService implements RoleServiceInterface {
     }
 
     async getRoles(rolesQuery: RolesQueryRequest): Promise<RolesQueryResponse> {
-        const model = {
-            name: true,
-            description: true,
-        }
+        const model = this.queryCreator.createQueryModel(Role);
         const prismaQuery = this.queryCreator.createQueryObject(model, rolesQuery);
 
         const count = await this.prisma.role.count({ ...prismaQuery, skip: undefined, take: undefined });

@@ -8,7 +8,7 @@ import { getActualOperatorFromNotOperator, isFilterActualOperator } from "./util
 import { Pagination } from "./pagination";
 import { ListFilter } from "./interfaces/list-filter";
 import { FilterActualOperator, FilterOperator } from "./types/filter-operator";
-import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, OrderByOptions } from "./types/query-creator-utility";
+import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, AutoWhereQueryCreatable, OrderByOptions } from "./types/query-creator-utility";
 import { ConcreteBinaryFilter, ConcreteListFilter } from "./types/concrete-filter";
 import { assignObjectByDotNotation, createObjectByDotNotation, defaultOrGiven, flipMap, isEnumerableObject } from "../../utils/object-helpers";
 import { trimPrefix, trimSuffix } from "../../utils/string-helpers";
@@ -22,10 +22,17 @@ import {
     WhereListFilterObject, 
     WhereQueryObject 
 } from "./types/query-object";
+import { ClassConstructor, plainToInstance } from "class-transformer";
 
 @injectable()
 export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
     private static readonly DOT = '.';
+
+    createQueryModel<T extends object>(cls: ClassConstructor<T>): AutoQueryModel {
+        return Object.fromEntries(
+            Object.keys(plainToInstance(cls, {})).map(key => [key, true])
+        );
+    }   
 
     createQueryObject<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
         : PrismaQueryObject {
@@ -41,7 +48,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
     }
 
-    createWhereObject<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
+    createWhereObject<T extends AutoQueryModel>(model: T, query: AutoWhereQueryCreatable, creationOptions?: AutoQueryCreationOptions)
         : WhereQueryObject | undefined {
         const { where } = this.createWhereWithFieldMap(model, query, creationOptions);
         return this.finalizeWhere(where);
@@ -152,7 +159,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
     }
 
-    private createWhereWithFieldMap<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, 
+    private createWhereWithFieldMap<T extends AutoQueryModel>(model: T, query: AutoWhereQueryCreatable, 
         creationOptions?: AutoQueryCreationOptions) : WhereWithFieldMap {
         const defaultOptions: AutoQueryCreationOptions = {
             filterSuffix: 'Filter',
@@ -173,7 +180,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         return Object.keys(where).length > 0 ? where : undefined;
     }
 
-    private constructActualWhereWithFieldMap<T>(model: T, query: AutoQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
+    private constructActualWhereWithFieldMap<T>(model: T, query: AutoWhereQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
         creationOptions: AutoQueryCreationOptions): WhereWithFieldMap {
         const initialConfig: WhereObjectCreationConfig = {
             fieldNamePrefix: '',
@@ -182,7 +189,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         return this.constructActualWhereWithFieldMapImpl(model, query, binaryAndListFilters, creationOptions, initialConfig);
     }
 
-    private constructActualWhereWithFieldMapImpl<T>(model: T, query: AutoQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
+    private constructActualWhereWithFieldMapImpl<T>(model: T, query: AutoWhereQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
         creationOptions: AutoQueryCreationOptions, config: WhereObjectCreationConfig): WhereWithFieldMap {
         let where: WhereQueryObject = {};
         let fieldMap: Record<string, string> = {};

@@ -18,6 +18,7 @@ import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
+import { Lecturer, User } from "../../core/models";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
@@ -30,12 +31,8 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
 
     async getLecturers(lecturersQuery: LecturersQueryRequest): Promise<LecturersQueryResponse> {
         const model = {
-            userId: true,
-            title: true,
-            user: {
-                username: true,
-                email: true,
-            }
+            ...this.queryCreator.createQueryModel(Lecturer),
+            user: this.queryCreator.createQueryModel(User)
         }
         const prismaQuery = this.queryCreator.createQueryObject(model, lecturersQuery, { 
             fieldMap: { 

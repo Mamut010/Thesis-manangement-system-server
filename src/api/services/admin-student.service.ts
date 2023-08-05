@@ -18,6 +18,7 @@ import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
+import { Student, User } from "../../core/models";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
@@ -30,19 +31,11 @@ export class AdminStudentService implements AdminStudentServiceInterface {
 
     async getStudents(studentsQuery: StudentsQueryRequest): Promise<StudentsQueryResponse> {
         const model = {
-            userId: true,
-            intake: true,
-            ects: true,
-            user: {
-                username: true,
-                surname: true,
-                forename: true,
-                email: true,
-                signature: true
-            }
+            ...this.queryCreator.createQueryModel(Student),
+            user: this.queryCreator.createQueryModel(User),
         };
         const prismaQuery = this.queryCreator.createQueryObject(model, studentsQuery, { fieldMap: { studentId: 'userId' } });
-
+        
         const count = await this.prisma.student.count({ ...prismaQuery, skip: undefined, take: undefined });
         const students = await this.prisma.student.findMany({ 
             ...prismaQuery,

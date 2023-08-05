@@ -7,6 +7,8 @@ export interface AutoQueryCreatable {
     orderBy?: OrderBy | OrderBy[],
 }
 
+export type AutoWhereQueryCreatable = Omit<AutoQueryCreatable, 'pagination' | 'orderBy'>;
+
 export interface AutoQueryCreationOptions {
     /**
      * If set, any property with the specified suffix is considered a filter, 
