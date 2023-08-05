@@ -94,23 +94,23 @@ export class AdminThesisService implements AdminThesisServiceInterface {
                 where: {
                     id: thesisId
             }});
-
-            const thesis = await this.prisma.thesis.update({
-                where: {
-                    id: thesisId
-                },
-                data: updateRequest,
-                include: {
-                    topic: true,
-                    field: true
-                }
-            });
-
-            return this.plainTransformer.toThesisInfo(thesis);
         }
         catch {
             throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.ThesisNotFound);
         }
+
+        const thesis = await this.prisma.thesis.update({
+            where: {
+                id: thesisId
+            },
+            data: updateRequest,
+            include: {
+                topic: true,
+                field: true
+            }
+        });
+
+        return this.plainTransformer.toThesisInfo(thesis);
     }
 
     async deleteThesis(thesisId: number): Promise<void> {
