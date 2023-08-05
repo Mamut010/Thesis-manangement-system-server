@@ -1,4 +1,4 @@
-import { IsDefined, IsIn, IsNumber, IsString } from "class-validator";
+import { IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
 import { RoleValues } from "../constants/roles";
 import { Expose } from "class-transformer";
 
@@ -13,4 +13,9 @@ export class Role {
     @IsString()
     @IsIn(RoleValues)
     name!: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    description!: string | null;
 }

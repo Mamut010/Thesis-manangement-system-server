@@ -43,10 +43,11 @@ model RefreshToken {
 }
 
 model Role {
-    id      Int         @id @default(autoincrement())
-    name    String      @unique
+    id              Int         @id @default(autoincrement())
+    name            String      @unique
+    description     String?
     
-    users   User[]
+    users           User[]
 }
 
 model Notification {
