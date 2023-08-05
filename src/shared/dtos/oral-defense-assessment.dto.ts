@@ -1,11 +1,11 @@
 import { Expose } from "class-transformer";
-import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class OralDefenseAssessmentDto {
     @Expose()
-    @IsOptional()
+    @IsDefined()
     @IsNumber()
-    studentId!: number | null;
+    studentId!: number;
 
     @Expose()
     @IsOptional()

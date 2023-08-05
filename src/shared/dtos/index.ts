@@ -4,6 +4,7 @@ export * from './jwt-refresh-payload.dto';
 export * from './jwt-refresh-context.dto';
 export * from './user-create-request.dto';
 export * from './user-update-request.dto';
+export * from './role.dto';
 export * from './admin-info.dto';
 export * from './student-info.dto';
 export * from './lecturer-info.dto';

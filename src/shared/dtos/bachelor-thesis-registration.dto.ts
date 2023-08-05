@@ -1,11 +1,11 @@
 import { Expose } from "class-transformer";
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class BachelorThesisRegistrationDto {
     @Expose()
-    @IsOptional()
+    @IsDefined()
     @IsNumber()
-    studentId!: number | null;
+    studentId!: number;
 
     @Expose()
     @IsOptional()
