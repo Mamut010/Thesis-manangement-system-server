@@ -139,10 +139,10 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             }
 
             if (isValueBinaryFilter) {
-                binaryFilters[creationOptions.fieldAlias?.[field] ?? field] = value;
+                binaryFilters[creationOptions.fieldMap?.[field] ?? field] = value;
             }
             else if (isValueListFilter) {
-                listFilters[creationOptions.fieldAlias?.[field] ?? field] = value;
+                listFilters[creationOptions.fieldMap?.[field] ?? field] = value;
             }
         }
 
@@ -157,10 +157,10 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         const defaultOptions: AutoQueryCreationOptions = {
             filterSuffix: 'Filter',
             filterPrefix: undefined,
-            fieldAlias: undefined,
+            fieldMap: undefined,
         };
 
-        const options = defaultOrGiven(defaultOptions, creationOptions, { skipNestedEnumeration: ['fieldAlias'] });
+        const options = defaultOrGiven(defaultOptions, creationOptions, { skipNestedEnumeration: ['fieldMap'] });
         if (!options.filterSuffix && !options.filterPrefix) {
             throw new Error('Either a filter suffix or prefix must be specified for auto query creation process');
         }
@@ -177,7 +177,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         creationOptions: AutoQueryCreationOptions): WhereWithFieldMap {
         const initialConfig: WhereObjectCreationConfig = {
             fieldNamePrefix: '',
-            reversedFieldMap: creationOptions.fieldAlias ? flipMap(creationOptions.fieldAlias) : undefined,
+            reversedFieldMap: creationOptions.fieldMap ? flipMap(creationOptions.fieldMap) : undefined,
         };
         return this.constructActualWhereWithFieldMapImpl(model, query, binaryAndListFilters, creationOptions, initialConfig);
     }

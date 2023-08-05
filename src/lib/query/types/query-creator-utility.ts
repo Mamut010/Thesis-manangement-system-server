@@ -33,7 +33,7 @@ export interface AutoQueryCreationOptions {
     /**
      * Field name mapped from filter fields and orderBy fields to actual model's fields.
      */
-    fieldAlias?: Record<string, string>,
+    fieldMap?: Record<string, string>,
 }
 
 export type AutoQueryModel = {
