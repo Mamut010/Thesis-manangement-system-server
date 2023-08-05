@@ -1,8 +1,17 @@
-import { Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { ThesisInfoDto } from "../../shared/dtos";
-import { BaseQueryResponse } from "./base-query.response";
+import { IsDefined, IsNumber, ValidateNested } from "class-validator";
+import { QueryResponse } from "../interfaces";
 
-export class ThesesQueryResponse extends BaseQueryResponse<ThesisInfoDto> {
+export class ThesesQueryResponse implements QueryResponse<ThesisInfoDto> {
+    @Expose()
+    @IsDefined()
+    @ValidateNested({ each: true })
     @Type(() => ThesisInfoDto)
     content!: ThesisInfoDto[];
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
+    count!: number;
 }
