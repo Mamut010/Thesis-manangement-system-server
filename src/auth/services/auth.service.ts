@@ -50,7 +50,7 @@ export class AuthService implements AuthServiceInterface {
             throw new AuthenticationError(AUTH_ERROR_MESSAGES.UserIdAlreadyExists);
         }
         else if (await this.prisma.user.findUnique({ where: { username: signUpRequest.username }})) {
-            throw new AuthenticationError(AUTH_ERROR_MESSAGES.UsernamAlreadyExists);
+            throw new AuthenticationError(AUTH_ERROR_MESSAGES.UsernameAlreadyExists);
         }
 
         const role = await this.prisma.role.findUnique({ where: { name: signUpRequest.roles[0] }});

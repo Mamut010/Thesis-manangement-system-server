@@ -5,7 +5,7 @@ export const AUTH_ERROR_MESSAGES = {
     InvalidAccessToken: 'Invalid access token',
 
     UserIdAlreadyExists: 'User ID already exists',
-    UsernamAlreadyExists: 'Username already exists', 
+    UsernameAlreadyExists: 'Username already exists', 
 
     RefreshTokenNotFound: 'Refresh token not found',
 } as const;
