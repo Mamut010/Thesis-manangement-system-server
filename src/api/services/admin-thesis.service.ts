@@ -119,15 +119,15 @@ export class AdminThesisService implements AdminThesisServiceInterface {
                 where: {
                     id: thesisId
             }});
-
-            await this.prisma.thesis.delete({
-                where: {
-                    id: thesisId
-                }
-            });
         }
         catch {
             throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.ThesisNotFound);
         }
+
+        await this.prisma.thesis.delete({
+            where: {
+                id: thesisId
+            }
+        });
     }
 }
