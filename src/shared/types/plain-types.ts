@@ -6,6 +6,7 @@ import {
     Lecturer, 
     OralDefenseAssessment, 
     OralDefenseRegistration, 
+    Role, 
     Student, 
     Thesis, 
     Topic, 
@@ -21,7 +22,9 @@ export type PlainStudent = Student & {
 };
 
 export type PlainLecturer = Lecturer & {
-    user: User,
+    user: User & {
+        role: Role
+    },
 };
 
 export type PlainThesis = Thesis & {

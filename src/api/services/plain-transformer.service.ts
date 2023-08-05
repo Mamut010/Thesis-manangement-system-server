@@ -42,8 +42,11 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
     }
 
     public toLecturerInfo(plain: PlainLecturer): LecturerInfoDto {
-        const dto = plainToInstanceExactMatch(LecturerInfoDto, flattenObject(plain));
+        const dto = plainToInstanceExactMatch(LecturerInfoDto, flattenObject(plain, {
+            transformedProps: ['role']
+        }));
         dto.lecturerId = plain.userId;
+        dto.type = plain.user.role.name;
         
         return dto;
     }

@@ -18,6 +18,11 @@ export class LecturerInfoDto {
     bio!: string | null;
 
     @Expose()
+    @IsDefined()
+    @IsString()
+    type!: string;
+
+    @Expose()
     @IsOptional()
     @IsEmail()
     email!: string | null;

@@ -38,7 +38,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
             }
         }
         const prismaQuery = this.queryCreator.createQueryObject(model, lecturersQuery, { 
-            fieldAlias: { 
+            fieldMap: { 
                 lecturerId: 'userId' 
             } 
         });
@@ -47,7 +47,11 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         const lecturers = await this.prisma.lecturer.findMany({
             ...prismaQuery,
             include: {
-                user: true
+                user: {
+                    include: {
+                        role: true
+                    }
+                }
             }
         })
 
@@ -74,7 +78,11 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
                 userId: lecturerId
             },
             include: {
-                user: true,
+                user: {
+                    include: {
+                        role: true
+                    }
+                }
             }
         })
 
