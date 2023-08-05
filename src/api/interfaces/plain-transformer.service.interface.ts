@@ -5,6 +5,7 @@ import {
     LecturerInfoDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
+    RoleDto, 
     StudentInfoDto,
     ThesisInfoDto
 } from "../../shared/dtos";
@@ -15,11 +16,13 @@ import {
     PlainLecturer, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
+    PlainRole, 
     PlainStudent,
     PlainThesis,
 } from "../../shared/types/plain-types";
 
 export interface PlainTransformerServiceInterface {
+    toRole(plain: PlainRole): RoleDto;
     toAdminInfo(plain: PlainAdmin): AdminInfoDto;
     toStudentInfo(plain: PlainStudent): StudentInfoDto;
     toLecturerInfo(plain: PlainLecturer): LecturerInfoDto;

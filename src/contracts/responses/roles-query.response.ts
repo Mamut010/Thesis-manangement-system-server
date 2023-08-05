@@ -1,8 +1,17 @@
-import { Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { RoleDto } from "../../shared/dtos";
-import { BaseQueryResponse } from "./base-query.response";
+import { QueryResponse } from "../interfaces";
+import { IsDefined, IsNumber, ValidateNested } from "class-validator";
 
-export class RolesQueryResponse extends BaseQueryResponse<RoleDto> {
+export class RolesQueryResponse implements QueryResponse<RoleDto> {
+    @Expose()
+    @IsDefined()
+    @ValidateNested({ each: true })
     @Type(() => RoleDto)
     content!: RoleDto[];
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
+    count!: number;
 }

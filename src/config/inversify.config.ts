@@ -21,14 +21,16 @@ import {
     AdminServiceInterface,
     AdminStudentServiceInterface, 
     AdminThesisServiceInterface, 
-    PlainTransformerServiceInterface
+    PlainTransformerServiceInterface,
+    RoleServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
     AdminService,
     AdminStudentService, 
     AdminThesisService, 
-    PlainTransformerService
+    PlainTransformerService,
+    RoleService
 } from '../api/services';
 import { 
     UserRepoInterface,
@@ -144,6 +146,11 @@ function configServices(container: Container, settings?: BootstrapSettingInterfa
     container
         .bind<AdminThesisServiceInterface>(INJECTION_TOKENS.AdminThesisService)
         .to(AdminThesisService)
+        .inRequestScope();
+
+    container
+        .bind<RoleServiceInterface>(INJECTION_TOKENS.RoleService)
+        .to(RoleService)
         .inRequestScope();
 }
 

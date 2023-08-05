@@ -6,6 +6,7 @@ import {
     LecturerInfoDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
+    RoleDto, 
     StudentInfoDto,
     ThesisInfoDto
 } from "../../shared/dtos";
@@ -18,6 +19,7 @@ import {
     PlainLecturer, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
+    PlainRole, 
     PlainStudent,
     PlainThesis
 } from "../../shared/types/plain-types";
@@ -26,6 +28,11 @@ import { PlainTransformerServiceInterface } from "../interfaces";
 @injectable()
 export class PlainTransformerService implements PlainTransformerServiceInterface {
     private static readonly registrationAndAssessmentRelations: string[] = ['thesis', 'supervisor1', 'supervisor2'];
+
+    public toRole(plain: PlainRole): RoleDto {
+        const dto = plainToInstanceExactMatch(RoleDto, flattenObject(plain));
+        return dto;
+    }
 
     public toAdminInfo(plain: PlainAdmin): AdminInfoDto {
         const dto = plainToInstanceExactMatch(AdminInfoDto, flattenObject(plain));

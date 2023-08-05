@@ -56,13 +56,13 @@ export class AdminThesisController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Post('/{id}')
+    @Post('/:id')
     @ResponseSchema(ThesisInfoDto)
     updateThesis(@Param('id') id: number, @Body({ required: true }) updateRequest: ThesisUpdateRequest) {
         return this.adminThesisService.updateThesis(id, updateRequest);
     }
 
-    @Delete('/{id}')
+    @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteThesis(@Param('id') id: number) {
         return this.adminThesisService.deleteThesis(id);

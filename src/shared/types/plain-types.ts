@@ -13,6 +13,8 @@ import {
     User 
 } from "../../core/models"
 
+export type PlainRole = Role;
+
 export type PlainAdmin = Admin & {
     user: User,
 };
