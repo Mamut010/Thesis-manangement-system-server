@@ -10,6 +10,11 @@ export class ThesisInfoDto {
     @Expose()
     @IsOptional()
     @IsString()
+    title!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     topicTitle!: string | null;
 
     @Expose()

@@ -189,8 +189,10 @@ function assignNestedFlattened<T>(options: FlatteningOptions, depth: number, tar
     const keyTransformer: KeyTransformer = options.keyTransformer!;
     const resultFlattened: Record<string, any> = { ...targetFlattened };
 
-    for(const key in nestedFlattened) {
-        const inwardKey = keyTransformer.transformInward(key, nestedProp);
+    for(const originalKey in nestedFlattened) {
+        const value = nestedFlattened[originalKey];
+        const inwardKey = keyTransformer.transformInward(originalKey, nestedProp);
+        const key = shouldTransformInnerKey(options, depth, nestedProp) ? inwardKey : originalKey;
 
         // Case: 
         // {
@@ -203,7 +205,7 @@ function assignNestedFlattened<T>(options: FlatteningOptions, depth: number, tar
         // }
         if (objectHasOwnProperty(targetFlattenedObject, key)) {
             if (options.keepDuplicate 
-                && targetFlattened[key] !== nestedFlattened[key] 
+                && targetFlattened[key] !== value
                 && !objectHasOwnProperty(targetFlattenedObject, inwardKey)) {
                 // Shape: 
                 // {
@@ -212,7 +214,7 @@ function assignNestedFlattened<T>(options: FlatteningOptions, depth: number, tar
                 //       yId,
                 //    }    
                 // }
-                resultFlattened[inwardKey] = nestedFlattened[key];
+                resultFlattened[inwardKey] = value;
             }
         }
         // Case: 
@@ -236,7 +238,7 @@ function assignNestedFlattened<T>(options: FlatteningOptions, depth: number, tar
         // }
             && !(targetProp 
                 && objectHasOwnProperty(targetFlattenedObject, keyTransformer.transformOutward(key, targetProp)))) {
-            resultFlattened[shouldTransformInnerKey(options, depth, nestedProp) ? inwardKey : key] = nestedFlattened[key];
+            resultFlattened[key] = value;
         }
     }
 
