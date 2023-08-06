@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsOptional, IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class RoleUpdateRequest {
     @Expose()

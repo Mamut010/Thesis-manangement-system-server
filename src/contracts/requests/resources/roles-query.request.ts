@@ -1,6 +1,6 @@
-import { IsStringFilter } from "../../decorators";
-import { StringFilter } from "../../lib/query";
-import { BaseQueryRequest } from "../bases";
+import { IsStringFilter } from "../../../decorators";
+import { StringFilter } from "../../../lib/query";
+import { BaseQueryRequest } from "../../bases";
 
 export class RolesQueryRequest extends BaseQueryRequest {
     @IsStringFilter()
