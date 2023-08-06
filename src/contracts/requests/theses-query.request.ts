@@ -1,8 +1,8 @@
 import { IsNumberFilter, IsStringFilter } from "../../decorators";
 import { NumberFilter, StringFilter } from "../../lib/query";
-import { QueryRequest } from "../bases";
+import { BaseQueryRequest } from "../bases";
 
-export class ThesesQueryRequest extends QueryRequest {
+export class ThesesQueryRequest extends BaseQueryRequest {
     @IsNumberFilter()
     thesisIdFilter?: NumberFilter;
 
