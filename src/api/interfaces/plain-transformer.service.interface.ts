@@ -4,6 +4,7 @@ import {
     BachelorThesisRegistrationDto, 
     FieldDto, 
     LecturerInfoDto, 
+    LocationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
     RoleDto, 
@@ -17,6 +18,7 @@ import {
     PlainBachelorThesisRegistration, 
     PlainField, 
     PlainLecturer, 
+    PlainLocation, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
     PlainRole, 
@@ -33,6 +35,7 @@ export interface PlainTransformerServiceInterface {
     toThesis(plain: PlainThesis): ThesisDto;
     toField(plain: PlainField): FieldDto;
     toTopic(plain: PlainTopic): TopicDto;
+    toLocation(plain: PlainLocation): LocationDto;
     toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto;
     toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto;
     toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto;

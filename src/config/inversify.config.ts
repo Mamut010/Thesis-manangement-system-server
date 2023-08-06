@@ -24,7 +24,8 @@ import {
     PlainTransformerServiceInterface,
     RoleServiceInterface,
     FieldServiceInterface,
-    TopicServiceInterface
+    TopicServiceInterface,
+    LocationServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -34,7 +35,8 @@ import {
     PlainTransformerService,
     RoleService,
     FieldService,
-    TopicService
+    TopicService,
+    LocationService
 } from '../api/services';
 import { 
     UserRepoInterface,
@@ -125,11 +127,6 @@ function configAuthServerServices(container: Container, settings?: BootstrapSett
 
 function configApiServerServices(container: Container, settings?: BootstrapSettingInterface) {
     container
-        .bind<PlainTransformerServiceInterface>(INJECTION_TOKENS.PlainTransformer)
-        .to(PlainTransformerService)
-        .inRequestScope();
-
-    container
         .bind<AdminServiceInterface>(INJECTION_TOKENS.AdminService)
         .to(AdminService)
         .inRequestScope();
@@ -164,6 +161,11 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
         .bind<TopicServiceInterface>(INJECTION_TOKENS.TopicService)
         .to(TopicService)
         .inRequestScope();
+
+    container
+        .bind<LocationServiceInterface>(INJECTION_TOKENS.LocationService)
+        .to(LocationService)
+        .inRequestScope();
 }
 
 function configUtils(container: Container, settings?: BootstrapSettingInterface) {
@@ -175,6 +177,11 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<JwtCookieHandlerInterface>(INJECTION_TOKENS.JwtCookieHandler)
         .to(JwtCookieHandler)
+        .inRequestScope();
+
+    container
+        .bind<PlainTransformerServiceInterface>(INJECTION_TOKENS.PlainTransformer)
+        .to(PlainTransformerService)
         .inRequestScope();
 
     container

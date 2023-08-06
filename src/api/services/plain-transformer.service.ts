@@ -5,6 +5,7 @@ import {
     BachelorThesisRegistrationDto, 
     FieldDto, 
     LecturerInfoDto, 
+    LocationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
     RoleDto, 
@@ -20,6 +21,7 @@ import {
     PlainBachelorThesisRegistration, 
     PlainField, 
     PlainLecturer, 
+    PlainLocation, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
     PlainRole, 
@@ -77,6 +79,11 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
 
     public toTopic(plain: PlainTopic): TopicDto {
         const dto = plainToInstanceExactMatch(TopicDto, plain);
+        return dto;
+    }
+
+    public toLocation(plain: PlainLocation): LocationDto {
+        const dto = plainToInstanceExactMatch(LocationDto, plain);
         return dto;
     }
 

@@ -4,6 +4,7 @@ import {
     BachelorThesisRegistration, 
     Field, 
     Lecturer, 
+    Location, 
     OralDefenseAssessment, 
     OralDefenseRegistration, 
     Role, 
@@ -32,6 +33,8 @@ export type PlainRole = Role;
 export type PlainField = Field;
 
 export type PlainTopic = Topic;
+
+export type PlainLocation = Location;
 
 export type PlainThesis = Thesis & {
     topic: Topic | null,
