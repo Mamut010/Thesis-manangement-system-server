@@ -17,7 +17,7 @@ import { ErrorResponse } from '../../contracts/responses/error.response';
 @injectable()
 export class ErrorHandler implements ExpressErrorMiddlewareInterface {
   error(error: any, request: Request, response: Response, next: NextFunction) {
-    let prismaError = this.handlePrismaError(error);
+    const prismaError = this.handlePrismaError(error);
     if (prismaError) {
       response.status(prismaError.status).json(prismaError);
     }
