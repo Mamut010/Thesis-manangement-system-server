@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { AdminThesisServiceInterface, PlainTransformerServiceInterface } from "../interfaces";
+import { ThesisServiceInterface, PlainTransformerServiceInterface } from "../interfaces";
 import { ThesisDto } from "../../shared/dtos";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { Prisma, PrismaClient } from "@prisma/client";
@@ -11,7 +11,7 @@ import { ThesesQueryResponse } from "../../contracts/responses/theses-query.resp
 import { ThesisCreateRequest } from "../../contracts/requests/thesis-create.request";
 
 @injectable()
-export class AdminThesisService implements AdminThesisServiceInterface {
+export class ThesisService implements ThesisServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
@@ -58,7 +58,7 @@ export class AdminThesisService implements AdminThesisServiceInterface {
         return response;
     }
 
-    async getThesisInfo(thesisId: number): Promise<ThesisDto> {
+    async getThesis(thesisId: number): Promise<ThesisDto> {
         const thesis = await this.prisma.thesis.findUnique({
             where: {
                 id: thesisId

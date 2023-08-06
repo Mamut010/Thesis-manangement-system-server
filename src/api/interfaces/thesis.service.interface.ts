@@ -4,9 +4,9 @@ import { ThesisUpdateRequest } from "../../contracts/requests/thesis-update.requ
 import { ThesesQueryResponse } from "../../contracts/responses/theses-query.response";
 import { ThesisDto } from "../../shared/dtos";
 
-export interface AdminThesisServiceInterface {
+export interface ThesisServiceInterface {
     getTheses(thesesQuery: ThesesQueryRequest): Promise<ThesesQueryResponse>;
-    getThesisInfo(thesisId: number): Promise<ThesisDto>;
+    getThesis(thesisId: number): Promise<ThesisDto>;
     createThesis(createRequest: ThesisCreateRequest): Promise<ThesisDto>;
     updateThesis(thesisId: number, updateRequest: ThesisUpdateRequest): Promise<ThesisDto>;
     deleteThesis(thesisId: number): Promise<void>;

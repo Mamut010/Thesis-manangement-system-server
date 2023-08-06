@@ -20,7 +20,7 @@ import {
     AdminLecturerServiceInterface,
     AdminServiceInterface,
     AdminStudentServiceInterface, 
-    AdminThesisServiceInterface, 
+    ThesisServiceInterface, 
     PlainTransformerServiceInterface,
     RoleServiceInterface
 } from '../api/interfaces';
@@ -28,7 +28,7 @@ import {
     AdminLecturerService,
     AdminService,
     AdminStudentService, 
-    AdminThesisService, 
+    ThesisService, 
     PlainTransformerService,
     RoleService
 } from '../api/services';
@@ -144,8 +144,8 @@ function configServices(container: Container, settings?: BootstrapSettingInterfa
         .inRequestScope();
 
     container
-        .bind<AdminThesisServiceInterface>(INJECTION_TOKENS.AdminThesisService)
-        .to(AdminThesisService)
+        .bind<ThesisServiceInterface>(INJECTION_TOKENS.ThesisService)
+        .to(ThesisService)
         .inRequestScope();
 
     container

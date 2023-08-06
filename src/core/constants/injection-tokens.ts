@@ -26,7 +26,7 @@ const SERVICE_TOKENS = {
     AdminService: Symbol.for('AdminService'),
     AdminStudentService: Symbol.for('AdminStudentService'),
     AdminLecturerService: Symbol.for('AdminLecturerService'),
-    AdminThesisService: Symbol.for('AdminThesisService'),
+    ThesisService: Symbol.for('ThesisService'),
     RoleService: Symbol.for('RoleService'),
 }
 
