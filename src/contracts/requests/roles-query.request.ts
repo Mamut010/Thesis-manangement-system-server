@@ -1,16 +1,11 @@
-import { IsOrderByArray, IsPagination, IsStringFilter } from "../../decorators";
-import { OrderBy, Pagination, StringFilter } from "../../lib/query";
+import { IsStringFilter } from "../../decorators";
+import { StringFilter } from "../../lib/query";
+import { QueryRequest } from "../bases";
 
-export class RolesQueryRequest {
+export class RolesQueryRequest extends QueryRequest {
     @IsStringFilter()
     nameFilter?: StringFilter;
 
     @IsStringFilter()
     descriptionFilter?: StringFilter;
-
-    @IsPagination()
-    pagination?: Pagination = new Pagination();
-
-    @IsOrderByArray()
-    orderBy?: OrderBy[];
 }

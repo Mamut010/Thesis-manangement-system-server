@@ -1,7 +1,8 @@
-import { IsNumberFilter, IsOrderByArray, IsPagination, IsStringFilter } from "../../decorators";
-import { NumberFilter, OrderBy, Pagination, StringFilter } from "../../lib/query";
+import { IsNumberFilter, IsStringFilter } from "../../decorators";
+import { NumberFilter, StringFilter } from "../../lib/query";
+import { QueryRequest } from "../bases";
 
-export class ThesesQueryRequest {
+export class ThesesQueryRequest extends QueryRequest {
     @IsNumberFilter()
     thesisIdFilter?: NumberFilter;
 
@@ -19,10 +20,4 @@ export class ThesesQueryRequest {
 
     @IsNumberFilter()
     slotLimitFilter?: NumberFilter;
-
-    @IsPagination()
-    pagination: Pagination = new Pagination();
-
-    @IsOrderByArray()
-    orderBy?: OrderBy[];
 }

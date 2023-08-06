@@ -1,1 +1,1 @@
-export * from './responses/query.response';
+export * from './query.response';

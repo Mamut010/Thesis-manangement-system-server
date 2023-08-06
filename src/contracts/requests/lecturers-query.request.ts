@@ -1,7 +1,8 @@
-import { NumberFilter, OrderBy, Pagination, StringFilter } from "../../lib/query";
-import { IsNumberFilter, IsOrderBy, IsPagination, IsStringFilter } from "../../decorators";
+import { NumberFilter, StringFilter } from "../../lib/query";
+import { IsNumberFilter, IsStringFilter } from "../../decorators";
+import { QueryRequest } from "../bases";
 
-export class LecturersQueryRequest {
+export class LecturersQueryRequest extends QueryRequest {
     @IsNumberFilter()
     lecturerIdFilter?: NumberFilter;
 
@@ -13,10 +14,4 @@ export class LecturersQueryRequest {
 
     @IsStringFilter()
     emailFilter?: StringFilter;
-
-    @IsPagination()
-    pagination: Pagination = new Pagination();
-
-    @IsOrderBy()
-    orderBy?: OrderBy[];
 }
