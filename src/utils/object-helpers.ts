@@ -51,7 +51,7 @@ export function defaultOrGiven<T>(defaulted: T, given?: T, options?: DefaultOrGi
 
     return result;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * A transformer is used to transform key in inward and outward cases.
  * 
@@ -249,7 +249,7 @@ function shouldTransformInnerKey(options: FlatteningOptions, depth: number, nest
     return (!options.transformedDepths || options.transformedDepths.includes(depth))
         && options.transformedProps?.includes(nestedProp);
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export function flipMap<T extends PropertyKey, U extends Exclude<PropertyKey, symbol>>(map: Record<T, U>): Record<string, T> {
     return Object.fromEntries(
         Object
@@ -257,7 +257,7 @@ export function flipMap<T extends PropertyKey, U extends Exclude<PropertyKey, sy
             .map(([key, value]) => [value, key])
     ) as Record<string, T>;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export type NestedNotatedObject<T> = { [property: string]: T | NestedNotatedObject<T> };
 
 export function assignObjectByDotNotation<T>(obj: NestedNotatedObject<T>, dotNotation: string, value: T)
@@ -279,4 +279,90 @@ export function assignObjectByDotNotation<T>(obj: NestedNotatedObject<T>, dotNot
 
 export function createObjectByDotNotation<T>(dotNotation: string, value: T): NestedNotatedObject<T> {
     return assignObjectByDotNotation({}, dotNotation, value);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export interface CompareObjectOptions {
+    ignoreUnmatchedProps?: boolean
+};
+
+export function compareObjectByEntries(obj1: Record<string, any>, obj2: Record<string, any>, 
+    compareOptions?: CompareObjectOptions): boolean {
+    const defaultOptions: CompareObjectOptions = {
+        ignoreUnmatchedProps: true
+    };
+    const options = defaultOrGiven(defaultOptions, compareOptions);
+    return compareObjectByEntriesImpl(obj1, obj2, options);
+}
+
+function compareObjectByEntriesImpl(obj1: Record<string, any>, obj2: Record<string, any>, 
+    options: CompareObjectOptions): boolean {
+    const keys = Array.from(new Set([...Object.keys(obj1), ...Object.keys(obj2)]));
+    for(const key of keys) {
+        const keyInObj1 = key in obj1;
+        const keyInObj2 = key in obj2;
+        if ((keyInObj1 && !keyInObj2) || (!keyInObj1 && keyInObj2)) {
+            if (!options.ignoreUnmatchedProps) {
+                return false;
+            }
+            else {
+                continue;
+            }
+        }
+
+        const val1 = obj1[key];
+        const val2 = obj2[key];
+
+        if (!compareObjectByEntriesImplCheckNonobject(val1, val2)
+            || !compareObjectByEntriesImplCheckEnumerable(val1, val2, options)
+            || !compareObjectByEntriesImplCheckArray(val1, val2, options)
+            || !compareObjectByEntriesImplCheckDate(val1, val2, options)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function compareObjectByEntriesImplCheckNonobject(val1: any, val2: any) {
+    if (typeof val1 !== 'object') {
+        if (val1 !== val2) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function compareObjectByEntriesImplCheckEnumerable(val1: any, val2: any, options: CompareObjectOptions) {
+    if (isEnumerableObject(val1)) {
+        if (!isEnumerableObject(val2) || !compareObjectByEntriesImpl(val1, val2, options)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function compareObjectByEntriesImplCheckArray(val1: any, val2: any, options: CompareObjectOptions) {
+    if(Array.isArray(val1)) {
+        if (!Array.isArray(val2) || !arrayEqualsByEntries(val1, val2, (item1, item2) => 
+            compareObjectByEntriesImpl(item1, item2, options))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function compareObjectByEntriesImplCheckDate(val1: any, val2: any, options: CompareObjectOptions) {
+    if(val1 instanceof Date) {
+        if (!(val2 instanceof Date) || (+val1 !== +val2)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function arrayEqualsByEntries(arr1: any[], arr2: any[], additionalCheck?: (item1: any, item2: any) => boolean) {
+    return arr1.length === arr2.length && arr1.every((item1, index) => {
+        const item2 = arr2[index];
+        return item1 === item2 || additionalCheck?.(item1, item2);
+    });
 }
