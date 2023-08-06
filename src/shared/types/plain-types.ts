@@ -13,8 +13,6 @@ import {
     User 
 } from "../../core/models"
 
-export type PlainRole = Role;
-
 export type PlainAdmin = Admin & {
     user: User,
 };
@@ -28,6 +26,10 @@ export type PlainLecturer = Lecturer & {
         role: Role
     },
 };
+
+export type PlainRole = Role;
+
+export type PlainField = Field;
 
 export type PlainThesis = Thesis & {
     topic: Topic | null,

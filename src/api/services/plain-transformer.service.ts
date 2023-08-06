@@ -3,6 +3,7 @@ import {
     AdminInfoDto,
     BachelorThesisAssessmentDto, 
     BachelorThesisRegistrationDto, 
+    FieldDto, 
     LecturerInfoDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
@@ -16,6 +17,7 @@ import {
     PlainAdmin,
     PlainBachelorThesisAssessment,
     PlainBachelorThesisRegistration, 
+    PlainField, 
     PlainLecturer, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
@@ -28,11 +30,6 @@ import { PlainTransformerServiceInterface } from "../interfaces";
 @injectable()
 export class PlainTransformerService implements PlainTransformerServiceInterface {
     private static readonly registrationAndAssessmentRelations: string[] = ['thesis', 'supervisor1', 'supervisor2'];
-
-    public toRole(plain: PlainRole): RoleDto {
-        const dto = plainToInstanceExactMatch(RoleDto, flattenObject(plain));
-        return dto;
-    }
 
     public toAdminInfo(plain: PlainAdmin): AdminInfoDto {
         const dto = plainToInstanceExactMatch(AdminInfoDto, flattenObject(plain));
@@ -58,11 +55,21 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
         return dto;
     }
 
-    public toThesisInfo(plain: PlainThesis): ThesisDto {
+    public toThesis(plain: PlainThesis): ThesisDto {
         const dto = plainToInstanceExactMatch(ThesisDto, flattenObject(plain, {
             transformedProps: ['topic', 'field'],
         }));
 
+        return dto;
+    }
+
+    public toRole(plain: PlainRole): RoleDto {
+        const dto = plainToInstanceExactMatch(RoleDto, plain);
+        return dto;
+    }
+
+    public toField(plain: PlainField): FieldDto {
+        const dto = plainToInstanceExactMatch(FieldDto, plain);
         return dto;
     }
 

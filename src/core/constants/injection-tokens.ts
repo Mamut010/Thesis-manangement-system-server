@@ -16,18 +16,21 @@ const REPOSITORY_TOKENS = {
     RefreshTokenRepo: Symbol.for('RefreshTokenRepo'),
 }
 
-const SERVICE_TOKENS = {
-    // Auth
+const AUTH_SERVICE_TOKENS = {
     JwtService: Symbol.for('JwtService'),
     HashService: Symbol.for('HashService'),
     AuthService: Symbol.for('AuthService'),
+}
 
-    // REST
+const API_SERVICE_TOKENS = {
     AdminService: Symbol.for('AdminService'),
     AdminStudentService: Symbol.for('AdminStudentService'),
     AdminLecturerService: Symbol.for('AdminLecturerService'),
+
+    // Resources
     ThesisService: Symbol.for('ThesisService'),
     RoleService: Symbol.for('RoleService'),
+    FieldService: Symbol.for('FieldService'),
 }
 
 const UTIL_TOKENS = {
@@ -42,6 +45,7 @@ export const INJECTION_TOKENS = {
     ...LOGGER_TOKENS,
     ...PRISMA_TOKENS,
     ...REPOSITORY_TOKENS,
-    ...SERVICE_TOKENS,
+    ...AUTH_SERVICE_TOKENS,
+    ...API_SERVICE_TOKENS,
     ...UTIL_TOKENS,
 } as const;

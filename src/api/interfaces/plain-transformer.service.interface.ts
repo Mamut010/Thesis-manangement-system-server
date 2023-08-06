@@ -2,6 +2,7 @@ import {
     AdminInfoDto,
     BachelorThesisAssessmentDto, 
     BachelorThesisRegistrationDto, 
+    FieldDto, 
     LecturerInfoDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
@@ -13,6 +14,7 @@ import {
     PlainAdmin,
     PlainBachelorThesisAssessment,
     PlainBachelorThesisRegistration, 
+    PlainField, 
     PlainLecturer, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
@@ -22,11 +24,12 @@ import {
 } from "../../shared/types/plain-types";
 
 export interface PlainTransformerServiceInterface {
-    toRole(plain: PlainRole): RoleDto;
     toAdminInfo(plain: PlainAdmin): AdminInfoDto;
     toStudentInfo(plain: PlainStudent): StudentInfoDto;
     toLecturerInfo(plain: PlainLecturer): LecturerInfoDto;
-    toThesisInfo(plain: PlainThesis): ThesisDto;
+    toRole(plain: PlainRole): RoleDto;
+    toThesis(plain: PlainThesis): ThesisDto;
+    toField(plain: PlainField): FieldDto;
     toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto;
     toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto;
     toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto;

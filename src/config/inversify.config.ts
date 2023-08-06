@@ -22,7 +22,8 @@ import {
     AdminStudentServiceInterface, 
     ThesisServiceInterface, 
     PlainTransformerServiceInterface,
-    RoleServiceInterface
+    RoleServiceInterface,
+    FieldServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -30,7 +31,8 @@ import {
     AdminStudentService, 
     ThesisService, 
     PlainTransformerService,
-    RoleService
+    RoleService,
+    FieldService
 } from '../api/services';
 import { 
     UserRepoInterface,
@@ -47,7 +49,8 @@ export const configInversify: Configuration<Container> = (container: Container, 
     configLogger(container, settings);
     configPrisma(container, settings);
     configRepos(container, settings);
-    configServices(container, settings);
+    configAuthServerServices(container, settings);
+    configApiServerServices(container, settings);
     configUtils(container, settings);
 }
 
@@ -101,10 +104,7 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
         .inRequestScope();
 }
 
-function configServices(container: Container, settings?: BootstrapSettingInterface) {
-    /**
-     * Auth Server's Services
-     */
+function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {
     container
         .bind<JwtServiceInterface>(INJECTION_TOKENS.JwtService)
         .to(JwtService)
@@ -119,10 +119,9 @@ function configServices(container: Container, settings?: BootstrapSettingInterfa
         .bind<AuthServiceInterface>(INJECTION_TOKENS.AuthService)
         .to(AuthService)
         .inRequestScope();
+}
 
-    /**
-     * REST Server's Services
-     */
+function configApiServerServices(container: Container, settings?: BootstrapSettingInterface) {
     container
         .bind<PlainTransformerServiceInterface>(INJECTION_TOKENS.PlainTransformer)
         .to(PlainTransformerService)
@@ -143,6 +142,7 @@ function configServices(container: Container, settings?: BootstrapSettingInterfa
         .to(AdminLecturerService)
         .inRequestScope();
 
+    // Resources
     container
         .bind<ThesisServiceInterface>(INJECTION_TOKENS.ThesisService)
         .to(ThesisService)
@@ -151,6 +151,11 @@ function configServices(container: Container, settings?: BootstrapSettingInterfa
     container
         .bind<RoleServiceInterface>(INJECTION_TOKENS.RoleService)
         .to(RoleService)
+        .inRequestScope();
+
+    container
+        .bind<FieldServiceInterface>(INJECTION_TOKENS.FieldService)
+        .to(FieldService)
         .inRequestScope();
 }
 
