@@ -46,6 +46,8 @@ model Role {
     id              Int         @id @default(autoincrement())
     name            String      @unique
     description     String?
+    createdAt       DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
     
     users           User[]
 }
@@ -107,6 +109,8 @@ model Topic {
     id              Int         @id @default(autoincrement())
     title           String
     description     String?     @db.Text
+    createdAt       DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
 
     thesis          Thesis[]
 }
@@ -115,6 +119,8 @@ model Field {
     id              Int         @id @default(autoincrement())
     title           String
     description     String?     @db.Text
+    createdAt       DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
 
     thesis          Thesis[]
 }
@@ -148,6 +154,8 @@ model Location {
     id                        Int                             @id @default(autoincrement())
     title                     String
     description               String?                         @db.Text
+    createdAt       DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
 }
 
 model BachelorThesisRegistration {

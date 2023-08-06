@@ -17,7 +17,7 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
 
     await prisma.$transaction([
         prisma.role.createMany({
-            data: roles.map(role => { return { name: role }; })
+            data: roles.map(role => { return { name: role, description: `The ${role}` }; })
         }),
         prisma.user.createMany({
             data: [

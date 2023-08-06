@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 import { Expose } from "class-transformer";
 
 export class Topic {
@@ -16,4 +16,14 @@ export class Topic {
     @IsOptional()
     @IsString()
     description!: string | null;
+    
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    createdAt!: Date;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    updatedAt!: Date;
 }
