@@ -10,17 +10,17 @@ import {
     Post, 
     QueryParams
 } from "routing-controllers";
-import { ROLES } from "../../core/constants/roles";
+import { ROLES } from "../../../core/constants/roles";
 import { inject, injectable } from "inversify";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
-import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { ThesisServiceInterface } from "../interfaces";
-import { HTTP_CODES } from "../../core/constants/http-codes";
-import { ThesisDto } from "../../shared/dtos";
-import { ThesesQueryResponse } from "../../contracts/responses/theses-query.response";
-import { ThesesQueryRequest } from "../../contracts/requests/theses-query.request";
-import { ThesisCreateRequest } from "../../contracts/requests/thesis-create.request";
-import { ThesisUpdateRequest } from "../../contracts/requests/thesis-update.request";
+import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
+import { ThesisServiceInterface } from "../../interfaces";
+import { HTTP_CODES } from "../../../core/constants/http-codes";
+import { ThesisDto } from "../../../shared/dtos";
+import { ThesesQueryResponse } from "../../../contracts/responses/theses-query.response";
+import { ThesesQueryRequest } from "../../../contracts/requests/theses-query.request";
+import { ThesisCreateRequest } from "../../../contracts/requests/thesis-create.request";
+import { ThesisUpdateRequest } from "../../../contracts/requests/thesis-update.request";
 
 @JsonController('theses')
 //@Authorized()

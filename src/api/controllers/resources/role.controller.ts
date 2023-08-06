@@ -12,15 +12,15 @@ import {
     QueryParams 
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
-import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { RoleServiceInterface } from "../interfaces";
-import { HTTP_CODES } from "../../core/constants/http-codes";
-import { RolesQueryResponse } from "../../contracts/responses/roles-query.response";
-import { RolesQueryRequest } from "../../contracts/requests/roles-query.request";
-import { RoleDto } from "../../shared/dtos";
-import { RoleCreateRequest } from "../../contracts/requests/role-create.request";
-import { RoleUpdateRequest } from "../../contracts/requests/role-update.request";
-import { ROLES } from "../../core/constants/roles";
+import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
+import { RoleServiceInterface } from "../../interfaces";
+import { HTTP_CODES } from "../../../core/constants/http-codes";
+import { RolesQueryResponse } from "../../../contracts/responses/roles-query.response";
+import { RolesQueryRequest } from "../../../contracts/requests/roles-query.request";
+import { RoleDto } from "../../../shared/dtos";
+import { RoleCreateRequest } from "../../../contracts/requests/role-create.request";
+import { RoleUpdateRequest } from "../../../contracts/requests/role-update.request";
+import { ROLES } from "../../../core/constants/roles";
 
 @JsonController('roles')
 //@Authorized()
