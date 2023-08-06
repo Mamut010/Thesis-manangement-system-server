@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import { RoleServiceInterface } from "../../interfaces/resources/role.service.interface";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { PlainTransformerServiceInterface } from "../../interfaces";
 import { RolesQueryRequest } from "../../../contracts/requests/resources/roles-query.request";
 import { RolesQueryResponse } from "../../../contracts/responses/resources/roles-query.response";
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
@@ -14,12 +13,13 @@ import { RoleUpdateRequest } from "../../../contracts/requests/resources/role-up
 import { UNIQUE_CONSTRAINT_ERROR_MESSAGES } from "../../../core/constants/unique-constraint-error-messages";
 import { ConflictError } from "../../../contracts/errors/conflict.error";
 import { Role } from "../../../core/models";
+import { PlainTransformerInterface } from "../../utils/plain-transformer";
 
 @injectable()
 export class RoleService implements RoleServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
     ) {
 

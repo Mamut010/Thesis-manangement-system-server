@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { TopicServiceInterface, PlainTransformerServiceInterface } from "../../interfaces";
+import { TopicServiceInterface } from "../../interfaces";
 import { TopicsQueryRequest } from "../../../contracts/requests/resources/topics-query.request";
 import { TopicsQueryResponse } from "../../../contracts/responses/resources/topics-query.response";
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
@@ -11,12 +11,13 @@ import { NOT_FOUND_ERROR_MESSAGES } from "../../../core/constants/not-found-erro
 import { TopicCreateRequest } from "../../../contracts/requests/resources/topic-create.request";
 import { TopicUpdateRequest } from "../../../contracts/requests/resources/topic-update.request";
 import { Topic } from "../../../core/models";
+import { PlainTransformerInterface } from "../../utils/plain-transformer";
 
 @injectable()
 export class TopicService implements TopicServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
     ) {
 

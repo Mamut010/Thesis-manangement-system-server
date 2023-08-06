@@ -20,8 +20,7 @@ import {
     AdminLecturerServiceInterface,
     AdminServiceInterface,
     AdminStudentServiceInterface, 
-    ThesisServiceInterface, 
-    PlainTransformerServiceInterface,
+    ThesisServiceInterface,
     RoleServiceInterface,
     FieldServiceInterface,
     TopicServiceInterface,
@@ -31,8 +30,7 @@ import {
     AdminLecturerService,
     AdminService,
     AdminStudentService, 
-    ThesisService, 
-    PlainTransformerService,
+    ThesisService,
     RoleService,
     FieldService,
     TopicService,
@@ -47,6 +45,7 @@ import {
     RefreshTokenRepo
 } from '../shared/repositories';
 import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
+import { PlainTransformer, PlainTransformerInterface } from '../api/utils/plain-transformer';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -180,8 +179,8 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
         .inRequestScope();
 
     container
-        .bind<PlainTransformerServiceInterface>(INJECTION_TOKENS.PlainTransformer)
-        .to(PlainTransformerService)
+        .bind<PlainTransformerInterface>(INJECTION_TOKENS.PlainTransformer)
+        .to(PlainTransformer)
         .inRequestScope();
 
     container

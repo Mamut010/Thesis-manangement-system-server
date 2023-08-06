@@ -11,7 +11,7 @@ import {
     StudentInfoDto,
     ThesisDto,
     TopicDto
-} from "../../shared/dtos";
+} from "../../../shared/dtos";
 import { 
     PlainAdmin,
     PlainBachelorThesisAssessment,
@@ -25,9 +25,9 @@ import {
     PlainStudent,
     PlainThesis,
     PlainTopic,
-} from "../../shared/types/plain-types";
+} from "../../../shared/types/plain-types";
 
-export interface PlainTransformerServiceInterface {
+export interface PlainTransformerInterface {
     toAdminInfo(plain: PlainAdmin): AdminInfoDto;
     toStudentInfo(plain: PlainStudent): StudentInfoDto;
     toLecturerInfo(plain: PlainLecturer): LecturerInfoDto;

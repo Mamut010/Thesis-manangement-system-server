@@ -1,8 +1,5 @@
 import { inject, injectable } from "inversify";
-import { 
-    AdminLecturerServiceInterface, 
-    PlainTransformerServiceInterface 
-} from "../interfaces";
+import { AdminLecturerServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
@@ -19,12 +16,13 @@ import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
 import { Lecturer, User } from "../../core/models";
+import { PlainTransformerInterface } from "../utils/plain-transformer";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface) {
 
     }

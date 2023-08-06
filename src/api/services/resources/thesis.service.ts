@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { ThesisServiceInterface, PlainTransformerServiceInterface } from "../../interfaces";
+import { ThesisServiceInterface } from "../../interfaces";
 import { ThesisDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { Prisma, PrismaClient } from "@prisma/client";
@@ -9,12 +9,13 @@ import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { ThesesQueryRequest } from "../../../contracts/requests/resources/theses-query.request";
 import { ThesesQueryResponse } from "../../../contracts/responses/resources/theses-query.response";
 import { ThesisCreateRequest } from "../../../contracts/requests/resources/thesis-create.request";
+import { PlainTransformerInterface } from "../../utils/plain-transformer";
 
 @injectable()
 export class ThesisService implements ThesisServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface) {
 
     }

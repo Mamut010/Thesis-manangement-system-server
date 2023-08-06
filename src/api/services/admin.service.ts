@@ -1,19 +1,17 @@
 import { inject, injectable } from "inversify";
-import { 
-    AdminServiceInterface, 
-    PlainTransformerServiceInterface 
-} from "../interfaces";
+import { AdminServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
 import { AdminInfoDto } from "../../shared/dtos";
+import { PlainTransformerInterface } from "../utils/plain-transformer";
 
 @injectable()
 export class AdminService implements AdminServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface) {
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface) {
 
     }
 

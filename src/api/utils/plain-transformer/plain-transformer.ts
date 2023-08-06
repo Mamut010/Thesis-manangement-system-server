@@ -12,9 +12,9 @@ import {
     StudentInfoDto,
     ThesisDto,
     TopicDto
-} from "../../shared/dtos";
-import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
-import { flattenObject } from "../../utils/object-helpers";
+} from "../../../shared/dtos";
+import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
+import { flattenObject } from "../../../utils/object-helpers";
 import { 
     PlainAdmin,
     PlainBachelorThesisAssessment,
@@ -28,11 +28,11 @@ import {
     PlainStudent,
     PlainThesis,
     PlainTopic
-} from "../../shared/types/plain-types";
-import { PlainTransformerServiceInterface } from "../interfaces";
+} from "../../../shared/types/plain-types";
+import { PlainTransformerInterface } from "./plain-transformer.interface";
 
 @injectable()
-export class PlainTransformerService implements PlainTransformerServiceInterface {
+export class PlainTransformer implements PlainTransformerInterface {
     private static readonly registrationAndAssessmentRelations: string[] = ['thesis', 'supervisor1', 'supervisor2'];
 
     public toAdminInfo(plain: PlainAdmin): AdminInfoDto {
@@ -90,7 +90,7 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
     public toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto {
         const dto = plainToInstanceExactMatch(BachelorThesisRegistrationDto, flattenObject(plain, {
             keepDuplicate: true,
-            transformedProps: PlainTransformerService.registrationAndAssessmentRelations,
+            transformedProps: PlainTransformer.registrationAndAssessmentRelations,
         }));
         
         dto.thesisType =  plain.thesis.field?.description ?? null;
@@ -100,7 +100,7 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
     public toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto {
         const dto = plainToInstanceExactMatch(OralDefenseRegistrationDto, flattenObject(plain, {
             keepDuplicate: true,
-            transformedProps: PlainTransformerService.registrationAndAssessmentRelations,
+            transformedProps: PlainTransformer.registrationAndAssessmentRelations,
         }));
         
         dto.areSpectatorsAllowed = (plain.spectatorsPresent ?? 0) > 1;
@@ -110,7 +110,7 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
     public toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto {
         const dto = plainToInstanceExactMatch(BachelorThesisAssessmentDto, flattenObject(plain, {
             keepDuplicate: true,
-            transformedProps: PlainTransformerService.registrationAndAssessmentRelations,
+            transformedProps: PlainTransformer.registrationAndAssessmentRelations,
         }));
         
         dto.thesisType =  plain.thesis.field?.description ?? null;
@@ -120,7 +120,7 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
     public toOralDefenseAssessment(plain: PlainOralDefenseAssessment): OralDefenseAssessmentDto {
         const dto = plainToInstanceExactMatch(OralDefenseAssessmentDto, flattenObject(plain, {
             keepDuplicate: true,
-            transformedProps: PlainTransformerService.registrationAndAssessmentRelations,
+            transformedProps: PlainTransformer.registrationAndAssessmentRelations,
         }));
 
         return dto;

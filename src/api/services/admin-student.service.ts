@@ -1,8 +1,5 @@
 import { inject, injectable } from "inversify";
-import { 
-    AdminStudentServiceInterface, 
-    PlainTransformerServiceInterface 
-} from "../interfaces";
+import { AdminStudentServiceInterface } from "../interfaces";
 import { StudentDetailResponse } from "../../contracts/responses/student-info.response";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
@@ -19,12 +16,13 @@ import { StudentsQueryRequest } from "../../contracts/requests/students-query.re
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
 import { Student, User } from "../../core/models";
+import { PlainTransformerInterface } from "../utils/plain-transformer";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface) {
 
     }

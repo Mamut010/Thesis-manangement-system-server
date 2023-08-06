@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { LocationServiceInterface, PlainTransformerServiceInterface } from "../../interfaces";
+import { LocationServiceInterface } from "../../interfaces";
 import { LocationsQueryRequest } from "../../../contracts/requests/resources/locations-query.request";
 import { LocationsQueryResponse } from "../../../contracts/responses/resources/locations-query.response";
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
@@ -11,12 +11,13 @@ import { NOT_FOUND_ERROR_MESSAGES } from "../../../core/constants/not-found-erro
 import { LocationCreateRequest } from "../../../contracts/requests/resources/location-create.request";
 import { LocationUpdateRequest } from "../../../contracts/requests/resources/location-update.request";
 import { Location } from "../../../core/models";
+import { PlainTransformerInterface } from "../../utils/plain-transformer";
 
 @injectable()
 export class LocationService implements LocationServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
     ) {
 

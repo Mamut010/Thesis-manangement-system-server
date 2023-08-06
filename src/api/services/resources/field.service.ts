@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { FieldServiceInterface, PlainTransformerServiceInterface } from "../../interfaces";
+import { FieldServiceInterface } from "../../interfaces";
 import { FieldsQueryRequest } from "../../../contracts/requests/resources/fields-query.request";
 import { FieldsQueryResponse } from "../../../contracts/responses/resources/fields-query.response";
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
@@ -11,12 +11,13 @@ import { NOT_FOUND_ERROR_MESSAGES } from "../../../core/constants/not-found-erro
 import { FieldCreateRequest } from "../../../contracts/requests/resources/field-create.request";
 import { FieldUpdateRequest } from "../../../contracts/requests/resources/field-update.request";
 import { Field } from "../../../core/models";
+import { PlainTransformerInterface } from "../../utils/plain-transformer";
 
 @injectable()
 export class FieldService implements FieldServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerServiceInterface,
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
     ) {
 
