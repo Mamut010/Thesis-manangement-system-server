@@ -29,7 +29,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Build Project",
+            "name": "Run Auth",
             "program": "${workspaceFolder}\\src\\auth.server.ts",
             "sourceMaps": true,
             "smartStep": true,
