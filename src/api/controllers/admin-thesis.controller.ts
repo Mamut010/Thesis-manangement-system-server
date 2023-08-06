@@ -16,7 +16,7 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AdminThesisServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
-import { ThesisInfoDto } from "../../shared/dtos";
+import { ThesisDto } from "../../shared/dtos";
 import { ThesesQueryResponse } from "../../contracts/responses/theses-query.response";
 import { ThesesQueryRequest } from "../../contracts/requests/theses-query.request";
 import { ThesisCreateRequest } from "../../contracts/requests/thesis-create.request";
@@ -43,21 +43,21 @@ export class AdminThesisController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/thesis-info')
-    @ResponseSchema(ThesisInfoDto)
+    @ResponseSchema(ThesisDto)
     getThesisInfo(@Param('id') id: number) {
         return this.adminThesisService.getThesisInfo(id);
     }
 
     @HttpCode(HTTP_CODES.Created)
     @Post()
-    @ResponseSchema(ThesisInfoDto)
+    @ResponseSchema(ThesisDto)
     createThesis(@Body({ required: true }) createRequest: ThesisCreateRequest) {
         return this.adminThesisService.createThesis(createRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Post('/:id')
-    @ResponseSchema(ThesisInfoDto)
+    @ResponseSchema(ThesisDto)
     updateThesis(@Param('id') id: number, @Body({ required: true }) updateRequest: ThesisUpdateRequest) {
         return this.adminThesisService.updateThesis(id, updateRequest);
     }

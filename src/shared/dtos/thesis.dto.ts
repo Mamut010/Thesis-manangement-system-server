@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class ThesisInfoDto {
+export class ThesisDto {
     @Expose()
     @IsDefined()
     @IsNumber()

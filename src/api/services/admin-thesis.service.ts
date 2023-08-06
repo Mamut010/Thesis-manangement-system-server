@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { AdminThesisServiceInterface, PlainTransformerServiceInterface } from "../interfaces";
-import { ThesisInfoDto } from "../../shared/dtos";
+import { ThesisDto } from "../../shared/dtos";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
@@ -58,7 +58,7 @@ export class AdminThesisService implements AdminThesisServiceInterface {
         return response;
     }
 
-    async getThesisInfo(thesisId: number): Promise<ThesisInfoDto> {
+    async getThesisInfo(thesisId: number): Promise<ThesisDto> {
         const thesis = await this.prisma.thesis.findUnique({
             where: {
                 id: thesisId
@@ -76,7 +76,7 @@ export class AdminThesisService implements AdminThesisServiceInterface {
         return this.plainTransformer.toThesisInfo(thesis);
     }
 
-    async createThesis(createRequest: ThesisCreateRequest): Promise<ThesisInfoDto> {
+    async createThesis(createRequest: ThesisCreateRequest): Promise<ThesisDto> {
         const thesis = await this.prisma.thesis.create({
             data: createRequest,
             include: {
@@ -88,7 +88,7 @@ export class AdminThesisService implements AdminThesisServiceInterface {
         return this.plainTransformer.toThesisInfo(thesis);
     }
 
-    async updateThesis(thesisId: number, updateRequest: ThesisCreateRequest): Promise<ThesisInfoDto> {
+    async updateThesis(thesisId: number, updateRequest: ThesisCreateRequest): Promise<ThesisDto> {
         try {
             await this.prisma.thesis.findUniqueOrThrow({
                 where: {

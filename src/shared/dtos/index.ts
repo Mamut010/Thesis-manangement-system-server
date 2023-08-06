@@ -8,7 +8,7 @@ export * from './role.dto';
 export * from './admin-info.dto';
 export * from './student-info.dto';
 export * from './lecturer-info.dto';
-export * from './thesis-info.dto';
+export * from './thesis.dto';
 export * from './bachelor-thesis-registration.dto';
 export * from './bachelor-thesis-assessment.dto';
 export * from './oral-defense-registration.dto';

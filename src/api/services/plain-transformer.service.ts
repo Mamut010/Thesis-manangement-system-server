@@ -8,7 +8,7 @@ import {
     OralDefenseRegistrationDto, 
     RoleDto, 
     StudentInfoDto,
-    ThesisInfoDto
+    ThesisDto
 } from "../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 import { flattenObject } from "../../utils/object-helpers";
@@ -58,8 +58,8 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
         return dto;
     }
 
-    public toThesisInfo(plain: PlainThesis): ThesisInfoDto {
-        const dto = plainToInstanceExactMatch(ThesisInfoDto, flattenObject(plain, {
+    public toThesisInfo(plain: PlainThesis): ThesisDto {
+        const dto = plainToInstanceExactMatch(ThesisDto, flattenObject(plain, {
             transformedProps: ['topic', 'field'],
         }));
 
