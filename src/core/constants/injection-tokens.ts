@@ -1,26 +1,26 @@
 const CONSTANT_TOKENS = {
     DiContainer: Symbol.for('DiContainer'),
-}
+} as const;
 
 const LOGGER_TOKENS = {
     Logger: Symbol.for('Logger'),
     LoggerFactory: Symbol.for('LoggerFactory'),
-}
+} as const;
 
 const PRISMA_TOKENS = {
     Prisma: Symbol.for('Prisma'),
-}
+} as const;
 
 const REPOSITORY_TOKENS = {
     UserRepo: Symbol.for('UserRepo'),
     RefreshTokenRepo: Symbol.for('RefreshTokenRepo'),
-}
+} as const;
 
 const AUTH_SERVICE_TOKENS = {
     JwtService: Symbol.for('JwtService'),
     HashService: Symbol.for('HashService'),
     AuthService: Symbol.for('AuthService'),
-}
+} as const;
 
 const API_SERVICE_TOKENS = {
     AdminService: Symbol.for('AdminService'),
@@ -31,14 +31,15 @@ const API_SERVICE_TOKENS = {
     ThesisService: Symbol.for('ThesisService'),
     RoleService: Symbol.for('RoleService'),
     FieldService: Symbol.for('FieldService'),
-}
+    TopicService: Symbol.for('TopicService')
+} as const;
 
 const UTIL_TOKENS = {
     JwtExtractor: Symbol.for('JwtExtractor'),
     JwtCookieHandler: Symbol.for('JwtCookieHandler'),
     PlainTransformer: Symbol.for('PlainTransformer'),
     PrismaQueryCreator: Symbol.for('PrismaQueryCreator'),
-}
+} as const;
 
 export const INJECTION_TOKENS = {
     ...CONSTANT_TOKENS,

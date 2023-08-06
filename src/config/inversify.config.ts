@@ -23,7 +23,8 @@ import {
     ThesisServiceInterface, 
     PlainTransformerServiceInterface,
     RoleServiceInterface,
-    FieldServiceInterface
+    FieldServiceInterface,
+    TopicServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -32,7 +33,8 @@ import {
     ThesisService, 
     PlainTransformerService,
     RoleService,
-    FieldService
+    FieldService,
+    TopicService
 } from '../api/services';
 import { 
     UserRepoInterface,
@@ -156,6 +158,11 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<FieldServiceInterface>(INJECTION_TOKENS.FieldService)
         .to(FieldService)
+        .inRequestScope();
+
+    container
+        .bind<TopicServiceInterface>(INJECTION_TOKENS.TopicService)
+        .to(TopicService)
         .inRequestScope();
 }
 

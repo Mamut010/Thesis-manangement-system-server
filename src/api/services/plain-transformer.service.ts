@@ -9,7 +9,8 @@ import {
     OralDefenseRegistrationDto, 
     RoleDto, 
     StudentInfoDto,
-    ThesisDto
+    ThesisDto,
+    TopicDto
 } from "../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 import { flattenObject } from "../../utils/object-helpers";
@@ -23,7 +24,8 @@ import {
     PlainOralDefenseRegistration, 
     PlainRole, 
     PlainStudent,
-    PlainThesis
+    PlainThesis,
+    PlainTopic
 } from "../../shared/types/plain-types";
 import { PlainTransformerServiceInterface } from "../interfaces";
 
@@ -70,6 +72,11 @@ export class PlainTransformerService implements PlainTransformerServiceInterface
 
     public toField(plain: PlainField): FieldDto {
         const dto = plainToInstanceExactMatch(FieldDto, plain);
+        return dto;
+    }
+
+    public toTopic(plain: PlainTopic): TopicDto {
+        const dto = plainToInstanceExactMatch(TopicDto, plain);
         return dto;
     }
 

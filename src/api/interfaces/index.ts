@@ -6,6 +6,7 @@ export * from './admin-lecturer.service.interface';
 export * from './resources/thesis.service.interface';
 export * from './resources/role.service.interface';
 export * from './resources/field.service.interface';
+export * from './resources/topic.service.interface';
 
 // Utils
 export * from './plain-transformer.service.interface';

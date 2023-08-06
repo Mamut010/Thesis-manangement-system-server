@@ -6,6 +6,7 @@ export const NOT_FOUND_ERROR_MESSAGES = {
     LecturerNotFound: 'Lecturer not found',
     ThesisNotFound: 'Thesis not found',
     FieldNotFound: 'Field not found',
+    TopicNotFound: 'Topic not found',
     BachelorThesisRegistrationNotFound: 'Bachelor thesis registration not found',
     OralDefenseRegistrationNotFound: 'Oral defense registration not found',
     BachelorThesisAssessmentNotFound: 'Bachelor thesis assessment not found',
