@@ -2,7 +2,6 @@ import * as jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';
 import { plainToInstance } from 'class-transformer';
 import { JwtServiceInterface } from '../interfaces';
-import { route } from '../../utils/route';
 import { AUTH_SETTINGS } from '../../core/constants/auth-settings';
 import { JWT_TOKEN_TYPES } from '../../core/constants/jwt-token-types';
 import { AuthTokens } from '../../shared/types/auth-tokens';
@@ -12,11 +11,6 @@ import { JwtTokenType } from '../../shared/types/jwt-token-type';
 
 @injectable()
 export class JwtService implements JwtServiceInterface {
-    private static readonly DEFAULT_SIGN_OPTIONS = {
-        issuer: route('auth'),
-        audience: route('api')
-    }
-
     private getSettingsByTokenType(tokenType: JwtTokenType) {
         if (tokenType === JWT_TOKEN_TYPES.AccessToken) {
             return {
@@ -40,7 +34,7 @@ export class JwtService implements JwtServiceInterface {
 
         const token = jwt.sign(instanceToPlainSkipUnset(payload), settings.secret, {
             expiresIn: settings.expiresIn,
-            ...JwtService.DEFAULT_SIGN_OPTIONS,
+            ...AUTH_SETTINGS.Jwt.DefaultSignOptions,
         });
 
         return token;
@@ -54,7 +48,7 @@ export class JwtService implements JwtServiceInterface {
         
         const token = jwt.sign(instanceToPlainSkipUnset(payload), settings.secret, {
             expiresIn: settings.expiresIn,
-            ...JwtService.DEFAULT_SIGN_OPTIONS,
+            ...AUTH_SETTINGS.Jwt.DefaultSignOptions,
         });
 
         return token;
@@ -69,12 +63,12 @@ export class JwtService implements JwtServiceInterface {
 
     verifyAccessToken(token: string): JwtAccessPayloadDto {
         const secret = this.getSettingsByTokenType(JWT_TOKEN_TYPES.AccessToken).secret;
-        return plainToInstance(JwtAccessPayloadDto, jwt.verify(token, secret, JwtService.DEFAULT_SIGN_OPTIONS));
+        return plainToInstance(JwtAccessPayloadDto, jwt.verify(token, secret, AUTH_SETTINGS.Jwt.DefaultSignOptions));
     }
 
     verifyRefreshToken(token: string): JwtRefreshPayloadDto {
         const secret = this.getSettingsByTokenType(JWT_TOKEN_TYPES.RefreshToken).secret;
-        return plainToInstance(JwtRefreshPayloadDto, jwt.verify(token, secret, JwtService.DEFAULT_SIGN_OPTIONS));
+        return plainToInstance(JwtRefreshPayloadDto, jwt.verify(token, secret, AUTH_SETTINGS.Jwt.DefaultSignOptions));
     }
 
     decodeAccessToken(token: string): JwtAccessPayloadDto {
