@@ -30,7 +30,7 @@ import { ThesisUpdateRequest } from "../../../contracts/requests/resources/thesi
 })
 export class ThesisController {
     constructor(
-        @inject(INJECTION_TOKENS.ThesisService) private adminThesisService: ThesisServiceInterface) {
+        @inject(INJECTION_TOKENS.ThesisService) private thesisService: ThesisServiceInterface) {
 
     }
 
@@ -38,14 +38,14 @@ export class ThesisController {
     @Get()
     @ResponseSchema(ThesesQueryResponse)
     getTheses(@QueryParams() thesesQuery: ThesesQueryRequest) {
-        return this.adminThesisService.getTheses(thesesQuery);
+        return this.thesisService.getTheses(thesesQuery);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id')
     @ResponseSchema(ThesisDto)
     getThesis(@Param('id') id: number) {
-        return this.adminThesisService.getThesis(id);
+        return this.thesisService.getThesis(id);
     }
 
     @HttpCode(HTTP_CODES.Created)
@@ -53,7 +53,7 @@ export class ThesisController {
     @Post()
     @ResponseSchema(ThesisDto)
     createThesis(@Body({ required: true }) createRequest: ThesisCreateRequest) {
-        return this.adminThesisService.createThesis(createRequest);
+        return this.thesisService.createThesis(createRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
@@ -61,13 +61,13 @@ export class ThesisController {
     @Post('/:id')
     @ResponseSchema(ThesisDto)
     updateThesis(@Param('id') id: number, @Body({ required: true }) updateRequest: ThesisUpdateRequest) {
-        return this.adminThesisService.updateThesis(id, updateRequest);
+        return this.thesisService.updateThesis(id, updateRequest);
     }
 
     //@Authorized(ROLES.Admin)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteThesis(@Param('id') id: number) {
-        return this.adminThesisService.deleteThesis(id);
+        return this.thesisService.deleteThesis(id);
     }
 }
