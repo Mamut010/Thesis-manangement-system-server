@@ -12,6 +12,6 @@ export const AUTH_SETTINGS = {
         SaltRounds: 10,
     },
     Helmet: {
-        HstsMaxAge: 31536000
+        HstsMaxAge: 60 * 60 * 24 * 365 // 1 year
     }
 } as const;
