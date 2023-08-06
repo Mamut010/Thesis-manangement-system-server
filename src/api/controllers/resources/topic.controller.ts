@@ -49,7 +49,7 @@ export class TopicController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized(ROLES.Admin)
+    //@Authorized([ROLES.Admin, ROLES.Lecturer1_1])
     @Post()
     @ResponseSchema(TopicDto)
     createTopic(@Body({ required: true }) createRequest: TopicCreateRequest) {
