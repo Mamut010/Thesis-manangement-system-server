@@ -23,6 +23,7 @@ import {
     WhereQueryObject 
 } from "./types/query-object";
 import { ClassConstructor, plainToInstance } from "class-transformer";
+import { InternalServerError } from "../../contracts/errors/internal-server.error";
 
 @injectable()
 export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
@@ -134,22 +135,17 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
                 continue;
             }
 
-            let field: string;
-            if (creationOptions.filterSuffix && key.endsWith(creationOptions.filterSuffix)) {
-                field = trimSuffix(key, creationOptions.filterSuffix);
-            }
-            else if (creationOptions.filterPrefix && key.startsWith(creationOptions.filterPrefix)) {
-                field = trimPrefix(key, creationOptions.filterPrefix);
-            }
-            else {
+            const field = this.getFieldNameFromKey(key, creationOptions);
+            if (!field) {
                 continue;
             }
 
+            const mappedFieldName = creationOptions.fieldNameMap?.[field];
             if (isValueBinaryFilter) {
-                binaryFilters[creationOptions.fieldMap?.[field] ?? field] = value;
+                binaryFilters[mappedFieldName ?? field] = value;
             }
             else if (isValueListFilter) {
-                listFilters[creationOptions.fieldMap?.[field] ?? field] = value;
+                listFilters[mappedFieldName ?? field] = value;
             }
         }
 
@@ -159,21 +155,70 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
     }
 
+    private getFieldNameFromKey(key: string, creationOptions: AutoQueryCreationOptions) {
+        if (creationOptions.filterSuffix && key.endsWith(creationOptions.filterSuffix)) {
+            return trimSuffix(key, creationOptions.filterSuffix);
+        }
+        else if (creationOptions.filterPrefix && key.startsWith(creationOptions.filterPrefix)) {
+            return trimPrefix(key, creationOptions.filterPrefix);
+        }
+    }
+
     private createWhereWithFieldMap<T extends AutoQueryModel>(model: T, query: AutoWhereQueryCreatable, 
         creationOptions?: AutoQueryCreationOptions) : WhereWithFieldMap {
         const defaultOptions: AutoQueryCreationOptions = {
             filterSuffix: 'Filter',
             filterPrefix: undefined,
+            fieldNameMap: undefined,
             fieldMap: undefined,
         };
 
         const options = defaultOrGiven(defaultOptions, creationOptions, { skipNestedEnumeration: ['fieldMap'] });
         if (!options.filterSuffix && !options.filterPrefix) {
-            throw new Error('Either a filter suffix or prefix must be specified for auto query creation process');
+            throw new InternalServerError('Either a filter suffix or prefix must be specified for auto query creation process');
         }
         
         const binaryAndListFilters = this.getFilterFieldsFromQuery(query, options);
-        return this.constructActualWhereWithFieldMap(model, query, binaryAndListFilters, options);
+        const { where, fieldMap } = this.constructActualWhereWithFieldMap(model, query, binaryAndListFilters, options);
+        if (options.fieldMap) {
+            this.handleUserSuppliedFieldMap(options.fieldMap, binaryAndListFilters, where, fieldMap);
+        }
+        return {
+            where,
+            fieldMap
+        }
+    }
+
+    private handleUserSuppliedFieldMap(fieldMap: Record<string, string>, binaryAndListFilters: BinaryAndListFilters,
+        where: WhereQueryObject, generatedFieldMap: Record<string, string>) {
+        // Added <key>-<value> of <filter's name>-<dot notation> pairs to where object.
+        // Warning: This may cause run time error if the dot notations are used incorrectly
+        Object
+            .entries(fieldMap)
+            .forEach(([key, value]) => {
+                this.addFilteringObjectToWhereByKey(binaryAndListFilters, where, key, value);
+            });
+        // Added all supplied field map to the generated field map
+        Object
+            .assign(generatedFieldMap, fieldMap);
+    }
+
+    private addFilteringObjectToWhereByKey(binaryAndListFilters: BinaryAndListFilters, where: WhereQueryObject, 
+        key: string, dotNotation: string) {
+        if(binaryAndListFilters.binaryFilters[key]) {
+            const filteringObject = this.createFilteringObject(binaryAndListFilters.binaryFilters[key] as any);
+            if (filteringObject) {
+                assignObjectByDotNotation(where, dotNotation, filteringObject);
+            }
+            delete binaryAndListFilters.binaryFilters[key];
+        }
+        else if(binaryAndListFilters.listFilters[key]) {
+            const filteringObject = this.createListFilteringObject(binaryAndListFilters.listFilters[key] as any);
+            if (filteringObject) {
+                assignObjectByDotNotation(where, dotNotation, filteringObject);
+            }
+            delete binaryAndListFilters.listFilters[key];
+        }
     }
 
     private finalizeWhere(where: WhereQueryObject): WhereQueryObject | undefined {
@@ -184,7 +229,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         creationOptions: AutoQueryCreationOptions): WhereWithFieldMap {
         const initialConfig: WhereObjectCreationConfig = {
             fieldNamePrefix: '',
-            reversedFieldMap: creationOptions.fieldMap ? flipMap(creationOptions.fieldMap) : undefined,
+            reversedFieldNameMap: creationOptions.fieldNameMap ? flipMap(creationOptions.fieldNameMap) : undefined,
         };
         return this.constructActualWhereWithFieldMapImpl(model, query, binaryAndListFilters, creationOptions, initialConfig);
     }
@@ -208,22 +253,9 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
                 continue;
             }
 
-            if(binaryAndListFilters.binaryFilters[key]) {
-                const filteringObject = this.createFilteringObject(binaryAndListFilters.binaryFilters[key] as any);
-                if (filteringObject) {
-                    assignObjectByDotNotation(where, config.fieldNamePrefix + key, filteringObject);
-                }
-                delete binaryAndListFilters.binaryFilters[key];
-            }
-            else if(binaryAndListFilters.listFilters[key]) {
-                const filteringObject = this.createListFilteringObject(binaryAndListFilters.listFilters[key] as any);
-                if (filteringObject) {
-                    assignObjectByDotNotation(where, config.fieldNamePrefix + key, filteringObject);
-                }
-                delete binaryAndListFilters.listFilters[key];
-            }
-
-            fieldMap[config.reversedFieldMap?.[key] ?? key] = config.fieldNamePrefix + key;
+            const currentDotNotation = config.fieldNamePrefix + key;
+            this.addFilteringObjectToWhereByKey(binaryAndListFilters, where, key, currentDotNotation);
+            fieldMap[config.reversedFieldNameMap?.[key] ?? key] = currentDotNotation;
         }
 
         return {
@@ -272,5 +304,5 @@ interface WhereWithFieldMap {
 
 interface WhereObjectCreationConfig {
     fieldNamePrefix: string,
-    reversedFieldMap?: Record<string, string>,
+    reversedFieldNameMap?: Record<string, string>,
 }

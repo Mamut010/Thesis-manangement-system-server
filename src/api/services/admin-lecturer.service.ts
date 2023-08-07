@@ -33,7 +33,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
             user: this.queryCreator.createQueryModel(User)
         }
         const prismaQuery = this.queryCreator.createQueryObject(model, lecturersQuery, { 
-            fieldMap: { 
+            fieldNameMap: { 
                 lecturerId: 'userId' 
             } 
         });

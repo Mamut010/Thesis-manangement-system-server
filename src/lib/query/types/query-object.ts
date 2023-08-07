@@ -22,8 +22,8 @@ export interface PaginationQueryObject {
 }
 
 export interface PrismaQueryObject {
-    where?: WhereQueryObject;
-    orderBy?: OrderByQueryObject | OrderByQueryObject[];
-    skip?: number;
-    take?: number;
+    where: WhereQueryObject | undefined;
+    orderBy: OrderByQueryObject | OrderByQueryObject[] | undefined;
+    skip: number | undefined
+    take: number | undefined;
 }

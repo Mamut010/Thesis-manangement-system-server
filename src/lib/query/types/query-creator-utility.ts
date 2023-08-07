@@ -35,7 +35,12 @@ export interface AutoQueryCreationOptions {
     /**
      * Field name mapped from filter fields and orderBy fields to actual model's fields.
      */
-    fieldMap?: Record<string, string>,
+    fieldNameMap?: Record<string, string>,
+
+    /**
+     * User supplied field map to override the auto generated field map while analyzing the structure of the model.
+     */
+    fieldMap?: Record<string, string>
 }
 
 export type AutoQueryModel = {

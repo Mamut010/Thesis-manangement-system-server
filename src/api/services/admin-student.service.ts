@@ -32,7 +32,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
             ...this.queryCreator.createQueryModel(Student),
             user: this.queryCreator.createQueryModel(User),
         };
-        const prismaQuery = this.queryCreator.createQueryObject(model, studentsQuery, { fieldMap: { studentId: 'userId' } });
+        const prismaQuery = this.queryCreator.createQueryObject(model, studentsQuery, { fieldNameMap: { studentId: 'userId' } });
         
         const count = await this.prisma.student.count({ ...prismaQuery, skip: undefined, take: undefined });
         const students = await this.prisma.student.findMany({ 
