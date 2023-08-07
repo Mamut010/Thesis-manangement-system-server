@@ -16,7 +16,6 @@ import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisRegistration } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainBachelorThesisRegistration } from "../../../shared/types/plain-types";
-import { instanceToInstance } from "class-transformer";
 
 @injectable()
 export class BachelorThesisRegistrationService implements BachelorThesisRegistrationServiceInterface {
