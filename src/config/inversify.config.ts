@@ -26,7 +26,8 @@ import {
     TopicServiceInterface,
     LocationServiceInterface,
     BachelorThesisRegistrationServiceInterface,
-    BachelorThesisAssessmentServiceInterface
+    BachelorThesisAssessmentServiceInterface,
+    OralDefenseRegistrationServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -38,7 +39,8 @@ import {
     TopicService,
     LocationService,
     BachelorThesisRegistrationService,
-    BachelorThesisAssessmentService
+    BachelorThesisAssessmentService,
+    OralDefenseRegistrationService
 } from '../api/services';
 import { 
     UserRepoInterface,
@@ -178,6 +180,11 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<BachelorThesisAssessmentServiceInterface>(INJECTION_TOKENS.BachelorThesisAssessmentService)
         .to(BachelorThesisAssessmentService)
+        .inRequestScope();
+
+    container
+        .bind<OralDefenseRegistrationServiceInterface>(INJECTION_TOKENS.OralDefenseRegistrationService)
+        .to(OralDefenseRegistrationService)
         .inRequestScope();
 }
 

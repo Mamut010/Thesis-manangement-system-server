@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class OralDefenseRegistration {
     @Expose()
@@ -34,8 +34,8 @@ export class OralDefenseRegistration {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    spectatorsPresent!: number | null;
+    @IsBoolean()
+    areSpectatorsAllowed!: boolean | null;
 
     @Expose()
     @IsOptional()

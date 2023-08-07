@@ -49,6 +49,11 @@ export class OralDefenseRegistrationDto {
 
     @Expose()
     @IsOptional()
+    @IsDate()
+    actualDate!: Date | null;
+
+    @Expose()
+    @IsOptional()
     @IsString()
     room!: string | null;
 

@@ -103,7 +103,6 @@ export class PlainTransformer implements PlainTransformerInterface {
             transformedProps: PlainTransformer.registrationAndAssessmentRelations,
         }));
         
-        dto.areSpectatorsAllowed = (plain.spectatorsPresent ?? 0) > 1;
         return dto;
     }
 
