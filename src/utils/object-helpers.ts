@@ -51,7 +51,9 @@ export function defaultOrGiven<T>(defaulted: T, given?: T, options?: DefaultOrGi
 
     return result;
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * A transformer is used to transform key in inward and outward cases.
  * 
@@ -257,7 +259,9 @@ export function flipMap<T extends PropertyKey, U extends Exclude<PropertyKey, sy
             .map(([key, value]) => [value, key])
     ) as Record<string, T>;
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export type NestedNotatedObject<T> = { [property: string]: T | NestedNotatedObject<T> };
 
 export function assignObjectByDotNotation<T>(obj: NestedNotatedObject<T>, dotNotation: string, value: T)
@@ -280,7 +284,9 @@ export function assignObjectByDotNotation<T>(obj: NestedNotatedObject<T>, dotNot
 export function createObjectByDotNotation<T>(dotNotation: string, value: T): NestedNotatedObject<T> {
     return assignObjectByDotNotation({}, dotNotation, value);
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export interface CompareObjectOptions {
     ignoreUnmatchedProps?: boolean
 }
@@ -313,7 +319,7 @@ function compareObjectByEntriesImpl(obj1: Record<string, any>, obj2: Record<stri
         const val2: unknown = obj2[key];
 
         if (!compareObjectByEntriesImplCheckNonobject(val1, val2)
-            || !compareObjectByEntriesImplCheckEnumerable(val1, val2, options)
+            || !compareObjectByEntriesImplCheckEnumerableObject(val1, val2, options)
             || !compareObjectByEntriesImplCheckArray(val1, val2, options)
             || !compareObjectByEntriesImplCheckDate(val1, val2, options)) {
             return false;
@@ -332,7 +338,7 @@ function compareObjectByEntriesImplCheckNonobject(val1: unknown, val2: unknown) 
     return true;
 }
 
-function compareObjectByEntriesImplCheckEnumerable(val1: unknown, val2: unknown, options: CompareObjectOptions) {
+function compareObjectByEntriesImplCheckEnumerableObject(val1: unknown, val2: unknown, options: CompareObjectOptions) {
     if (isEnumerableObject(val1)) {
         if (!isEnumerableObject(val2) || !compareObjectByEntriesImpl(val1, val2, options)) {
             return false;
@@ -366,4 +372,20 @@ function arrayEqualsByEntries(arr1: unknown[], arr2: unknown[],
         const item2 = arr2[index];
         return item1 === item2 || additionalCheck?.(item1, item2);
     });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export function isObjectEmptyOrAllUndefined(obj: Record<string, any>, 
+    validateNested?: boolean): obj is Record<string, undefined> {
+    for(const key in obj) {
+        const value = obj[key];
+        if (isEnumerableObject(value)) {
+            return validateNested === true && isObjectEmptyOrAllUndefined(value, validateNested);
+        }
+        else if (value !== undefined) {
+            return false;
+        }
+    }
+
+    return true;
 }
