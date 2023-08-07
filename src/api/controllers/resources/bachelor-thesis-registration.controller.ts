@@ -24,7 +24,7 @@ import { BachelorThesisRegistrationUpdateRequest } from "../../../contracts/requ
 import { ROLES } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 
-@JsonController('bachelorThesisRegistrations')
+@JsonController('bachelor-thesis-registrations')
 //@Authorized()
 @injectable()
 @OpenAPI({
