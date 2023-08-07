@@ -34,6 +34,7 @@ const API_SERVICE_TOKENS = {
     TopicService: Symbol.for('TopicService'),
     LocationService: Symbol.for('LocationService'),
     BachelorThesisRegistrationService: Symbol.for('BachelorThesisRegistrationService'),
+    BachelorThesisAssessmentService: Symbol.for('BachelorThesisAssessmentService'),
 } as const;
 
 const UTIL_TOKENS = {

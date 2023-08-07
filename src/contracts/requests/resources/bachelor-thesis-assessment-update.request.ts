@@ -1,0 +1,49 @@
+import { Expose } from "class-transformer";
+import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+
+export class BachelorThesisAssessmentUpdateRequest {
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    thesisId?: number;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    studentId?: number;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    supervisor1Id?: number;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    supervisor2Id?: number;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    furtherParticipants?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    supervisor1Grade?: number;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    supervisor2Grade?: number;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    assessmentDescription?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsDate()
+    assessmentDate?: Date;
+}

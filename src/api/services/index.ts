@@ -9,3 +9,4 @@ export * from './resources/field.service';
 export * from './resources/topic.service';
 export * from './resources/location.service';
 export * from './resources/bachelor-thesis-registration.service';
+export * from './resources/bachelor-thesis-assessment.service';
