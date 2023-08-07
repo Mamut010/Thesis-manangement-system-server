@@ -218,8 +218,8 @@ model BachelorThesisAssessment {
     id                     Int         @id @default(autoincrement())
     studentId              Int         @unique
     thesisId               Int
-    supervisor1Id          Int
-    supervisor2Id          Int
+    supervisor1Id          Int?
+    supervisor2Id          Int?
     furtherParticipants    String?     @db.VarChar(255)
     supervisor1Grade       Float?      @db.Float
     supervisor2Grade       Float?      @db.Float
@@ -231,16 +231,16 @@ model BachelorThesisAssessment {
 
     student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    supervisor1            Lecturer    @relation("supervisor1BachelorThesisAssessments", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    supervisor2            Lecturer    @relation("supervisor2BachelorThesisAssessments", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor1            Lecturer?   @relation("supervisor1BachelorThesisAssessments", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor2            Lecturer?   @relation("supervisor2BachelorThesisAssessments", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model OralDefenseAssessment {
     id                     Int         @id @default(autoincrement())
     studentId              Int         @unique
     thesisId               Int
-    supervisor1Id          Int
-    supervisor2Id          Int
+    supervisor1Id          Int?
+    supervisor2Id          Int?
     dateDefense            DateTime?   @db.Date
     placeDefense           String?     @db.VarChar(255)
     startDate              DateTime?   @db.Date
@@ -256,6 +256,6 @@ model OralDefenseAssessment {
 
     student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    supervisor1            Lecturer    @relation("supervisor1OralDefenseAssessments", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    supervisor2            Lecturer    @relation("supervisor2OralDefenseAssessments", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor1            Lecturer?   @relation("supervisor1OralDefenseAssessments", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor2            Lecturer?   @relation("supervisor2OralDefenseAssessments", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
 }
