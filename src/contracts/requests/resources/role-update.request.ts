@@ -5,10 +5,5 @@ export class RoleUpdateRequest {
     @Expose()
     @IsOptional()
     @IsString()
-    name?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
     description?: string;
 }
