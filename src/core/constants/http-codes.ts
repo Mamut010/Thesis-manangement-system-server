@@ -71,15 +71,26 @@ export const HTTP_CODES = {
    /**
     * The server cannot find the requested resource. In the browser, this means the URL is not recognized. 
     * In an API, this can also mean that the endpoint is valid but the resource itself does not exist. 
-    * Servers may also send this response instead of 403 Forbidden to hide the existence of a resource from an unauthorized client. 
-    * This response code is probably the most well known due to its frequent occurrence on the web.
+    * Servers may also send this response instead of 403 Forbidden to hide the existence of a resource from an 
+    * unauthorized client. This response code is probably the most well known due to its frequent occurrence on the web.
     */
    NotFound: 404,
+
+   /**
+    * The request method is known by the server but is not supported by the target resource. 
+    * For example, an API may not allow calling DELETE to remove a resource.
+    */
+   MethodNotAllowed: 405,
 
    /**
     * This response is sent when a request conflicts with the current state of the server.
     */
    Conflict: 409,
+
+   /**
+    * The server refuses the attempt to brew coffee with a teapot.
+    */
+   ImATeapot: 418,
 
    /**
     * The server has encountered a situation it does not know how to handle.
