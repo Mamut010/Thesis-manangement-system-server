@@ -8,3 +8,4 @@ export * from './resources/role.service';
 export * from './resources/field.service';
 export * from './resources/topic.service';
 export * from './resources/location.service';
+export * from './resources/bachelor-thesis-registration.service';

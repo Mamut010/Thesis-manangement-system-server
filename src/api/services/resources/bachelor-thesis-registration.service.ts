@@ -1,0 +1,134 @@
+import { inject, injectable } from "inversify";
+import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
+import { PrismaClient } from "@prisma/client";
+import { BachelorThesisRegistrationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
+import { BachelorThesisRegistrationsQueryResponse } from "../../../contracts/responses/resources/bachelor-thesis-registrations-query.response";
+import { PrismaQueryCreatorInterface } from "../../../lib/query";
+import { BachelorThesisRegistrationDto } from "../../../shared/dtos";
+import { NotFoundError } from "../../../contracts/errors/not-found.error";
+import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
+import { BachelorThesisRegistrationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-registration-create.request";
+import { BachelorThesisRegistrationUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-registration-update.request";
+import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
+import { BachelorThesisRegistrationServiceInterface } from "../../interfaces";
+import { AuthorizedUser } from "../../../core/auth-checkers";
+import { BachelorThesisRegistration } from "../../../core/models";
+import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
+import { PlainBachelorThesisRegistration } from "../../../shared/types/plain-types";
+import { instanceToInstance } from "class-transformer";
+
+@injectable()
+export class BachelorThesisRegistrationService implements BachelorThesisRegistrationServiceInterface {
+    private static readonly include = {
+        student: {
+            include: {
+                user: true
+            }
+        },
+        supervisor1: true,
+        supervisor2: true,
+        thesis: {
+            include: {
+                field: true
+            }
+        }
+    } as const;
+    
+    constructor(
+        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
+        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
+    ) {
+
+    }
+
+    async getBachelorThesisRegistrations(user: AuthorizedUser, queryRequest: BachelorThesisRegistrationsQueryRequest)
+        : Promise<BachelorThesisRegistrationsQueryResponse> {
+        const fieldMap = {
+            surname: 'student.user.surname',
+            forename: 'student.user.forename',
+            thesisTitle: 'thesis.title',
+            thesisType: 'thesis.field.title',
+            supervisor1Title: 'supervisor1.title',
+            supervisor2Title: 'supervisor2.title',
+        };
+        const model = this.queryCreator.createQueryModel(BachelorThesisRegistration);
+        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
+
+        const count = await this.prisma.bachelorThesisRegistration.count({ where: prismaQuery.where });
+        const bachelorThesisRegistrations = await this.prisma.bachelorThesisRegistration.findMany({
+            ...prismaQuery,
+            include: BachelorThesisRegistrationService.include,
+        });
+
+        const response = new BachelorThesisRegistrationsQueryResponse();
+        response.content = bachelorThesisRegistrations.map(item => this.plainTransformer.toBachelorThesisRegistration(item));
+        response.count = count;
+        return response;
+    }
+
+    async getBachelorThesisRegistration(user: AuthorizedUser, id: number): Promise<BachelorThesisRegistrationDto> {
+        const bachelorThesisRegistration = await this.ensureRecordExists(id);
+        return this.plainTransformer.toBachelorThesisRegistration(bachelorThesisRegistration);
+    }
+
+    async createBachelorThesisRegistration(user: AuthorizedUser, createRequest: BachelorThesisRegistrationCreateRequest)
+        : Promise<BachelorThesisRegistrationDto> {
+        const bachelorThesisRegistration = await this.prisma.bachelorThesisRegistration.create({
+            data: createRequest,
+            include: BachelorThesisRegistrationService.include
+        });
+        return this.plainTransformer.toBachelorThesisRegistration(bachelorThesisRegistration);
+    }
+
+    async updateBachelorThesisRegistration(user: AuthorizedUser, id: number, 
+        updateRequest: BachelorThesisRegistrationUpdateRequest) : Promise<BachelorThesisRegistrationDto> {
+        let record = await this.ensureRecordExists(id);
+        this.ensureValidModification(user, record);
+
+        if (!isObjectEmptyOrAllUndefined(updateRequest) && !compareObjectByEntries(record, updateRequest)) {
+            record = await this.prisma.bachelorThesisRegistration.update({
+                where: {
+                    id: id
+                },
+                data: updateRequest,
+                include: BachelorThesisRegistrationService.include
+            });
+        }
+
+        return this.plainTransformer.toBachelorThesisRegistration(record);
+    }
+
+    async deleteBachelorThesisRegistration(user: AuthorizedUser, id: number): Promise<void> {
+        const record = await this.ensureRecordExists(id);
+        this.ensureValidModification(user, record);
+
+        await this.prisma.bachelorThesisRegistration.delete({
+            where: {
+                id: id
+            }
+        });
+    }
+
+    private async ensureRecordExists(id: number) {
+        try {
+            return await this.prisma.bachelorThesisRegistration.findUniqueOrThrow({
+                where: {
+                    id: id
+                },
+                include: BachelorThesisRegistrationService.include
+            });
+        }
+        catch {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisRegistrationNotFound);
+        }
+    }
+
+    private ensureValidModification(user: AuthorizedUser, record: PlainBachelorThesisRegistration) {
+        const isValid = true;
+        if (!isValid) {
+            throw new ForbiddenError('Access to resource is denied');
+        }
+    }
+}

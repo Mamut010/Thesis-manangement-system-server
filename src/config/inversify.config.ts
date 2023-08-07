@@ -24,7 +24,8 @@ import {
     RoleServiceInterface,
     FieldServiceInterface,
     TopicServiceInterface,
-    LocationServiceInterface
+    LocationServiceInterface,
+    BachelorThesisRegistrationServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -34,7 +35,8 @@ import {
     RoleService,
     FieldService,
     TopicService,
-    LocationService
+    LocationService,
+    BachelorThesisRegistrationService
 } from '../api/services';
 import { 
     UserRepoInterface,
@@ -164,6 +166,11 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<LocationServiceInterface>(INJECTION_TOKENS.LocationService)
         .to(LocationService)
+        .inRequestScope();
+
+    container
+        .bind<BachelorThesisRegistrationServiceInterface>(INJECTION_TOKENS.BachelorThesisRegistrationService)
+        .to(BachelorThesisRegistrationService)
         .inRequestScope();
 }
 
