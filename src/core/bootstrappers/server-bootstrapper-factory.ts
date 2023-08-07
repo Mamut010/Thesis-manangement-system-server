@@ -35,7 +35,11 @@ export const serverBootstrapperFactory = (serverType: ServerType): Bootstrapper 
                 optionsSuccessStatus: HTTP_CODES.Ok,
             },
             classTransformer: true,
-            plainToClassTransformOptions: { exposeDefaultValues: true },
+            plainToClassTransformOptions: { 
+                excludeExtraneousValues: true, 
+                exposeUnsetFields: false, 
+                exposeDefaultValues: true,
+            },
             validation: true,
             routePrefix: env.app.servers[serverType].routePrefix,
             defaultErrorHandler: false,
