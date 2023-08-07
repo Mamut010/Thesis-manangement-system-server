@@ -10,6 +10,7 @@ import { ThesesQueryRequest } from "../../../contracts/requests/resources/theses
 import { ThesesQueryResponse } from "../../../contracts/responses/resources/theses-query.response";
 import { ThesisCreateRequest } from "../../../contracts/requests/resources/thesis-create.request";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 
 @injectable()
 export class ThesisService implements ThesisServiceInterface {
@@ -60,20 +61,7 @@ export class ThesisService implements ThesisServiceInterface {
     }
 
     async getThesis(id: number): Promise<ThesisDto> {
-        const thesis = await this.prisma.thesis.findUnique({
-            where: {
-                id: id
-            },
-            include: {
-                topic: true,
-                field: true,
-            }
-        });
-
-        if (!thesis) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);
-        }
-
+        const thesis = await this.ensureRecordExists(id);
         return this.plainTransformer.toThesis(thesis);
     }
 
@@ -90,20 +78,21 @@ export class ThesisService implements ThesisServiceInterface {
     }
 
     async updateThesis(id: number, updateRequest: ThesisCreateRequest): Promise<ThesisDto> {
-        await this.ensureRecordExists(id);
+        let record = await this.ensureRecordExists(id);
+        if (!isObjectEmptyOrAllUndefined(updateRequest) && !compareObjectByEntries(record, updateRequest)) {
+            record = await this.prisma.thesis.update({
+                where: {
+                    id: id
+                },
+                data: updateRequest,
+                include: {
+                    topic: true,
+                    field: true
+                }
+            });
+        }
 
-        const thesis = await this.prisma.thesis.update({
-            where: {
-                id: id
-            },
-            data: updateRequest,
-            include: {
-                topic: true,
-                field: true
-            }
-        });
-
-        return this.plainTransformer.toThesis(thesis);
+        return this.plainTransformer.toThesis(record);
     }
 
     async deleteThesis(id: number): Promise<void> {
@@ -121,7 +110,12 @@ export class ThesisService implements ThesisServiceInterface {
             return await this.prisma.thesis.findUniqueOrThrow({
                 where: {
                     id: id
-            }});
+                },
+                include: {
+                    topic: true,
+                    field: true,
+                }
+            });
         }
         catch {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);

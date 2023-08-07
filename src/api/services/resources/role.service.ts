@@ -14,6 +14,7 @@ import { ConflictError } from "../../../contracts/errors/conflict.error";
 import { Role } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
 import { MethodNotAllowedError } from "../../../contracts/errors/method-not-allowed.error";
+import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 
 @injectable()
 export class RoleService implements RoleServiceInterface {
@@ -54,15 +55,17 @@ export class RoleService implements RoleServiceInterface {
     }
 
     async updateRole(id: number, updateRequest: RoleUpdateRequest): Promise<RoleDto> {
-        await this.ensureRecordExists(id);
+        let record = await this.ensureRecordExists(id);
+        if (!isObjectEmptyOrAllUndefined(updateRequest) && !compareObjectByEntries(record, updateRequest)) {
+            record = await this.prisma.role.update({
+                where: {
+                    id: id
+                },
+                data: updateRequest
+            });
+        }
 
-        const role = await this.prisma.role.update({
-            where: {
-                id: id
-            },
-            data: updateRequest
-        });
-        return this.plainTransformer.toRole(role);
+        return this.plainTransformer.toRole(record);
     }
 
     async deleteRole(id: number): Promise<void> {
