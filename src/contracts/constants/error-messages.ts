@@ -35,5 +35,10 @@ export const ERROR_MESSAGES = {
     MethodNotAllowed: {
         RoleCreationNotAllowed: 'Role creation is not allowed',
         RoleDeletionNotAllowed: 'Role deletion is not allowed',
+    },
+    Forbidden: {
+        DefaultMessage: 'Access is denied',
+        DefaultResourceMessage: 'Access to resource is denied',
+        BachelorThesisRegistrationDenied: 'Access to bachelor thesis registration is denied',
     }
 } as const;

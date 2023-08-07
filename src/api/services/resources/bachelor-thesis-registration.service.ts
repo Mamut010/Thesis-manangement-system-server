@@ -127,7 +127,7 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
     private ensureValidModification(user: AuthorizedUser, record: PlainBachelorThesisRegistration) {
         const isValid = true;
         if (!isValid) {
-            throw new ForbiddenError('Access to resource is denied');
+            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.BachelorThesisRegistrationDenied);
         }
     }
 }
