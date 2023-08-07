@@ -376,11 +376,11 @@ function arrayEqualsByEntries(arr1: unknown[], arr2: unknown[],
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export function isObjectEmptyOrAllUndefined(obj: Record<string, any>, 
-    validateNested?: boolean): obj is Record<string, undefined> {
+    validateNested: boolean = true): obj is Record<string, undefined> {
     for(const key in obj) {
         const value = obj[key];
         if (isEnumerableObject(value)) {
-            return validateNested === true && isObjectEmptyOrAllUndefined(value, validateNested);
+            return validateNested && isObjectEmptyOrAllUndefined(value, validateNested);
         }
         else if (value !== undefined) {
             return false;
