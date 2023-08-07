@@ -378,7 +378,7 @@ function arrayEqualsByEntries(arr1: unknown[], arr2: unknown[],
 export function isObjectEmptyOrAllUndefined(obj: Record<string, any>, 
     validateNested: boolean = true): obj is Record<string, undefined> {
     for(const key in obj) {
-        const value = obj[key];
+        const value: unknown = obj[key];
         if (isEnumerableObject(value)) {
             return validateNested && isObjectEmptyOrAllUndefined(value, validateNested);
         }
@@ -388,4 +388,31 @@ export function isObjectEmptyOrAllUndefined(obj: Record<string, any>,
     }
 
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export type SingleOrArray<T> = T | T[];
+
+export function merge<T>(...objs: (SingleOrArray<T> | undefined)[]): SingleOrArray<T> | undefined {
+    const merged: T[] = objs.reduce((pre: T[], obj: SingleOrArray<T> | undefined) => {
+        if (obj) {
+            if (Array.isArray(obj)) {
+                pre.push(...obj);
+            }
+            else {
+                pre.push(obj);
+            }  
+        }
+        return pre;
+    }, []);
+
+    if (merged.length > 1) {
+        return merged;
+    }
+    else if(merged.length === 1) {
+        return merged[0];
+    }
+    else {
+        return undefined;
+    }
 }
