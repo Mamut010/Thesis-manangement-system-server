@@ -3,7 +3,7 @@ import { AdminServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
+import { ERROR_MESSAGES } from "../../core/constants/error-messages";
 import { AdminInfoDto } from "../../shared/dtos";
 import { PlainTransformerInterface } from "../utils/plain-transformer";
 
@@ -26,7 +26,7 @@ export class AdminService implements AdminServiceInterface {
         });
 
         if (!admin) {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.AdminNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.AdminNotFound);
         }
 
         return this.plainTransformer.toAdminInfo(admin);

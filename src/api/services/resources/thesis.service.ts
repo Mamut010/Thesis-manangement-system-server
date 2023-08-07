@@ -4,7 +4,7 @@ import { ThesisDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../../core/constants/not-found-error-message";
+import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { ThesesQueryRequest } from "../../../contracts/requests/resources/theses-query.request";
 import { ThesesQueryResponse } from "../../../contracts/responses/resources/theses-query.response";
@@ -71,7 +71,7 @@ export class ThesisService implements ThesisServiceInterface {
         });
 
         if (!thesis) {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.ThesisNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);
         }
 
         return this.plainTransformer.toThesis(thesis);
@@ -124,7 +124,7 @@ export class ThesisService implements ThesisServiceInterface {
             }});
         }
         catch {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.ThesisNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);
         }
     }
 }

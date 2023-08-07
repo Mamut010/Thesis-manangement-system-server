@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { AdminLecturerServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
+import { ERROR_MESSAGES } from "../../core/constants/error-messages";
 import { 
     BachelorThesisAssessmentDto, 
     BachelorThesisRegistrationDto, 
@@ -82,7 +82,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         })
 
         if (!lecturer) {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.LecturerNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.LecturerNotFound);
         }
 
         return this.plainTransformer.toLecturerInfo(lecturer);

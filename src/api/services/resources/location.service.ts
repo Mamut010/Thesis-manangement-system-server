@@ -7,7 +7,7 @@ import { LocationsQueryResponse } from "../../../contracts/responses/resources/l
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { LocationDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../../core/constants/not-found-error-message";
+import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
 import { LocationCreateRequest } from "../../../contracts/requests/resources/location-create.request";
 import { LocationUpdateRequest } from "../../../contracts/requests/resources/location-update.request";
 import { Location } from "../../../core/models";
@@ -78,7 +78,7 @@ export class LocationService implements LocationServiceInterface {
             }});
         }
         catch {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.LocationNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.LocationNotFound);
         }
     }
 }

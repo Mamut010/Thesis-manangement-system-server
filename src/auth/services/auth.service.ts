@@ -23,12 +23,11 @@ import { Role, RefreshToken } from '../../core/models';
 import { plainToInstanceExactMatch } from '../../utils/class-transformer-helpers';
 import { JwtExtractorInterface } from '../utils/jwt-extractors';
 import { JwtCookieHandlerInterface } from '../utils/jwt-cookie-handlers';
-import { AUTH_ERROR_MESSAGES } from '../../core/constants/auth-error-messages';
+import { ERROR_MESSAGES } from '../../core/constants/error-messages';
 import { 
     UserRepoInterface, 
     RefreshTokenRepoInterface 
 } from '../../shared/interfaces';
-import { NOT_FOUND_ERROR_MESSAGES } from '../../core/constants/not-found-error-message';
 import { StringResponse } from '../../contracts/responses/string.response';
 import { StringArrayResponse } from '../../contracts/responses/string-array.response';
 
@@ -47,16 +46,16 @@ export class AuthService implements AuthServiceInterface {
 
     async signUp(signUpRequest: SignUpRequest): Promise<void> {
         if (await this.prisma.user.findUnique({ where: { userId: signUpRequest.id }})) {
-            throw new AuthenticationError(AUTH_ERROR_MESSAGES.UserIdAlreadyExists);
+            throw new AuthenticationError(ERROR_MESSAGES.Auth.UserIdAlreadyExists);
         }
         else if (await this.prisma.user.findUnique({ where: { username: signUpRequest.username }})) {
-            throw new AuthenticationError(AUTH_ERROR_MESSAGES.UsernameAlreadyExists);
+            throw new AuthenticationError(ERROR_MESSAGES.Auth.UsernameAlreadyExists);
         }
 
         const role = await this.prisma.role.findUnique({ where: { name: signUpRequest.roles[0] }});
 
         if (!role) {
-            throw new UnexpectedError(NOT_FOUND_ERROR_MESSAGES.RoleNotFound);
+            throw new UnexpectedError(ERROR_MESSAGES.NotFound.RoleNotFound);
         }
 
         const userCreatingRequest = new UserCreateRequestDto();
@@ -81,7 +80,7 @@ export class AuthService implements AuthServiceInterface {
 
         if (!user ||
             !(await this.hashService.verifyHash(loginRequest.password, user.password))) {
-            throw new UnauthorizedError(AUTH_ERROR_MESSAGES.InvalidLoginCredentials);
+            throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidLoginCredentials);
         }
 
         const jwtAccessContext = plainToInstanceExactMatch(JwtAccessContextDto, user);
@@ -104,7 +103,7 @@ export class AuthService implements AuthServiceInterface {
     async logout(request: Request, response: Response): Promise<void> {
         const payload = await this.verifyJwtTokenInRequest(request);
         if (!payload) {
-            throw new UnauthorizedError(AUTH_ERROR_MESSAGES.InvalidAccessToken);
+            throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidAccessToken);
         }
 
         const user = await this.prisma.user.findUnique({
@@ -120,7 +119,7 @@ export class AuthService implements AuthServiceInterface {
             }
         });
         if (!user) {
-            throw new UnauthorizedError(AUTH_ERROR_MESSAGES.InvalidEmbeddedCredentials);
+            throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidEmbeddedCredentials);
         }
 
         await this.refreshTokenRepo.deleteAll(payload.context.userId);
@@ -130,7 +129,7 @@ export class AuthService implements AuthServiceInterface {
     async getRoles(request: Request): Promise<StringArrayResponse> {
         const payload = await this.verifyJwtTokenInRequest(request);
         if (!payload) {
-            throw new UnauthorizedError(AUTH_ERROR_MESSAGES.InvalidAccessToken);
+            throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidAccessToken);
         }
 
         return new StringArrayResponse(payload.context.roles);
@@ -139,7 +138,7 @@ export class AuthService implements AuthServiceInterface {
     async issueAccessToken(request: Request, response: Response): Promise<StringResponse> {
         const refreshToken = await this.jwtCookieHandler.extractRefreshTokenFromCookie(request);
         if (!refreshToken) {
-            throw new UnauthorizedError(AUTH_ERROR_MESSAGES.RefreshTokenNotFound);
+            throw new UnauthorizedError(ERROR_MESSAGES.Auth.RefreshTokenNotFound);
         }
 
         let payload: JwtRefreshPayloadDto;
@@ -160,11 +159,11 @@ export class AuthService implements AuthServiceInterface {
             });
 
             if (!user) {
-                throw new AuthenticationError(AUTH_ERROR_MESSAGES.InvalidEmbeddedCredentials);
+                throw new AuthenticationError(ERROR_MESSAGES.Auth.InvalidEmbeddedCredentials);
             }
             else if (!user.refreshToken ||
                 !(await this.hashService.verifyHash(refreshToken, user.refreshToken.token))) {
-                throw new AuthenticationError(AUTH_ERROR_MESSAGES.InvalidRefreshToken);
+                throw new AuthenticationError(ERROR_MESSAGES.Auth.InvalidRefreshToken);
             }
     
             // If everything is valid, issue new access token

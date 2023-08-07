@@ -7,13 +7,13 @@ import { RolesQueryResponse } from "../../../contracts/responses/resources/roles
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { RoleDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../../core/constants/not-found-error-message";
 import { RoleCreateRequest } from "../../../contracts/requests/resources/role-create.request";
 import { RoleUpdateRequest } from "../../../contracts/requests/resources/role-update.request";
-import { UNIQUE_CONSTRAINT_ERROR_MESSAGES } from "../../../core/constants/unique-constraint-error-messages";
+import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
 import { ConflictError } from "../../../contracts/errors/conflict.error";
 import { Role } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { MethodNotAllowedError } from "../../../contracts/errors/method-not-allowed.error";
 
 @injectable()
 export class RoleService implements RoleServiceInterface {
@@ -54,7 +54,6 @@ export class RoleService implements RoleServiceInterface {
 
     async updateRole(id: number, updateRequest: RoleUpdateRequest): Promise<RoleDto> {
         await this.ensureRecordExists(id);
-        await this.ensureUniqueRoleName(updateRequest.name);
 
         const role = await this.prisma.role.update({
             where: {
@@ -75,6 +74,10 @@ export class RoleService implements RoleServiceInterface {
         });
     }
 
+    private ensureMethodValidatity(msg?: string) {
+        throw new MethodNotAllowedError(msg);
+    }
+
     private async ensureRecordExists(id: number) {
         try {
             return await this.prisma.role.findUniqueOrThrow({
@@ -83,13 +86,13 @@ export class RoleService implements RoleServiceInterface {
             }});
         }
         catch {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.RoleNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.RoleNotFound);
         }
     }
 
     private async ensureUniqueRoleName(roleName?: string) {
         if (roleName && (await this.prisma.role.findUnique({ where: { name: roleName } }))) {
-            throw new ConflictError(UNIQUE_CONSTRAINT_ERROR_MESSAGES.RoleAlreadyExists);
+            throw new ConflictError(ERROR_MESSAGES.UniqueConstraint.RoleAlreadyExists);
         }
     }
 }

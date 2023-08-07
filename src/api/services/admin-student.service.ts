@@ -3,7 +3,7 @@ import { AdminStudentServiceInterface } from "../interfaces";
 import { StudentDetailResponse } from "../../contracts/responses/student-info.response";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
+import { ERROR_MESSAGES } from "../../core/constants/error-messages";
 import { 
     BachelorThesisAssessmentDto, 
     BachelorThesisRegistrationDto,
@@ -70,7 +70,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         });
 
         if (!student) {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.StudentNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
         }
 
         return this.plainTransformer.toStudentInfo(student);
@@ -98,7 +98,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         });
 
         if (!bachelorThesisRegistration) {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.BachelorThesisRegistrationNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisRegistrationNotFound);
         }
 
         return this.plainTransformer.toBachelorThesisRegistration(bachelorThesisRegistration);
@@ -121,7 +121,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         });
 
         if (!oralDefenseRegistration) {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.OralDefenseRegistrationNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseRegistrationNotFound);
         }
 
         return this.plainTransformer.toOralDefenseRegistration(oralDefenseRegistration);
@@ -149,7 +149,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         });
 
         if (!bachelorThesisAssessment) {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.BachelorThesisAssessmentNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisAssessmentNotFound);
         }
 
         return this.plainTransformer.toBachelorThesisAssessment(bachelorThesisAssessment);
@@ -172,7 +172,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         });
 
         if (!oralDefenseAssessment) {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.OralDefenseAssessmentNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseAssessmentNotFound);
         }
 
         return this.plainTransformer.toOralDefenseAssessment(oralDefenseAssessment);

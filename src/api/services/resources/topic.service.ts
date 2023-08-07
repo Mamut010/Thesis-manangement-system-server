@@ -7,7 +7,7 @@ import { TopicsQueryResponse } from "../../../contracts/responses/resources/topi
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { TopicDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../../core/constants/not-found-error-message";
+import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
 import { TopicCreateRequest } from "../../../contracts/requests/resources/topic-create.request";
 import { TopicUpdateRequest } from "../../../contracts/requests/resources/topic-update.request";
 import { Topic } from "../../../core/models";
@@ -78,7 +78,7 @@ export class TopicService implements TopicServiceInterface {
             }});
         }
         catch {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.TopicNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.TopicNotFound);
         }
     }
 }

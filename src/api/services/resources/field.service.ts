@@ -7,7 +7,7 @@ import { FieldsQueryResponse } from "../../../contracts/responses/resources/fiel
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { FieldDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../../core/constants/not-found-error-message";
+import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
 import { FieldCreateRequest } from "../../../contracts/requests/resources/field-create.request";
 import { FieldUpdateRequest } from "../../../contracts/requests/resources/field-update.request";
 import { Field } from "../../../core/models";
@@ -78,7 +78,7 @@ export class FieldService implements FieldServiceInterface {
             }});
         }
         catch {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.FieldNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.FieldNotFound);
         }
     }
 }

@@ -6,11 +6,10 @@ import { PrismaClient } from "@prisma/client";
 import { ITXClientDenyList } from '@prisma/client/runtime/library';
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { ROLES } from "../../core/constants/roles";
-import { UNEXPECTED_ERROR_MESSAGES } from "../../core/constants/unexpected-error-messages";
+import { ERROR_MESSAGES } from "../../core/constants/error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { UserRepoInterface } from "../interfaces";
 import { User } from "../../core/models";
-import { NOT_FOUND_ERROR_MESSAGES } from "../../core/constants/not-found-error-message";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { UserCreateRequestDto, UserUpdateRequestDto } from "../dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
@@ -40,7 +39,7 @@ export class UserRepo implements UserRepoInterface {
 
                 const recordCreatingPromise = this.createRecordInAssociatedRepoByRole(tx, request);
                 if (!recordCreatingPromise) {
-                    throw new BadRequestError(NOT_FOUND_ERROR_MESSAGES.RoleNotFound);
+                    throw new BadRequestError(ERROR_MESSAGES.NotFound.RoleNotFound);
                 }
 
                 await recordCreatingPromise;
@@ -49,7 +48,7 @@ export class UserRepo implements UserRepoInterface {
             });
         }
         catch (err) {
-            throw new UnexpectedError(UNEXPECTED_ERROR_MESSAGES.UserCreationFailed);
+            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.UserCreationFailed);
         }
     }
 
@@ -62,7 +61,7 @@ export class UserRepo implements UserRepoInterface {
             });
         }
         catch {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.UserNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
         }
 
         const user = await this.prisma.user.update({
@@ -97,7 +96,7 @@ export class UserRepo implements UserRepoInterface {
             });
         }
         catch {
-            throw new NotFoundError(NOT_FOUND_ERROR_MESSAGES.UserNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
         }
     }
 

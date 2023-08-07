@@ -1,0 +1,39 @@
+export const ERROR_MESSAGES = {
+    Auth: {
+        InvalidLoginCredentials: 'Wrong username or password',
+        InvalidEmbeddedCredentials: 'Invalid embedded credentials',
+        InvalidRefreshToken: 'Invalid refresh token',
+        InvalidAccessToken: 'Invalid access token',
+        UserIdAlreadyExists: 'User ID already exists',
+        UsernameAlreadyExists: 'Username already exists', 
+        RefreshTokenNotFound: 'Refresh token not found',
+    },
+    NotFound: {
+        UserNotFound: 'User not found',
+        RoleNotFound: 'Role not found',
+        AdminNotFound: 'Admin not found',
+        StudentNotFound: 'Student not found',
+        LecturerNotFound: 'Lecturer not found',
+        ThesisNotFound: 'Thesis not found',
+        FieldNotFound: 'Field not found',
+        TopicNotFound: 'Topic not found',
+        LocationNotFound: 'Location not found',
+        BachelorThesisRegistrationNotFound: 'Bachelor thesis registration not found',
+        OralDefenseRegistrationNotFound: 'Oral defense registration not found',
+        BachelorThesisAssessmentNotFound: 'Bachelor thesis assessment not found',
+        OralDefenseAssessmentNotFound: 'Oral defense assessment not found',
+    },
+    Unexpected: {
+        DefaultMessage: 'Unexpected error has occurred',
+        RefreshTokenCreationFailed: 'Unable to create refresh token',
+        RefreshTokenDeleteAllFailed: 'Unable to delete all associated refresh tokens',
+        UserCreationFailed: 'Unable to create new user',
+    },
+    UniqueConstraint: {
+        RoleAlreadyExists: 'The role already exists',
+    },
+    MethodNotAllowed: {
+        CreateRoleNotAllowed: 'Role creation is not allowed',
+        DeleteRoleNotAllowed: 'Role deletion is not allowed',
+    }
+} as const;

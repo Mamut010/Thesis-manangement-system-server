@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
-import { UNEXPECTED_ERROR_MESSAGES } from "../../core/constants/unexpected-error-messages";
+import { ERROR_MESSAGES } from "../../core/constants/error-messages";
 import { RefreshToken } from "../../core/models/refresh-token.model";
 import { RefreshTokenRepoInterface } from "../interfaces";
 
@@ -23,7 +23,7 @@ export class RefreshTokenRepo implements RefreshTokenRepoInterface {
             });
         }
         catch {
-            throw new UnexpectedError(UNEXPECTED_ERROR_MESSAGES.RefreshTokenCreationFailed);
+            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.RefreshTokenCreationFailed);
         }
     }
 
@@ -37,7 +37,7 @@ export class RefreshTokenRepo implements RefreshTokenRepoInterface {
             return count;
         }
         catch {
-            throw new UnexpectedError(UNEXPECTED_ERROR_MESSAGES.RefreshTokenDeleteAllFailed);
+            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.RefreshTokenDeleteAllFailed);
         }
     }
 }
