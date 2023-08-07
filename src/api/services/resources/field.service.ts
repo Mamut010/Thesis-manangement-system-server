@@ -7,7 +7,7 @@ import { FieldsQueryResponse } from "../../../contracts/responses/resources/fiel
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { FieldDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
-import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
+import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { FieldCreateRequest } from "../../../contracts/requests/resources/field-create.request";
 import { FieldUpdateRequest } from "../../../contracts/requests/resources/field-update.request";
 import { Field } from "../../../core/models";

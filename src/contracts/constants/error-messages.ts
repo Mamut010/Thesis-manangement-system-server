@@ -33,7 +33,7 @@ export const ERROR_MESSAGES = {
         RoleAlreadyExists: 'The role already exists',
     },
     MethodNotAllowed: {
-        CreateRoleNotAllowed: 'Role creation is not allowed',
-        DeleteRoleNotAllowed: 'Role deletion is not allowed',
+        RoleCreationNotAllowed: 'Role creation is not allowed',
+        RoleDeletionNotAllowed: 'Role deletion is not allowed',
     }
 } as const;

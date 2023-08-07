@@ -3,7 +3,7 @@ import { AdminStudentServiceInterface } from "../interfaces";
 import { StudentDetailResponse } from "../../contracts/responses/student-info.response";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { ERROR_MESSAGES } from "../../core/constants/error-messages";
+import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { 
     BachelorThesisAssessmentDto, 
     BachelorThesisRegistrationDto,

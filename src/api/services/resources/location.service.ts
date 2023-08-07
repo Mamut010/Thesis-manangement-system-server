@@ -7,7 +7,7 @@ import { LocationsQueryResponse } from "../../../contracts/responses/resources/l
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { LocationDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
-import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
+import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { LocationCreateRequest } from "../../../contracts/requests/resources/location-create.request";
 import { LocationUpdateRequest } from "../../../contracts/requests/resources/location-update.request";
 import { Location } from "../../../core/models";

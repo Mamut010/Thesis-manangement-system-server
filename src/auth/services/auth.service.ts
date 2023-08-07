@@ -23,7 +23,7 @@ import { Role, RefreshToken } from '../../core/models';
 import { plainToInstanceExactMatch } from '../../utils/class-transformer-helpers';
 import { JwtExtractorInterface } from '../utils/jwt-extractors';
 import { JwtCookieHandlerInterface } from '../utils/jwt-cookie-handlers';
-import { ERROR_MESSAGES } from '../../core/constants/error-messages';
+import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import { 
     UserRepoInterface, 
     RefreshTokenRepoInterface 

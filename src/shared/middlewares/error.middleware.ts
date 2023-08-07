@@ -4,7 +4,7 @@ import { injectable } from 'inversify';
 import { Middleware, ExpressErrorMiddlewareInterface } from 'routing-controllers';
 import { HTTP_CODES } from '../../core/constants/http-codes';
 import { Prisma } from '@prisma/client';
-import { ERROR_MESSAGES } from '../../core/constants/error-messages';
+import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import { env } from '../../env';
 import { container } from '../../core/bootstrappers';
 import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';

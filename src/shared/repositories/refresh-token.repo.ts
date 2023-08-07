@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
-import { ERROR_MESSAGES } from "../../core/constants/error-messages";
+import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { RefreshToken } from "../../core/models/refresh-token.model";
 import { RefreshTokenRepoInterface } from "../interfaces";
 

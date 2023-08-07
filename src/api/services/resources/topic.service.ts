@@ -7,7 +7,7 @@ import { TopicsQueryResponse } from "../../../contracts/responses/resources/topi
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { TopicDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
-import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
+import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { TopicCreateRequest } from "../../../contracts/requests/resources/topic-create.request";
 import { TopicUpdateRequest } from "../../../contracts/requests/resources/topic-update.request";
 import { Topic } from "../../../core/models";

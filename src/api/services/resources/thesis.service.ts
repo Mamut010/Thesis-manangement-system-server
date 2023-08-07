@@ -4,7 +4,7 @@ import { ThesisDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
-import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
+import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { ThesesQueryRequest } from "../../../contracts/requests/resources/theses-query.request";
 import { ThesesQueryResponse } from "../../../contracts/responses/resources/theses-query.response";

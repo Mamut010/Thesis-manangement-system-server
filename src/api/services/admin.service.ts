@@ -3,7 +3,7 @@ import { AdminServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { ERROR_MESSAGES } from "../../core/constants/error-messages";
+import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { AdminInfoDto } from "../../shared/dtos";
 import { PlainTransformerInterface } from "../utils/plain-transformer";
 

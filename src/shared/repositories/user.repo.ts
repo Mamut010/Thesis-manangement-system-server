@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 import { ITXClientDenyList } from '@prisma/client/runtime/library';
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { ROLES } from "../../core/constants/roles";
-import { ERROR_MESSAGES } from "../../core/constants/error-messages";
+import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { UserRepoInterface } from "../interfaces";
 import { User } from "../../core/models";

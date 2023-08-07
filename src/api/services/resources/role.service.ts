@@ -9,7 +9,7 @@ import { RoleDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { RoleCreateRequest } from "../../../contracts/requests/resources/role-create.request";
 import { RoleUpdateRequest } from "../../../contracts/requests/resources/role-update.request";
-import { ERROR_MESSAGES } from "../../../core/constants/error-messages";
+import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { ConflictError } from "../../../contracts/errors/conflict.error";
 import { Role } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
@@ -44,6 +44,7 @@ export class RoleService implements RoleServiceInterface {
     }
 
     async createRole(createRequest: RoleCreateRequest): Promise<RoleDto> {
+        this.ensureMethodAvailablity(ERROR_MESSAGES.MethodNotAllowed.RoleCreationNotAllowed);
         await this.ensureUniqueRoleName(createRequest.name);
 
         const role = await this.prisma.role.create({
@@ -65,6 +66,7 @@ export class RoleService implements RoleServiceInterface {
     }
 
     async deleteRole(id: number): Promise<void> {
+        this.ensureMethodAvailablity(ERROR_MESSAGES.MethodNotAllowed.RoleDeletionNotAllowed);
         await this.ensureRecordExists(id);
 
         await this.prisma.role.delete({
@@ -74,7 +76,7 @@ export class RoleService implements RoleServiceInterface {
         });
     }
 
-    private ensureMethodValidatity(msg?: string) {
+    private ensureMethodAvailablity(msg?: string) {
         throw new MethodNotAllowedError(msg);
     }
 
