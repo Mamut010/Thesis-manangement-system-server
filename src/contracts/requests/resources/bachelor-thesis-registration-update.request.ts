@@ -1,16 +1,16 @@
 import { Expose } from "class-transformer";
-import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class BachelorThesisRegistrationUpdateRequest {
     @Expose()
-    @IsDefined()
+    @IsOptional()
     @IsNumber()
-    thesisId!: number;
+    thesisId?: number;
 
     @Expose()
-    @IsDefined()
+    @IsOptional()
     @IsNumber()
-    studentId!: number;
+    studentId?: number;
 
     @Expose()
     @IsOptional()
