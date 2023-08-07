@@ -283,7 +283,7 @@ export function createObjectByDotNotation<T>(dotNotation: string, value: T): Nes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export interface CompareObjectOptions {
     ignoreUnmatchedProps?: boolean
-};
+}
 
 export function compareObjectByEntries(obj1: Record<string, any>, obj2: Record<string, any>, 
     compareOptions?: CompareObjectOptions): boolean {
@@ -309,8 +309,8 @@ function compareObjectByEntriesImpl(obj1: Record<string, any>, obj2: Record<stri
             }
         }
 
-        const val1 = obj1[key];
-        const val2 = obj2[key];
+        const val1: unknown = obj1[key];
+        const val2: unknown = obj2[key];
 
         if (!compareObjectByEntriesImplCheckNonobject(val1, val2)
             || !compareObjectByEntriesImplCheckEnumerable(val1, val2, options)
@@ -323,7 +323,7 @@ function compareObjectByEntriesImpl(obj1: Record<string, any>, obj2: Record<stri
     return true;
 }
 
-function compareObjectByEntriesImplCheckNonobject(val1: any, val2: any) {
+function compareObjectByEntriesImplCheckNonobject(val1: unknown, val2: unknown) {
     if (typeof val1 !== 'object') {
         if (val1 !== val2) {
             return false;
@@ -332,7 +332,7 @@ function compareObjectByEntriesImplCheckNonobject(val1: any, val2: any) {
     return true;
 }
 
-function compareObjectByEntriesImplCheckEnumerable(val1: any, val2: any, options: CompareObjectOptions) {
+function compareObjectByEntriesImplCheckEnumerable(val1: unknown, val2: unknown, options: CompareObjectOptions) {
     if (isEnumerableObject(val1)) {
         if (!isEnumerableObject(val2) || !compareObjectByEntriesImpl(val1, val2, options)) {
             return false;
@@ -341,17 +341,17 @@ function compareObjectByEntriesImplCheckEnumerable(val1: any, val2: any, options
     return true;
 }
 
-function compareObjectByEntriesImplCheckArray(val1: any, val2: any, options: CompareObjectOptions) {
+function compareObjectByEntriesImplCheckArray(val1: unknown, val2: unknown, options: CompareObjectOptions) {
     if(Array.isArray(val1)) {
         if (!Array.isArray(val2) || !arrayEqualsByEntries(val1, val2, (item1, item2) => 
-            compareObjectByEntriesImpl(item1, item2, options))) {
+            isEnumerableObject(item1) && isEnumerableObject(item2) && compareObjectByEntriesImpl(item1, item2, options))) {
             return false;
         }
     }
     return true;
 }
 
-function compareObjectByEntriesImplCheckDate(val1: any, val2: any, options: CompareObjectOptions) {
+function compareObjectByEntriesImplCheckDate(val1: unknown, val2: unknown, options: CompareObjectOptions) {
     if(val1 instanceof Date) {
         if (!(val2 instanceof Date) || (+val1 !== +val2)) {
             return false;
@@ -360,7 +360,8 @@ function compareObjectByEntriesImplCheckDate(val1: any, val2: any, options: Comp
     return true;
 }
 
-function arrayEqualsByEntries(arr1: any[], arr2: any[], additionalCheck?: (item1: any, item2: any) => boolean) {
+function arrayEqualsByEntries(arr1: unknown[], arr2: unknown[], 
+    additionalCheck?: (item1: unknown, item2: unknown) => boolean) {
     return arr1.length === arr2.length && arr1.every((item1, index) => {
         const item2 = arr2[index];
         return item1 === item2 || additionalCheck?.(item1, item2);
