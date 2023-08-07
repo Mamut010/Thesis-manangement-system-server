@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 
 import { injectable } from "inversify";
 import { BinaryFilter } from "./interfaces/binary-filter";
@@ -206,14 +206,14 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
     private addFilteringObjectToWhereByKey(binaryAndListFilters: BinaryAndListFilters, where: WhereQueryObject, 
         key: string, dotNotation: string) {
         if(binaryAndListFilters.binaryFilters[key]) {
-            const filteringObject = this.createFilteringObject(binaryAndListFilters.binaryFilters[key] as any);
+            const filteringObject = this.createFilteringObject<unknown, FilterOperator>(binaryAndListFilters.binaryFilters[key]);
             if (filteringObject) {
                 assignObjectByDotNotation(where, dotNotation, filteringObject);
             }
             delete binaryAndListFilters.binaryFilters[key];
         }
         else if(binaryAndListFilters.listFilters[key]) {
-            const filteringObject = this.createListFilteringObject(binaryAndListFilters.listFilters[key] as any);
+            const filteringObject = this.createListFilteringObject<unknown>(binaryAndListFilters.listFilters[key]);
             if (filteringObject) {
                 assignObjectByDotNotation(where, dotNotation, filteringObject);
             }
