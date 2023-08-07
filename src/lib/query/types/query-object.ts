@@ -13,7 +13,7 @@ export type WhereBinaryFilterObject<TValue> = ActualFilteringObject<TValue> | { 
 export type WhereListFilterObject<TValue> = ActualFilteringObject<TValue[]>;
 
 export type WhereQueryObject = { 
-    [property: string]: WhereBinaryFilterObject<any> | WhereListFilterObject<any> | WhereQueryObject
+    [property: string]: WhereBinaryFilterObject<unknown> | WhereListFilterObject<unknown> | WhereQueryObject
 };
 
 export interface PaginationQueryObject { 
