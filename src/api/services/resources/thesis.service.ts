@@ -11,9 +11,15 @@ import { ThesesQueryResponse } from "../../../contracts/responses/resources/thes
 import { ThesisCreateRequest } from "../../../contracts/requests/resources/thesis-create.request";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
 import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
+import { Thesis } from "../../../core/models";
 
 @injectable()
 export class ThesisService implements ThesisServiceInterface {
+    private static readonly include = {
+        topic: true,
+        field: true,
+    } as const;
+
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
@@ -22,36 +28,17 @@ export class ThesisService implements ThesisServiceInterface {
     }
 
     async getTheses(queryRequest: ThesesQueryRequest): Promise<ThesesQueryResponse> {
-        const where: Prisma.ThesisWhereInput = {
-            id: this.queryCreator.createFilteringObject(queryRequest.thesisIdFilter),
-            title: this.queryCreator.createFilteringObject(queryRequest.titleFilter),
-            slot: this.queryCreator.createFilteringObject(queryRequest.slotFilter),
-            slotLimit: this.queryCreator.createFilteringObject(queryRequest.slotLimitFilter),
-            topic: {
-                title: this.queryCreator.createFilteringObject(queryRequest.topicFilter)
-            },
-            field: {
-                title: this.queryCreator.createFilteringObject(queryRequest.fieldFilter)
-            },
-        };
         const fieldMap = {
-            id: 'id',
-            title: 'title',
-            slot: 'slot',
-            slotLimit: 'slotLimit',
-            topic: 'topic.title',
-            field: 'field.title',
+            topicTitle: 'topic.title',
+            fieldTitle: 'field.title',
         };
+        const model = this.queryCreator.createQueryModel(Thesis);
+        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
 
-        const count = await this.prisma.thesis.count({ where });
+        const count = await this.prisma.thesis.count({ where: prismaQuery.where });
         const theses = await this.prisma.thesis.findMany({
-            where: where,
-            include: {
-                topic: true,
-                field: true,
-            },
-            orderBy: this.queryCreator.createOrderByObject(queryRequest.orderBy, { fieldMap, ignoreUnmapped: true }),
-            ...this.queryCreator.createPaginationObject(queryRequest.pagination)
+            ...prismaQuery,
+            include: ThesisService.include
         });
 
         const response = new ThesesQueryResponse();
@@ -68,10 +55,7 @@ export class ThesisService implements ThesisServiceInterface {
     async createThesis(createRequest: ThesisCreateRequest): Promise<ThesisDto> {
         const thesis = await this.prisma.thesis.create({
             data: createRequest,
-            include: {
-                topic: true,
-                field: true,
-            }
+            include: ThesisService.include
         });
 
         return this.plainTransformer.toThesis(thesis);
@@ -85,10 +69,7 @@ export class ThesisService implements ThesisServiceInterface {
                     id: id
                 },
                 data: updateRequest,
-                include: {
-                    topic: true,
-                    field: true
-                }
+                include: ThesisService.include
             });
         }
 
@@ -111,10 +92,7 @@ export class ThesisService implements ThesisServiceInterface {
                 where: {
                     id: id
                 },
-                include: {
-                    topic: true,
-                    field: true,
-                }
+                include: ThesisService.include
             });
         }
         catch {
