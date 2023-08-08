@@ -6,4 +6,4 @@ node_modules
 dist/*
 
 # Ignore test files
-**/*test.*ts
+**/*test.*
