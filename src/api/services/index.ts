@@ -11,3 +11,4 @@ export * from './resources/location.service';
 export * from './resources/bachelor-thesis-registration.service';
 export * from './resources/bachelor-thesis-assessment.service';
 export * from './resources/oral-defense-registration.service';
+export * from './resources/oral-defense-assessment.service';
