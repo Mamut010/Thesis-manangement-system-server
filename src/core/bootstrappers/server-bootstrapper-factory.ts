@@ -3,7 +3,7 @@ import { RoutingControllersOptions, useExpressServer } from 'routing-controllers
 import { env } from '../../env';
 import { authorizationChecker, currentUserChecker } from '../auth-checkers';
 import { BootstrapSettingInterface, Bootstrapper } from '../../lib/bootstrapper';
-import { preconfigApp, postconfigApp } from '../../config/app.config';
+import { preconfigApp, postconfigApp } from '../../config';
 import { ServerType } from '../../shared/types/server-types';
 import { CorsOptions } from 'cors';
 import { HTTP_CODES } from '../constants/http-codes';
