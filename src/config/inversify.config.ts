@@ -46,7 +46,8 @@ import {
 } from '../api/services';
 import { 
     UserRepoInterface,
-    RefreshTokenRepoInterface 
+    RefreshTokenRepoInterface, 
+    MailServiceInterface
 } from '../shared/interfaces';
 import { 
     UserRepo,
@@ -54,6 +55,7 @@ import {
 } from '../shared/repositories';
 import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
 import { PlainTransformer, PlainTransformerInterface } from '../api/utils/plain-transformer';
+import { SMTPMailService } from '../shared/services';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -62,6 +64,7 @@ export const configInversify: Configuration<Container> = (container: Container, 
     configRepos(container, settings);
     configAuthServerServices(container, settings);
     configApiServerServices(container, settings);
+    configSharedServices(container, settings);
     configUtils(container, settings);
 }
 
@@ -192,6 +195,13 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<OralDefenseAssessmentServiceInterface>(INJECTION_TOKENS.OralDefenseAssessmentService)
         .to(OralDefenseAssessmentService)
+        .inRequestScope();
+}
+
+function configSharedServices(container: Container, settings?: BootstrapSettingInterface) {
+    container
+        .bind<MailServiceInterface>(INJECTION_TOKENS.MailService)
+        .to(SMTPMailService)
         .inRequestScope();
 }
 
