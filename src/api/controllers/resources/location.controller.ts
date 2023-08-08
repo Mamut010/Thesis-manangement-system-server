@@ -37,8 +37,8 @@ export class LocationController {
     @HttpCode(HTTP_CODES.Ok)
     @Get()
     @ResponseSchema(LocationsQueryResponse)
-    getLocations(@QueryParams() locationsQuery: LocationsQueryRequest) {
-        return this.locationService.getLocations(locationsQuery);
+    getLocations(@QueryParams() queryRequest: LocationsQueryRequest) {
+        return this.locationService.getLocations(queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)

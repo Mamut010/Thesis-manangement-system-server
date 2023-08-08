@@ -41,8 +41,8 @@ export class BachelorThesisRegistrationController {
     @Get()
     @ResponseSchema(BachelorThesisRegistrationsQueryResponse)
     getBachelorThesisRegistrations(@CurrentUser() user: AuthorizedUser, 
-        @QueryParams() bachelorThesisRegistrationsQuery: BachelorThesisRegistrationsQueryRequest) {
-        return this.bachelorThesisRegistrationService.getBachelorThesisRegistrations(user, bachelorThesisRegistrationsQuery);
+        @QueryParams() queryRequest: BachelorThesisRegistrationsQueryRequest) {
+        return this.bachelorThesisRegistrationService.getBachelorThesisRegistrations(user, queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)

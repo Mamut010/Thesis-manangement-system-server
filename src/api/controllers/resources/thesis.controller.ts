@@ -37,8 +37,8 @@ export class ThesisController {
     @HttpCode(HTTP_CODES.Ok)
     @Get()
     @ResponseSchema(ThesesQueryResponse)
-    getTheses(@QueryParams() thesesQuery: ThesesQueryRequest) {
-        return this.thesisService.getTheses(thesesQuery);
+    getTheses(@QueryParams() queryRequest: ThesesQueryRequest) {
+        return this.thesisService.getTheses(queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)

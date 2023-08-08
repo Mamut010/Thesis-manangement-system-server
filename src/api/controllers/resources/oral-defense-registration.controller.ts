@@ -41,8 +41,8 @@ export class OralDefenseRegistrationController {
     @Get()
     @ResponseSchema(OralDefenseRegistrationsQueryResponse)
     getOralDefenseRegistrations(@CurrentUser() user: AuthorizedUser, 
-        @QueryParams() oralDefenseRegistrationsQuery: OralDefenseRegistrationsQueryRequest) {
-        return this.oralDefenseRegistrationService.getOralDefenseRegistrations(user, oralDefenseRegistrationsQuery);
+        @QueryParams() queryRequest: OralDefenseRegistrationsQueryRequest) {
+        return this.oralDefenseRegistrationService.getOralDefenseRegistrations(user, queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)

@@ -37,8 +37,8 @@ export class TopicController {
     @HttpCode(HTTP_CODES.Ok)
     @Get()
     @ResponseSchema(TopicsQueryResponse)
-    getTopics(@QueryParams() topicsQuery: TopicsQueryRequest) {
-        return this.topicService.getTopics(topicsQuery);
+    getTopics(@QueryParams() queryRequest: TopicsQueryRequest) {
+        return this.topicService.getTopics(queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)

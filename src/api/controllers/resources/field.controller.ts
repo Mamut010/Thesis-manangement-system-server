@@ -37,8 +37,8 @@ export class FieldController {
     @HttpCode(HTTP_CODES.Ok)
     @Get()
     @ResponseSchema(FieldsQueryResponse)
-    getFields(@QueryParams() fieldsQuery: FieldsQueryRequest) {
-        return this.fieldService.getFields(fieldsQuery);
+    getFields(@QueryParams() queryRequest: FieldsQueryRequest) {
+        return this.fieldService.getFields(queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)

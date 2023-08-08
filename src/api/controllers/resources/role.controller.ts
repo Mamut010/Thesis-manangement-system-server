@@ -37,8 +37,8 @@ export class RoleController {
     @HttpCode(HTTP_CODES.Ok)
     @Get()
     @ResponseSchema(RolesQueryResponse)
-    getRoles(@QueryParams() rolesQuery: RolesQueryRequest) {
-        return this.roleService.getRoles(rolesQuery);
+    getRoles(@QueryParams() queryRequest: RolesQueryRequest) {
+        return this.roleService.getRoles(queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
