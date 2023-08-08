@@ -15,7 +15,17 @@ export class ThesisDto {
     @Expose()
     @IsOptional()
     @IsString()
+    topicId!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     topicTitle!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    fieldId!: string | null;
 
     @Expose()
     @IsOptional()
