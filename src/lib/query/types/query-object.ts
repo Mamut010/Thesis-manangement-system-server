@@ -35,7 +35,7 @@ export type ActualFilteringObject<TValue, TOperator extends FilterOperator | Lis
 
 // Defaulted TOperator to FilterActualOperator as for WhereQueryObject, there is no way to know the actual operator
 export type WhereBinaryFilterObject<TValue, TOperator extends FilterOperator = FilterOperator> = 
-    ActualFilteringObject<TValue, TOperator> | { not: ActualFilteringObject<TValue, TOperator> }
+    ActualFilteringObject<TValue, TOperator> | { not: WhereBinaryFilterObject<TValue, TOperator> }
 
 export type WhereListFilterObject<TValue> = ActualFilteringObject<TValue[], ListFilterOperator>;
 
