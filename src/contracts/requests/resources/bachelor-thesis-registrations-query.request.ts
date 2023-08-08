@@ -1,68 +1,80 @@
-import { IsNumberFilter, IsStringFilter, IsDateFilter, IsBooleanFilter } from "../../../decorators";
-import { NumberFilter, StringFilter, DateFilter, BooleanFilter } from "../../../lib/query";
+import { 
+    IsNumberFilter, 
+    IsStringFilter,
+    IsNullableStringFilter, 
+    IsNullableDateFilter,
+    IsNullableBooleanFilter
+} from "../../../decorators";
+import { 
+    NumberFilter, 
+    StringFilter,
+    NullableStringFilter, 
+    NullableDateFilter,
+    NullableBooleanFilter
+} from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class BachelorThesisRegistrationsQueryRequest extends BaseQueryRequest {
     @IsNumberFilter()
     studentIdFilter?: NumberFilter;
 
-    @IsStringFilter()
-    surnameFilter?: StringFilter;
+    @IsNullableStringFilter()
+    surnameFilter?: NullableStringFilter;
 
-    @IsStringFilter()
-    forenameFilter?: StringFilter;
+    @IsNullableStringFilter()
+    forenameFilter?: NullableStringFilter;
 
-    @IsDateFilter()
-    dateOfBirthFilter?: DateFilter;
+    @IsNullableDateFilter()
+    dateOfBirthFilter?: NullableDateFilter;
 
-    @IsStringFilter()
-    placeOfBirthFilter?: StringFilter;
+    @IsNullableStringFilter()
+    placeOfBirthFilter?: NullableStringFilter;
 
-    @IsStringFilter()
-    thesisTitleFilter?: StringFilter;
+    @IsNullableStringFilter()
+    thesisTitleFilter?: NullableStringFilter;
 
     @IsStringFilter()
     thesisTypeFilter?: StringFilter;
 
-    @IsStringFilter()
-    furtherParticipantsFilter?: StringFilter;
+    @IsNullableStringFilter()
+    furtherParticipantsFilter?: NullableStringFilter;
 
-    @IsDateFilter()
-    studentDateFilter?: DateFilter;
+    @IsNullableDateFilter()
+    studentDateFilter?: NullableDateFilter;
 
-    @IsStringFilter()
-    supervisor1TitleFilter?: StringFilter;
+    @IsNullableStringFilter()
+    supervisor1TitleFilter?: NullableStringFilter;
 
-    @IsDateFilter()
-    supervisor1DateFilter?: DateFilter;
+    @IsNullableDateFilter()
+    supervisor1DateFilter?: NullableDateFilter;
 
-    @IsBooleanFilter()
-    supervisor1ConfirmedFilter?: BooleanFilter;
+    @IsNullableBooleanFilter()
+    supervisor1ConfirmedFilter?: NullableBooleanFilter;
 
-    @IsStringFilter()
-    supervisor2TitleFilter?: StringFilter;
+    @IsNullableStringFilter()
+    supervisor2TitleFilter?: NullableStringFilter;
 
-    @IsDateFilter()
-    supervisor2DateFilter?: DateFilter;
+    @IsNullableDateFilter()
+    supervisor2DateFilter?: NullableDateFilter;
 
-    @IsBooleanFilter()
-    supervisor2ConfirmedFilter?: BooleanFilter;
+    @IsNullableBooleanFilter()
+    supervisor2ConfirmedFilter?: NullableBooleanFilter;
 
-    @IsBooleanFilter()
-    adminConfirmedFilter?: BooleanFilter;
+    @IsNullableBooleanFilter()
+    adminConfirmedFilter?: NullableBooleanFilter;;
 
-    @IsDateFilter()
-    issuedFilter?: DateFilter;
+    @IsNullableDateFilter()
+    issuedFilter?: NullableDateFilter;
 
-    @IsDateFilter()
-    deadlineCopyFilter?: DateFilter;
+    @IsNullableDateFilter()
+    deadlineCopyFilter?: NullableDateFilter;
 
-    @IsDateFilter()
-    extensionGrantedFilter?: DateFilter;
+    @IsNullableDateFilter()
+    extensionGrantedFilter?: NullableDateFilter;
 
-    @IsStringFilter()
-    chairmanOfExaminationFilter?: StringFilter;
+    @IsNullableStringFilter()
+    chairmanOfExaminationFilter?: NullableStringFilter;
 
-    @IsDateFilter()
-    dateOfIssueFilter?: DateFilter;
+    @IsNullableDateFilter()
+    dateOfIssueFilter?: NullableDateFilter;
 }

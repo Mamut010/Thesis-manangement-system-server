@@ -1,38 +1,50 @@
-import { IsNumberFilter, IsStringFilter, IsDateFilter } from "../../../decorators";
-import { NumberFilter, StringFilter, DateFilter } from "../../../lib/query";
+import { 
+    IsNumberFilter, 
+    IsStringFilter,
+    IsNullableStringFilter,
+    IsNullableNumberFilter,
+    IsNullableDateFilter
+} from "../../../decorators";
+import { 
+    NumberFilter, 
+    StringFilter,
+    NullableStringFilter,
+    NullableNumberFilter,
+    NullableDateFilter
+} from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class BachelorThesisAssessmentsQueryRequest extends BaseQueryRequest {
     @IsNumberFilter()
     studentIdFilter?: NumberFilter;
 
-    @IsStringFilter()
-    surnameFilter?: StringFilter;
+    @IsNullableStringFilter()
+    surnameFilter?: NullableStringFilter;
 
-    @IsStringFilter()
-    forenameFilter?: StringFilter;
+    @IsNullableStringFilter()
+    forenameFilter?: NullableStringFilter;
 
     @IsStringFilter()
     thesisTypeFilter?: StringFilter;
 
-    @IsStringFilter()
-    furtherParticipantsFilter?: StringFilter;
+    @IsNullableStringFilter()
+    furtherParticipantsFilter?: NullableStringFilter;
 
-    @IsStringFilter()
-    supervisor1TitleFilter?: StringFilter;
+    @IsNullableStringFilter()
+    supervisor1TitleFilter?: NullableStringFilter;
 
-    @IsNumberFilter()
-    supervisor1GradeFilter?: NumberFilter;
+    @IsNullableNumberFilter()
+    supervisor1GradeFilter?: NullableNumberFilter;
 
-    @IsStringFilter()
-    supervisor2TitleFilter?: StringFilter;
+    @IsNullableStringFilter()
+    supervisor2TitleFilter?: NullableStringFilter;
 
-    @IsNumberFilter()
-    supervisor2GradeFilter?: NumberFilter;
+    @IsNullableNumberFilter()
+    supervisor2GradeFilter?: NullableNumberFilter;
 
-    @IsStringFilter()
-    assessmentDescriptionFilter?: StringFilter;
+    @IsNullableStringFilter()
+    assessmentDescriptionFilter?: NullableStringFilter;
 
-    @IsDateFilter()
-    assessmentDateFilter?: DateFilter;
+    @IsNullableDateFilter()
+    assessmentDateFilter?: NullableDateFilter;
 }

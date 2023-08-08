@@ -1,44 +1,56 @@
-import { IsNumberFilter, IsStringFilter, IsDateFilter, IsBooleanFilter } from "../../../decorators";
-import { NumberFilter, StringFilter, DateFilter, BooleanFilter } from "../../../lib/query";
+import { 
+    IsNumberFilter,
+    IsNullableBooleanFilter, 
+    IsNullableStringFilter,
+    IsNullableDateFilter,
+    IsNullableNumberFilter
+} from "../../../decorators";
+import { 
+    NumberFilter,
+    NullableBooleanFilter, 
+    NullableStringFilter,
+    NullableDateFilter,
+    NullableNumberFilter
+} from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class OralDefenseRegistrationsQueryRequest extends BaseQueryRequest {
     @IsNumberFilter()
     studentIdFilter?: NumberFilter;
 
-    @IsStringFilter()
-    surnameFilter?: StringFilter;
+    @IsNullableStringFilter()
+    surnameFilter?: NullableStringFilter;
 
-    @IsStringFilter()
-    forenameFilter?: StringFilter;
+    @IsNullableStringFilter()
+    forenameFilter?: NullableStringFilter;
 
-    @IsStringFilter()
-    supervisor1TitleFilter?: StringFilter;
+    @IsNullableStringFilter()
+    supervisor1TitleFilter?: NullableStringFilter;
 
-    @IsStringFilter()
-    supervisor2TitleFilter?: StringFilter;
+    @IsNullableStringFilter()
+    supervisor2TitleFilter?: NullableStringFilter;
 
-    @IsBooleanFilter()
-    areSpectatorsAllowedFilter?: BooleanFilter;
+    @IsNullableBooleanFilter()
+    areSpectatorsAllowedFilter?: NullableBooleanFilter;
 
-    @IsStringFilter()
-    weekdateFilter?: StringFilter;
+    @IsNullableStringFilter()
+    weekdateFilter?: NullableStringFilter;
 
-    @IsDateFilter()
-    proposedDateFilter?: DateFilter;
+    @IsNullableDateFilter()
+    proposedDateFilter?: NullableDateFilter;
 
-    @IsDateFilter()
-    actualDateFilter?: DateFilter;
+    @IsNullableDateFilter()
+    actualDateFilter?: NullableDateFilter;
 
-    @IsStringFilter()
-    roomFilter?: StringFilter;
+    @IsNullableStringFilter()
+    roomFilter?: NullableStringFilter;
 
-    @IsNumberFilter()
-    concernedAgreedFilter?: NumberFilter;
+    @IsNullableNumberFilter()
+    concernedAgreedFilter?: NullableNumberFilter;
 
-    @IsDateFilter()
-    receivingDateFilter?: DateFilter;
+    @IsNullableDateFilter()
+    receivingDateFilter?: NullableDateFilter;
 
-    @IsDateFilter()
-    submissionDateFilter?: DateFilter;
+    @IsNullableDateFilter()
+    submissionDateFilter?: NullableDateFilter;
 }

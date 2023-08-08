@@ -1,23 +1,38 @@
-import { IsNumberFilter, IsStringFilter } from "../../../decorators";
-import { NumberFilter, StringFilter } from "../../../lib/query";
+import { 
+    IsNullableDateFilter,
+    IsNullableNumberFilter, 
+    IsNullableStringFilter, 
+    IsNumberFilter, 
+    IsStringFilter 
+} from "../../../decorators";
+import { 
+    NullableDateFilter, 
+    NullableNumberFilter, 
+    NullableStringFilter, 
+    NumberFilter, 
+    StringFilter 
+} from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class ThesesQueryRequest extends BaseQueryRequest {
     @IsNumberFilter()
     thesisIdFilter?: NumberFilter;
 
-    @IsStringFilter()
-    titleFilter?: StringFilter;
+    @IsNullableStringFilter()
+    titleFilter?: NullableStringFilter;
 
     @IsStringFilter()
-    topicFilter?: StringFilter;
+    topicTitleFilter?: StringFilter;
 
     @IsStringFilter()
-    fieldFilter?: StringFilter;
+    fieldTitleFilter?: StringFilter;
 
     @IsNumberFilter()
     slotFilter?: NumberFilter;
 
-    @IsNumberFilter()
-    slotLimitFilter?: NumberFilter;
+    @IsNullableNumberFilter()
+    slotLimitFilter?: NullableNumberFilter;
+
+    @IsNullableDateFilter()
+    submissionDeadlineFilter?: NullableDateFilter;
 }
