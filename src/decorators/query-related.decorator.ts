@@ -4,6 +4,11 @@ import {
     DateListFilter, 
     EmailFilter, 
     EmailListFilter, 
+    NullableBooleanFilter, 
+    NullableDateFilter, 
+    NullableEmailFilter, 
+    NullableNumberFilter, 
+    NullableStringFilter, 
     NumberFilter, 
     NumberListFilter, 
     OrderBy, 
@@ -18,6 +23,12 @@ export const IsNumberFilter = optionalNestedDecoratorFactory(() => NumberFilter)
 export const IsDateFilter = optionalNestedDecoratorFactory(() => DateFilter);
 export const IsBooleanFilter = optionalNestedDecoratorFactory(() => BooleanFilter);
 export const IsEmailFilter = optionalNestedDecoratorFactory(() => EmailFilter);
+
+export const IsNullableStringFilter = optionalNestedDecoratorFactory(() => NullableStringFilter);
+export const IsNullableNumberFilter = optionalNestedDecoratorFactory(() => NullableNumberFilter);
+export const IsNullableDateFilter = optionalNestedDecoratorFactory(() => NullableDateFilter);
+export const IsNullableBooleanFilter = optionalNestedDecoratorFactory(() => NullableBooleanFilter);
+export const IsNullableEmailFilter = optionalNestedDecoratorFactory(() => NullableEmailFilter);
 
 export const IsStringListFilter = optionalNestedDecoratorFactory(() => StringListFilter);
 export const IsNumberListFilter = optionalNestedDecoratorFactory(() => NumberListFilter);

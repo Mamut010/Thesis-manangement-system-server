@@ -31,7 +31,7 @@ export interface PrismaQueryCreatorInterface {
         : WhereQueryObject | undefined;
         
     createFilteringObject<TValue, TOperator extends FilterOperator>(binaryFilter?: BinaryFilter<TValue, TOperator>)
-        : WhereBinaryFilterObject<TValue> | undefined;
+        : WhereBinaryFilterObject<TValue, TOperator> | undefined;
 
     createListFilteringObject<TValue>(listFilter?: ListFilter<TValue>)
         : WhereListFilterObject<TValue> | undefined;

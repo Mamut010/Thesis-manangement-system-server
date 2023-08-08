@@ -393,6 +393,23 @@ export function isObjectEmptyOrAllUndefined(obj: Record<string, any>,
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export type SingleOrArray<T> = T | T[];
 
+export function singleOrArrayOrUndefined<T>(obj: SingleOrArray<T> | undefined) {
+    if (Array.isArray(obj)) {
+        if (obj.length > 1) {
+            return obj;
+        }
+        else if(obj.length === 1) {
+            return obj[0];
+        }
+        else {
+            return undefined;
+        }
+    }
+    else {
+        return obj;
+    }
+}
+
 export function merge<T>(...objs: (SingleOrArray<T> | undefined)[]): SingleOrArray<T> | undefined {
     const merged: T[] = objs.reduce((pre: T[], obj: SingleOrArray<T> | undefined) => {
         if (obj) {
@@ -406,13 +423,5 @@ export function merge<T>(...objs: (SingleOrArray<T> | undefined)[]): SingleOrArr
         return pre;
     }, []);
 
-    if (merged.length > 1) {
-        return merged;
-    }
-    else if(merged.length === 1) {
-        return merged[0];
-    }
-    else {
-        return undefined;
-    }
+    return singleOrArrayOrUndefined(merged);
 }

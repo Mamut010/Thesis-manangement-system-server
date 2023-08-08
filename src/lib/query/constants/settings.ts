@@ -7,7 +7,14 @@ export const DefaultQuerySettings = {
     NumberFilterOperator: GeneralFilterOperators.Equals,
     DateFilterOperator: GeneralFilterOperators.Equals,
     BoolFilterOperator: GeneralFilterOperators.Equals,
+
+    NullableStringFilterOperator: StringFilterOperators.Contains,
+    NullableNumberFilterOperator: GeneralFilterOperators.Equals,
+    NullableDateFilterOperator: GeneralFilterOperators.Equals,
+    NullableBoolFilterOperator: GeneralFilterOperators.Equals,
+
     ListFilterOperator: ListFilterOperators.In,
+
     SortDir: SortDirs.Ascending,
     Take: 30,
     MinTake: 1,

@@ -4,17 +4,19 @@ import { injectable } from "inversify";
 import { BinaryFilter } from "./interfaces/binary-filter";
 import { OrderBy } from "./order-by";
 import { PrismaQueryCreatorInterface } from "./interfaces/prisma-query-creator.interface";
-import { getActualOperatorFromNotOperator, isFilterActualOperator } from "./utils/operator-helpers";
+import { getActualOperatorFromNotOperator, isFilterActualOperator, isNullableOperator } from "./utils/operator-helpers";
 import { Pagination } from "./pagination";
 import { ListFilter } from "./interfaces/list-filter";
-import { FilterActualOperator, FilterOperator } from "./types/filter-operator";
+import { FilterActualOperator, FilterOperator, NonNullableFilterOperator } from "./types/filter-operator";
 import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, AutoWhereQueryCreatable, OrderByOptions } from "./types/query-creator-utility";
 import { ConcreteBinaryFilter, ConcreteListFilter } from "./types/concrete-filter";
-import { assignObjectByDotNotation, createObjectByDotNotation, defaultOrGiven, flipMap, isEnumerableObject } from "../../utils/object-helpers";
+import { assignObjectByDotNotation, createObjectByDotNotation, defaultOrGiven, flipMap, isEnumerableObject, singleOrArrayOrUndefined } from "../../utils/object-helpers";
 import { trimPrefix, trimSuffix } from "../../utils/string-helpers";
-import { isBinaryFilter, isListFilter } from "./utils/filter-helper";
+import { isBinaryFilter, isListFilter } from "./utils/filter-helpers";
 import { 
     ActualFilteringObject,
+    ActualListFilteringObject,
+    NullableFilteringObject,
     OrderByQueryObject, 
     PaginationQueryObject, 
     PrismaQueryObject, 
@@ -56,7 +58,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
     }
 
     createFilteringObject<TValue, TOperator extends FilterOperator>(binaryFilter?: BinaryFilter<TValue, TOperator>)
-        : WhereBinaryFilterObject<TValue> | undefined {
+        : WhereBinaryFilterObject<TValue, TOperator> | undefined {
         // Deal with undefined filter
         if (!binaryFilter) {
             return;
@@ -71,10 +73,10 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
                     value: binaryFilter.value,
                     operator: actualOperator
                 })
-            };
+            } as any;
         }
 
-        // Type guard used here so compiler won't complain
+        // Type guard used here so type-checker won't complain
         if (isFilterActualOperator(binaryFilter.operator)) {
             return this.constructActualFilteringObject({
                 value: binaryFilter.value,
@@ -103,7 +105,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             const orderBys = orderBy
                     .map(item => this.constructOrderBySingle(item, options))
                     .filter((item): item is OrderByQueryObject => typeof item !== 'undefined');
-            return orderBys.length > 0 ? orderBys : undefined;
+            return singleOrArrayOrUndefined(orderBys);
         }
         else {
             return this.constructOrderBySingle(orderBy, options);
@@ -265,16 +267,18 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
     }
 
     private constructActualFilteringObject<TValue, TOperator extends FilterActualOperator>
-        (binaryFilter: BinaryFilter<TValue, TOperator>): ActualFilteringObject<TValue> {
-        return {
-            [binaryFilter.operator]: binaryFilter.value
-        } as any;
+        (binaryFilter: BinaryFilter<TValue, TOperator>): ActualFilteringObject<TValue, TOperator> {
+        return this.handleNullableOperator(binaryFilter) ?? 
+            {
+                [binaryFilter.operator]: binaryFilter.value
+            } as any;
     }
 
-    private constructActualListFilteringObject<TValue>(listFilter: ListFilter<TValue>): ActualFilteringObject<TValue[]> {
-        return {
-            [listFilter.operator]: listFilter.value
-        } as any;
+    private constructActualListFilteringObject<TValue>(listFilter: ListFilter<TValue>): ActualListFilteringObject<TValue[]> {
+        return this.handleNullableOperator(listFilter) ?? 
+            {
+                [listFilter.operator]: listFilter.value
+            } as any;
     }
 
     private constructOrderBySingle(orderBy: OrderBy, orderByOptions: OrderByOptions): OrderByQueryObject | undefined {
@@ -287,6 +291,15 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
         else {
             return actualLocation ? createObjectByDotNotation(actualLocation, orderBy.dir) : undefined;
+        }
+    }
+
+    private handleNullableOperator<T>(filter: (T extends { operator: unknown } ? T : never))
+        : NullableFilteringObject | undefined {
+        if (isNullableOperator(filter.operator)) {
+            return {
+                equals: null
+            };
         }
     }
 }

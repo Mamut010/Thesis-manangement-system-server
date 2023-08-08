@@ -6,6 +6,14 @@ export const GeneralFilterNotOperators = {
     NotEquals: 'nequals',
 } as const;
 
+export const NullableExclusiveFilterOperators = {
+    IsNull: 'isNull'
+} as const;
+
+export const NullableExclusiveFilterNotOperators = {
+    IsNotNull: 'nisNull'
+} as const;
+
 export const StringFilterOperators = {
     Contains: 'contains',
     StartsWith: 'startsWith',
@@ -28,14 +36,37 @@ export const NumberAndDateFilterOperators = {
 export const FilterNotOperators = {
     ...GeneralFilterNotOperators,
     ...StringFilterNotOperators,
+    ...NullableExclusiveFilterNotOperators,
+} as const;
+
+export const NonNullableFilterNotOperators = {
+    ...GeneralFilterNotOperators,
+    ...StringFilterNotOperators,
 } as const;
 
 export const FilterOperatorValues = [
     ...Object.values(GeneralFilterOperators), 
+    ...Object.values(NullableExclusiveFilterOperators), 
     ...Object.values(StringFilterOperators),
     ...Object.values(NumberAndDateFilterOperators),
     ...Object.values(FilterNotOperators),
-]
+];
+
+export const NullableExclusiveFilterOperatorValues = [
+    ...Object.values(NullableExclusiveFilterOperators),
+    ...Object.values(NullableExclusiveFilterNotOperators),
+];
+
+export const FilterNotOperatorValues = Object.values(FilterNotOperators);
+
+export const NonNullableFilterOperatorValues = [
+    ...Object.values(GeneralFilterOperators),
+    ...Object.values(StringFilterOperators),
+    ...Object.values(NumberAndDateFilterOperators),
+    ...Object.values(NonNullableFilterNotOperators),
+];
+
+export const NonNullableFilterNotOperatorValues = Object.values(NonNullableFilterNotOperators);
 
 export const StringFilterOperatorValues = [
     ...Object.values(GeneralFilterOperators), 
@@ -61,4 +92,22 @@ export const BoolFilterOperatorValues = [
     ...Object.values(GeneralFilterNotOperators),
 ];
 
-export const FilterNotOperatorValues = Object.values(FilterNotOperators);
+export const NullableStringFilterOperatorValues = [
+    ...Object.values(StringFilterOperatorValues),
+    ...Object.values(NullableExclusiveFilterOperatorValues),
+];
+
+export const NullableNumberFilterOperatorValues = [
+    ...Object.values(NumberFilterOperatorValues),
+    ...Object.values(NullableExclusiveFilterOperatorValues),
+];
+
+export const NullableDateFilterOperatorValues = [
+    ...Object.values(DateFilterOperatorValues),
+    ...Object.values(NullableExclusiveFilterOperatorValues),
+];
+
+export const NullableBoolFilterOperatorValues = [
+    ...Object.values(BoolFilterOperatorValues),
+    ...Object.values(NullableExclusiveFilterOperatorValues),
+];
