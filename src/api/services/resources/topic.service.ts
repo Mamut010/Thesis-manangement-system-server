@@ -28,7 +28,7 @@ export class TopicService implements TopicServiceInterface {
         const model = this.queryCreator.createQueryModel(Topic);
         const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest);
 
-        const count = await this.prisma.topic.count({ ...prismaQuery, skip: undefined, take: undefined });
+        const count = await this.prisma.topic.count({ where: prismaQuery.where });
         const topics = await this.prisma.topic.findMany(prismaQuery);
 
         const response = new TopicsQueryResponse();

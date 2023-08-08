@@ -28,7 +28,7 @@ export class LocationService implements LocationServiceInterface {
         const model = this.queryCreator.createQueryModel(Location);
         const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest);
 
-        const count = await this.prisma.location.count({ ...prismaQuery, skip: undefined, take: undefined });
+        const count = await this.prisma.location.count({ where: prismaQuery.where });
         const locations = await this.prisma.location.findMany(prismaQuery);
 
         const response = new LocationsQueryResponse();

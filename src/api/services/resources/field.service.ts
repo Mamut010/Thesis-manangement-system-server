@@ -28,7 +28,7 @@ export class FieldService implements FieldServiceInterface {
         const model = this.queryCreator.createQueryModel(Field);
         const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest);
 
-        const count = await this.prisma.field.count({ ...prismaQuery, skip: undefined, take: undefined });
+        const count = await this.prisma.field.count({ where: prismaQuery.where });
         const fields = await this.prisma.field.findMany(prismaQuery);
 
         const response = new FieldsQueryResponse();

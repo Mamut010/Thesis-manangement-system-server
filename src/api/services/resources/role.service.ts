@@ -30,7 +30,7 @@ export class RoleService implements RoleServiceInterface {
         const model = this.queryCreator.createQueryModel(Role);
         const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest);
 
-        const count = await this.prisma.role.count({ ...prismaQuery, skip: undefined, take: undefined });
+        const count = await this.prisma.role.count({ where: prismaQuery.where });
         const roles = await this.prisma.role.findMany(prismaQuery);
 
         const response = new RolesQueryResponse();
