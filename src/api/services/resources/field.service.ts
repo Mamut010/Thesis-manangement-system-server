@@ -12,7 +12,6 @@ import { FieldCreateRequest } from "../../../contracts/requests/resources/field-
 import { FieldUpdateRequest } from "../../../contracts/requests/resources/field-update.request";
 import { Field } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
-import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()

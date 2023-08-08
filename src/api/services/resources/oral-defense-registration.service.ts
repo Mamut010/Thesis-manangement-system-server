@@ -10,7 +10,6 @@ import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { OralDefenseRegistrationCreateRequest } from "../../../contracts/requests/resources/oral-defense-registration-create.request";
 import { OralDefenseRegistrationUpdateRequest } from "../../../contracts/requests/resources/oral-defense-registration-update.request";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
-import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 import { OralDefenseRegistrationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { OralDefenseRegistration } from "../../../core/models";

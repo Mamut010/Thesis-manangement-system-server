@@ -14,7 +14,6 @@ import { ConflictError } from "../../../contracts/errors/conflict.error";
 import { Role } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
 import { MethodNotAllowedError } from "../../../contracts/errors/method-not-allowed.error";
-import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()

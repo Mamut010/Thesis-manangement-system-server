@@ -12,7 +12,6 @@ import { TopicCreateRequest } from "../../../contracts/requests/resources/topic-
 import { TopicUpdateRequest } from "../../../contracts/requests/resources/topic-update.request";
 import { Topic } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
-import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()

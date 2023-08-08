@@ -10,7 +10,6 @@ import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { BachelorThesisAssessmentCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-create.request";
 import { BachelorThesisAssessmentUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-update.request";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
-import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 import { BachelorThesisAssessmentServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisAssessment } from "../../../core/models";

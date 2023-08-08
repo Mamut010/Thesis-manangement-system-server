@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { ThesisServiceInterface } from "../../interfaces";
 import { ThesisDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { PrismaQueryCreatorInterface } from "../../../lib/query";
@@ -10,7 +10,6 @@ import { ThesesQueryRequest } from "../../../contracts/requests/resources/theses
 import { ThesesQueryResponse } from "../../../contracts/responses/resources/theses-query.response";
 import { ThesisCreateRequest } from "../../../contracts/requests/resources/thesis-create.request";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
-import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 import { Thesis } from "../../../core/models";
 import { anyChanges } from "../../../utils/crud-helpers";
 

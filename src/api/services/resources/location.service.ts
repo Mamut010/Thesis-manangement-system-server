@@ -12,7 +12,6 @@ import { LocationCreateRequest } from "../../../contracts/requests/resources/loc
 import { LocationUpdateRequest } from "../../../contracts/requests/resources/location-update.request";
 import { Location } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
-import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()
