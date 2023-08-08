@@ -13,6 +13,7 @@ import { TopicUpdateRequest } from "../../../contracts/requests/resources/topic-
 import { Topic } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
 import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
+import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()
 export class TopicService implements TopicServiceInterface {
@@ -51,7 +52,7 @@ export class TopicService implements TopicServiceInterface {
 
     async updateTopic(id: number, updateRequest: TopicUpdateRequest): Promise<TopicDto> {
         let record = await this.ensureRecordExists(id);
-        if (!isObjectEmptyOrAllUndefined(updateRequest) && !compareObjectByEntries(record, updateRequest)) {
+        if (anyChanges(record, updateRequest)) {
             record = await this.prisma.topic.update({
                 where: {
                     id: id

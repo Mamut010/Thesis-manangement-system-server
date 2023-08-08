@@ -294,7 +294,7 @@ export interface CompareObjectOptions {
 export function compareObjectByEntries(obj1: Record<string, any>, obj2: Record<string, any>, 
     compareOptions?: CompareObjectOptions): boolean {
     const defaultOptions: CompareObjectOptions = {
-        ignoreUnmatchedProps: true
+        ignoreUnmatchedProps: false
     };
     const options = defaultOrGiven(defaultOptions, compareOptions);
     return compareObjectByEntriesImpl(obj1, obj2, options);

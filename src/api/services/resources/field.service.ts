@@ -13,6 +13,7 @@ import { FieldUpdateRequest } from "../../../contracts/requests/resources/field-
 import { Field } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
 import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
+import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()
 export class FieldService implements FieldServiceInterface {
@@ -51,7 +52,7 @@ export class FieldService implements FieldServiceInterface {
 
     async updateField(id: number, updateRequest: FieldUpdateRequest): Promise<FieldDto> {
         let record = await this.ensureRecordExists(id);
-        if (!isObjectEmptyOrAllUndefined(updateRequest) && !compareObjectByEntries(record, updateRequest)) {
+        if (anyChanges(record, updateRequest)) {
             record = await this.prisma.field.update({
                 where: {
                     id: id

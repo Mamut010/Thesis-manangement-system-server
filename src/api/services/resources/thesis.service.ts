@@ -12,6 +12,7 @@ import { ThesisCreateRequest } from "../../../contracts/requests/resources/thesi
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
 import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
 import { Thesis } from "../../../core/models";
+import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()
 export class ThesisService implements ThesisServiceInterface {
@@ -63,7 +64,7 @@ export class ThesisService implements ThesisServiceInterface {
 
     async updateThesis(id: number, updateRequest: ThesisCreateRequest): Promise<ThesisDto> {
         let record = await this.ensureRecordExists(id);
-        if (!isObjectEmptyOrAllUndefined(updateRequest) && !compareObjectByEntries(record, updateRequest)) {
+        if (anyChanges(record, updateRequest)) {
             record = await this.prisma.thesis.update({
                 where: {
                     id: id

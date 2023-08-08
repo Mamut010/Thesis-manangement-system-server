@@ -13,6 +13,7 @@ import { LocationUpdateRequest } from "../../../contracts/requests/resources/loc
 import { Location } from "../../../core/models";
 import { PlainTransformerInterface } from "../../utils/plain-transformer";
 import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../../utils/object-helpers";
+import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()
 export class LocationService implements LocationServiceInterface {
@@ -51,7 +52,7 @@ export class LocationService implements LocationServiceInterface {
 
     async updateLocation(id: number, updateRequest: LocationUpdateRequest): Promise<LocationDto> {
         let record = await this.ensureRecordExists(id);
-        if (!isObjectEmptyOrAllUndefined(updateRequest) && !compareObjectByEntries(record, updateRequest)) {
+        if (anyChanges(record, updateRequest)) {
             record = await this.prisma.location.update({
                 where: {
                     id: id

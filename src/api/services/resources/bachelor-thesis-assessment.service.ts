@@ -16,6 +16,7 @@ import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisAssessment } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainBachelorThesisAssessment } from "../../../shared/types/plain-types";
+import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()
 export class BachelorThesisAssessmentService implements BachelorThesisAssessmentServiceInterface {
@@ -85,7 +86,7 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
         let record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
-        if (!isObjectEmptyOrAllUndefined(updateRequest) && !compareObjectByEntries(record, updateRequest)) {
+        if (anyChanges(record, updateRequest)) {
             record = await this.prisma.bachelorThesisAssessment.update({
                 where: {
                     id: id

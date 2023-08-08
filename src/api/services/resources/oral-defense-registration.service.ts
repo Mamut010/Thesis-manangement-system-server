@@ -16,6 +16,7 @@ import { AuthorizedUser } from "../../../core/auth-checkers";
 import { OralDefenseRegistration } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainOralDefenseRegistration } from "../../../shared/types/plain-types";
+import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()
 export class OralDefenseRegistrationService implements OralDefenseRegistrationServiceInterface {
@@ -79,7 +80,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
         let record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
-        if (!isObjectEmptyOrAllUndefined(updateRequest) && !compareObjectByEntries(record, updateRequest)) {
+        if (anyChanges(record, updateRequest)) {
             record = await this.prisma.oralDefenseRegistration.update({
                 where: {
                     id: id
