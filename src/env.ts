@@ -83,4 +83,10 @@ export const env = {
         username: getOsEnv('SWAGGER_USERNAME'),
         password: getOsEnv('SWAGGER_PASSWORD'),
     },
+    mail: {
+        secured: toBool(getOsEnvOptional('MAIL_SECURED')),
+        service: getOsEnv('MAIL_SERVICE'),
+        user: getOsEnv('MAIL_USER'),
+        pass: getOsEnv('MAIL_PASS'),
+    },
 } as const;

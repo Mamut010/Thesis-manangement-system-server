@@ -39,6 +39,10 @@ const API_SERVICE_TOKENS = {
     OralDefenseAssessmentService: Symbol.for('OralDefenseAssessmentService'),
 } as const;
 
+const SHARED_SERVICE_TOKENS = {
+    MailService: Symbol.for('MailService'),
+} as const;
+
 const UTIL_TOKENS = {
     JwtExtractor: Symbol.for('JwtExtractor'),
     JwtCookieHandler: Symbol.for('JwtCookieHandler'),
@@ -53,5 +57,6 @@ export const INJECTION_TOKENS = {
     ...REPOSITORY_TOKENS,
     ...AUTH_SERVICE_TOKENS,
     ...API_SERVICE_TOKENS,
+    ...SHARED_SERVICE_TOKENS,
     ...UTIL_TOKENS,
 } as const;
