@@ -4,11 +4,11 @@ import { NullableBoolFilterOperatorValues } from "../../constants/filter-operato
 import { BinaryFilter } from "../../interfaces/binary-filter";
 import { NullableBoolFilterOperator } from "../../types/filter-operator";
 import { DefaultQuerySettings } from "../../constants/settings";
-import { ValidateIfNotNullableOperator } from "../../utils/validator-helpers";
+import { ValidateIfNotNullableOperator } from "../../decorators/validate-if-not-nullable-operator.decorator";
 
 export class NullableBooleanFilter implements BinaryFilter<boolean, NullableBoolFilterOperator> {
     @Expose()
-    @ValidateIf(ValidateIfNotNullableOperator<NullableBooleanFilter>)
+    @ValidateIfNotNullableOperator()
     @IsDefined()
     @IsBoolean()
     @Type(() => Boolean)
