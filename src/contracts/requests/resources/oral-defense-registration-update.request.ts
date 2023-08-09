@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class OralDefenseRegistrationUpdateRequest {
@@ -40,11 +40,13 @@ export class OralDefenseRegistrationUpdateRequest {
     @Expose()
     @IsOptional()
     @IsDate()
+    @Type(() => Date)
     proposedDate?: Date;
 
     @Expose()
     @IsOptional()
     @IsDate()
+    @Type(() => Date)
     actualDate?: Date;
 
     @Expose()
@@ -55,10 +57,12 @@ export class OralDefenseRegistrationUpdateRequest {
     @Expose()
     @IsOptional()
     @IsDate()
+    @Type(() => Date)
     receivingDate?: Date;
 
     @Expose()
     @IsOptional()
     @IsDate()
+    @Type(() => Date)
     submissionDate?: Date;
 }

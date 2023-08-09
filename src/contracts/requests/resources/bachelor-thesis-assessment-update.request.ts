@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class BachelorThesisAssessmentUpdateRequest {
@@ -45,5 +45,6 @@ export class BachelorThesisAssessmentUpdateRequest {
     @Expose()
     @IsOptional()
     @IsDate()
+    @Type(() => Date)
     assessmentDate?: Date;
 }

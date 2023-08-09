@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class ThesisCreateRequest {
@@ -40,6 +40,7 @@ export class ThesisCreateRequest {
     @Expose()
     @IsOptional()
     @IsDate()
+    @Type(() => Date)
     submissionDeadline?: Date;
 
     @Expose()
