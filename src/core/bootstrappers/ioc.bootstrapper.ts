@@ -1,6 +1,6 @@
 import { useContainer } from 'routing-controllers';
 import { BootstrapSettingInterface, Bootstrapper } from '../../lib/bootstrapper';
-import { InversifyAdapter } from '../../lib/adapters';
+import { InversifyAdapter } from '../di-adapters';
 import { Container } from 'inversify';
 import { configInversify } from '../../config';
 
