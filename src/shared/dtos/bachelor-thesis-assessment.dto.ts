@@ -34,6 +34,11 @@ export class BachelorThesisAssessmentDto {
 
     @Expose()
     @IsOptional()
+    @IsNumber()
+    supervisor1Id!: number | null;
+
+    @Expose()
+    @IsOptional()
     @IsString()
     supervisor1Title!: string | null;
 
@@ -41,6 +46,11 @@ export class BachelorThesisAssessmentDto {
     @IsOptional()
     @IsNumber()
     supervisor1Grade!: number | null;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    supervisor2Id!: number | null;
 
     @Expose()
     @IsOptional()

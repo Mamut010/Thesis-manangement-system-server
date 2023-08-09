@@ -54,6 +54,11 @@ export class BachelorThesisRegistrationDto {
 
     @Expose()
     @IsOptional()
+    @IsNumber()
+    supervisor1Id!: number | null;
+
+    @Expose()
+    @IsOptional()
     @IsString()
     supervisor1Title!: string | null;
 
@@ -61,6 +66,11 @@ export class BachelorThesisRegistrationDto {
     @IsOptional()
     @IsDate()
     supervisor1Date!: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    supervisor2Id!: number | null;
 
     @Expose()
     @IsOptional()

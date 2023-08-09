@@ -14,8 +14,8 @@ export class ThesisDto {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    topicId!: string | null;
+    @IsNumber()
+    topicId!: number | null;
 
     @Expose()
     @IsOptional()
@@ -24,8 +24,8 @@ export class ThesisDto {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    fieldId!: string | null;
+    @IsNumber()
+    fieldId!: number | null;
 
     @Expose()
     @IsOptional()
