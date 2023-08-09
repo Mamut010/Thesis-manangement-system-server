@@ -12,20 +12,22 @@ export class JwtCookieHandler implements JwtCookieHandlerInterface {
     }
 
     attachRefreshTokenToCookie(response: Response, token: string): void {
-        response.cookie(AUTH_SETTINGS.Jwt.RefreshTokenCookie, token, {
+        response.cookie(AUTH_SETTINGS.Cookie.RefreshTokenKey, token, {
             httpOnly: true,
-            expires: this.jwtService.getTokenExp(token)
+            signed: true,
+            expires: this.jwtService.getTokenExp(token),
         });
     }
 
     detachRefreshTokenFromCookie(response: Response): void {
-        response.clearCookie(AUTH_SETTINGS.Jwt.RefreshTokenCookie, {
-            httpOnly: true
+        response.clearCookie(AUTH_SETTINGS.Cookie.RefreshTokenKey, {
+            httpOnly: true,
+            signed: true,
         });
     }
 
     extractRefreshTokenFromCookie(request: Request): string | undefined {
-        const cookies = request.cookies as Record<string, string | undefined>;
-        return cookies[AUTH_SETTINGS.Jwt.RefreshTokenCookie];
+        const signedCookies: Record<string, string | undefined> = request.signedCookies;
+        return signedCookies[AUTH_SETTINGS.Cookie.RefreshTokenKey];
     }
 }

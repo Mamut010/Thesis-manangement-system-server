@@ -5,7 +5,7 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import {
-    getOsEnv, getOsEnvOptional, getOsPaths, normalizePort, toBool, toNumber
+    getOsEnv, getOsEnvArray, getOsEnvOptional, getOsPaths, normalizePort, toBool, toNumber
 } from './lib/env';
 
 /**
@@ -21,10 +21,6 @@ export const env = {
     isProduction: process.env.NODE_ENV === 'production',
     isTest: process.env.NODE_ENV === 'test',
     isDevelopment: process.env.NODE_ENV === 'development',
-    secrets: {
-        accessToken: getOsEnv('ACCESS_TOKEN_SECRET'),
-        refreshToken: getOsEnv('REFRESH_TOKEN_SECRET')
-    },
     app: {
         name: getOsEnv('APP_NAME'),
         version: getOsEnv('APP_VERSION'),
@@ -61,8 +57,13 @@ export const env = {
             port: normalizePort(process.env.APP_SOCKET_PORT ?? getOsEnv('SOCKET_PORT')) as number,
         }
     },
+    auth: {
+        accessToken: getOsEnv('ACCESS_TOKEN_SECRET'),
+        refreshToken: getOsEnv('REFRESH_TOKEN_SECRET'),
+        cookieSecret: getOsEnv('COOKIE_SECRET'),
+    },
     cors: {
-        allowOrigins: getOsEnv('ALLOW_ORIGINS').split(';')
+        allowOrigins: getOsEnvArray('ALLOW_ORIGINS')
     },
     log: {
         level: getOsEnv('LOG_LEVEL'),

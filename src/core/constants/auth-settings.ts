@@ -3,15 +3,18 @@ import { route } from "../../utils/route";
 
 export const AUTH_SETTINGS = {
     Jwt: {
-        AccessTokenSecret: env.secrets.accessToken,
-        RefreshTokenSecret: env.secrets.refreshToken,
-        RefreshTokenCookie: 'thesis-system$refresh',
+        AccessTokenSecret: env.auth.accessToken,
+        RefreshTokenSecret: env.auth.refreshToken,
         AccessTokenTtl: '10m',
         RefreshTokenTtl: '30d',
         DefaultSignOptions: {
             issuer: route('auth'),
             audience: route('api')
         }
+    },
+    Cookie: {
+        Secret: env.auth.cookieSecret,
+        RefreshTokenKey: 'thesis-system$refresh',
     },
     Hash: {
         SaltRounds: 10,
