@@ -5,7 +5,7 @@
 import { env } from '../env';
 import { Logger } from '../lib/logger';
 import { ServerType } from '../shared/types/server-types';
-import { route } from '../utils/route';
+import { route } from '../utils/route-helpers';
 
 export function banner(log: Logger, server: ServerType): void {
     if (env.app.banner) {
