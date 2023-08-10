@@ -330,8 +330,21 @@ function compareObjectByEntriesImpl(obj1: Record<string, any>, obj2: Record<stri
 }
 
 function compareObjectByEntriesImplCheckNonobject(val1: unknown, val2: unknown) {
+    let o1: unknown;
+    let o2: unknown;
+    let isChecked = false;
     if (typeof val1 !== 'object') {
-        if (val1 !== val2) {
+        o1 = val1;
+        o2 = val2;
+        isChecked = true;
+    }
+    else {
+        o1 = val2;
+        o2 = val1;
+    }
+
+    if (isChecked || typeof o1 !== 'object') {
+        if (o1 !== o2) {
             return false;
         }
     }
@@ -339,8 +352,23 @@ function compareObjectByEntriesImplCheckNonobject(val1: unknown, val2: unknown) 
 }
 
 function compareObjectByEntriesImplCheckEnumerableObject(val1: unknown, val2: unknown, options: CompareObjectOptions) {
+    let o1: unknown;
+    let o2: unknown;
+    let isChecked = false;
     if (isEnumerableObject(val1)) {
-        if (!isEnumerableObject(val2) || !compareObjectByEntriesImpl(val1, val2, options)) {
+        o1 = val1;
+        o2 = val2;
+        isChecked = true;
+    }
+    else {
+        o1 = val2;
+        o2 = val1;
+    }
+
+    const typeGuard = (o1: unknown): o1 is Record<string, any> => isChecked;
+    
+    if (typeGuard(o1) || isEnumerableObject(o1)) {
+        if (!isEnumerableObject(o2) || !compareObjectByEntriesImpl(o1, o2, options)) {
             return false;
         }
     }
@@ -348,8 +376,23 @@ function compareObjectByEntriesImplCheckEnumerableObject(val1: unknown, val2: un
 }
 
 function compareObjectByEntriesImplCheckArray(val1: unknown, val2: unknown, options: CompareObjectOptions) {
-    if(Array.isArray(val1)) {
-        if (!Array.isArray(val2) || !arrayEqualsByEntries(val1, val2, (item1, item2) => 
+    let o1: unknown;
+    let o2: unknown;
+    let isChecked = false;
+    if (Array.isArray(val1)) {
+        o1 = val1;
+        o2 = val2;
+        isChecked = true;
+    }
+    else {
+        o1 = val2;
+        o2 = val1;
+    }
+
+    const typeGuard = (o1: unknown): o1 is unknown[] => isChecked;
+    
+    if(typeGuard(o1) || Array.isArray(o1)) {
+        if (!Array.isArray(o2) || !arrayEqualsByEntries(o1, o2, (item1, item2) => 
             isEnumerableObject(item1) && isEnumerableObject(item2) && compareObjectByEntriesImpl(item1, item2, options))) {
             return false;
         }
@@ -358,8 +401,23 @@ function compareObjectByEntriesImplCheckArray(val1: unknown, val2: unknown, opti
 }
 
 function compareObjectByEntriesImplCheckDate(val1: unknown, val2: unknown, options: CompareObjectOptions) {
-    if(val1 instanceof Date) {
-        if (!(val2 instanceof Date) || (+val1 !== +val2)) {
+    let o1: unknown;
+    let o2: unknown;
+    let isChecked = false;
+    if (val1 instanceof Date) {
+        o1 = val1;
+        o2 = val2;
+        isChecked = true;
+    }
+    else {
+        o1 = val2;
+        o2 = val1;
+    }
+
+    const typeGuard = (o1: unknown): o1 is Date => isChecked;
+    
+    if(typeGuard(o1) || o1 instanceof Date) {
+        if (!(o2 instanceof Date) || (+o1 !== +o2)) {
             return false;
         }
     }
