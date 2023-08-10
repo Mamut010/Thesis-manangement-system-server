@@ -48,6 +48,7 @@ const UTIL_TOKENS = {
     JwtCookieHandler: Symbol.for('JwtCookieHandler'),
     PlainTransformer: Symbol.for('PlainTransformer'),
     PrismaQueryCreator: Symbol.for('PrismaQueryCreator'),
+    PdfFormFiller: Symbol.for('PdfFormFiller'),
 } as const;
 
 export const INJECTION_TOKENS = {
