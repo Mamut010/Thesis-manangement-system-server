@@ -2,12 +2,12 @@ import { FormField } from "../interfaces/form-field";
 import { FormFieldHandler } from "../interfaces/form-field-handler";
 import { FormFieldHandleOptions } from "../types/form-field-handle-options";
 
-export class TextField implements FormField {
-    constructor(public name: string, public value?: string) {
-        
+export class CheckBoxField implements FormField {
+    constructor(public name: string, public isChecked?: boolean) {
+
     }
 
     accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined): Promise<void> {
-        return handler.handleText(this, handleOptions);
+        return handler.handleCheckBox(this, handleOptions);
     }
 }

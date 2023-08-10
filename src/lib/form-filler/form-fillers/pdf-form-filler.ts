@@ -28,9 +28,11 @@ export class PdfFormFiller implements FormFillerInterface {
 
         const pdfDoc = await PDFDocument.load(doc);
         const form = pdfDoc.getForm();
-        const pdfFormFiller = new PdfFormFieldHandler(form);
+        const pdfFormHandler = new PdfFormFieldHandler(form);
 
-        Object.values(data).forEach(formField => formField.accept(pdfFormFiller));
+        for(const formField of Object.values(data)) {
+            await formField.accept(pdfFormHandler);
+        }
         return pdfDoc;
     }
 

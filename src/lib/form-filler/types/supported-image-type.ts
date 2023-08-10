@@ -1,0 +1,1 @@
+export type SupportedImageType = 'jpg' | 'jpeg' | 'png';

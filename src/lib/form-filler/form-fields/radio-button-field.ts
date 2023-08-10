@@ -7,7 +7,7 @@ export class RadioButtonField implements FormField {
 
     }
 
-    accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined): void {
-        handler.handleRadioButton(this, handleOptions);
+    accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined): Promise<void> {
+        return handler.handleRadioButton(this, handleOptions);
     }
 }
