@@ -1,0 +1,1 @@
+export type PathOrTypedArray = string | Uint8Array | ArrayBuffer;

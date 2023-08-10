@@ -7,3 +7,6 @@ dist/*
 
 # Ignore test files
 **/*test.*
+
+public/*
+!public/assets/
