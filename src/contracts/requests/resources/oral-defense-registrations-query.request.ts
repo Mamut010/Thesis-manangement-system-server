@@ -34,7 +34,7 @@ export class OralDefenseRegistrationsQueryRequest extends BaseQueryRequest {
     areSpectatorsAllowedFilter?: NullableBooleanFilter;
 
     @IsNullableStringFilter()
-    weekdateFilter?: NullableStringFilter;
+    weekdayFilter?: NullableStringFilter;
 
     @IsNullableDateFilter()
     proposedDateFilter?: NullableDateFilter;

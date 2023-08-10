@@ -198,7 +198,7 @@ model OralDefenseRegistration {
     supervisor2Id          Int?
     room                   String?     
     areSpectatorsAllowed   Boolean?    
-    weekdate               String?     @db.VarChar(255)
+    weekday                String?     @db.VarChar(255)
     proposedDate           DateTime?   @db.DateTime
     actualDate             DateTime?   @db.DateTime
     concernedAgreed        Int?        @default(0)
