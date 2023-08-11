@@ -37,7 +37,17 @@ export class PdfFormFieldHandler implements FormFieldHandler {
     async handleRadioButton(formField: RadioButtonField, handleOptions?: FormFieldHandleOptions): Promise<void> {
         const handle = () => {
             const radioGroup = this.form.getRadioGroup(formField.groupName);
-            radioGroup.select(formField.option ?? '');
+            
+            const isValidTargetOption = (targetOption?: string): targetOption is string => {
+                return radioGroup.getOptions().some(option => option === targetOption);
+            }
+
+            if (isValidTargetOption(formField.option)) {
+                radioGroup.select(formField.option);
+            }
+            else {
+                radioGroup.clear();
+            }
         }
         
         return this.wrapErr(handle, handleOptions);
