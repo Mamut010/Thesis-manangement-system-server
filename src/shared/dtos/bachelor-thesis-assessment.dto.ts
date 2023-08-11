@@ -13,6 +13,11 @@ export class BachelorThesisAssessmentDto {
     studentId!: number;
 
     @Expose()
+    @IsDefined()
+    @IsNumber()
+    thesisId!: number;
+
+    @Expose()
     @IsOptional()
     @IsString()
     surname!: string | null;
