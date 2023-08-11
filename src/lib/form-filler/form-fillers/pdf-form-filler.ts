@@ -33,6 +33,8 @@ export class PdfFormFiller implements FormFillerInterface {
         for(const formField of Object.values(data)) {
             await formField.accept(pdfFormHandler);
         }
+
+        form.flatten();
         return pdfDoc;
     }
 
