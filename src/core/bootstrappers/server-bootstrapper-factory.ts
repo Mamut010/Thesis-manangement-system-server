@@ -49,8 +49,8 @@ export const serverBootstrapperFactory = (serverType: ServerType): Bootstrapper 
              * Here we specify what controllers should be registered in our express server.
              */
             controllers: env.app.servers[serverType].dirs.controllers,
-            middlewares: [...env.app.servers[serverType].dirs.middlewares, ...env.app.shared.dirs.middlewares],
-            interceptors: [...env.app.servers[serverType].dirs.interceptors, ...env.app.shared.dirs.interceptors],
+            middlewares: [...env.app.shared.dirs.middlewares, ...env.app.servers[serverType].dirs.middlewares],
+            interceptors: [...env.app.shared.dirs.interceptors, ...env.app.servers[serverType].dirs.interceptors],
     
             /**
              * Authorization features
