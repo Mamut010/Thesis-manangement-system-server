@@ -14,7 +14,7 @@ export class PdfFormFieldHandler implements FormFieldHandler {
     async handleText(formField: TextField, handleOptions?: FormFieldHandleOptions): Promise<void> {
         const handle = () => {
             const textField = this.form.getTextField(formField.name);
-            textField.setText(formField.value);
+            textField.setText(formField.value ?? undefined);
         }
         
         return this.wrapErr(handle, handleOptions);
@@ -38,7 +38,7 @@ export class PdfFormFieldHandler implements FormFieldHandler {
         const handle = () => {
             const radioGroup = this.form.getRadioGroup(formField.groupName);
             
-            const isValidTargetOption = (targetOption?: string): targetOption is string => {
+            const isValidTargetOption = (targetOption?: string | null): targetOption is string => {
                 return radioGroup.getOptions().some(option => option === targetOption);
             }
 
