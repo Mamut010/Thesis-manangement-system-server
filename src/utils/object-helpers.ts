@@ -1,4 +1,6 @@
+import { isDate } from "util/types";
 import { capitalize, trimPrefix, uncapitalize } from "./string-helpers";
+import { arrayIntersection, arrayUnion } from "./array-helpers";
 
 /**
  * Make an object become immutable. This operation is irreversible.
@@ -8,11 +10,20 @@ export function makeImmutable<T>(obj: T): Readonly<T> {
     return Object.freeze<T>(obj);
 }
 
-export function isEnumerableObject(obj: any): obj is { [property: PropertyKey]: any } {
+export function isEnumerableObject(obj: unknown): obj is { [property: PropertyKey]: any } {
     return typeof obj === 'object' 
-        && obj !== null 
+        && obj !== null
         && !Array.isArray(obj)
-        && !(obj instanceof Date);
+        && !isDateObject(obj);
+}
+
+export function isDateObject(obj: unknown, strict?: boolean): obj is Date {
+    if (strict) {
+        return isDate(obj) && !isNaN(+obj);
+    }
+    else {
+        return isDate(obj);
+    }
 }
 
 /**
@@ -302,17 +313,14 @@ export function compareObjectByEntries(obj1: Record<string, any>, obj2: Record<s
 
 function compareObjectByEntriesImpl(obj1: Record<string, any>, obj2: Record<string, any>, 
     options: CompareObjectOptions): boolean {
-    const keys = Array.from(new Set([...Object.keys(obj1), ...Object.keys(obj2)]));
+    const key1s = Object.keys(obj1);
+    const key2s = Object.keys(obj2);
+    const keys = !options.ignoreUnmatchedProps 
+        ? arrayUnion(key1s, key2s) 
+        : arrayIntersection(key1s, key2s);
     for(const key of keys) {
-        const keyInObj1 = key in obj1;
-        const keyInObj2 = key in obj2;
-        if ((keyInObj1 && !keyInObj2) || (!keyInObj1 && keyInObj2)) {
-            if (!options.ignoreUnmatchedProps) {
-                return false;
-            }
-            else {
-                continue;
-            }
+        if (!(key in obj1 && key in obj2)) {
+            return false;
         }
 
         const val1: unknown = obj1[key];
@@ -404,7 +412,7 @@ function compareObjectByEntriesImplCheckDate(val1: unknown, val2: unknown, optio
     let o1: unknown;
     let o2: unknown;
     let isChecked = false;
-    if (val1 instanceof Date) {
+    if (isDateObject(val1)) {
         o1 = val1;
         o2 = val2;
         isChecked = true;
@@ -416,8 +424,8 @@ function compareObjectByEntriesImplCheckDate(val1: unknown, val2: unknown, optio
 
     const typeGuard = (o1: unknown): o1 is Date => isChecked;
     
-    if(typeGuard(o1) || o1 instanceof Date) {
-        if (!(o2 instanceof Date) || (+o1 !== +o2)) {
+    if(typeGuard(o1) || isDateObject(o1)) {
+        if (!isDateObject(o2) || (+o1 !== +o2)) {
             return false;
         }
     }

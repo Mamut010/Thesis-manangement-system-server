@@ -15,7 +15,7 @@ export class PdfFormFiller implements FormFillerInterface {
         return Buffer.from(pdfBytes);
     }
 
-    async fillToBase64(doc: PathOrTypedArray, data: FormFillRequest | FormField[]): Promise<string> {
+    async fillAsBase64(doc: PathOrTypedArray, data: FormFillRequest | FormField[]): Promise<string> {
         const pdfDoc = await this.fillDoc(doc, data);
         return await pdfDoc.saveAsBase64()
     }
