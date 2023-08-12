@@ -8,7 +8,7 @@ export class ImageButtonField extends ButtonField {
     constructor(
         name: string, 
         public image?: string | Uint8Array | ArrayBuffer | null, 
-        public imageType: SupportedImageType = DEFAULTS.ImageType) {
+        public imageType?: SupportedImageType) {
         super(name);
     }
 

@@ -63,6 +63,9 @@ export class PdfFormFieldHandler implements FormFieldHandler {
                 this.form.removeField(button);
                 return;
             }
+            if (!formField.imageType) {
+                throw new Error(`Please specify an image type for the image field '${formField.name}'`);
+            }
 
             const image = formField.imageType === SUPPORTED_IMAGE_TYPES.Png
                 ? await pdfDoc.embedPng(formField.image)
