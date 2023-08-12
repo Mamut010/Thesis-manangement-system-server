@@ -1,18 +1,22 @@
 import { DateTime } from "luxon";
 import { TextField } from "./text-field";
-import { DATETIME_FORMATS } from "../../../contracts/constants/datetime-formats";
 import { isDateObject } from "../../../utils/object-helpers";
+import { DEFAULTS } from "../constants/default";
+import { computeDateTimeLocale } from "../utils/locale-helpers";
 
 export class DateField extends TextField {
     private _date?: Date | null;
-    private _format: Intl.DateTimeFormatOptions;
+    private _format?: Intl.DateTimeFormatOptions;
+    private _locale?: string;
 
     constructor(
         name: string, 
-        date?: Date | string | null, 
-        format: Intl.DateTimeFormatOptions = DATETIME_FORMATS.DATE_LONG) {
+        date?: Date | null, 
+        format: Intl.DateTimeFormatOptions | undefined = DEFAULTS.DateFormat,
+        locale: string | undefined = DEFAULTS.Locale) {
         super(name);
         this._format = format;
+        this._locale = computeDateTimeLocale(locale);
         this.date = date;
     }
 
@@ -20,29 +24,39 @@ export class DateField extends TextField {
         return this._date;
     }
 
-    set date(value: Date | string | null | undefined) {
+    set date(value: Date | null | undefined) {
         this._date = this.computeDate(value);
-        this.value = this.computeDateString();
+        this.recomputeTextValue();
     }
 
-    get format(): Intl.DateTimeFormatOptions {
+    get format() {
         return this._format;
     }
 
-    set format(format: Intl.DateTimeFormatOptions) {
+    set format(format: Intl.DateTimeFormatOptions | undefined) {
         this._format = format;
-        this.value = this.computeDateString();
+        this.recomputeTextValue();
     }
 
-    private computeDate(value: Date | string | null | undefined) {
-        const result = typeof value === 'string' ? new Date(value) : value;
-        if (result && !isDateObject(result, true)) {
+    get locale() {
+        return this._locale;
+    }
+
+    set locale(locale: string | undefined) {
+        this._locale = computeDateTimeLocale(locale);
+        this.recomputeTextValue();
+    }
+
+    private computeDate(value: Date | null | undefined) {
+        if (value && !isDateObject(value, true)) {
             throw new Error('Invalid date');
         }
-        return result; 
+        return value; 
     }
 
-    private computeDateString() {
-        return this._date ? DateTime.fromJSDate(this._date).toLocaleString(this._format) : this._date;
+    private recomputeTextValue() {
+        this.value = this._date
+            ? DateTime.fromJSDate(this._date).toLocaleString(this._format, { locale: this._locale }) 
+            : this._date;
     }
 }

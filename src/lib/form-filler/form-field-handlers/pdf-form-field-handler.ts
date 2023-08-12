@@ -5,6 +5,7 @@ import { PDFForm } from "pdf-lib";
 import { FormFieldHandleOptions } from "../types/form-field-handle-options";
 import { CheckBoxField } from "../form-fields/check-box-field";
 import { ImageButtonField } from "../form-fields/image-button-field";
+import { SUPPORTED_IMAGE_TYPES } from "../constants/images";
 
 export class PdfFormFieldHandler implements FormFieldHandler {
     constructor(public form: PDFForm) {
@@ -57,11 +58,16 @@ export class PdfFormFieldHandler implements FormFieldHandler {
         : Promise<void> {
         const handle = async () => {
             const pdfDoc = this.form.doc;
-            const image = formField.imageType === 'png' 
+            const button = this.form.getButton(formField.name);
+            if (!formField.image) {
+                this.form.removeField(button);
+                return;
+            }
+
+            const image = formField.imageType === SUPPORTED_IMAGE_TYPES.Png
                 ? await pdfDoc.embedPng(formField.image)
                 : await pdfDoc.embedJpg(formField.image); 
 
-            const button = this.form.getButton(formField.name);
             button.setImage(image);
         }
         

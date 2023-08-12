@@ -1,13 +1,13 @@
-import { DateTime } from "luxon";
+import { computeNumberLocale } from "../utils/locale-helpers";
 import { TextField } from "./text-field";
-import { DATETIME_FORMATS } from "../../../contracts/constants/datetime-formats";
-import { isDateObject } from "../../../utils/object-helpers";
 
 export class NumberField extends TextField {
     private _number?: number | null;
+    private _locale?: string;
 
-    constructor(name: string, number?: number | null) {
+    constructor(name: string, number?: number | null, locale?: string) {
         super(name);
+        this._locale = computeNumberLocale(locale);
         this.number = number;
     }
 
@@ -17,10 +17,19 @@ export class NumberField extends TextField {
 
     set number(value: number| null | undefined) {
         this._number = value;
-        this.value = this.computeNumberString();
+        this.recomputeTextValue();
     }
 
-    private computeNumberString() {
-        return typeof this._number === 'number' ? this._number.toString() : this._number;
+    get locale() {
+        return this._locale;
+    }
+
+    set locale(value: string | undefined) {
+        this._locale = computeNumberLocale(value);
+        this.recomputeTextValue();
+    }
+
+    private recomputeTextValue() {
+        this.value = typeof this._number === 'number' ? this._number.toLocaleString(this._locale) : this._number;
     }
 }
