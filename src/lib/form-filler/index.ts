@@ -16,3 +16,5 @@ export * from './form-fields/text-field';
 export * from './form-fields/check-box-field';
 export * from './form-fields/date-field';
 export * from './form-fields/image-button-field';
+export * from './form-fields/button-field';
+export * from './form-fields/number-field';

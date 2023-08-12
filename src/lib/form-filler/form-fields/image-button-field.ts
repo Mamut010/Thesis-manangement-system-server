@@ -5,7 +5,7 @@ import { ButtonField } from "./button-field";
 
 export class ImageButtonField extends ButtonField {
     constructor(
-        public name: string, 
+        name: string, 
         public image: string | Uint8Array | ArrayBuffer, 
         public imageType: SupportedImageType) {
         super(name);
