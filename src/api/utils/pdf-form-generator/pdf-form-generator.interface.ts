@@ -1,5 +1,5 @@
 import { BachelorThesisRegistrationDto } from "../../../shared/dtos";
 
-export interface FormGeneratorInterface {
+export interface PdfFormGeneratorInterface {
     generateBachelorThesisRegistration(data: BachelorThesisRegistrationDto): Promise<Buffer>;
 }

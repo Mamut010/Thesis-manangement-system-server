@@ -1,14 +1,21 @@
 import { inject, injectable } from "inversify";
 import { BachelorThesisRegistrationDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { DateField, FormField, FormFillerInterface, ImageButtonField, NumberField, RadioButtonField, TextField } from "../../../lib/form-filler";
+import { 
+    DateField, 
+    FormField, 
+    FormFillerInterface, 
+    ImageButtonField, 
+    RadioButtonField, 
+    TextField 
+} from "../../../lib/form-filler";
 import { ASSETS } from "../../constants/assets";
 import { TEMPLATE_FIELDS } from "../../constants/template-fields";
-import { FormGeneratorInterface } from "./form-generator.interface";
+import { PdfFormGeneratorInterface } from "./pdf-form-generator.interface";
 import { PrismaClient } from "@prisma/client";
 
 @injectable()
-export class FormGenerator implements FormGeneratorInterface {
+export class PdfFormGenerator implements PdfFormGeneratorInterface {
     constructor(
         @inject(INJECTION_TOKENS.PdfFormFiller) private pdfFormFiller: FormFillerInterface,
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient) {

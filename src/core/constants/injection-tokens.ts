@@ -49,7 +49,7 @@ const UTIL_TOKENS = {
     PlainTransformer: Symbol.for('PlainTransformer'),
     PrismaQueryCreator: Symbol.for('PrismaQueryCreator'),
     PdfFormFiller: Symbol.for('PdfFormFiller'),
-    FormGenerator: Symbol.for('FormGenerator'),
+    PdfFormGenerator: Symbol.for('PdfFormGenerator'),
 } as const;
 
 export const INJECTION_TOKENS = {
