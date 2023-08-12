@@ -6,7 +6,7 @@ import { arrayIntersection, arrayUnion } from "./array-helpers";
  * Make an object become immutable. This operation is irreversible.
  * @param obj The object to make immutable
  */
-export function makeImmutable<T>(obj: T): Readonly<T> {
+export function makeImmutable<T extends object>(obj: T): Readonly<T> {
     return Object.freeze<T>(obj);
 }
 
@@ -32,7 +32,7 @@ export function isDateObject(obj: unknown, strict?: boolean): obj is Date {
  * @param property The property to check for.
  * @returns True if the given object owns a property. Otherwise, false.
  */
-export function objectHasOwnProperty<T>(obj: T, property: PropertyKey): boolean {
+export function objectHasOwnProperty<T extends object>(obj: T, property: PropertyKey): boolean{
     return Object.prototype.hasOwnProperty.call(obj, property);
 }
 
@@ -158,7 +158,7 @@ export interface FlatteningOptions {
  * @param flatteningOptions The options used for flattening process.
  * @returns The flattened object.
  */
-export function flattenObject<T>(obj: T, flatteningOptions?: FlatteningOptions): Record<string, any> {
+export function flattenObject<T extends object>(obj: T, flatteningOptions?: FlatteningOptions): Record<string, any> {
     const defaultOptions: FlatteningOptions = {
         maxDepth: undefined,
         initialKey: undefined,
@@ -174,7 +174,8 @@ export function flattenObject<T>(obj: T, flatteningOptions?: FlatteningOptions):
     return flattenObjectImpl(obj, options, 0, options.initialKey);
 }
 
-function flattenObjectImpl<T>(obj: T, flatteningOptions: FlatteningOptions, currentDepth: number, currentProp?: string) {
+function flattenObjectImpl<T extends object>(obj: T, flatteningOptions: FlatteningOptions, currentDepth: number, 
+    currentProp?: string) {
     let flattened: Record<string, any> = {};
     const isNestable = flatteningOptions?.maxDepth ? currentDepth < flatteningOptions?.maxDepth : true;
 
@@ -196,8 +197,9 @@ function flattenObjectImpl<T>(obj: T, flatteningOptions: FlatteningOptions, curr
     return flattened;
 }
 
-function assignNestedFlattened<T>(options: FlatteningOptions, depth: number, targetFlattened: Record<string, any>, 
-    nestedFlattened: T, nestedProp: string, targetProp?: string): Record<string, any> {
+function assignNestedFlattened<T extends object>(options: FlatteningOptions, depth: number, 
+    targetFlattened: Record<string, any>, nestedFlattened: T, 
+    nestedProp: string, targetProp?: string): Record<string, any> {
     const targetFlattenedObject: object = targetFlattened;
     const keyTransformer: KeyTransformer = options.keyTransformer!;
     const resultFlattened: Record<string, any> = { ...targetFlattened };
@@ -319,17 +321,18 @@ function compareObjectByEntriesImpl(obj1: Record<string, any>, obj2: Record<stri
         ? arrayUnion(key1s, key2s) 
         : arrayIntersection(key1s, key2s);
     for(const key of keys) {
-        if (!(key in obj1 && key in obj2)) {
+        if (!(objectHasOwnProperty(obj1, key) && objectHasOwnProperty(obj2, key))) {
             return false;
         }
 
         const val1: unknown = obj1[key];
         const val2: unknown = obj2[key];
 
-        if (!compareObjectByEntriesImplCheckNonobject(val1, val2)
+        if (val1 !== val2 && 
+            (!compareObjectByEntriesImplCheckNonobject(val1, val2)
             || !compareObjectByEntriesImplCheckEnumerableObject(val1, val2, options)
             || !compareObjectByEntriesImplCheckArray(val1, val2, options)
-            || !compareObjectByEntriesImplCheckDate(val1, val2, options)) {
+            || !compareObjectByEntriesImplCheckDate(val1, val2, options))) {
             return false;
         }
     }
