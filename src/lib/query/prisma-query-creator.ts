@@ -175,7 +175,9 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             fieldMap: undefined,
         };
 
-        const options = defaultOrGiven(defaultOptions, creationOptions, { skipNestedEnumeration: ['fieldMap'] });
+        const options = defaultOrGiven(defaultOptions, creationOptions, { 
+            skipNestedEnumeration: ['fieldMap', 'fieldNameMap'] 
+        });
         if (!options.filterSuffix && !options.filterPrefix) {
             throw new InternalServerError('Either a filter suffix or prefix must be specified for auto query creation process');
         }
