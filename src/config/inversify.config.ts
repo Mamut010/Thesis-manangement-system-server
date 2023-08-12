@@ -57,6 +57,7 @@ import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
 import { PlainTransformer, PlainTransformerInterface } from '../api/utils/plain-transformer';
 import { SMTPMailService } from '../shared/services';
 import { FormFillerInterface, PdfFormFiller } from '../lib/form-filler';
+import { FormGenerator, FormGeneratorInterface } from '../api/utils/form-generator';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -231,4 +232,10 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
         .bind<FormFillerInterface>(INJECTION_TOKENS.PdfFormFiller)
         .to(PdfFormFiller)
         .inRequestScope();    
+
+    container
+        .bind<FormGeneratorInterface>(INJECTION_TOKENS.FormGenerator)
+        .to(FormGenerator)
+        .inRequestScope();    
+
 }
