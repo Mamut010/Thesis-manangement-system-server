@@ -1,15 +1,17 @@
 import { inject, injectable } from "inversify";
 import { BachelorThesisRegistrationDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { DateField, FormField, FormFillerInterface, NumberField, RadioButtonField, TextField } from "../../../lib/form-filler";
+import { DateField, FormField, FormFillerInterface, ImageButtonField, NumberField, RadioButtonField, TextField } from "../../../lib/form-filler";
 import { ASSETS } from "../../constants/assets";
 import { TEMPLATE_FIELDS } from "../../constants/template-fields";
 import { FormGeneratorInterface } from "./form-generator.interface";
+import { PrismaClient } from "@prisma/client";
 
 @injectable()
 export class FormGenerator implements FormGeneratorInterface {
     constructor(
-        @inject(INJECTION_TOKENS.PdfFormFiller) private pdfFormFiller: FormFillerInterface) {
+        @inject(INJECTION_TOKENS.PdfFormFiller) private pdfFormFiller: FormFillerInterface,
+        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient) {
 
     }
 
@@ -18,7 +20,7 @@ export class FormGenerator implements FormGeneratorInterface {
 
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.Surname, data.surname));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.Forename, data.forename));
-        fields.push(new NumberField(TEMPLATE_FIELDS.BachelorThesisRegistration.MatricalculationNo, data.studentId));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.MatricalculationNo, data.studentId.toString()));
         fields.push(new DateField(TEMPLATE_FIELDS.BachelorThesisRegistration.DateOfBirth, data.dateOfBirth));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.PlaceOfBirth, data.placeOfBirth));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.FurtherParticipants, data.furtherParticipants));
@@ -41,10 +43,45 @@ export class FormGenerator implements FormGeneratorInterface {
         
         this.addThesisTitleToBachelorThesisRegistration(fields, data);
 
+        const signatures = await this.getSignatures('bachelorThesisRegistration', data.id);
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.BachelorThesisRegistration.Signature, 
+            signatures.studentSignature
+            ));
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.BachelorThesisRegistration.AssessorSignature, 
+            signatures.supervisor1Signature
+            ));
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.BachelorThesisRegistration.CoAssessorSignature, 
+            signatures.supervisor2Signature
+            ));
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.BachelorThesisRegistration.AuthorSignature, 
+            signatures.studentSignature
+            ));
+
         return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisRegistration.path, fields);
     }
 
     private addThesisTitleToBachelorThesisRegistration(fields: FormField[], data: BachelorThesisRegistrationDto) {
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.TitleOfBachelorThesis[0], data.thesisTitle));
+    }
+
+    private async getSignatures(model: 'bachelorThesisRegistration' | 'bachelorThesisAssessment', id: number) {
+        const signatures = await (this.prisma[model] as any).findUniqueOrThrow({
+            where: { id },
+            select: {
+                student: { select: { user: { select: { signature: true } } } },
+                supervisor1: { select: { user: { select: { signature: true } } } },
+                supervisor2: { select: { user: { select: { signature: true } } } } 
+            }
+        });
+
+        return {
+            studentSignature: signatures.student.user.signature,
+            supervisor1Signature: signatures.supervisor1?.user.signature,
+            supervisor2Signature: signatures.supervisor2?.user.signature,
+        }
     }
 }
