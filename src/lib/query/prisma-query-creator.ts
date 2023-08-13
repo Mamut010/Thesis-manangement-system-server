@@ -10,7 +10,7 @@ import { ListFilter } from "./interfaces/list-filter";
 import { FilterActualOperator, FilterOperator } from "./types/filter-operator";
 import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, AutoWhereQueryCreatable, OrderByOptions } from "./types/query-creator-utility";
 import { ConcreteBinaryFilter, ConcreteListFilter } from "./types/concrete-filter";
-import { createObjectByDotNotation, defaultOrGiven, flipMap, isEnumerableObject, singleOrArrayOrUndefined } from "../../utils/object-helpers";
+import { assignObjectByDotNotation, createObjectByDotNotation, defaultOrGiven, flipMap, isEnumerableObject, singleOrArrayOrUndefined } from "../../utils/object-helpers";
 import { trimPrefix, trimSuffix } from "../../utils/string-helpers";
 import { isBinaryFilter, isBinaryFilterArray, isListFilter, isListFilterArray } from "./utils/filter-helpers";
 import { 
@@ -249,20 +249,20 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
     }
 
     private addFilteringObjectsToWhere<T>(filteringObjects: T[], where: WhereQueryObject, dotNotation: string) {
-        const completeFilteringObjects = filteringObjects
-            .filter((item): item is NonNullable<typeof item> => typeof item !== 'undefined')
-            .map(item => createObjectByDotNotation(dotNotation, item));
+        const nonUndefinedFilteringObjects = filteringObjects
+            .filter((item): item is NonNullable<typeof item> => typeof item !== 'undefined');
         
-        if (completeFilteringObjects.length > 1) {
-            const OR = completeFilteringObjects
+        if (nonUndefinedFilteringObjects.length > 1) {
+            const OR = nonUndefinedFilteringObjects
+                .map(item => createObjectByDotNotation(dotNotation, item))
                 .reduce((pre: typeof filteringObject[], filteringObject) => {
                     pre.push(filteringObject);
                     return pre;
                 }, []);
             this.addORToWhere(where, OR);
         }
-        else if (completeFilteringObjects.length === 1) {
-            Object.assign(where, completeFilteringObjects[0]);
+        else if (nonUndefinedFilteringObjects.length === 1) {
+            assignObjectByDotNotation(where, dotNotation, nonUndefinedFilteringObjects[0]);
         }
     }
 

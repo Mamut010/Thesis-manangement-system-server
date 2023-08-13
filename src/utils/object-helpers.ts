@@ -288,9 +288,10 @@ export function assignObjectByDotNotation<T>(obj: NestedNotatedObject<T>, dotNot
     let current: NestedNotatedObject<T> = result;
     let i = 0;
     while (i < nestedProps.length - 1) {
-        const inner: NestedNotatedObject<T> = {};
-        current[nestedProps[i]] = inner;
-        current = inner;
+        const currentProp = nestedProps[i];
+        const inner = objectHasOwnProperty(current, currentProp) ? current[currentProp] : {};
+        current[currentProp] = inner;
+        current = inner as Record<string, any>;
         i++;
     }
     current[nestedProps[i]] = value;
