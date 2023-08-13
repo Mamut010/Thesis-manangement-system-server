@@ -11,7 +11,7 @@ export const TEMPLATE_FIELDS = {
         CoAssessor: 'Co-Assessor',
         Surname: 'Surname',
         Forename: 'Forename',
-        MatricalculationNo: 'Matricalculation Number',
+        MatriculationNo: 'Matriculation Number',
         DateOfBirth: 'Date of birth',
         PlaceOfBirth: 'Place of birth',
         Issued: 'Issued',
@@ -33,5 +33,20 @@ export const TEMPLATE_FIELDS = {
         AssessorDate: 'Assessor Date',
         CoAssessorDate: 'Co-Assessor Date',
         AuthorDate: 'Author Date',
+    },
+    BachelorThesisEvaluation: {
+        MrOrMs: {
+            Name: 'Title',
+            Options: {
+                Mr: 'Mr',
+                Ms: 'Ms',
+            }
+        },
+        Surname: 'Surname',
+        Forename: 'Forename',
+        MatriculationNo: 'Matriculation Number',
+        ThesisTitle: 'Thesis Title',
+        Date: 'Date',
+        Signature1stExaminer: 'Signature 1st Examiner',
     }
 } as const
