@@ -6,7 +6,7 @@ export function isBinaryFilter(obj: unknown): obj is ConcreteBinaryFilter {
 }
 
 export function isBinaryFilterArray(obj: unknown): obj is ConcreteBinaryFilter[] {
-    return Array.isArray(obj) && obj.every(isBinaryFilter);
+    return Array.isArray(obj) && obj.length > 0 && obj.every(isBinaryFilter);
 }
 
 export function isListFilter(obj: unknown): obj is ConcreteListFilter {
@@ -14,5 +14,5 @@ export function isListFilter(obj: unknown): obj is ConcreteListFilter {
 }
 
 export function isListFilterArray(obj: unknown): obj is ConcreteListFilter[] {
-    return Array.isArray(obj) && obj.every(isListFilter);
+    return Array.isArray(obj) && obj.length > 0 && obj.every(isListFilter);
 }
