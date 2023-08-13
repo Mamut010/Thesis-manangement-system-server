@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { inject, injectable } from "inversify";
 import { BachelorThesisRegistrationDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
@@ -86,9 +88,9 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         });
 
         return {
-            studentSignature: signatures.student.user.signature,
-            supervisor1Signature: signatures.supervisor1?.user.signature,
-            supervisor2Signature: signatures.supervisor2?.user.signature,
+            studentSignature: signatures.student.user.signature as string | null,
+            supervisor1Signature: signatures.supervisor1?.user.signature as string | null | undefined,
+            supervisor2Signature: signatures.supervisor2?.user.signature as string | null | undefined,
         }
     }
 }

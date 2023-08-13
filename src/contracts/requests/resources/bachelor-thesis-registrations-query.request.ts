@@ -61,7 +61,7 @@ export class BachelorThesisRegistrationsQueryRequest extends BaseQueryRequest {
     supervisor2ConfirmedFilter?: NullableBooleanFilter;
 
     @IsNullableBooleanFilter()
-    adminConfirmedFilter?: NullableBooleanFilter;;
+    adminConfirmedFilter?: NullableBooleanFilter;
 
     @IsNullableDateFilter()
     issuedFilter?: NullableDateFilter;

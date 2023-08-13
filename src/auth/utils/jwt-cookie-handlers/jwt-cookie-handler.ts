@@ -27,7 +27,7 @@ export class JwtCookieHandler implements JwtCookieHandlerInterface {
     }
 
     extractRefreshTokenFromCookie(request: Request): string | undefined {
-        const signedCookies: Record<string, string | undefined> = request.signedCookies;
+        const signedCookies = request.signedCookies as Record<string, string | undefined>;
         return signedCookies[AUTH_SETTINGS.Cookie.RefreshTokenKey];
     }
 }
