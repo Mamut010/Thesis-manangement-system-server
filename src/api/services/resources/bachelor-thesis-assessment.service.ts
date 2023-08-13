@@ -47,7 +47,6 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
         const fieldMap = {
             surname: 'student.user.surname',
             forename: 'student.user.forename',
-            thesisType: 'thesis.field.title',
             supervisor1Title: 'supervisor1.title',
             supervisor2Title: 'supervisor2.title',
         };

@@ -48,7 +48,6 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
             surname: 'student.user.surname',
             forename: 'student.user.forename',
             thesisTitle: 'thesis.title',
-            thesisType: 'thesis.field.title',
             supervisor1Title: 'supervisor1.title',
             supervisor2Title: 'supervisor2.title',
         };

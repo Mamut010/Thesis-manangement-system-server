@@ -28,12 +28,15 @@ export class ThesisService implements ThesisServiceInterface {
     }
 
     async getTheses(queryRequest: ThesesQueryRequest): Promise<ThesesQueryResponse> {
+        console.log(JSON.stringify(queryRequest, null, 2));
         const fieldMap = {
             topicTitle: 'topic.title',
             fieldTitle: 'field.title',
         };
         const model = this.queryCreator.createQueryModel(Thesis);
-        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
+        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest, { fieldMap, fieldNameMap: {
+            thesisId: 'id'
+        }});
 
         const count = await this.prisma.thesis.count({ where: prismaQuery.where });
         const theses = await this.prisma.thesis.findMany({
