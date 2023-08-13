@@ -37,7 +37,7 @@ export function objectHasOwnProperty<T extends object>(obj: T, property: Propert
 }
 
 export interface DefaultOrGivenOptions {
-    skipNestedEnumeration?: string[]
+    skipNestedEnumeration?: string[] | boolean
 }
 
 export function defaultOrGiven<T>(defaulted: T, given?: T, options?: DefaultOrGivenOptions) {
@@ -52,8 +52,11 @@ export function defaultOrGiven<T>(defaulted: T, given?: T, options?: DefaultOrGi
         }
 
         const givenValue = given[key];
-        if(isEnumerableObject(givenValue) && !options?.skipNestedEnumeration?.includes(key)) {
-            result[key] = defaultOrGiven(defaulted[key], givenValue, options);
+        const skip = options?.skipNestedEnumeration;
+        if(isEnumerableObject(givenValue) 
+            && skip !== true 
+            && !(Array.isArray(skip) && skip?.includes(key))) {
+                result[key] = defaultOrGiven(defaulted[key], givenValue, options);
         }
         else {
             result[key] = givenValue;

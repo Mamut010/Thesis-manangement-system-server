@@ -99,7 +99,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             fieldMap: undefined,
             ignoreUnmapped: false,
         }
-        const options = defaultOrGiven(defaultOptions, orderByOptions, { skipNestedEnumeration: ['fieldMap'] });
+        const options = defaultOrGiven(defaultOptions, orderByOptions, { skipNestedEnumeration: true });
 
         if (Array.isArray(orderBy)) {
             const orderBys = orderBy
@@ -175,9 +175,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             fieldMap: undefined,
         };
 
-        const options = defaultOrGiven(defaultOptions, creationOptions, { 
-            skipNestedEnumeration: ['fieldMap', 'fieldNameMap'] 
-        });
+        const options = defaultOrGiven(defaultOptions, creationOptions, { skipNestedEnumeration: true });
         if (!options.filterSuffix && !options.filterPrefix) {
             throw new InternalServerError('Either a filter suffix or prefix must be specified for auto query creation process');
         }
