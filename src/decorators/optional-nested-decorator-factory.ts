@@ -1,4 +1,4 @@
-import { Expose, Type, TypeHelpOptions } from "class-transformer";
+import { Expose, Transform, Type, TypeHelpOptions } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 
 export const optionalNestedDecoratorFactory = (typeFunction?: (type?: TypeHelpOptions) => Function, isArray?: boolean) => {
@@ -7,5 +7,8 @@ export const optionalNestedDecoratorFactory = (typeFunction?: (type?: TypeHelpOp
         ValidateNested({ each: isArray })(target, propertyKey);
         IsOptional()(target, propertyKey);
         Expose()(target, propertyKey);
+        if (isArray) {
+            Transform(({ value }) => !Array.isArray(value) ? [value] : value)(target, propertyKey);
+        }
     };
 }

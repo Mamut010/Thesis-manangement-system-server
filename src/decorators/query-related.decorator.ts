@@ -36,6 +36,24 @@ export const IsDateListFilter = optionalNestedDecoratorFactory(() => DateListFil
 export const IsEmailListFilter = optionalNestedDecoratorFactory(() => EmailListFilter);
 
 export const IsPagination = optionalNestedDecoratorFactory(() => Pagination);
-
 export const IsOrderBy = optionalNestedDecoratorFactory(() => OrderBy);
+
+// Array
+export const IsStringFilterArray = optionalNestedDecoratorFactory(() => StringFilter, true);
+export const IsNumberFilterArray = optionalNestedDecoratorFactory(() => NumberFilter, true);
+export const IsDateFilterArray = optionalNestedDecoratorFactory(() => DateFilter, true);
+export const IsBooleanFilterArray = optionalNestedDecoratorFactory(() => BooleanFilter, true);
+export const IsEmailFilterArray = optionalNestedDecoratorFactory(() => EmailFilter, true);
+
+export const IsNullableStringFilterArray = optionalNestedDecoratorFactory(() => NullableStringFilter, true);
+export const IsNullableNumberFilterArray = optionalNestedDecoratorFactory(() => NullableNumberFilter, true);
+export const IsNullableDateFilterArray = optionalNestedDecoratorFactory(() => NullableDateFilter, true);
+export const IsNullableBooleanFilterArray = optionalNestedDecoratorFactory(() => NullableBooleanFilter, true);
+export const IsNullableEmailFilterArray = optionalNestedDecoratorFactory(() => NullableEmailFilter, true);
+
+export const IsStringListFilterArray = optionalNestedDecoratorFactory(() => StringListFilter, true);
+export const IsNumberListFilterArray = optionalNestedDecoratorFactory(() => NumberListFilter, true);
+export const IsDateListFilterArray = optionalNestedDecoratorFactory(() => DateListFilter, true);
+export const IsEmailListFilterArray = optionalNestedDecoratorFactory(() => EmailListFilter, true);
+
 export const IsOrderByArray = optionalNestedDecoratorFactory(() => OrderBy, true);

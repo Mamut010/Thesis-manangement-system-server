@@ -1,9 +1,9 @@
 import { 
-    IsNullableDateFilter,
-    IsNullableNumberFilter, 
-    IsNullableStringFilter, 
-    IsNumberFilter, 
-    IsStringFilter 
+    IsNullableDateFilterArray,
+    IsNullableNumberFilterArray, 
+    IsNullableStringFilterArray, 
+    IsNumberFilterArray, 
+    IsStringFilterArray 
 } from "../../../decorators";
 import { 
     NullableDateFilter, 
@@ -15,24 +15,24 @@ import {
 import { BaseQueryRequest } from "../../bases";
 
 export class ThesesQueryRequest extends BaseQueryRequest {
-    @IsNumberFilter()
-    thesisIdFilter?: NumberFilter;
+    @IsNumberFilterArray()
+    thesisIdFilter?: NumberFilter[];
 
-    @IsNullableStringFilter()
-    titleFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    titleFilter?: NullableStringFilter[];
 
-    @IsStringFilter()
-    topicTitleFilter?: StringFilter;
+    @IsStringFilterArray()
+    topicTitleFilter?: StringFilter[];
 
-    @IsStringFilter()
-    fieldTitleFilter?: StringFilter;
+    @IsStringFilterArray()
+    fieldTitleFilter?: StringFilter[];
 
-    @IsNumberFilter()
-    slotFilter?: NumberFilter;
+    @IsNumberFilterArray()
+    slotFilter?: NumberFilter[];
 
-    @IsNullableNumberFilter()
-    slotLimitFilter?: NullableNumberFilter;
+    @IsNullableNumberFilterArray()
+    slotLimitFilter?: NullableNumberFilter[];
 
-    @IsNullableDateFilter()
-    submissionDeadlineFilter?: NullableDateFilter;
+    @IsNullableDateFilterArray()
+    submissionDeadlineFilter?: NullableDateFilter[];
 }
