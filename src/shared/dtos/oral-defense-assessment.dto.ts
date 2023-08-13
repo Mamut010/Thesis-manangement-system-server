@@ -29,6 +29,11 @@ export class OralDefenseAssessmentDto {
 
     @Expose()
     @IsOptional()
+    @IsString()
+    thesisTitle!: string | null;
+
+    @Expose()
+    @IsOptional()
     @IsDate()
     dateDefense!: Date | null;
 

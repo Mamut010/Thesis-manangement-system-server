@@ -45,11 +45,6 @@ export class BachelorThesisRegistrationDto {
     @Expose()
     @IsOptional()
     @IsString()
-    thesisType!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
     furtherParticipants!: string | null;
 
     @Expose()

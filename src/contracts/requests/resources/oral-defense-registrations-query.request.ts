@@ -25,6 +25,9 @@ export class OralDefenseRegistrationsQueryRequest extends BaseQueryRequest {
     forenameFilter?: NullableStringFilter;
 
     @IsNullableStringFilter()
+    thesisTitleFilter?: NullableStringFilter;
+
+    @IsNullableStringFilter()
     supervisor1TitleFilter?: NullableStringFilter;
 
     @IsNullableStringFilter()

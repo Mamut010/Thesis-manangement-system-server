@@ -24,8 +24,8 @@ export class BachelorThesisAssessmentsQueryRequest extends BaseQueryRequest {
     @IsNullableStringFilter()
     forenameFilter?: NullableStringFilter;
 
-    @IsStringFilter()
-    thesisTypeFilter?: StringFilter;
+    @IsNullableStringFilter()
+    thesisTitleFilter?: NullableStringFilter;
 
     @IsNullableStringFilter()
     furtherParticipantsFilter?: NullableStringFilter;

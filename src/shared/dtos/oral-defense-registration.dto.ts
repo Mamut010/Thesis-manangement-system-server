@@ -30,6 +30,11 @@ export class OralDefenseRegistrationDto {
 
     @Expose()
     @IsOptional()
+    @IsString()
+    thesisTitle!: string | null;
+
+    @Expose()
+    @IsOptional()
     @IsNumber()
     supervisor1Id!: number | null;
 

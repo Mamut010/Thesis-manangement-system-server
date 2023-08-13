@@ -30,7 +30,7 @@ export class BachelorThesisAssessmentDto {
     @Expose()
     @IsOptional()
     @IsString()
-    thesisType!: string | null;
+    thesisTitle!: string | null;
 
     @Expose()
     @IsOptional()

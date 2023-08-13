@@ -93,7 +93,6 @@ export class PlainTransformer implements PlainTransformerInterface {
             transformedProps: PlainTransformer.registrationAndAssessmentRelations,
         }));
         
-        dto.thesisType =  plain.thesis.field?.title ?? null;
         return dto;
     }
 
@@ -112,7 +111,6 @@ export class PlainTransformer implements PlainTransformerInterface {
             transformedProps: PlainTransformer.registrationAndAssessmentRelations,
         }));
         
-        dto.thesisType =  plain.thesis.field?.description ?? null;
         return dto;
     }
 

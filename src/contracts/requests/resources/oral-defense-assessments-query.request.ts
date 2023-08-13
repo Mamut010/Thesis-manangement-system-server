@@ -24,6 +24,9 @@ export class OralDefenseAssessmentsQueryRequest extends BaseQueryRequest {
     @IsNullableStringFilter()
     forenameFilter?: NullableStringFilter;
 
+    @IsNullableStringFilter()
+    thesisTitleFilter?: NullableStringFilter;
+
     @IsNullableDateFilter()
     dateDefenseFilter?: NullableDateFilter;
 
