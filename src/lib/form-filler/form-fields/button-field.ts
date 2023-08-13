@@ -7,5 +7,5 @@ export abstract class ButtonField implements FormField {
         
     }
 
-    abstract accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined): Promise<void>;
+    abstract accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined): Promise<void> | void;
 }

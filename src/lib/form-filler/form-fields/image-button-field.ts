@@ -11,7 +11,7 @@ export class ImageButtonField extends ButtonField {
         super(name);
     }
 
-    accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined): Promise<void> {
+    accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined) {
         return handler.handleImageButton(this, handleOptions);
     }
 }

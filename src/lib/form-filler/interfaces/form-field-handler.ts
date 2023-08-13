@@ -5,8 +5,8 @@ import { TextField } from "../form-fields/text-field";
 import { FormFieldHandleOptions } from "../types/form-field-handle-options";
 
 export interface FormFieldHandler {
-    handleText(formField: TextField, handleOptions?: FormFieldHandleOptions): Promise<void>;
-    handleCheckBox(formField: CheckBoxField, handleOptions?: FormFieldHandleOptions): Promise<void>;
-    handleRadioButton(formField: RadioButtonField, handleOptions?: FormFieldHandleOptions): Promise<void>;
-    handleImageButton(formField: ImageButtonField, handleOptions?: FormFieldHandleOptions): Promise<void>;
+    handleText(formField: TextField, handleOptions?: FormFieldHandleOptions): Promise<void> | void;
+    handleCheckBox(formField: CheckBoxField, handleOptions?: FormFieldHandleOptions): Promise<void> | void;
+    handleRadioButton(formField: RadioButtonField, handleOptions?: FormFieldHandleOptions): Promise<void> | void;
+    handleImageButton(formField: ImageButtonField, handleOptions?: FormFieldHandleOptions): Promise<void> | void;
 }

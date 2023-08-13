@@ -7,7 +7,7 @@ export class TextField implements FormField {
         
     }
 
-    accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined): Promise<void> {
+    accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined) {
         return handler.handleText(this, handleOptions);
     }
 }

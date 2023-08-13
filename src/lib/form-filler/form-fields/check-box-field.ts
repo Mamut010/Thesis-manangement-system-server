@@ -7,7 +7,7 @@ export class CheckBoxField implements FormField {
 
     }
 
-    accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined): Promise<void> {
+    accept(handler: FormFieldHandler, handleOptions?: FormFieldHandleOptions | undefined) {
         return handler.handleCheckBox(this, handleOptions);
     }
 }

@@ -12,7 +12,7 @@ export class PdfFormFieldHandler implements FormFieldHandler {
 
     }
 
-    async handleText(formField: TextField, handleOptions?: FormFieldHandleOptions): Promise<void> {
+    handleText(formField: TextField, handleOptions?: FormFieldHandleOptions): void {
         const handle = () => {
             const textField = this.form.getTextField(formField.name);
             textField.setText(formField.value ?? undefined);
@@ -21,7 +21,7 @@ export class PdfFormFieldHandler implements FormFieldHandler {
         return this.wrapErr(handle, handleOptions);
     }
 
-    async handleCheckBox(formField: CheckBoxField, handleOptions?: FormFieldHandleOptions): Promise<void> {
+    handleCheckBox(formField: CheckBoxField, handleOptions?: FormFieldHandleOptions): void {
         const handle = () => {
             const checkBox = this.form.getCheckBox(formField.name);
             if (formField.isChecked) {
@@ -35,7 +35,7 @@ export class PdfFormFieldHandler implements FormFieldHandler {
         return this.wrapErr(handle, handleOptions);
     }
 
-    async handleRadioButton(formField: RadioButtonField, handleOptions?: FormFieldHandleOptions): Promise<void> {
+    handleRadioButton(formField: RadioButtonField, handleOptions?: FormFieldHandleOptions): void {
         const handle = () => {
             const radioGroup = this.form.getRadioGroup(formField.groupName);
             
