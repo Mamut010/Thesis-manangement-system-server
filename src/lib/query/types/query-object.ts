@@ -35,12 +35,22 @@ export type ActualFilteringObject<TValue, TOperator extends FilterOperator | Lis
 
 // Defaulted TOperator to FilterActualOperator as for WhereQueryObject, there is no way to know the actual operator
 export type WhereBinaryFilterObject<TValue, TOperator extends FilterOperator = FilterOperator> = 
-    ActualFilteringObject<TValue, TOperator> | { not: WhereBinaryFilterObject<TValue, TOperator> }
+    ActualFilteringObject<TValue, TOperator> | { not: ActualFilteringObject<TValue, TOperator> }
 
 export type WhereListFilterObject<TValue> = ActualFilteringObject<TValue[], ListFilterOperator>;
 
+export type WhereQueryObjectBak = { 
+    [property: string]: WhereBinaryFilterObject<unknown> | WhereListFilterObject<unknown> | WhereQueryObject
+} & {
+    AND?: Omit<WhereQueryObject, 'AND'>[],
+    OR?: Omit<WhereQueryObject, 'AND' | 'OR'>[]
+};
+
 export type WhereQueryObject = { 
     [property: string]: WhereBinaryFilterObject<unknown> | WhereListFilterObject<unknown> | WhereQueryObject
+} & {
+    AND?: { OR: Omit<WhereQueryObject, 'AND' | 'OR'>[] }[],
+    OR?: Omit<WhereQueryObject, 'AND' | 'OR'>[]
 };
 
 export interface PaginationQueryObject { 

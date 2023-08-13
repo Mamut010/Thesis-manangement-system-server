@@ -7,12 +7,12 @@ import { PrismaQueryCreatorInterface } from "./interfaces/prisma-query-creator.i
 import { getActualOperatorFromNotOperator, isFilterActualOperator, isNullableOperator } from "./utils/operator-helpers";
 import { Pagination } from "./pagination";
 import { ListFilter } from "./interfaces/list-filter";
-import { FilterActualOperator, FilterOperator, NonNullableFilterOperator } from "./types/filter-operator";
+import { FilterActualOperator, FilterOperator } from "./types/filter-operator";
 import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, AutoWhereQueryCreatable, OrderByOptions } from "./types/query-creator-utility";
 import { ConcreteBinaryFilter, ConcreteListFilter } from "./types/concrete-filter";
-import { assignObjectByDotNotation, createObjectByDotNotation, defaultOrGiven, flipMap, isEnumerableObject, singleOrArrayOrUndefined } from "../../utils/object-helpers";
+import { createObjectByDotNotation, defaultOrGiven, flipMap, isEnumerableObject, singleOrArrayOrUndefined } from "../../utils/object-helpers";
 import { trimPrefix, trimSuffix } from "../../utils/string-helpers";
-import { isBinaryFilter, isListFilter } from "./utils/filter-helpers";
+import { isBinaryFilter, isBinaryFilterArray, isListFilter, isListFilterArray } from "./utils/filter-helpers";
 import { 
     ActualFilteringObject,
     ActualListFilteringObject,
@@ -26,6 +26,7 @@ import {
 } from "./types/query-object";
 import { ClassConstructor, plainToInstance } from "class-transformer";
 import { InternalServerError } from "../../contracts/errors/internal-server.error";
+import { mergeRecordsOfArray } from "./utils/record-helpers";
 
 @injectable()
 export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
@@ -57,7 +58,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         return this.finalizeWhere(where);
     }
 
-    createFilteringObject<TValue, TOperator extends FilterOperator>(binaryFilter?: BinaryFilter<TValue, TOperator>)
+    createFilteringObject<TValue, TOperator extends FilterOperator = FilterOperator>(binaryFilter?: BinaryFilter<TValue, TOperator>)
         : WhereBinaryFilterObject<TValue, TOperator> | undefined {
         // Deal with undefined filter
         if (!binaryFilter) {
@@ -104,7 +105,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         if (Array.isArray(orderBy)) {
             const orderBys = orderBy
                     .map(item => this.constructOrderBySingle(item, options))
-                    .filter((item): item is OrderByQueryObject => typeof item !== 'undefined');
+                    .filter((item): item is NonNullable<typeof item> => typeof item !== 'undefined');
             return singleOrArrayOrUndefined(orderBys);
         }
         else {
@@ -122,18 +123,24 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
 
     private getFilterFieldsFromQuery(query: AutoQueryCreatable, creationOptions: AutoQueryCreationOptions)
         : BinaryAndListFilters {
-        let binaryFilters: Record<string, ConcreteBinaryFilter> = {};
-        let listFilters: Record<string, ConcreteListFilter> = {};
+        let binaryFilters: BinaryAndListFilters['binaryFilters']= {};
+        let listFilters: BinaryAndListFilters['listFilters'] = {};
 
         for(const key in query) {
             const value: unknown = query[key];
             const isValueBinaryFilter = isBinaryFilter(value);
+            const isValueBinaryFilterArray = isBinaryFilterArray(value);
             const isValueListFilter = isListFilter(value);
+            const isValueListFilterArray = isListFilterArray(value);
 
-            if (!isValueBinaryFilter && !isValueListFilter && isEnumerableObject(value)) {
+            if (!isValueBinaryFilter 
+                && !isValueBinaryFilterArray
+                && !isValueListFilter 
+                && !isValueListFilterArray
+                && isEnumerableObject(value)) {
                 const inner = this.getFilterFieldsFromQuery(value, creationOptions); 
-                binaryFilters = { ...inner.binaryFilters, ...binaryFilters };
-                listFilters = { ...inner.listFilters, ...listFilters };
+                binaryFilters = mergeRecordsOfArray(inner.binaryFilters, binaryFilters);
+                listFilters = mergeRecordsOfArray(inner.listFilters, listFilters);
                 continue;
             }
 
@@ -142,12 +149,18 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
                 continue;
             }
 
-            const mappedFieldName = creationOptions.fieldNameMap?.[field];
+            const finalFieldName = creationOptions.fieldNameMap?.[field] ?? field;
             if (isValueBinaryFilter) {
-                binaryFilters[mappedFieldName ?? field] = value;
+                binaryFilters[finalFieldName] = [value];
+            }
+            else if (isValueBinaryFilterArray) {
+                binaryFilters[finalFieldName] = value;
             }
             else if (isValueListFilter) {
-                listFilters[mappedFieldName ?? field] = value;
+                listFilters[finalFieldName] = [value];
+            }
+            else if (isValueListFilterArray) {
+                listFilters[finalFieldName] = value;
             }
         }
 
@@ -198,29 +211,114 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         Object
             .entries(fieldMap)
             .forEach(([key, value]) => {
-                this.addFilteringObjectToWhereByKey(binaryAndListFilters, where, key, value);
+                this.addFilteringObjectsToWhereByKey(binaryAndListFilters, where, key, value);
             });
         // Added all supplied field map to the generated field map
         Object
             .assign(generatedFieldMap, fieldMap);
     }
 
-    private addFilteringObjectToWhereByKey(binaryAndListFilters: BinaryAndListFilters, where: WhereQueryObject, 
+    private addFilteringObjectsToWhereByKey(binaryAndListFilters: BinaryAndListFilters, where: WhereQueryObject, 
         key: string, dotNotation: string) {
+        let filteringObjects: unknown[] | undefined = undefined;
+        let isBinary = false;
+        let isList = false;
         if(binaryAndListFilters.binaryFilters[key]) {
-            const filteringObject = this.createFilteringObject<unknown, FilterOperator>(binaryAndListFilters.binaryFilters[key]);
-            if (filteringObject) {
-                assignObjectByDotNotation(where, dotNotation, filteringObject);
-            }
-            delete binaryAndListFilters.binaryFilters[key];
+            filteringObjects = binaryAndListFilters.binaryFilters[key]
+                .map(filter => this.createFilteringObject<unknown>(filter));
+            isBinary = true;
         }
         else if(binaryAndListFilters.listFilters[key]) {
-            const filteringObject = this.createListFilteringObject<unknown>(binaryAndListFilters.listFilters[key]);
-            if (filteringObject) {
-                assignObjectByDotNotation(where, dotNotation, filteringObject);
-            }
+            filteringObjects = binaryAndListFilters.listFilters[key]
+                .map(filter => this.createListFilteringObject<unknown>(filter));
+            isList = true;
+        }
+
+        if (!filteringObjects){
+            return;
+        }
+
+        this.addFilteringObjectsToWhere(filteringObjects, where, dotNotation);
+        // Delete so later call to this key does not add any more filtering objects with the same key
+        if (isBinary) {
+            delete binaryAndListFilters.binaryFilters[key];
+        }
+        else if (isList) {
             delete binaryAndListFilters.listFilters[key];
         }
+    }
+
+    private addFilteringObjectsToWhere<T>(filteringObjects: T[], where: WhereQueryObject, dotNotation: string) {
+        const completeFilteringObjects = filteringObjects
+            .filter((item): item is NonNullable<typeof item> => typeof item !== 'undefined')
+            .map(item => createObjectByDotNotation(dotNotation, item));
+        
+        if (completeFilteringObjects.length > 1) {
+            const OR = completeFilteringObjects
+                .reduce((pre: typeof filteringObject[], filteringObject) => {
+                    pre.push(filteringObject);
+                    return pre;
+                }, []);
+            this.addORToWhere(where, OR);
+        }
+        else if (completeFilteringObjects.length === 1) {
+            Object.assign(where, completeFilteringObjects[0]);
+        }
+    }
+
+    private addORToWhere(where: WhereQueryObject, ORValue: WhereQueryObject[]) {
+        const currentOR = where.OR;
+        const currentAND = where.AND;
+        const newInnerWhere = { OR: ORValue };
+        if (currentAND) {
+            currentAND.push(newInnerWhere);
+        }
+        else if (currentOR) {
+            const currentInnerWhere = { OR: currentOR }; 
+            where.AND = [currentInnerWhere, newInnerWhere];
+            delete where.OR;
+        }
+        else {
+            where.OR = ORValue;
+        }
+    }
+
+    private mergeWhere(where1: WhereQueryObject, where2: WhereQueryObject) {
+        const {AND, OR, ...props} = { ...where1, ...where2 };
+        const where: WhereQueryObject = props;
+        
+        if (where1.AND) {
+            if (where2.AND) {
+                where1.AND.push(...where2.AND);
+            }
+            else if (where2.OR) {
+                this.addORToWhere(where1, where2.OR);
+            }
+            where.AND = where1.AND;
+        }
+        else if (where1.OR) {
+            // If where2 has at least an OR, or better, an AND
+            if (where2.AND || where2.OR) {
+                this.addORToWhere(where2, where1.OR);
+                // After where1.OR is added to where2, it should now have an AND
+                where.AND = where2.AND;
+            }
+            // Otherwise
+            else {
+                // Just keep where1.OR
+                where.OR = where1.OR;
+            }
+        }
+        else {
+            if (where2.AND) {
+                where.AND = where2.AND;
+            }
+            else if (where2.OR) {
+                where.OR = where2.OR;
+            }
+        }
+
+        return where;
     }
 
     private finalizeWhere(where: WhereQueryObject): WhereQueryObject | undefined {
@@ -250,13 +348,13 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
                 };
                 const inner = this.constructActualWhereWithFieldMapImpl(value, query, binaryAndListFilters, creationOptions, 
                     innerConfig);
-                where = { ...inner.where, ...where };
-                fieldMap = { ...inner.fieldMap, ...fieldMap };
+                where = this.mergeWhere(where, inner.where);
+                fieldMap = { ...fieldMap, ...inner.fieldMap };
                 continue;
             }
 
             const currentDotNotation = config.fieldNamePrefix + key;
-            this.addFilteringObjectToWhereByKey(binaryAndListFilters, where, key, currentDotNotation);
+            this.addFilteringObjectsToWhereByKey(binaryAndListFilters, where, key, currentDotNotation);
             fieldMap[config.reversedFieldNameMap?.[key] ?? key] = currentDotNotation;
         }
 
@@ -306,8 +404,8 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
 
 // Utility interfaces
 interface BinaryAndListFilters {
-    binaryFilters: Record<string, ConcreteBinaryFilter>,
-    listFilters: Record<string, ConcreteListFilter>
+    binaryFilters: Record<string, ConcreteBinaryFilter[]>,
+    listFilters: Record<string, ConcreteListFilter[]>
 }
 
 interface WhereWithFieldMap {
