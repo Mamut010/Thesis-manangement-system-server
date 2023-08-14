@@ -2,8 +2,8 @@ import { inject, injectable } from "inversify";
 import { JwtCookieHandlerInterface } from "./jwt-cookie-handler.interface";
 import { Request, Response } from 'express';
 import { AUTH_SETTINGS } from "../../../core/constants/auth-settings";
-import { JwtServiceInterface } from "../../interfaces";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
+import { JwtServiceInterface } from "../../../shared/interfaces";
 
 @injectable()
 export class JwtCookieHandler implements JwtCookieHandlerInterface {

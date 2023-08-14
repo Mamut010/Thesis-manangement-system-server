@@ -1,5 +1,5 @@
-import { JwtAccessContextDto, JwtAccessPayloadDto, JwtRefreshContextDto, JwtRefreshPayloadDto } from "../../shared/dtos";
-import { AuthTokens } from "../../shared/types/auth-tokens";
+import { JwtAccessContextDto, JwtAccessPayloadDto, JwtRefreshContextDto, JwtRefreshPayloadDto } from "../dtos";
+import { AuthTokens } from "../types/auth-tokens";
 
 export interface JwtServiceInterface {
     generateAccessToken(context: JwtAccessContextDto): string;

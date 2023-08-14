@@ -8,11 +8,7 @@ import {
     JwtRefreshPayloadDto, 
     UserCreateRequestDto 
 } from '../../shared/dtos';
-import { 
-    AuthServiceInterface, 
-    HashServiceInterface, 
-    JwtServiceInterface
-} from '../interfaces';
+import { AuthServiceInterface } from '../interfaces';
 import { LoginRequest } from '../../contracts/requests/login.request';
 import { PrismaClient } from '@prisma/client';
 import { UnauthorizedError } from '../../contracts/errors/unauthorized.error';
@@ -21,12 +17,14 @@ import { SignUpRequest } from '../../contracts/requests/sign-up.request';
 import { AuthenticationError } from '../../contracts/errors/authentication.error';
 import { Role, RefreshToken } from '../../core/models';
 import { plainToInstanceExactMatch } from '../../utils/class-transformer-helpers';
-import { JwtExtractorInterface } from '../utils/jwt-extractors';
 import { JwtCookieHandlerInterface } from '../utils/jwt-cookie-handlers';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import { 
     UserRepoInterface, 
-    RefreshTokenRepoInterface 
+    RefreshTokenRepoInterface, 
+    JwtServiceInterface,
+    HashServiceInterface,
+    JwtExtractorServiceInterface
 } from '../../shared/interfaces';
 import { StringResponse } from '../../contracts/responses/string.response';
 import { StringArrayResponse } from '../../contracts/responses/string-array.response';
@@ -38,7 +36,7 @@ export class AuthService implements AuthServiceInterface {
         @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
         @inject(INJECTION_TOKENS.HashService) private hashService: HashServiceInterface,
         @inject(INJECTION_TOKENS.JwtService) private jwtService: JwtServiceInterface,
-        @inject(INJECTION_TOKENS.JwtExtractor) private jwtExtractor: JwtExtractorInterface,
+        @inject(INJECTION_TOKENS.JwtExtractor) private jwtExtractor: JwtExtractorServiceInterface,
         @inject(INJECTION_TOKENS.JwtCookieHandler) private jwtCookieHandler: JwtCookieHandlerInterface,
         @inject(INJECTION_TOKENS.RefreshTokenRepo) private refreshTokenRepo: RefreshTokenRepoInterface) {
 
@@ -183,8 +181,12 @@ export class AuthService implements AuthServiceInterface {
 
     async verifyJwtTokenInRequest(request: Request): Promise<JwtAccessPayloadDto | undefined> {
         try {
-            const accessToken = await this.jwtExtractor.extract(request);
+            const authHeader = request.headers.authorization;
+            if (!authHeader) {
+                return undefined;
+            }
 
+            const accessToken = await this.jwtExtractor.extract(authHeader);
             if (!accessToken) {
                 return undefined;
             }

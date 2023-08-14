@@ -17,8 +17,6 @@ const REPOSITORY_TOKENS = {
 } as const;
 
 const AUTH_SERVICE_TOKENS = {
-    JwtService: Symbol.for('JwtService'),
-    HashService: Symbol.for('HashService'),
     AuthService: Symbol.for('AuthService'),
 } as const;
 
@@ -41,10 +39,12 @@ const API_SERVICE_TOKENS = {
 
 const SHARED_SERVICE_TOKENS = {
     MailService: Symbol.for('MailService'),
+    JwtService: Symbol.for('JwtService'),
+    HashService: Symbol.for('HashService'),
+    JwtExtractor: Symbol.for('JwtExtractor'),
 } as const;
 
 const UTIL_TOKENS = {
-    JwtExtractor: Symbol.for('JwtExtractor'),
     JwtCookieHandler: Symbol.for('JwtCookieHandler'),
     PlainTransformer: Symbol.for('PlainTransformer'),
     PrismaQueryCreator: Symbol.for('PrismaQueryCreator'),

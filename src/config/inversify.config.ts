@@ -4,17 +4,8 @@ import { INJECTION_TOKENS } from '../core/constants/injection-tokens';
 import { PrismaClient } from '@prisma/client';
 import { BootstrapSettingInterface } from '../lib/bootstrapper';
 import { Configuration } from './configuration';
-import { 
-    AuthService,
-    HashService,
-    JwtService
-} from '../auth/services';
-import { 
-    AuthServiceInterface, 
-    HashServiceInterface, 
-    JwtServiceInterface
-} from '../auth/interfaces';
-import { JwtExtractorInterface, AuthHeaderJwtExtractor } from '../auth/utils/jwt-extractors';
+import { AuthService } from '../auth/services';
+import {  AuthServiceInterface } from '../auth/interfaces';
 import { JwtCookieHandler, JwtCookieHandlerInterface } from '../auth/utils/jwt-cookie-handlers';
 import { 
     AdminLecturerServiceInterface,
@@ -47,7 +38,10 @@ import {
 import { 
     UserRepoInterface,
     RefreshTokenRepoInterface, 
-    MailServiceInterface
+    MailServiceInterface,
+    JwtServiceInterface,
+    HashServiceInterface,
+    JwtExtractorServiceInterface
 } from '../shared/interfaces';
 import { 
     UserRepo,
@@ -55,7 +49,12 @@ import {
 } from '../shared/repositories';
 import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
 import { PlainTransformer, PlainTransformerInterface } from '../api/utils/plain-transformer';
-import { SMTPMailService } from '../shared/services';
+import { 
+    AuthHeaderJwtExtractorService,
+    HashService,
+    JwtService, 
+    SMTPMailService 
+} from '../shared/services';
 import { FormFillerInterface, PdfFormFiller } from '../lib/form-filler';
 import { PdfFormGenerator, PdfFormGeneratorInterface } from '../api/utils/pdf-form-generator';
 
@@ -121,11 +120,6 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
 }
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {
-    container
-        .bind<JwtServiceInterface>(INJECTION_TOKENS.JwtService)
-        .to(JwtService)
-        .inRequestScope();
-    
     container
         .bind<HashServiceInterface>(INJECTION_TOKENS.HashService)
         .to(HashService)
@@ -205,14 +199,19 @@ function configSharedServices(container: Container, settings?: BootstrapSettingI
         .bind<MailServiceInterface>(INJECTION_TOKENS.MailService)
         .to(SMTPMailService)
         .inRequestScope();
+
+    container
+        .bind<JwtServiceInterface>(INJECTION_TOKENS.JwtService)
+        .to(JwtService)
+        .inRequestScope();
+
+    container
+        .bind<JwtExtractorServiceInterface>(INJECTION_TOKENS.JwtExtractor)
+        .to(AuthHeaderJwtExtractorService)
+        .inRequestScope();
 }
 
 function configUtils(container: Container, settings?: BootstrapSettingInterface) {
-    container
-        .bind<JwtExtractorInterface>(INJECTION_TOKENS.JwtExtractor)
-        .to(AuthHeaderJwtExtractor)
-        .inRequestScope();
-
     container
         .bind<JwtCookieHandlerInterface>(INJECTION_TOKENS.JwtCookieHandler)
         .to(JwtCookieHandler)
