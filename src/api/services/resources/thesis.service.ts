@@ -28,7 +28,6 @@ export class ThesisService implements ThesisServiceInterface {
     }
 
     async getTheses(queryRequest: ThesesQueryRequest): Promise<ThesesQueryResponse> {
-        console.log(JSON.stringify(queryRequest, null, 2));
         const fieldMap = {
             topicTitle: 'topic.title',
             fieldTitle: 'field.title',
