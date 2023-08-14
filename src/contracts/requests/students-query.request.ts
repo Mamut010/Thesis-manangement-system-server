@@ -1,29 +1,29 @@
 import { NumberFilter, StringFilter } from "../../lib/query";
-import { IsNumberFilter, IsStringFilter } from "../../decorators";
+import { IsNumberFilterArray, IsStringFilterArray } from "../../decorators";
 import { BaseQueryRequest } from "../bases";
 
 export class StudentsQueryRequest extends BaseQueryRequest {
-    @IsNumberFilter()
-    studentIdFilter?: NumberFilter;
+    @IsNumberFilterArray()
+    studentIdFilter?: NumberFilter[];
 
-    @IsStringFilter()
-    usernameFilter?: StringFilter;
+    @IsStringFilterArray()
+    usernameFilter?: StringFilter[];
 
-    @IsStringFilter()
-    surnameFilter?: StringFilter;
+    @IsStringFilterArray()
+    surnameFilter?: StringFilter[];
 
-    @IsStringFilter()
-    forenameFilter?: StringFilter;
+    @IsStringFilterArray()
+    forenameFilter?: StringFilter[];
 
-    @IsStringFilter()
-    emailFilter?: StringFilter;
+    @IsStringFilterArray()
+    emailFilter?: StringFilter[];
 
-    @IsStringFilter()
-    signatureFilter?: StringFilter;
+    @IsStringFilterArray()
+    signatureFilter?: StringFilter[];
 
-    @IsStringFilter()
-    intakeFilter?: StringFilter;
+    @IsStringFilterArray()
+    intakeFilter?: StringFilter[];
 
-    @IsNumberFilter()
-    ectsFilter?: NumberFilter;
+    @IsNumberFilterArray()
+    ectsFilter?: NumberFilter[];
 }

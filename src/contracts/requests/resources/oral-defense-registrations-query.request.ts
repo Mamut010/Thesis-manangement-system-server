@@ -1,9 +1,9 @@
 import { 
-    IsNumberFilter,
-    IsNullableBooleanFilter, 
-    IsNullableStringFilter,
-    IsNullableDateFilter,
-    IsNullableNumberFilter
+    IsNumberFilterArray,
+    IsNullableBooleanFilterArray, 
+    IsNullableStringFilterArray,
+    IsNullableDateFilterArray,
+    IsNullableNumberFilterArray
 } from "../../../decorators";
 import { 
     NumberFilter,
@@ -15,45 +15,45 @@ import {
 import { BaseQueryRequest } from "../../bases";
 
 export class OralDefenseRegistrationsQueryRequest extends BaseQueryRequest {
-    @IsNumberFilter()
-    studentIdFilter?: NumberFilter;
+    @IsNumberFilterArray()
+    studentIdFilter?: NumberFilter[];
 
-    @IsNullableStringFilter()
-    surnameFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    surnameFilter?: NullableStringFilter[];
 
-    @IsNullableStringFilter()
-    forenameFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    forenameFilter?: NullableStringFilter[];
 
-    @IsNullableStringFilter()
-    thesisTitleFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    thesisTitleFilter?: NullableStringFilter[];
 
-    @IsNullableStringFilter()
-    supervisor1TitleFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    supervisor1TitleFilter?: NullableStringFilter[];
 
-    @IsNullableStringFilter()
-    supervisor2TitleFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    supervisor2TitleFilter?: NullableStringFilter[];
 
-    @IsNullableBooleanFilter()
-    areSpectatorsAllowedFilter?: NullableBooleanFilter;
+    @IsNullableBooleanFilterArray()
+    areSpectatorsAllowedFilter?: NullableBooleanFilter[];
 
-    @IsNullableStringFilter()
-    weekdayFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    weekdayFilter?: NullableStringFilter[];
 
-    @IsNullableDateFilter()
-    proposedDateFilter?: NullableDateFilter;
+    @IsNullableDateFilterArray()
+    proposedDateFilter?: NullableDateFilter[];
 
-    @IsNullableDateFilter()
-    actualDateFilter?: NullableDateFilter;
+    @IsNullableDateFilterArray()
+    actualDateFilter?: NullableDateFilter[];
 
-    @IsNullableStringFilter()
-    roomFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    roomFilter?: NullableStringFilter[];
 
-    @IsNullableNumberFilter()
-    concernedAgreedFilter?: NullableNumberFilter;
+    @IsNullableNumberFilterArray()
+    concernedAgreedFilter?: NullableNumberFilter[];
 
-    @IsNullableDateFilter()
-    receivingDateFilter?: NullableDateFilter;
+    @IsNullableDateFilterArray()
+    receivingDateFilter?: NullableDateFilter[];
 
-    @IsNullableDateFilter()
-    submissionDateFilter?: NullableDateFilter;
+    @IsNullableDateFilterArray()
+    submissionDateFilter?: NullableDateFilter[];
 }

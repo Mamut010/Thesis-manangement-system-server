@@ -1,11 +1,11 @@
-import { IsNullableStringFilter, IsStringFilter } from "../../../decorators";
+import { IsNullableStringFilterArray, IsStringFilterArray } from "../../../decorators";
 import { NullableStringFilter, StringFilter } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class RolesQueryRequest extends BaseQueryRequest {
-    @IsStringFilter()
-    nameFilter?: StringFilter;
+    @IsStringFilterArray()
+    nameFilter?: StringFilter[];
 
-    @IsNullableStringFilter()
-    descriptionFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    descriptionFilter?: NullableStringFilter[];
 }

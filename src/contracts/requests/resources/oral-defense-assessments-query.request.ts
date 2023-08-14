@@ -1,9 +1,9 @@
 import { 
-    IsNumberFilter,
-    IsNullableBooleanFilter, 
-    IsNullableStringFilter,
-    IsNullableDateFilter,
-    IsNullableNumberFilter
+    IsNumberFilterArray,
+    IsNullableBooleanFilterArray, 
+    IsNullableStringFilterArray,
+    IsNullableDateFilterArray,
+    IsNullableNumberFilterArray
 } from "../../../decorators";
 import { 
     NumberFilter,
@@ -15,48 +15,48 @@ import {
 import { BaseQueryRequest } from "../../bases";
 
 export class OralDefenseAssessmentsQueryRequest extends BaseQueryRequest {
-    @IsNumberFilter()
-    studentIdFilter?: NumberFilter;
+    @IsNumberFilterArray()
+    studentIdFilter?: NumberFilter[];
 
-    @IsNullableStringFilter()
-    surnameFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    surnameFilter?: NullableStringFilter[];
 
-    @IsNullableStringFilter()
-    forenameFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    forenameFilter?: NullableStringFilter[];
 
-    @IsNullableStringFilter()
-    thesisTitleFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    thesisTitleFilter?: NullableStringFilter[];
 
-    @IsNullableDateFilter()
-    dateDefenseFilter?: NullableDateFilter;
+    @IsNullableDateFilterArray()
+    dateDefenseFilter?: NullableDateFilter[];
 
-    @IsNullableStringFilter()
-    placeDefenseFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    placeDefenseFilter?: NullableStringFilter[];
 
-    @IsNullableDateFilter()
-    startDateFilter?: NullableDateFilter;
+    @IsNullableDateFilterArray()
+    startDateFilter?: NullableDateFilter[];
 
-    @IsNullableDateFilter()
-    finishDateFilter?: NullableDateFilter;
+    @IsNullableDateFilterArray()
+    finishDateFilter?: NullableDateFilter[];
 
-    @IsNullableBooleanFilter()
-    stateOfHealthFilter?: NullableBooleanFilter;
+    @IsNullableBooleanFilterArray()
+    stateOfHealthFilter?: NullableBooleanFilter[];
 
-    @IsNullableStringFilter()
-    supervisor1TitleFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    supervisor1TitleFilter?: NullableStringFilter[];
 
-    @IsNullableNumberFilter()
-    supervisor1GradeFilter?: NullableNumberFilter;
+    @IsNullableNumberFilterArray()
+    supervisor1GradeFilter?: NullableNumberFilter[];
 
-    @IsNullableStringFilter()
-    supervisor2TitleFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    supervisor2TitleFilter?: NullableStringFilter[];
 
-    @IsNullableNumberFilter()
-    supervisor2GradeFilter?: NullableNumberFilter;
+    @IsNullableNumberFilterArray()
+    supervisor2GradeFilter?: NullableNumberFilter[];
 
-    @IsNullableStringFilter()
-    recordFilter?: NullableStringFilter;
+    @IsNullableStringFilterArray()
+    recordFilter?: NullableStringFilter[];
 
-    @IsNullableDateFilter()
-    assessmentDateFilter?: NullableDateFilter;
+    @IsNullableDateFilterArray()
+    assessmentDateFilter?: NullableDateFilter[];
 }
