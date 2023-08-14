@@ -173,10 +173,10 @@ model BachelorThesisRegistration {
     studentDate             DateTime?   @db.Date
     furtherParticipants     String?     @db.Text
     supervisor1Date         DateTime?   @db.Date
-    supervisor1Confirmed    Boolean?
+    supervisor1Confirmed    Boolean?    
     supervisor2Date         DateTime?   @db.Date
     supervisor2Confirmed    Boolean?
-    adminConfirmed          Boolean?
+    adminConfirmed          Boolean?    
     issued                  DateTime?   @db.Date
     deadlineCopy            DateTime?   @db.Date
     extensionGranted        DateTime?   @db.Date

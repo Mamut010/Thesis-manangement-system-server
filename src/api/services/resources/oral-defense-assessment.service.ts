@@ -26,7 +26,8 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
             }
         },
         supervisor1: true,
-        supervisor2: true
+        supervisor2: true,
+        thesis: true,
     } as const;
     
     constructor(

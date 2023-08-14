@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { IsDate, IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
 import { WeekdayValues } from "../../constants/weekdays";
 
 export class OralDefenseRegistrationCreateRequest {
@@ -30,8 +30,8 @@ export class OralDefenseRegistrationCreateRequest {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    spectatorsPresent?: number;
+    @IsBoolean()
+    areSpectatorsAllowed?: boolean;
 
     @Expose()
     @IsOptional()

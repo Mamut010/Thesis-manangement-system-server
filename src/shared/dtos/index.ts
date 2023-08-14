@@ -14,5 +14,6 @@ export * from './topic.dto';
 export * from './location.dto';
 export * from './bachelor-thesis-registration.dto';
 export * from './bachelor-thesis-assessment.dto';
+export * from './bachelor-thesis-evaluation.dto';
 export * from './oral-defense-registration.dto';
 export * from './oral-defense-assessment.dto';

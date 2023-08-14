@@ -27,11 +27,7 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
         },
         supervisor1: true,
         supervisor2: true,
-        thesis: {
-            include: {
-                field: true
-            }
-        }
+        thesis: true,
     } as const;
     
     constructor(

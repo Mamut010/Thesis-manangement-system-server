@@ -1,6 +1,7 @@
 import { 
     Admin, 
     BachelorThesisAssessment, 
+    BachelorThesisEvaluation, 
     BachelorThesisRegistration, 
     Field, 
     Lecturer, 
@@ -41,29 +42,22 @@ export type PlainThesis = Thesis & {
     field: Field | null,
 }
 
-export type PlainThesisWithOptionalField = Thesis & {
-    field: Field | null
-};
-
 export type Supervisors = {
     supervisor1: Lecturer | null,
     supervisor2: Lecturer | null,
 };
 
-export type PlainBachelorThesisRegistration = BachelorThesisRegistration & Supervisors & {
+export type PlainStudentWithThesis = {
     student: PlainStudent,
-    thesis: PlainThesisWithOptionalField,
-};
+    thesis: Thesis,
+}
 
-export type PlainOralDefenseRegistration = OralDefenseRegistration & Supervisors & {
-    student: PlainStudent,
-};
+export type PlainBachelorThesisRegistration = BachelorThesisRegistration & Supervisors & PlainStudentWithThesis;
 
-export type PlainBachelorThesisAssessment = BachelorThesisAssessment & Supervisors & {
-    student: PlainStudent,
-    thesis: PlainThesisWithOptionalField,
-};
+export type PlainOralDefenseRegistration = OralDefenseRegistration & Supervisors & PlainStudentWithThesis;
 
-export type PlainOralDefenseAssessment = OralDefenseAssessment & Supervisors & {
-    student: PlainStudent,
-};
+export type PlainBachelorThesisAssessment = BachelorThesisAssessment & Supervisors & PlainStudentWithThesis;
+
+export type PlainOralDefenseAssessment = OralDefenseAssessment & Supervisors & PlainStudentWithThesis;
+
+export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & PlainStudentWithThesis;

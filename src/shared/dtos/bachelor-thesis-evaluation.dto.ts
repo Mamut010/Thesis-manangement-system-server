@@ -2,7 +2,7 @@ import { Expose } from "class-transformer";
 import { IsBoolean, IsDate, IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
 import { TitleValues } from "../../contracts/constants/title";
 
-export class OralDefenseRegistrationDto {
+export class BachelorThesisEvaluationDto {
     @Expose()
     @IsDefined()
     @IsNumber()

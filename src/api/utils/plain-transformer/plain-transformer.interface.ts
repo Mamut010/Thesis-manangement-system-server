@@ -1,6 +1,7 @@
 import { 
     AdminInfoDto,
     BachelorThesisAssessmentDto, 
+    BachelorThesisEvaluationDto, 
     BachelorThesisRegistrationDto, 
     FieldDto, 
     LecturerInfoDto, 
@@ -15,6 +16,7 @@ import {
 import { 
     PlainAdmin,
     PlainBachelorThesisAssessment,
+    PlainBachelorThesisEvaluation,
     PlainBachelorThesisRegistration, 
     PlainField, 
     PlainLecturer, 
@@ -40,4 +42,5 @@ export interface PlainTransformerInterface {
     toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto;
     toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto;
     toOralDefenseAssessment(plain: PlainOralDefenseAssessment): OralDefenseAssessmentDto;
+    toBachelorThesisEvaluation(plain: PlainBachelorThesisEvaluation): BachelorThesisEvaluationDto;
 }

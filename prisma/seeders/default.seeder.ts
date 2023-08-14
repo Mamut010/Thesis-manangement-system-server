@@ -92,11 +92,13 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
             data: [
                 { 
                     thesisId: 1, studentId: 10001, supervisor1Id: 101, supervisor2Id: 401, adminId: 1,
-                    furtherParticipants: 'Jane Doe',
+                    furtherParticipants: 'Jane Doe', 
+                    supervisor1Confirmed: true
                 },
                 { 
                     thesisId: 2, studentId: 10002, supervisor1Id: 101, supervisor2Id: 401, adminId: 1,
                     furtherParticipants: 'John Doe',
+                    supervisor1Confirmed: true, supervisor2Confirmed: false
                 },
             ]
         }),
@@ -132,6 +134,18 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
                 { 
                     thesisId: 2, studentId: 10002, supervisor1Id: 101, supervisor2Id: 401 
                 },
+            ]
+        }),
+        prisma.bachelorThesisEvaluation.createMany({
+            data: [
+                {
+                    thesisId: 1, studentId: 10001, supervisorId: 101,
+                    title: 'Mr', date: new Date(), supervisorConfirmed: true
+                },
+                {
+                    thesisId: 2, studentId: 10002, supervisorId: 401,
+                    title: 'Ms'
+                }
             ]
         }),
     ]);
