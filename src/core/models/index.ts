@@ -11,5 +11,6 @@ export * from './field.model';
 export * from './location.model';
 export * from './bachelor-thesis-registration.model';
 export * from './bachelor-thesis-assessment.model';
+export * from './bachelor-thesis-evaluation.model';
 export * from './oral-defense-registration.model';
 export * from './oral-defense-assessment.model'

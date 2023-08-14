@@ -1,4 +1,4 @@
-export const WEEK_DAYS = {
+export const WEEKDAYS = {
     Monday: 'Monday',
     Tuesday: 'Tuesday',
     Wednesday: 'Wednesday',
@@ -8,4 +8,4 @@ export const WEEK_DAYS = {
     Sunday: 'Sunday',
 } as const;
 
-export const WeekdayValues = Object.values(WEEK_DAYS);
+export const WeekdayValues = Object.values(WEEKDAYS);

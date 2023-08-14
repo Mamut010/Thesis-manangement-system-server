@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import { IsBoolean, IsDate, IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
-import { WeekdayValues } from "../../contracts/constants/weekdates";
+import { WeekdayValues } from "../../contracts/constants/weekdays";
 
 export class OralDefenseRegistration {
     @Expose()
