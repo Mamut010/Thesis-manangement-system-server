@@ -52,12 +52,14 @@ export type PlainStudentWithThesis = {
     thesis: Thesis,
 }
 
-export type PlainBachelorThesisRegistration = BachelorThesisRegistration & Supervisors & PlainStudentWithThesis;
+export type PlainBachelorThesisRegistration = BachelorThesisRegistration & PlainStudentWithThesis & Supervisors;
 
-export type PlainOralDefenseRegistration = OralDefenseRegistration & Supervisors & PlainStudentWithThesis;
+export type PlainOralDefenseRegistration = OralDefenseRegistration & PlainStudentWithThesis & Supervisors;
 
-export type PlainBachelorThesisAssessment = BachelorThesisAssessment & Supervisors & PlainStudentWithThesis;
+export type PlainBachelorThesisAssessment = BachelorThesisAssessment & PlainStudentWithThesis & Supervisors;
 
-export type PlainOralDefenseAssessment = OralDefenseAssessment & Supervisors & PlainStudentWithThesis;
+export type PlainOralDefenseAssessment = OralDefenseAssessment & PlainStudentWithThesis & Supervisors;
 
-export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & PlainStudentWithThesis;
+export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & PlainStudentWithThesis & {
+    supervisor: Lecturer
+};

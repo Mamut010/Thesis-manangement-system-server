@@ -41,6 +41,11 @@ export class BachelorThesisEvaluationDto {
     @Expose()
     @IsOptional()
     @IsString()
+    supervisorTitle!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     @IsIn(TitleValues)
     title!: string | null;
 

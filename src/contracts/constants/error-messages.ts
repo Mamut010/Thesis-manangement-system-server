@@ -20,6 +20,7 @@ export const ERROR_MESSAGES = {
         LocationNotFound: 'Location not found',
         BachelorThesisRegistrationNotFound: 'Bachelor thesis registration not found',
         BachelorThesisAssessmentNotFound: 'Bachelor thesis assessment not found',
+        BachelorThesisEvaluationNotFound: 'Bachelor thesis evaluation not found',
         OralDefenseRegistrationNotFound: 'Oral defense registration not found',
         OralDefenseAssessmentNotFound: 'Oral defense assessment not found',
     },
@@ -41,6 +42,7 @@ export const ERROR_MESSAGES = {
         DefaultResourceMessage: 'Access to resource is denied',
         BachelorThesisRegistrationDenied: 'Access to bachelor thesis registration is denied',
         BachelorThesisAssessmentDenied: 'Access to bachelor thesis assessment is denied',
+        BachelorThesisEvaluationDenied: 'Access to bachelor thesis evaluation is denied',
         OralDefenseRegistrationDenied: 'Access to oral defense registration is denied',
         OralDefenseAssessmentDenied: 'Access to oral defense assessment is denied',
     }

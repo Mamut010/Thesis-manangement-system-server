@@ -1,13 +1,8 @@
 import { Expose } from "class-transformer";
 import { IsBoolean, IsDate, IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
-import { TitleValues } from "../../contracts/constants/title";
+import { TitleValues } from "../../constants/title";
 
-export class BachelorThesisEvaluation {
-    @Expose()
-    @IsDefined()
-    @IsNumber()
-    id!: number;
-
+export class BachelorThesisEvaluationCreateRequest {
     @Expose()
     @IsDefined()
     @IsNumber()
@@ -27,25 +22,15 @@ export class BachelorThesisEvaluation {
     @IsOptional()
     @IsString()
     @IsIn(TitleValues)
-    title!: string | null;
+    title?: string;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    date!: Date | null;
+    date?: Date
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    supervisorConfirmed!: boolean | null;
-
-    @Expose()
-    @IsDefined()
-    @IsDate()
-    createdAt!: Date;
-
-    @Expose()
-    @IsDefined()
-    @IsDate()
-    updatedAt!: Date;
+    supervisorConfirmed?: boolean;
 }

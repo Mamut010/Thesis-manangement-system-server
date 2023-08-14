@@ -35,7 +35,8 @@ import { PlainTransformerInterface } from "./plain-transformer.interface";
 
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
-    private static readonly bachelorThesisAndOralDefenseRelations: string[] = ['thesis', 'supervisor1', 'supervisor2'];
+    private static readonly bachelorThesisAndOralDefenseRelations 
+        = ['thesis', 'supervisor', 'supervisor1', 'supervisor2'];
 
     public toAdminInfo(plain: PlainAdmin): AdminInfoDto {
         const dto = plainToInstanceExactMatch(AdminInfoDto, flattenObject(plain));
