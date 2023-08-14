@@ -16,20 +16,10 @@ import { OralDefenseRegistration } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainOralDefenseRegistration } from "../../../shared/types/plain-types";
 import { anyChanges } from "../../../utils/crud-helpers";
+import { bachelorThesisAndOralDefenseInclude } from "../../constants/includes";
 
 @injectable()
 export class OralDefenseRegistrationService implements OralDefenseRegistrationServiceInterface {
-    private static readonly include = {
-        student: {
-            include: {
-                user: true
-            }
-        },
-        supervisor1: true,
-        supervisor2: true,
-        thesis: true,
-    } as const;
-    
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
@@ -43,6 +33,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
         const fieldMap = {
             surname: 'student.user.surname',
             forename: 'student.user.forename',
+            thesisTitle: 'thesis.title',
             supervisor1Title: 'supervisor1.title',
             supervisor2Title: 'supervisor2.title',
         };
@@ -52,7 +43,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
         const count = await this.prisma.oralDefenseRegistration.count({ where: prismaQuery.where });
         const oralDefenseRegistrations = await this.prisma.oralDefenseRegistration.findMany({
             ...prismaQuery,
-            include: OralDefenseRegistrationService.include,
+            include: bachelorThesisAndOralDefenseInclude,
         });
 
         const response = new OralDefenseRegistrationsQueryResponse();
@@ -70,7 +61,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
         : Promise<OralDefenseRegistrationDto> {
         const oralDefenseRegistration = await this.prisma.oralDefenseRegistration.create({
             data: createRequest,
-            include: OralDefenseRegistrationService.include
+            include: bachelorThesisAndOralDefenseInclude,
         });
         return this.plainTransformer.toOralDefenseRegistration(oralDefenseRegistration);
     }
@@ -86,7 +77,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
                     id: id
                 },
                 data: updateRequest,
-                include: OralDefenseRegistrationService.include
+                include: bachelorThesisAndOralDefenseInclude,
             });
         }
 
@@ -110,7 +101,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
                 where: {
                     id: id
                 },
-                include: OralDefenseRegistrationService.include
+                include: bachelorThesisAndOralDefenseInclude,
             });
         }
         catch {

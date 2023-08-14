@@ -17,6 +17,7 @@ import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
 import { Lecturer, User } from "../../core/models";
 import { PlainTransformerInterface } from "../utils/plain-transformer";
+import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
@@ -100,20 +101,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
                     }
                 ]
             },
-            include: {
-                student: {
-                    include: {
-                        user: true
-                    }
-                },
-                thesis: {
-                    include: {
-                        field: true
-                    }
-                },
-                supervisor1: true,
-                supervisor2: true,
-            }
+            include: bachelorThesisAndOralDefenseInclude,
         });
 
         return bachelorThesisRegistrations.map(item => this.plainTransformer.toBachelorThesisRegistration(item));
@@ -131,15 +119,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
                     }
                 ]
             },
-            include: {
-                student: {
-                    include: {
-                        user: true
-                    }
-                },
-                supervisor1: true,
-                supervisor2: true,
-            }
+            include: bachelorThesisAndOralDefenseInclude,
         });
 
         return oralDefenseRegistrations.map(item => this.plainTransformer.toOralDefenseRegistration(item));
@@ -157,20 +137,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
                     }
                 ]
             },
-            include: {
-                student: {
-                    include: {
-                        user: true
-                    }
-                },
-                thesis: {
-                    include: {
-                        field: true
-                    }
-                },
-                supervisor1: true,
-                supervisor2: true,
-            }
+            include: bachelorThesisAndOralDefenseInclude,
         });
 
         return bachelorThesisAssessments.map(item => this.plainTransformer.toBachelorThesisAssessment(item));
@@ -188,15 +155,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
                     }
                 ]
             },
-            include: {
-                student: {
-                    include: {
-                        user: true
-                    }
-                },
-                supervisor1: true,
-                supervisor2: true,
-            }
+            include: bachelorThesisAndOralDefenseInclude,
         });
 
         return oralDefenseAssessments.map(item => this.plainTransformer.toOralDefenseAssessment(item));

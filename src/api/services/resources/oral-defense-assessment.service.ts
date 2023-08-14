@@ -16,20 +16,10 @@ import { OralDefenseAssessment } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainOralDefenseAssessment } from "../../../shared/types/plain-types";
 import { anyChanges } from "../../../utils/crud-helpers";
+import { bachelorThesisAndOralDefenseInclude } from "../../constants/includes";
 
 @injectable()
 export class OralDefenseAssessmentService implements OralDefenseAssessmentServiceInterface {
-    private static readonly include = {
-        student: {
-            include: {
-                user: true
-            }
-        },
-        supervisor1: true,
-        supervisor2: true,
-        thesis: true,
-    } as const;
-    
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
@@ -43,6 +33,7 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
         const fieldMap = {
             surname: 'student.user.surname',
             forename: 'student.user.forename',
+            thesisTitle: 'thesis.title',
             supervisor1Title: 'supervisor1.title',
             supervisor2Title: 'supervisor2.title',
         };
@@ -52,7 +43,7 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
         const count = await this.prisma.oralDefenseAssessment.count({ where: prismaQuery.where });
         const oralDefenseAssessments = await this.prisma.oralDefenseAssessment.findMany({
             ...prismaQuery,
-            include: OralDefenseAssessmentService.include,
+            include:  bachelorThesisAndOralDefenseInclude,
         });
 
         const response = new OralDefenseAssessmentsQueryResponse();
@@ -70,7 +61,7 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
         : Promise<OralDefenseAssessmentDto> {
         const oralDefenseAssessment = await this.prisma.oralDefenseAssessment.create({
             data: createRequest,
-            include: OralDefenseAssessmentService.include
+            include:  bachelorThesisAndOralDefenseInclude
         });
         return this.plainTransformer.toOralDefenseAssessment(oralDefenseAssessment);
     }
@@ -86,7 +77,7 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
                     id: id
                 },
                 data: updateRequest,
-                include: OralDefenseAssessmentService.include
+                include:  bachelorThesisAndOralDefenseInclude
             });
         }
 
@@ -110,7 +101,7 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
                 where: {
                     id: id
                 },
-                include: OralDefenseAssessmentService.include
+                include:  bachelorThesisAndOralDefenseInclude
             });
         }
         catch {

@@ -16,20 +16,10 @@ import { BachelorThesisRegistration } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainBachelorThesisRegistration } from "../../../shared/types/plain-types";
 import { anyChanges } from "../../../utils/crud-helpers";
+import { bachelorThesisAndOralDefenseInclude } from "../../constants/includes";
 
 @injectable()
 export class BachelorThesisRegistrationService implements BachelorThesisRegistrationServiceInterface {
-    private static readonly include = {
-        student: {
-            include: {
-                user: true
-            }
-        },
-        supervisor1: true,
-        supervisor2: true,
-        thesis: true,
-    } as const;
-    
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
@@ -53,7 +43,7 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
         const count = await this.prisma.bachelorThesisRegistration.count({ where: prismaQuery.where });
         const bachelorThesisRegistrations = await this.prisma.bachelorThesisRegistration.findMany({
             ...prismaQuery,
-            include: BachelorThesisRegistrationService.include,
+            include:  bachelorThesisAndOralDefenseInclude,
         });
 
         const response = new BachelorThesisRegistrationsQueryResponse();
@@ -71,7 +61,7 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
         : Promise<BachelorThesisRegistrationDto> {
         const bachelorThesisRegistration = await this.prisma.bachelorThesisRegistration.create({
             data: createRequest,
-            include: BachelorThesisRegistrationService.include
+            include:  bachelorThesisAndOralDefenseInclude
         });
         return this.plainTransformer.toBachelorThesisRegistration(bachelorThesisRegistration);
     }
@@ -87,7 +77,7 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
                     id: id
                 },
                 data: updateRequest,
-                include: BachelorThesisRegistrationService.include
+                include:  bachelorThesisAndOralDefenseInclude
             });
         }
 
@@ -111,7 +101,7 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
                 where: {
                     id: id
                 },
-                include: BachelorThesisRegistrationService.include
+                include:  bachelorThesisAndOralDefenseInclude
             });
         }
         catch {

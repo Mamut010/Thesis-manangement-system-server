@@ -16,20 +16,10 @@ import { BachelorThesisAssessment } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainBachelorThesisAssessment } from "../../../shared/types/plain-types";
 import { anyChanges } from "../../../utils/crud-helpers";
+import { bachelorThesisAndOralDefenseInclude } from "../../constants/includes";
 
 @injectable()
 export class BachelorThesisAssessmentService implements BachelorThesisAssessmentServiceInterface {
-    private static readonly include = {
-        student: {
-            include: {
-                user: true
-            }
-        },
-        supervisor1: true,
-        supervisor2: true,
-        thesis: true,
-    } as const;
-    
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
@@ -43,6 +33,7 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
         const fieldMap = {
             surname: 'student.user.surname',
             forename: 'student.user.forename',
+            thesisTitle: 'thesis.title',
             supervisor1Title: 'supervisor1.title',
             supervisor2Title: 'supervisor2.title',
         };
@@ -52,7 +43,7 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
         const count = await this.prisma.bachelorThesisAssessment.count({ where: prismaQuery.where });
         const bachelorThesisAssessments = await this.prisma.bachelorThesisAssessment.findMany({
             ...prismaQuery,
-            include: BachelorThesisAssessmentService.include,
+            include:  bachelorThesisAndOralDefenseInclude,
         });
 
         const response = new BachelorThesisAssessmentsQueryResponse();
@@ -70,7 +61,7 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
         : Promise<BachelorThesisAssessmentDto> {
         const bachelorThesisAssessment = await this.prisma.bachelorThesisAssessment.create({
             data: createRequest,
-            include: BachelorThesisAssessmentService.include
+            include:  bachelorThesisAndOralDefenseInclude,
         });
         return this.plainTransformer.toBachelorThesisAssessment(bachelorThesisAssessment);
     }
@@ -86,7 +77,7 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
                     id: id
                 },
                 data: updateRequest,
-                include: BachelorThesisAssessmentService.include
+                include: bachelorThesisAndOralDefenseInclude,
             });
         }
 
@@ -110,7 +101,7 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
                 where: {
                     id: id
                 },
-                include: BachelorThesisAssessmentService.include
+                include: bachelorThesisAndOralDefenseInclude,
             });
         }
         catch {

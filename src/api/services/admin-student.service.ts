@@ -17,6 +17,7 @@ import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
 import { Student, User } from "../../core/models";
 import { PlainTransformerInterface } from "../utils/plain-transformer";
+import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
@@ -81,20 +82,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
             where: {
                 studentId: studentId
             },
-            include: {
-                student: {
-                    include: {
-                        user: true
-                    }
-                },
-                thesis: {
-                    include: {
-                        field: true
-                    }
-                },
-                supervisor1: true,
-                supervisor2: true,
-            }
+            include: bachelorThesisAndOralDefenseInclude,
         });
 
         if (!bachelorThesisRegistration) {
@@ -109,15 +97,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
             where: {
                 studentId: studentId
             },
-            include: {
-                student: {
-                    include: {
-                        user: true
-                    }
-                },
-                supervisor1: true,
-                supervisor2: true,
-            }
+            include: bachelorThesisAndOralDefenseInclude,
         });
 
         if (!oralDefenseRegistration) {
@@ -132,20 +112,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
             where: {
                 studentId: studentId
             },
-            include: {
-                student: {
-                    include: {
-                        user: true
-                    }
-                },
-                thesis: {
-                    include: {
-                        field: true
-                    }
-                },
-                supervisor1: true,
-                supervisor2: true,
-            }
+            include: bachelorThesisAndOralDefenseInclude,
         });
 
         if (!bachelorThesisAssessment) {
@@ -160,15 +127,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
             where: {
                 studentId: studentId
             },
-            include: {
-                student: {
-                    include: {
-                        user: true
-                    }
-                },
-                supervisor1: true,
-                supervisor2: true,
-            }
+            include: bachelorThesisAndOralDefenseInclude,
         });
 
         if (!oralDefenseAssessment) {
