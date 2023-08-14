@@ -50,7 +50,7 @@ import {
 import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
 import { PlainTransformer, PlainTransformerInterface } from '../api/utils/plain-transformer';
 import { 
-    AuthHeaderJwtExtractorService,
+    BearerJwtExtractorService,
     HashService,
     JwtService, 
     SMTPMailService 
@@ -207,7 +207,7 @@ function configSharedServices(container: Container, settings?: BootstrapSettingI
 
     container
         .bind<JwtExtractorServiceInterface>(INJECTION_TOKENS.JwtExtractor)
-        .to(AuthHeaderJwtExtractorService)
+        .to(BearerJwtExtractorService)
         .inRequestScope();
 }
 
