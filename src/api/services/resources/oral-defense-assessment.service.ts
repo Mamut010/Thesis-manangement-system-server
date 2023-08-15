@@ -9,7 +9,7 @@ import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { OralDefenseAssessmentCreateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-create.request";
 import { OralDefenseAssessmentUpdateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-update.request";
-import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { OralDefenseAssessmentServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { OralDefenseAssessment } from "../../../core/models";

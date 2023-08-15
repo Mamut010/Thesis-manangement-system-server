@@ -54,14 +54,14 @@ model Role {
 
 model Notification {
     id          Int         @id @default(autoincrement())
-    senderId    Int
+    senderId    Int?
     title       String?     
     content     String?
     isRead      Boolean     @default(false)
     createdAt   DateTime    @default(now()) @db.Timestamp(6)
     updatedAt   DateTime    @updatedAt @db.Timestamp(6)
 
-    sender      User        @relation(fields: [senderId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    sender      User?       @relation(fields: [senderId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     receivers   User[]      @relation("usersReceivedNotifications")
 }
 

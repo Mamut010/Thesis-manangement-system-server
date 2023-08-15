@@ -16,8 +16,8 @@ import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
 import { Lecturer, User } from "../../core/models";
-import { PlainTransformerInterface } from "../utils/plain-transformer";
 import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
+import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {

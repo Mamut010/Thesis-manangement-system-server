@@ -43,22 +43,28 @@ import {
     MailServiceInterface,
     JwtServiceInterface,
     HashServiceInterface,
-    JwtExtractorServiceInterface
+    JwtExtractorServiceInterface,
+    UuidServiceInterface,
+    NotificationServiceInterface
 } from '../shared/interfaces';
 import { 
     UserRepo,
     RefreshTokenRepo
 } from '../shared/repositories';
 import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
-import { PlainTransformer, PlainTransformerInterface } from '../api/utils/plain-transformer';
 import { 
     BearerJwtExtractorService,
     HashService,
     JwtService, 
-    SMTPMailService 
+    NotificationService, 
+    SMTPMailService, 
+    UuidService
 } from '../shared/services';
 import { FormFillerInterface, PdfFormFiller } from '../lib/form-filler';
 import { PdfFormGenerator, PdfFormGeneratorInterface } from '../api/utils/pdf-form-generator';
+import { WsSetupServiceInterface } from '../ws/interfaces';
+import { WsSetupService } from '../ws/services';
+import { PlainTransformer, PlainTransformerInterface } from '../shared/utils/plain-transformer';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -67,6 +73,7 @@ export const configInversify: Configuration<Container> = (container: Container, 
     configRepos(container, settings);
     configAuthServerServices(container, settings);
     configApiServerServices(container, settings);
+    configWsServerServices(container, settings);
     configSharedServices(container, settings);
     configUtils(container, settings);
 }
@@ -201,6 +208,13 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
         .inRequestScope();
 }
 
+function configWsServerServices(container: Container, settings?: BootstrapSettingInterface) {
+    container
+        .bind<WsSetupServiceInterface>(INJECTION_TOKENS.WsSetupService)
+        .to(WsSetupService)
+        .inSingletonScope();
+}
+
 function configSharedServices(container: Container, settings?: BootstrapSettingInterface) {
     container
         .bind<MailServiceInterface>(INJECTION_TOKENS.MailService)
@@ -215,6 +229,16 @@ function configSharedServices(container: Container, settings?: BootstrapSettingI
     container
         .bind<JwtExtractorServiceInterface>(INJECTION_TOKENS.JwtExtractor)
         .to(BearerJwtExtractorService)
+        .inSingletonScope();
+
+    container
+        .bind<UuidServiceInterface>(INJECTION_TOKENS.UuidService)
+        .to(UuidService)
+        .inSingletonScope();
+
+    container
+        .bind<NotificationServiceInterface>(INJECTION_TOKENS.NotificationService)
+        .to(NotificationService)
         .inSingletonScope();
 }
 

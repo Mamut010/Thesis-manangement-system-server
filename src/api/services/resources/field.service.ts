@@ -11,7 +11,7 @@ import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { FieldCreateRequest } from "../../../contracts/requests/resources/field-create.request";
 import { FieldUpdateRequest } from "../../../contracts/requests/resources/field-update.request";
 import { Field } from "../../../core/models";
-import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()

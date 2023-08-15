@@ -6,6 +6,7 @@ import {
     Field, 
     Lecturer, 
     Location, 
+    Notification, 
     OralDefenseAssessment, 
     OralDefenseRegistration, 
     Role, 
@@ -14,6 +15,8 @@ import {
     Topic, 
     User 
 } from "../../core/models"
+
+export type PlainNotification = Notification;
 
 export type PlainAdmin = Admin & {
     user: User,

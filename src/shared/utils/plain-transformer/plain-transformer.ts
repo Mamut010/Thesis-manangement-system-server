@@ -7,13 +7,14 @@ import {
     FieldDto, 
     LecturerInfoDto, 
     LocationDto, 
+    NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
     RoleDto, 
     StudentInfoDto,
     ThesisDto,
     TopicDto
-} from "../../../shared/dtos";
+} from "../../dtos";
 import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 import { flattenObject } from "../../../utils/object-helpers";
 import { 
@@ -30,13 +31,19 @@ import {
     PlainStudent,
     PlainThesis,
     PlainTopic
-} from "../../../shared/types/plain-types";
+} from "../../types/plain-types";
 import { PlainTransformerInterface } from "./plain-transformer.interface";
+import { Notification } from "../../../core/models";
 
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
     private static readonly bachelorThesisAndOralDefenseRelations 
         = ['thesis', 'supervisor', 'supervisor1', 'supervisor2'];
+
+    public toNotification(plain: Notification): NotificationDto {
+        const dto = plainToInstanceExactMatch(NotificationDto, plain);
+        return dto;
+    }
 
     public toAdminInfo(plain: PlainAdmin): AdminInfoDto {
         const dto = plainToInstanceExactMatch(AdminInfoDto, flattenObject(plain));

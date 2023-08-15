@@ -5,3 +5,4 @@ export * from './auth-home.bootstrapper';
 export * from './ioc.bootstrapper';
 export * from './winston.bootstrapper';
 export * from './swagger.bootstrapper';
+export * from './io.bootstrapper';

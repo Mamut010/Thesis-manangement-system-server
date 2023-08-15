@@ -11,7 +11,7 @@ import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { LocationCreateRequest } from "../../../contracts/requests/resources/location-create.request";
 import { LocationUpdateRequest } from "../../../contracts/requests/resources/location-update.request";
 import { Location } from "../../../core/models";
-import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()

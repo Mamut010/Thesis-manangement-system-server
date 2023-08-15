@@ -11,7 +11,7 @@ import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { TopicCreateRequest } from "../../../contracts/requests/resources/topic-create.request";
 import { TopicUpdateRequest } from "../../../contracts/requests/resources/topic-update.request";
 import { Topic } from "../../../core/models";
-import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { anyChanges } from "../../../utils/crud-helpers";
 
 @injectable()
