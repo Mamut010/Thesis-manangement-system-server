@@ -73,7 +73,7 @@ export const configInversify: Configuration<Container> = (container: Container, 
 
 function configConstants(container: Container, settings?: BootstrapSettingInterface) {
     container
-        .bind<Container>(INJECTION_TOKENS.DiContainer)
+        .bind<Container>(INJECTION_TOKENS.DIContainer)
         .toConstantValue(container);
 }
 
@@ -205,43 +205,42 @@ function configSharedServices(container: Container, settings?: BootstrapSettingI
     container
         .bind<MailServiceInterface>(INJECTION_TOKENS.MailService)
         .to(SMTPMailService)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<JwtServiceInterface>(INJECTION_TOKENS.JwtService)
         .to(JwtService)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<JwtExtractorServiceInterface>(INJECTION_TOKENS.JwtExtractor)
         .to(BearerJwtExtractorService)
-        .inRequestScope();
+        .inSingletonScope();
 }
 
 function configUtils(container: Container, settings?: BootstrapSettingInterface) {
     container
         .bind<JwtCookieHandlerInterface>(INJECTION_TOKENS.JwtCookieHandler)
         .to(JwtCookieHandler)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<PlainTransformerInterface>(INJECTION_TOKENS.PlainTransformer)
         .to(PlainTransformer)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<PrismaQueryCreatorInterface>(INJECTION_TOKENS.PrismaQueryCreator)
         .to(PrismaQueryCreator)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<FormFillerInterface>(INJECTION_TOKENS.PdfFormFiller)
         .to(PdfFormFiller)
-        .inRequestScope();    
+        .inSingletonScope();   
 
     container
         .bind<PdfFormGeneratorInterface>(INJECTION_TOKENS.PdfFormGenerator)
         .to(PdfFormGenerator)
-        .inRequestScope();    
-
+        .inSingletonScope();
 }

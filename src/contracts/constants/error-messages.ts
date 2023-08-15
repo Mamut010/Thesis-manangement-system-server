@@ -5,7 +5,8 @@ export const ERROR_MESSAGES = {
         InvalidRefreshToken: 'Invalid refresh token',
         InvalidAccessToken: 'Invalid access token',
         UserIdAlreadyExists: 'User ID already exists',
-        UsernameAlreadyExists: 'Username already exists', 
+        UsernameAlreadyExists: 'Username already exists',
+        AccessTokenNotFound: 'Access token not found', 
         RefreshTokenNotFound: 'Refresh token not found',
     },
     NotFound: {
