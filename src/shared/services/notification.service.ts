@@ -14,6 +14,7 @@ import { NotificationsQueryResponse } from "../../contracts/responses/notificati
 import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { Notification } from "../../core/models";
+import { SERVER_TO_CLIENT_EVENTS } from "../../contracts/constants/io";
 
 @injectable()
 export class NotificationService implements NotificationServiceInterface {
@@ -57,7 +58,7 @@ export class NotificationService implements NotificationServiceInterface {
         this.io
             .of(IO_NAMESPACES.Notifications)
             .to(this.wsSetupService.getRoom(notificationInfo.receiverId))
-            .emit('notification:received', dto);
+            .emit(SERVER_TO_CLIENT_EVENTS.Notification.Received, dto);
 
         return dto;
     }
