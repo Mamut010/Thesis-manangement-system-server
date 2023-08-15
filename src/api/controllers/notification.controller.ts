@@ -9,7 +9,7 @@ import { AuthorizedUser } from "../../core/auth-checkers";
 import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
 
 @JsonController('notifications')
-//@Authorized()
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
