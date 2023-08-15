@@ -11,7 +11,8 @@ import {
     bootstrapApiHome, 
     bootstrapIoc, 
     bootstrapWinston, 
-    bootstrapSwagger 
+    bootstrapSwagger, 
+    bootstrapIo
 } from './core/bootstrappers';
 
 const log = new Logger(__filename);
@@ -25,6 +26,7 @@ bootstrap({
         bootstrapWinston, 
         bootstrapIoc,
         bootstrapApiServer,
+        bootstrapIo,
         bootstrapSwagger,
         bootstrapApiHome,
     ],

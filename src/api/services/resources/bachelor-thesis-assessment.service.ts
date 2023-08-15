@@ -9,7 +9,7 @@ import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { BachelorThesisAssessmentCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-create.request";
 import { BachelorThesisAssessmentUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-update.request";
-import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { BachelorThesisAssessmentServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisAssessment } from "../../../core/models";

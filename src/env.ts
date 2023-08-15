@@ -46,6 +46,13 @@ export const env = {
                     interceptors: getOsPaths('AUTH_INTERCEPTORS'),
                 },
             },
+            ws: {
+                port: normalizePort(process.env.APP_WS_PORT ?? getOsEnv('WS_PORT')) as number,
+                dirs: {
+                    controllers: getOsPaths('WS_CONTROLLERS'),
+                    middlewares: getOsPaths('WS_MIDDLEWARES'),
+                },
+            }
         },
         shared: {
             dirs: {
@@ -53,9 +60,6 @@ export const env = {
                 interceptors: getOsPaths('SHARED_INTERCEPTORS'),
             },
         },
-        socket: {
-            port: normalizePort(process.env.APP_SOCKET_PORT ?? getOsEnv('SOCKET_PORT')) as number,
-        }
     },
     auth: {
         accessToken: getOsEnv('ACCESS_TOKEN_SECRET'),

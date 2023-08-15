@@ -6,13 +6,14 @@ import {
     FieldDto, 
     LecturerInfoDto, 
     LocationDto, 
+    NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
     RoleDto, 
     StudentInfoDto,
     ThesisDto,
     TopicDto
-} from "../../../shared/dtos";
+} from "../../dtos";
 import { 
     PlainAdmin,
     PlainBachelorThesisAssessment,
@@ -21,15 +22,17 @@ import {
     PlainField, 
     PlainLecturer, 
     PlainLocation, 
+    PlainNotification, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
     PlainRole, 
     PlainStudent,
     PlainThesis,
     PlainTopic,
-} from "../../../shared/types/plain-types";
+} from "../../types/plain-types";
 
 export interface PlainTransformerInterface {
+    toNotification(plain: PlainNotification): NotificationDto;
     toAdminInfo(plain: PlainAdmin): AdminInfoDto;
     toStudentInfo(plain: PlainStudent): StudentInfoDto;
     toLecturerInfo(plain: PlainLecturer): LecturerInfoDto;

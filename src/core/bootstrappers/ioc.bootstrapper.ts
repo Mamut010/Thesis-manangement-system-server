@@ -12,6 +12,10 @@ export const bootstrapIoc: Bootstrapper = (settings?: BootstrapSettingInterface)
     useContainer(inversifyAdapter);
 
     configInversify(container, settings);
+
+    // Set container data for other bootstrappers
+    settings?.setData('container', container);
+    settings?.setData('ioc-adapter', inversifyAdapter);
 };
 
 export { container }

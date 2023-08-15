@@ -12,7 +12,7 @@ import { RoleUpdateRequest } from "../../../contracts/requests/resources/role-up
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { ConflictError } from "../../../contracts/errors/conflict.error";
 import { Role } from "../../../core/models";
-import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { MethodNotAllowedError } from "../../../contracts/errors/method-not-allowed.error";
 import { anyChanges } from "../../../utils/crud-helpers";
 

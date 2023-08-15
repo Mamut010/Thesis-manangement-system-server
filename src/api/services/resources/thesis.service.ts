@@ -9,7 +9,7 @@ import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { ThesesQueryRequest } from "../../../contracts/requests/resources/theses-query.request";
 import { ThesesQueryResponse } from "../../../contracts/responses/resources/theses-query.response";
 import { ThesisCreateRequest } from "../../../contracts/requests/resources/thesis-create.request";
-import { PlainTransformerInterface } from "../../utils/plain-transformer";
+import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { Thesis } from "../../../core/models";
 import { anyChanges } from "../../../utils/crud-helpers";
 

@@ -1,5 +1,6 @@
 const CONSTANT_TOKENS = {
-    DiContainer: Symbol.for('DiContainer'),
+    DIContainer: Symbol.for('DIContainer'),
+    IOServer: Symbol.for('IOServer'),
 } as const;
 
 const LOGGER_TOKENS = {
@@ -38,11 +39,17 @@ const API_SERVICE_TOKENS = {
     OralDefenseAssessmentService: Symbol.for('OralDefenseAssessmentService'),
 } as const;
 
+const WS_SERVICE_TOKENS = {
+    WsSetupService: Symbol.for('WsSetupService'),
+}
+
 const SHARED_SERVICE_TOKENS = {
     MailService: Symbol.for('MailService'),
     JwtService: Symbol.for('JwtService'),
     HashService: Symbol.for('HashService'),
     JwtExtractor: Symbol.for('JwtExtractor'),
+    NotificationService: Symbol.for('NotificationService'),
+    UuidService: Symbol.for('UuidService'),
 } as const;
 
 const UTIL_TOKENS = {
@@ -60,6 +67,7 @@ export const INJECTION_TOKENS = {
     ...REPOSITORY_TOKENS,
     ...AUTH_SERVICE_TOKENS,
     ...API_SERVICE_TOKENS,
+    ...WS_SERVICE_TOKENS,
     ...SHARED_SERVICE_TOKENS,
     ...UTIL_TOKENS,
 } as const;

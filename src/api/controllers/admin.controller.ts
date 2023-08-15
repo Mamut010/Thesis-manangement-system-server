@@ -12,7 +12,7 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AdminServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
 import { AdminInfoDto } from "../../shared/dtos";
-import { User } from "../../core/models";
+import { AuthorizedUser } from "../../core/auth-checkers";
 
 @JsonController('admin')
 @Authorized(ROLES.Admin)
@@ -29,7 +29,7 @@ export class AdminController {
     @HttpCode(HTTP_CODES.Ok)
     @Get('/info')
     @ResponseSchema(AdminInfoDto)
-    getAdminInfo(@CurrentUser({ required: true }) user: User) {
+    getAdminInfo(@CurrentUser({ required: true }) user: AuthorizedUser) {
         return this.adminService.getAdminInfo(user.userId);
     }
 }

@@ -1,3 +1,3 @@
 import { env } from '../../env';
 
-export type ServerType = keyof typeof env.app.servers;
+export type ServerType = Exclude<keyof typeof env.app.servers, 'ws'>;
