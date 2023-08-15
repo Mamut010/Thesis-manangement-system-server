@@ -16,17 +16,19 @@ export class AuthMiddleware implements MiddlewareInterface {
     }
 
     async use(socket: IOSocket, next: (err?: any) => any) {
-        try {
-            const token: unknown = socket.handshake.auth['token'];
-            if (typeof token !== 'string') {
-                // Dummy value as the error is actually created in the catch block
-                throw -1;
-            }
-            const jwtToken = await this.jwtExtractor.extract(token);
-            if(!jwtToken) {
-                throw -1;
-            }
+        const token: unknown = socket.handshake.auth['token'];
+        if (typeof token !== 'string') {
+            return next(new AuthenticationError(ERROR_MESSAGES.Auth.InvalidAccessToken));
+        }
 
+        socket.data.token = token;
+
+        const jwtToken = await this.jwtExtractor.extract(token);
+        if(!jwtToken) {
+            return next(new AuthenticationError(ERROR_MESSAGES.Auth.InvalidAccessToken));
+        }
+
+        try {
             const payload = this.jwtService.verifyAccessToken(jwtToken);
             socket.data.user = payload.context;
         }

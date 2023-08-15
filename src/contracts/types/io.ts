@@ -14,11 +14,11 @@ export interface ClientToServerEvents {
 }
 
 export interface InterServerEvents {
-    ping: () => void;
 }
 
 export interface SocketData {
     user: AuthorizedUser;
+    token: string;
 }
 
 export type IOServer = Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
