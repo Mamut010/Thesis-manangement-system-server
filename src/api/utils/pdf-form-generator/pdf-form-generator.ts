@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { inject, injectable } from "inversify";
-import { BachelorThesisRegistrationDto } from "../../../shared/dtos";
+import { BachelorThesisEvaluationDto, BachelorThesisRegistrationDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { 
     DateField, 
@@ -15,6 +15,7 @@ import { ASSETS } from "../../constants/assets";
 import { TEMPLATE_FIELDS } from "../../constants/template-fields";
 import { PdfFormGeneratorInterface } from "./pdf-form-generator.interface";
 import { PrismaClient } from "@prisma/client";
+import { TITLES } from "../../../contracts/constants/title";
 
 @injectable()
 export class PdfFormGenerator implements PdfFormGeneratorInterface {
@@ -73,6 +74,31 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisRegistration.path, fields);
     }
 
+    async generateBachelorThesisEvaluation(data: BachelorThesisEvaluationDto): Promise<Buffer> {
+        const fields: FormField[] = [];
+
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Surname, data.surname));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.ThesisTitle, data.thesisTitle));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.MatriculationNo, data.studentId.toString()));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Forename, data.forename));
+        if (data.title === TITLES.Mr) {
+            fields.push(new RadioButtonField(
+                TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Name,
+                TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Options.Mr));
+        }
+        else if (data.title === TITLES.Ms) {
+            fields.push(new RadioButtonField(
+                TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Name,
+                TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Options.Ms));
+        }
+        fields.push(new DateField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Date, data.date));
+
+        const signature = await this.getBachelorThesisEvaluationSupervisorSignature(data.id);
+        fields.push(new ImageButtonField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Signature1stExaminer, signature));
+
+        return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisEvaluation.path, fields);
+    }
+
     private addThesisTitleToBachelorThesisRegistration(fields: FormField[], data: BachelorThesisRegistrationDto) {
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.TitleOfBachelorThesis[0], data.thesisTitle));
     }
@@ -92,5 +118,16 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
             supervisor1Signature: signatures.supervisor1?.user.signature as string | null | undefined,
             supervisor2Signature: signatures.supervisor2?.user.signature as string | null | undefined,
         }
+    }
+
+    private async getBachelorThesisEvaluationSupervisorSignature(id: number) {
+        const signatures = await this.prisma.bachelorThesisEvaluation.findUniqueOrThrow({
+            where: { id },
+            select: {
+                supervisor: { select: { user: { select: { signature: true } } } },
+            }
+        });
+
+        return signatures.supervisor.user.signature;
     }
 }
