@@ -120,6 +120,12 @@ export class PlainTransformer implements PlainTransformerInterface {
             keepDuplicate: true,
             transformedProps: PlainTransformer.bachelorThesisAndOralDefenseRelations,
         }));
+        if (dto.supervisor1Grade !== null && dto.supervisor2Grade !== null) {
+            dto.overallGrade = (dto.supervisor1Grade + dto.supervisor2Grade) / 2;
+        }
+        else {
+            dto.overallGrade = null;
+        }
         
         return dto;
     }
@@ -129,6 +135,12 @@ export class PlainTransformer implements PlainTransformerInterface {
             keepDuplicate: true,
             transformedProps: PlainTransformer.bachelorThesisAndOralDefenseRelations,
         }));
+        if (dto.supervisor1Grade !== null && dto.supervisor2Grade !== null) {
+            dto.overallGrade = (dto.supervisor1Grade + dto.supervisor2Grade) / 2;
+        }
+        else {
+            dto.overallGrade = null;
+        }
 
         return dto;
     }

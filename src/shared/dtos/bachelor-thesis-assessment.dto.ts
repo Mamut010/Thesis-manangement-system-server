@@ -69,6 +69,11 @@ export class BachelorThesisAssessmentDto {
 
     @Expose()
     @IsOptional()
+    @IsNumber()
+    overallGrade!: number | null;
+
+    @Expose()
+    @IsOptional()
     @IsString()
     assessmentDescription!: string | null;
 

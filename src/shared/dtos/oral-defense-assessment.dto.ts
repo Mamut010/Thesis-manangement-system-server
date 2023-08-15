@@ -89,6 +89,11 @@ export class OralDefenseAssessmentDto {
 
     @Expose()
     @IsOptional()
+    @IsNumber()
+    overallGrade!: number | null;
+
+    @Expose()
+    @IsOptional()
     @IsString()
     record!: string | null;
 
