@@ -72,6 +72,35 @@ export const TEMPLATE_FIELDS = {
         Date: 'Date',
         Signature1stExaminer: 'Signature 1st Examiner',
     },
+    OralDefenseRegistration: {
+        DateReceived: 'Date received',
+        DateOfAdmission: 'Date of admission',
+        Surname: 'Surname',
+        MatriculationNo: 'Matriculation Number',
+        FirstExaminerName: '1st Examiner Name',
+        SecondExaminerName: '2nd Examiner Name',
+        Date: 'Date',
+        Weekday: 'Weekday',
+        Time: 'Time',
+        Room: 'Room',
+        Forename: 'Forename',
+        FirstExaminerSignature: '1st Examiner Signature',
+        SecondExaminerSignature: '2nd Examiner Signature',
+        AreSpectatorsAllowed: {
+            Name: 'Are spectators allowed',
+            Options: {
+                Yes: 'Yes',
+                No: 'No',
+            }
+        },
+        ConcernedAgreed: {
+            Name: 'Concerned agreed',
+            Options: {
+                Yes: 'Yes',
+                No: 'No',
+            }
+        }
+    },
     OralDefenseAssessment: {
         Record: 'Record',
         Surname: 'Surname',

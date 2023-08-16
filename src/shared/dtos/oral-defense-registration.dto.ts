@@ -87,10 +87,10 @@ export class OralDefenseRegistrationDto {
     @Expose()
     @IsOptional()
     @IsDate()
-    receivingDate!: Date | null;
+    dateReceived!: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    submissionDate!: Date | null;
+    admissionDate!: Date | null;
 }

@@ -14,6 +14,10 @@ export const ASSETS = {
             filename: 'Evaluation of Bachelor Thesis.pdf',
             path: templates('Evaluation of Bachelor Thesis.pdf'),
         },
+        OralDefenseRegistration: {
+            filename: 'Registration for Oral Defense.pdf',
+            path: templates('Registration for Oral Defense.pdf'),
+        },
         OralDefenseAssessment: {
             filename: 'Assessment of Oral Defense.pdf',
             path: templates('Assessment of Oral Defense.pdf'),

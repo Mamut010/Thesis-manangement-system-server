@@ -60,11 +60,11 @@ export class OralDefenseRegistrationUpdateRequest {
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    receivingDate?: Date;
+    dateReceived?: Date;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    submissionDate?: Date;
+    admissionDate?: Date;
 }

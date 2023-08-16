@@ -205,8 +205,8 @@ model OralDefenseRegistration {
     proposedDate           DateTime?   @db.DateTime
     actualDate             DateTime?   @db.DateTime
     concernedAgreed        Int?        @default(0)
-    receivingDate          DateTime?   @db.DateTime
-    submissionDate         DateTime?   @db.DateTime
+    dateReceived           DateTime?   @db.DateTime
+    admissionDate          DateTime?   @db.DateTime
     step                   Int?        @default(0)
     createdAt              DateTime    @default(now()) @db.Timestamp(6)
     updatedAt              DateTime    @updatedAt @db.Timestamp(6)

@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { inject, injectable } from "inversify";
-import { BachelorThesisAssessmentDto, BachelorThesisEvaluationDto, BachelorThesisRegistrationDto, OralDefenseAssessmentDto } from "../../../shared/dtos";
+import { BachelorThesisAssessmentDto, BachelorThesisEvaluationDto, BachelorThesisRegistrationDto, OralDefenseAssessmentDto, OralDefenseRegistrationDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { 
     DateField, 
@@ -18,6 +18,8 @@ import { TEMPLATE_FIELDS } from "../../constants/template-fields";
 import { PdfFormGeneratorInterface } from "./pdf-form-generator.interface";
 import { PrismaClient } from "@prisma/client";
 import { TITLES } from "../../../contracts/constants/title";
+import { DATETIME_FORMATS } from "../../constants/datetime";
+import { LOCALES } from "../../constants/locales";
 
 @injectable()
 export class PdfFormGenerator implements PdfFormGeneratorInterface {
@@ -135,6 +137,48 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new ImageButtonField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Signature1stExaminer, signature));
 
         return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisEvaluation.path, fields);
+    }
+
+    async generateOralDefenseRegistration(data: OralDefenseRegistrationDto): Promise<Buffer> {
+        const fields: FormField[] = [];
+
+        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.DateReceived, data.dateReceived));
+        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.DateOfAdmission, data.admissionDate));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Surname, data.surname));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Forename, data.forename));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.MatriculationNo, data.studentId.toString()));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.FirstExaminerName, data.supervisor1Title));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.SecondExaminerName, data.supervisor2Title));
+        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.Date, data.proposedDate));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Weekday, data.weekday));
+        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.Time, data.proposedDate, 
+            DATETIME_FORMATS.TIME_12HOUR, LOCALES.EN));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Room, data.room));
+        fields.push(new RadioButtonField(
+            TEMPLATE_FIELDS.OralDefenseRegistration.AreSpectatorsAllowed.Name,
+            data.areSpectatorsAllowed
+                ? TEMPLATE_FIELDS.OralDefenseRegistration.AreSpectatorsAllowed.Options.Yes
+                : TEMPLATE_FIELDS.OralDefenseRegistration.AreSpectatorsAllowed.Options.No
+            ));
+        fields.push(new RadioButtonField(
+            TEMPLATE_FIELDS.OralDefenseRegistration.ConcernedAgreed.Name,
+            data.concernedAgreed
+                ? TEMPLATE_FIELDS.OralDefenseRegistration.ConcernedAgreed.Options.Yes
+                : TEMPLATE_FIELDS.OralDefenseRegistration.ConcernedAgreed.Options.No
+            ));
+
+        const signatures = await this.getSignatures('oralDefenseRegistration', data.id);
+
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.OralDefenseRegistration.FirstExaminerSignature, 
+            signatures.supervisor1Signature
+            ));
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.OralDefenseRegistration.SecondExaminerSignature, 
+            signatures.supervisor2Signature
+            ));
+
+        return this.pdfFormFiller.fill(ASSETS.Templates.OralDefenseRegistration.path, fields);
     }
 
     async generateOralDefenseAssessment(data: OralDefenseAssessmentDto): Promise<Buffer> {
