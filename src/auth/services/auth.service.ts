@@ -29,6 +29,7 @@ import {
 import { StringResponse } from '../../contracts/responses/string.response';
 import { StringArrayResponse } from '../../contracts/responses/string-array.response';
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
+import { env } from '../../env';
 
 @injectable()
 export class AuthService implements AuthServiceInterface {
@@ -44,6 +45,7 @@ export class AuthService implements AuthServiceInterface {
     }
 
     async signUp(signUpRequest: SignUpRequest): Promise<void> {
+        this.tryDecryptUsernameAndPassword(signUpRequest);
         if (await this.prisma.user.findUnique({ where: { userId: signUpRequest.id }})) {
             throw new AuthenticationError(ERROR_MESSAGES.Auth.UserIdAlreadyExists);
         }
@@ -68,6 +70,7 @@ export class AuthService implements AuthServiceInterface {
     }
 
     async login(loginRequest: LoginRequest, response: Response): Promise<StringResponse> {
+        this.tryDecryptUsernameAndPassword(loginRequest);
         const user = await this.prisma.user.findUnique({
             where: {
                 username: loginRequest.username
@@ -196,6 +199,17 @@ export class AuthService implements AuthServiceInterface {
         }
         catch {
             return undefined;
+        }
+    }
+
+    private tryDecryptUsernameAndPassword(request: { username: string, password: string }) {
+        try {
+            this.decryptUsernameAndPassword(request);
+        }
+        catch(err) {
+            if (!env.isDevelopment) {
+                throw err;
+            }
         }
     }
 
