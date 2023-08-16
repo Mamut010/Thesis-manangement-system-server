@@ -1,13 +1,15 @@
 /* eslint-disable */
 
 import { inject, injectable } from "inversify";
-import { BachelorThesisEvaluationDto, BachelorThesisRegistrationDto } from "../../../shared/dtos";
+import { BachelorThesisAssessmentDto, BachelorThesisEvaluationDto, BachelorThesisRegistrationDto, OralDefenseAssessmentDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { 
     DateField, 
     FormField, 
     FormFillerInterface, 
     ImageButtonField, 
+    NumberField, 
+    NumberFieldOptions, 
     RadioButtonField, 
     TextField 
 } from "../../../lib/form-filler";
@@ -74,6 +76,42 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisRegistration.path, fields);
     }
 
+    async generateBachelorThesisAssessment(data: BachelorThesisAssessmentDto): Promise<Buffer> {
+        const fields: FormField[] = [];
+        const numberOptions: NumberFieldOptions = { format: { maximumFractionDigits: 2 } };
+
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.TitleOfBachelorThesis, data.thesisTitle));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.FutherParticipants, data.furtherParticipants));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.Surname, data.surname));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.FirstExaminerName, data.supervisor1Title));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.SecondExaminerName, data.supervisor2Title));
+        fields.push(new DateField(TEMPLATE_FIELDS.BachelorThesisAssessment.AssessmentDate, data.assessmentDate));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.Forename, data.forename));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.MatriculationNo, data.studentId.toString()));
+        fields.push(new RadioButtonField(
+            TEMPLATE_FIELDS.BachelorThesisAssessment.IndividualOrGroupStudy.Name,
+            data.furtherParticipants 
+                ? TEMPLATE_FIELDS.BachelorThesisAssessment.IndividualOrGroupStudy.Options.Group
+                : TEMPLATE_FIELDS.BachelorThesisAssessment.IndividualOrGroupStudy.Options.Individual
+            ));
+        fields.push(new NumberField(TEMPLATE_FIELDS.BachelorThesisAssessment.FirstExaminerGrade, data.supervisor1Grade, numberOptions));
+        fields.push(new NumberField(TEMPLATE_FIELDS.BachelorThesisAssessment.SecondExaminerGrade, data.supervisor2Grade, numberOptions));
+        fields.push(new NumberField(TEMPLATE_FIELDS.BachelorThesisAssessment.OverallGrade, data.overallGrade, numberOptions));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.AssessmentOfTheBachelorThesis, data.assessmentDescription));
+
+        const signatures = await this.getSignatures('bachelorThesisAssessment', data.id);
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.BachelorThesisAssessment.Signature1stExaminer, 
+            signatures.supervisor1Signature
+            ));
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.BachelorThesisAssessment.Signature2ndExaminer, 
+            signatures.supervisor2Signature
+            ));
+
+        return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisAssessment.path, fields);
+    }
+
     async generateBachelorThesisEvaluation(data: BachelorThesisEvaluationDto): Promise<Buffer> {
         const fields: FormField[] = [];
 
@@ -99,11 +137,55 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisEvaluation.path, fields);
     }
 
+    async generateOralDefenseAssessment(data: OralDefenseAssessmentDto): Promise<Buffer> {
+        const fields: FormField[] = [];
+        const numberOptions: NumberFieldOptions = { format: { maximumFractionDigits: 2 } };
+
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.Record, data.record));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.Surname, data.surname));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.Forename, data.forename));
+        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseAssessment.Date, data.dateDefense));
+        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseAssessment.Start, data.startDate));
+        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseAssessment.Finish, data.finishDate));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.FirstExaminerName, data.supervisor1Title));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.SecondExaminerName, data.supervisor2Title));
+        fields.push(new NumberField(TEMPLATE_FIELDS.OralDefenseAssessment.FirstExaminerGrade, data.supervisor1Grade, numberOptions));
+        fields.push(new NumberField(TEMPLATE_FIELDS.OralDefenseAssessment.SecondExaminerGrade, data.supervisor2Grade, numberOptions));
+        fields.push(new NumberField(TEMPLATE_FIELDS.OralDefenseAssessment.OverallGrade, data.overallGrade, numberOptions));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.MatriculationNo, data.studentId.toString()));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.Place, data.placeDefense));
+        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseAssessment.AssessmentDate, data.assessmentDate));
+        fields.push(new RadioButtonField(
+            TEMPLATE_FIELDS.OralDefenseAssessment.SufficientStateOfHealth.Name,
+            data.stateOfHealth
+                ? TEMPLATE_FIELDS.OralDefenseAssessment.SufficientStateOfHealth.Options.Yes
+                : TEMPLATE_FIELDS.OralDefenseAssessment.SufficientStateOfHealth.Options.No
+            ));
+
+        const signatures = await this.getSignatures('oralDefenseAssessment', data.id);
+
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.OralDefenseAssessment.Signature1stExaminer, 
+            signatures.supervisor1Signature
+            ));
+        fields.push(new ImageButtonField(
+            TEMPLATE_FIELDS.OralDefenseAssessment.Signature2ndExaminer, 
+            signatures.supervisor2Signature
+            ));
+
+        return this.pdfFormFiller.fill(ASSETS.Templates.OralDefenseAssessment.path, fields);
+    }
+
     private addThesisTitleToBachelorThesisRegistration(fields: FormField[], data: BachelorThesisRegistrationDto) {
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.TitleOfBachelorThesis[0], data.thesisTitle));
     }
 
-    private async getSignatures(model: 'bachelorThesisRegistration' | 'bachelorThesisAssessment', id: number) {
+    private async getSignatures(
+        model: 'bachelorThesisRegistration' 
+            | 'bachelorThesisAssessment' 
+            | 'oralDefenseRegistration' 
+            | 'oralDefenseAssessment', 
+        id: number) {
         const signatures = await (this.prisma[model] as any).findUniqueOrThrow({
             where: { id },
             select: {

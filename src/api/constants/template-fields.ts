@@ -34,6 +34,29 @@ export const TEMPLATE_FIELDS = {
         CoAssessorDate: 'Co-Assessor Date',
         AuthorDate: 'Author Date',
     },
+    BachelorThesisAssessment: {
+        TitleOfBachelorThesis: 'Title of bachelor thesis',
+        FutherParticipants: 'Further participants',
+        Surname: 'Surname',
+        FirstExaminerName: '1st Examiner Name',
+        SecondExaminerName: '2nd Examiner Name',
+        AssessmentDate: 'Date',
+        OverallGrade: 'Overall grade',
+        Forename: 'Forename',
+        MatriculationNo: 'Matriculation Number',
+        IndividualOrGroupStudy: {
+            Name: 'Study',
+            Options: {
+                Individual: 'Individual study',
+                Group: 'Group study'
+            },
+        },
+        FirstExaminerGrade: '1st Examiner Grade',
+        SecondExaminerGrade: '2nd Examiner Grade',
+        Signature1stExaminer: 'Signature 1st Examiner',
+        Signature2ndExaminer: 'Signature 2nd Examiner',
+        AssessmentOfTheBachelorThesis: 'Assessment of the bachelor thesis',
+    },
     BachelorThesisEvaluation: {
         MrOrMs: {
             Name: 'Title',
@@ -48,5 +71,30 @@ export const TEMPLATE_FIELDS = {
         ThesisTitle: 'Thesis Title',
         Date: 'Date',
         Signature1stExaminer: 'Signature 1st Examiner',
+    },
+    OralDefenseAssessment: {
+        Record: 'Record',
+        Surname: 'Surname',
+        Date: 'Date',
+        Start: 'Start',
+        FirstExaminerName: '1st Examiner Name',
+        SecondExaminerName: '2nd Examiner Name',
+        OverallGrade: 'Overall grade',
+        Forename: 'Forename',
+        MatriculationNo: 'Matriculation Number',
+        Place: 'Place',
+        Finish: 'Finish',
+        SufficientStateOfHealth: {
+            Name: 'Sufficient state of health',
+            Options: {
+                Yes: 'Yes',
+                No: 'No',
+            }
+        },
+        FirstExaminerGrade: '1st Examiner Grade',
+        SecondExaminerGrade: '2nd Examiner Grade',
+        AssessmentDate: 'Assessment date',
+        Signature1stExaminer: 'Signature 1st Examiner',
+        Signature2ndExaminer: 'Signature 2nd Examiner',
     }
 } as const

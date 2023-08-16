@@ -9,7 +9,7 @@ export * from './constants/images';
 export * from './types/form-field-handle-options';
 export * from './types/form-fill-request';
 export * from './types/path-or-typed-array';
-export * from './types/supported-image-type';
+export * from './types/utility-types';
 
 export * from './form-field-handlers/pdf-form-field-handler';
 
