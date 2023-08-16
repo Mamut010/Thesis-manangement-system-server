@@ -3,7 +3,7 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
-import { IOServer } from "../../contracts/types/io";
+import { IOServer, NotificationsNsp } from "../../contracts/types/io";
 import { IO_NAMESPACES } from "../../ws/constants/io-namespaces";
 import { NotificationInfo } from "../types/notification";
 import { NotificationServiceInterface } from "../interfaces";
@@ -18,13 +18,15 @@ import { SERVER_TO_CLIENT_EVENTS } from "../../contracts/constants/io";
 
 @injectable()
 export class NotificationService implements NotificationServiceInterface {
+    private notificationsNsp: NotificationsNsp.IONotificationsNamespace;
+
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface,
         @inject(INJECTION_TOKENS.IOServer) private io: IOServer,
         @inject(INJECTION_TOKENS.WsSetupService) private wsSetupService: WsSetupServiceInterface) {
-
+        this.notificationsNsp = this.io.of(IO_NAMESPACES.Notifications);
     }
 
     async getReceivedNotifications(userId: number, queryRequest: NotificationsQueryRequest)
@@ -55,10 +57,9 @@ export class NotificationService implements NotificationServiceInterface {
 
         const dto = this.plainTransformer.toNotification(notification);
 
-        this.io
-            .of(IO_NAMESPACES.Notifications)
+        this.notificationsNsp
             .to(this.wsSetupService.getRoom(notificationInfo.receiverId))
-            .emit(SERVER_TO_CLIENT_EVENTS.Notification.Received, dto);
+            .emit(SERVER_TO_CLIENT_EVENTS.Notifications.Received, dto);
 
         return dto;
     }

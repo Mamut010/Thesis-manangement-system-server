@@ -18,7 +18,7 @@ export class NotificationController extends BaseSocketController {
         super(wsSetupService);
     }
 
-    @OnMessage(CLIENT_TO_SERVER_EVENTS.Notification.MarkAsRead)
+    @OnMessage(CLIENT_TO_SERVER_EVENTS.Notifications.MarkAsRead)
     async markAsRead(@ConnectedSocket() socket: IOSocket, @MessageBody() msg: NotificationMarkAsReadRequest, 
         @MessageAck() ack: (count: number) => any) {
         await this.notificationService.markAsRead(socket.data.user.userId, msg.ids, ack);
