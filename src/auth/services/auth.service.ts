@@ -23,18 +23,19 @@ import {
     UserRepoInterface, 
     RefreshTokenRepoInterface, 
     JwtServiceInterface,
-    HashServiceInterface,
+    CryptoServiceInterface,
     JwtExtractorServiceInterface
 } from '../../shared/interfaces';
 import { StringResponse } from '../../contracts/responses/string.response';
 import { StringArrayResponse } from '../../contracts/responses/string-array.response';
+import { BadRequestError } from '../../contracts/errors/bad-request.error';
 
 @injectable()
 export class AuthService implements AuthServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
-        @inject(INJECTION_TOKENS.HashService) private hashService: HashServiceInterface,
+        @inject(INJECTION_TOKENS.CryptoService) private cryptoService: CryptoServiceInterface,
         @inject(INJECTION_TOKENS.JwtService) private jwtService: JwtServiceInterface,
         @inject(INJECTION_TOKENS.JwtExtractor) private jwtExtractor: JwtExtractorServiceInterface,
         @inject(INJECTION_TOKENS.JwtCookieHandler) private jwtCookieHandler: JwtCookieHandlerInterface,
@@ -59,7 +60,7 @@ export class AuthService implements AuthServiceInterface {
         const userCreatingRequest = new UserCreateRequestDto();
         userCreatingRequest.userId = signUpRequest.id;
         userCreatingRequest.username = signUpRequest.username;
-        userCreatingRequest.password = await this.hashService.hash(signUpRequest.password);
+        userCreatingRequest.password = await this.cryptoService.hash(signUpRequest.password);
         userCreatingRequest.email = signUpRequest.email;
         userCreatingRequest.role = plainToInstanceExactMatch(Role, role);
 
@@ -77,7 +78,7 @@ export class AuthService implements AuthServiceInterface {
         });
 
         if (!user ||
-            !(await this.hashService.verifyHash(loginRequest.password, user.password))) {
+            !(await this.cryptoService.verifyHash(loginRequest.password, user.password))) {
             throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidLoginCredentials);
         }
 
@@ -90,7 +91,7 @@ export class AuthService implements AuthServiceInterface {
         await this.refreshTokenRepo.deleteAll(user.userId);
         await this.refreshTokenRepo.create(plainToInstanceExactMatch(RefreshToken, {
             userId: user.userId, 
-            token: await this.hashService.hash(refreshToken), 
+            token: await this.cryptoService.hash(refreshToken), 
             exp: this.jwtService.getTokenExp(refreshToken),
         }));
         await this.jwtCookieHandler.attachRefreshTokenToCookie(response, refreshToken);
@@ -160,7 +161,7 @@ export class AuthService implements AuthServiceInterface {
                 throw new AuthenticationError(ERROR_MESSAGES.Auth.InvalidEmbeddedCredentials);
             }
             else if (!user.refreshToken ||
-                !(await this.hashService.verifyHash(refreshToken, user.refreshToken.token))) {
+                !(await this.cryptoService.verifyHash(refreshToken, user.refreshToken.token))) {
                 throw new AuthenticationError(ERROR_MESSAGES.Auth.InvalidRefreshToken);
             }
     
@@ -195,6 +196,16 @@ export class AuthService implements AuthServiceInterface {
         }
         catch {
             return undefined;
+        }
+    }
+
+    private decryptUsernameAndPassword(request: { username: string, password: string }) {
+        try {
+            request.username = this.cryptoService.decryptAsString(request.username);
+            request.password = this.cryptoService.decryptAsString(request.password);
+        }
+        catch {
+            throw new BadRequestError(ERROR_MESSAGES.Auth.InvalidCredentials);
         }
     }
 }

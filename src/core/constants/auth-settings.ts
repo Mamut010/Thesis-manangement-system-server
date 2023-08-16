@@ -19,6 +19,12 @@ export const AUTH_SETTINGS = {
     Hash: {
         SaltRounds: 10,
     },
+    Cipher: {
+        AlgorithmKey: env.auth.cipherSecret,
+        AlgorithmName: 'aes-128-gcm',
+        AlgorithmNonceSize: 12,
+        AlgorithmTagSize: 16,
+    },
     Helmet: {
         HstsMaxAge: 60 * 60 * 24 * 365 // 1 year
     }

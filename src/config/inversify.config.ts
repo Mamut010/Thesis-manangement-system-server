@@ -42,7 +42,7 @@ import {
     RefreshTokenRepoInterface, 
     MailServiceInterface,
     JwtServiceInterface,
-    HashServiceInterface,
+    CryptoServiceInterface,
     JwtExtractorServiceInterface,
     UuidServiceInterface,
     NotificationServiceInterface
@@ -54,7 +54,7 @@ import {
 import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
 import { 
     BearerJwtExtractorService,
-    HashService,
+    CryptoService,
     JwtService, 
     NotificationService, 
     SMTPMailService, 
@@ -130,8 +130,8 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {
     container
-        .bind<HashServiceInterface>(INJECTION_TOKENS.HashService)
-        .to(HashService)
+        .bind<CryptoServiceInterface>(INJECTION_TOKENS.CryptoService)
+        .to(CryptoService)
         .inRequestScope();
 
     container

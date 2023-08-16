@@ -65,6 +65,7 @@ export const env = {
         accessToken: getOsEnv('ACCESS_TOKEN_SECRET'),
         refreshToken: getOsEnv('REFRESH_TOKEN_SECRET'),
         cookieSecret: getOsEnv('COOKIE_SECRET'),
+        cipherSecret: getOsEnv('CIPHER_SECRET'),
     },
     cors: {
         allowOrigins: getOsEnvArray('ALLOW_ORIGINS')

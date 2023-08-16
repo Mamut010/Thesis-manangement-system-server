@@ -46,7 +46,7 @@ const WS_SERVICE_TOKENS = {
 const SHARED_SERVICE_TOKENS = {
     MailService: Symbol.for('MailService'),
     JwtService: Symbol.for('JwtService'),
-    HashService: Symbol.for('HashService'),
+    CryptoService: Symbol.for('CryptoService'),
     JwtExtractor: Symbol.for('JwtExtractor'),
     NotificationService: Symbol.for('NotificationService'),
     UuidService: Symbol.for('UuidService'),

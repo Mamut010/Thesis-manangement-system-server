@@ -1,5 +1,6 @@
 export const ERROR_MESSAGES = {
     Auth: {
+        InvalidCredentials: 'Invalid credentials',
         InvalidLoginCredentials: 'Wrong username or password',
         InvalidEmbeddedCredentials: 'Invalid embedded credentials',
         InvalidRefreshToken: 'Invalid refresh token',
