@@ -55,6 +55,6 @@ export namespace MainNsp {
     export type IOSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
 }
 
-// Type aliases for convience
+// Type aliases for convenience
 export type IOServer = MainNsp.IOServer;
 export type IOSocket = MainNsp.IOSocket;
