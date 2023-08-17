@@ -18,7 +18,9 @@ export function banner(log: Logger, server: ServerType): void {
         log.info(`Version      : ${env.app.version}`);
         log.info(``);
         if(env.swagger.enabled) 
-            log.info(`API Info     : ${route(server)}${env.swagger.route}`);
+            log.info(`API Info       : ${route(server)}${env.swagger.route}`);
+        if(env.socketAdminUI.enabled)
+            log.info(`Socket Admin UI: ${env.socketAdminUI.url}`);
         log.info('-------------------------------------------------------');
         log.info('');
     } else {
