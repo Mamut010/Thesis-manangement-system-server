@@ -48,14 +48,12 @@ export class PlainTransformer implements PlainTransformerInterface {
     public toAdminInfo(plain: PlainAdmin): AdminInfoDto {
         const dto = plainToInstanceExactMatch(AdminInfoDto, flattenObject(plain));
         dto.adminId = plain.userId;
-
         return dto;
     }
 
     public toStudentInfo(plain: PlainStudent): StudentInfoDto {
         const dto = plainToInstanceExactMatch(StudentInfoDto, flattenObject(plain));
         dto.studentId = plain.userId;
-        
         return dto;
     }
 
@@ -98,59 +96,46 @@ export class PlainTransformer implements PlainTransformerInterface {
     }
 
     public toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto {
-        const dto = plainToInstanceExactMatch(BachelorThesisRegistrationDto, flattenObject(plain, {
-            keepDuplicate: true,
-            transformedProps: PlainTransformer.bachelorThesisAndOralDefenseRelations,
-        }));
-        
+        const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisRegistrationDto, plain);
         return dto;
     }
 
     public toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto {
-        const dto = plainToInstanceExactMatch(OralDefenseRegistrationDto, flattenObject(plain, {
-            keepDuplicate: true,
-            transformedProps: PlainTransformer.bachelorThesisAndOralDefenseRelations,
-        }));
-        
+        const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseRegistrationDto, plain);
         return dto;
     }
 
     public toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto {
-        const dto = plainToInstanceExactMatch(BachelorThesisAssessmentDto, flattenObject(plain, {
-            keepDuplicate: true,
-            transformedProps: PlainTransformer.bachelorThesisAndOralDefenseRelations,
-        }));
-        if (dto.supervisor1Grade !== null && dto.supervisor2Grade !== null) {
-            dto.overallGrade = (dto.supervisor1Grade + dto.supervisor2Grade) / 2;
-        }
-        else {
-            dto.overallGrade = null;
-        }
-        
+        const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisAssessmentDto, plain);
+        dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
         return dto;
     }
 
     public toOralDefenseAssessment(plain: PlainOralDefenseAssessment): OralDefenseAssessmentDto {
-        const dto = plainToInstanceExactMatch(OralDefenseAssessmentDto, flattenObject(plain, {
-            keepDuplicate: true,
-            transformedProps: PlainTransformer.bachelorThesisAndOralDefenseRelations,
-        }));
-        if (dto.supervisor1Grade !== null && dto.supervisor2Grade !== null) {
-            dto.overallGrade = (dto.supervisor1Grade + dto.supervisor2Grade) / 2;
-        }
-        else {
-            dto.overallGrade = null;
-        }
-
+        const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseAssessmentDto, plain);
+        dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
         return dto;
     }
 
     public toBachelorThesisEvaluation(plain: PlainBachelorThesisEvaluation): BachelorThesisEvaluationDto {
-        const dto = plainToInstanceExactMatch(BachelorThesisEvaluationDto, flattenObject(plain, {
+        const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisEvaluationDto, plain);
+        return dto;
+    }
+
+    private toBachelorThesisOrOralDefenseDto<T>(cls: new (...args: any[]) => T, plain: object): T {
+        return plainToInstanceExactMatch(cls, flattenObject(plain, {
             keepDuplicate: true,
             transformedProps: PlainTransformer.bachelorThesisAndOralDefenseRelations,
         }));
+    }
 
-        return dto;
+    private computeOverallGrade(...grades: (number | null | undefined)[]) {
+        if (grades.length > 0 
+            && grades.every((grade: number | null | undefined): grade is number => typeof grade === 'number')) {
+            return grades.reduce((total, grade) => total + grade, 0) / grades.length;
+        }
+        else {
+            return null;
+        }
     }
 }
