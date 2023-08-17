@@ -24,9 +24,9 @@ export class NotificationService implements NotificationServiceInterface {
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface,
-        @inject(INJECTION_TOKENS.IOServer) private io: IOServer,
-        @inject(INJECTION_TOKENS.WsSetupService) private wsSetupService: WsSetupServiceInterface) {
-        this.notificationsNsp = this.io.of(IO_NAMESPACES.Notifications);
+        @inject(INJECTION_TOKENS.WsSetupService) private wsSetupService: WsSetupServiceInterface,
+        @inject(INJECTION_TOKENS.IOServer) io: IOServer) {
+        this.notificationsNsp = io.of(IO_NAMESPACES.Notifications);
     }
 
     async getReceivedNotifications(userId: number, queryRequest: NotificationsQueryRequest)
@@ -56,15 +56,16 @@ export class NotificationService implements NotificationServiceInterface {
         });
 
         const dto = this.plainTransformer.toNotification(notification);
+        const room = this.wsSetupService.getRoom(notificationInfo.receiverId);
 
         this.notificationsNsp
-            .to(this.wsSetupService.getRoom(notificationInfo.receiverId))
+            .to(room)
             .emit(SERVER_TO_CLIENT_EVENTS.Notifications.Received, dto);
 
         return dto;
     }
 
-    async markAsRead(userId: number, ids: number[], ack: (count: number) => any): Promise<number> {
+    async markAsRead(userId: number, ids: number[]): Promise<number> {
         const notifications = await this.prisma.notification.updateMany({
             where: {
                 id: {
@@ -74,14 +75,13 @@ export class NotificationService implements NotificationServiceInterface {
                     some: {
                         userId: userId
                     }
-                }
+                },
+                isRead: false,
             },
             data: {
                 isRead: true
             }
         });
-
-        ack(notifications.count);
 
         return notifications.count;
     }

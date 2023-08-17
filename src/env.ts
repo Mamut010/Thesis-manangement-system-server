@@ -98,7 +98,7 @@ export const env = {
     socketAdminUI: {
         enabled: toBool(getOsEnv('SOCKET_ADMIN_ENABLED')),
         url: getOsEnv('SOCKET_ADMIN_URL'),
-        nsp: getOsEnvOptional('SOCKET_ADMIN_NSP'),
+        nsp: getOsEnv('SOCKET_ADMIN_NSP'),
         username: getOsEnv('SOCKET_ADMIN_USERNAME'),
         password: getOsEnv('SOCKET_ADMIN_PASSWORD'),
     }

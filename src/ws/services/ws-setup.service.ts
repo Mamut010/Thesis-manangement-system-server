@@ -2,9 +2,9 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { JwtExtractorServiceInterface, JwtServiceInterface, UuidServiceInterface } from "../../shared/interfaces";
 import { WsSetupServiceInterface } from "../interfaces";
-import { IOSocket } from "../../contracts/types/io";
-import { AuthenticationError } from "../../contracts/errors/authentication.error";
-import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
+import { IODefaultSocket } from "../../contracts/types/io";
+import { WsAuthenticateRequest } from "../../contracts/requests/ws-authenticate.request";
+import { WsAuthenticateResponse } from "../../contracts/responses/ws-authenticate.response";
 
 @injectable()
 export class WsSetupService implements WsSetupServiceInterface {
@@ -15,10 +15,16 @@ export class WsSetupService implements WsSetupServiceInterface {
         
     }
 
-    async onConnection(socket: IOSocket): Promise<void> {
-        // Force all connection from the same user join the same room.
+    async onConnection(socket: IODefaultSocket): Promise<void> {
+        // Force all connection from the same user to join the same room.
         // This way, every emit to the 'userId' room will be reflected on all tabs if the client opens multiple tabs
-        await socket.join(this.getRoom(socket.data.user.userId));
+        const room = this.getRoom(socket.data.user.userId);
+        await socket.join(room);
+    }
+
+    async onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse | undefined> {
+        // TODO: Implement authentication mechanism
+        return { authenticated: true };
     }
 
     getRoom(userId: number): string {

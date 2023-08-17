@@ -1,11 +1,11 @@
 import { inject, injectable } from "inversify";
-import { ConnectedSocket, MessageAck, MessageBody, OnMessage, SocketController } from "socket-controllers";
+import { ConnectedSocket, EmitOnSuccess, MessageBody, OnMessage, SocketController } from "socket-controllers";
 import { IO_NAMESPACES } from "../constants/io-namespaces";
 import { BaseSocketController } from "../bases/base.controller";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { NotificationServiceInterface } from "../../shared/interfaces";
 import { WsSetupServiceInterface } from "../interfaces";
-import { CLIENT_TO_SERVER_EVENTS } from "../../contracts/constants/io";
+import { CLIENT_TO_SERVER_EVENTS, SERVER_TO_CLIENT_EVENTS } from "../../contracts/constants/io";
 import { IOSocket } from "../../contracts/types/io";
 import { NotificationMarkAsReadRequest } from "../../contracts/requests/notification-mark-as-read.request";
 
@@ -19,8 +19,8 @@ export class NotificationController extends BaseSocketController {
     }
 
     @OnMessage(CLIENT_TO_SERVER_EVENTS.Notifications.MarkAsRead)
-    async markAsRead(@ConnectedSocket() socket: IOSocket, @MessageBody() msg: NotificationMarkAsReadRequest, 
-        @MessageAck() ack: (count: number) => any) {
-        await this.notificationService.markAsRead(socket.data.user.userId, msg.ids, ack);
+    @EmitOnSuccess(SERVER_TO_CLIENT_EVENTS.Notifications.MarkAsReadSuccess)
+    async markAsRead(@ConnectedSocket() socket: IOSocket, @MessageBody() msg: NotificationMarkAsReadRequest) {
+        return await this.notificationService.markAsRead(socket.data.user.userId, msg.ids);
     }
 }

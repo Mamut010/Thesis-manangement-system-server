@@ -12,5 +12,5 @@ export interface NotificationServiceInterface {
         
     sendNotification(notificationInfo: NotificationInfo): Promise<NotificationDto>;
     
-    markAsRead(userId: number, ids: number[], ack: (count: number) => any): Promise<number>;
+    markAsRead(userId: number, ids: number[]): Promise<number>;
 }
