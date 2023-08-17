@@ -3,6 +3,7 @@ import { TextField } from "./text-field";
 import { isDateObject } from "../../../utils/object-helpers";
 import { DEFAULTS } from "../constants/default";
 import { computeDateTimeLocale } from "../utils/locale-helpers";
+import { DateFieldOptions } from "../types/utility-types";
 
 export class DateField extends TextField {
     private _date?: Date | null;
@@ -12,11 +13,10 @@ export class DateField extends TextField {
     constructor(
         name: string, 
         date?: Date | null, 
-        format: Intl.DateTimeFormatOptions | undefined = DEFAULTS.DateFormat,
-        locale: string | undefined = DEFAULTS.Locale) {
+        options?: DateFieldOptions) {
         super(name);
-        this._format = format;
-        this._locale = computeDateTimeLocale(locale);
+        this._format = options?.format ?? DEFAULTS.DateFormat;
+        this._locale = computeDateTimeLocale(options?.locale ?? DEFAULTS.Locale);
         this.date = date;
     }
 

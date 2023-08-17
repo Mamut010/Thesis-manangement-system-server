@@ -141,6 +141,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
 
     async generateOralDefenseRegistration(data: OralDefenseRegistrationDto): Promise<Buffer> {
         const fields: FormField[] = [];
+        const timeConfig = { locale: LOCALES.EN, format: DATETIME_FORMATS.TIME_12HOUR };
 
         fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.DateReceived, data.dateReceived));
         fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.DateOfAdmission, data.admissionDate));
@@ -151,8 +152,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.SecondExaminerName, data.supervisor2Title));
         fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.Date, data.proposedDate));
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Weekday, data.weekday));
-        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.Time, data.proposedDate, 
-            DATETIME_FORMATS.TIME_12HOUR, LOCALES.EN));
+        fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.Time, data.proposedDate, timeConfig));
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Room, data.room));
         fields.push(new RadioButtonField(
             TEMPLATE_FIELDS.OralDefenseRegistration.AreSpectatorsAllowed.Name,
