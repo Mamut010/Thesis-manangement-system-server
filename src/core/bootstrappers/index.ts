@@ -6,3 +6,4 @@ export * from './ioc.bootstrapper';
 export * from './winston.bootstrapper';
 export * from './swagger.bootstrapper';
 export * from './io.bootstrapper';
+export * from './socket-admin-ui.bootstrapper'

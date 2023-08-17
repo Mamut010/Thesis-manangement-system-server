@@ -12,7 +12,8 @@ import {
     bootstrapIoc, 
     bootstrapWinston, 
     bootstrapSwagger, 
-    bootstrapIo
+    bootstrapIo,
+    bootstrapSocketAdminUI
 } from './core/bootstrappers';
 
 const log = new Logger(__filename);
@@ -28,6 +29,7 @@ bootstrap({
         bootstrapApiServer,
         bootstrapIo,
         bootstrapSwagger,
+        bootstrapSocketAdminUI,
         bootstrapApiHome,
     ],
     externalDeps: {
