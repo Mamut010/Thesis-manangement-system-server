@@ -1,5 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
 
-export function getJwtPayloadExpAsDate(payload: JwtPayload) {
-    return new Date((payload.exp ?? 0) * 1000);
+export function getJwtPayloadExpAsDate(exp: number) {
+    return new Date(exp * 1000);
 }

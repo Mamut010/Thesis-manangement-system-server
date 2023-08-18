@@ -67,7 +67,7 @@ export class JwtService implements JwtServiceInterface {
 
     getTokenExp(token: string): Date {
         const payload = jwt.decode(token) as jwt.JwtPayload | null;
-        return getJwtPayloadExpAsDate(payload ?? {});
+        return getJwtPayloadExpAsDate(payload?.exp ?? 0);
     }
 
     private getSettingsByTokenType(tokenType: JwtTokenType) {
