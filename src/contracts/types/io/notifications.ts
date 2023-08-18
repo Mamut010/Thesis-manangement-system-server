@@ -12,7 +12,7 @@ import {
 export interface ServerToClientNotificationsEvents extends ServerToClientDefaultEvents {
     [SERVER_TO_CLIENT_EVENTS.Notifications.Received]: 
         (dto: NotificationDto) => void;
-    [SERVER_TO_CLIENT_EVENTS.Notifications.MarkAsReadSuccess]:
+    [SERVER_TO_CLIENT_EVENTS.Notifications.MarkAsReadFinished]:
         (count: number) => void;
 }
   
