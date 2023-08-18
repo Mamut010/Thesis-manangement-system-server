@@ -11,21 +11,6 @@ import { JwtServiceInterface } from '../interfaces';
 
 @injectable()
 export class JwtService implements JwtServiceInterface {
-    private getSettingsByTokenType(tokenType: JwtTokenType) {
-        if (tokenType === JWT_TOKEN_TYPES.AccessToken) {
-            return {
-                secret: AUTH_SETTINGS.Jwt.AccessTokenSecret,
-                expiresIn: AUTH_SETTINGS.Jwt.AccessTokenTtl,
-            }
-        }
-        else {
-            return {
-                secret: AUTH_SETTINGS.Jwt.RefreshTokenSecret,
-                expiresIn: AUTH_SETTINGS.Jwt.RefreshTokenTtl,
-            }
-        }
-    }
-
     generateAccessToken(context: JwtAccessContextDto): string {
         const payload = new JwtAccessPayloadDto();
         payload.context = context;
@@ -82,5 +67,20 @@ export class JwtService implements JwtServiceInterface {
     getTokenExp(token: string): Date {
         const exp = (jwt.decode(token) as jwt.JwtPayload).exp ?? 0;
         return new Date(exp * 1000);
+    }
+
+    private getSettingsByTokenType(tokenType: JwtTokenType) {
+        if (tokenType === JWT_TOKEN_TYPES.AccessToken) {
+            return {
+                secret: AUTH_SETTINGS.Jwt.AccessTokenSecret,
+                expiresIn: AUTH_SETTINGS.Jwt.AccessTokenTtl,
+            }
+        }
+        else {
+            return {
+                secret: AUTH_SETTINGS.Jwt.RefreshTokenSecret,
+                expiresIn: AUTH_SETTINGS.Jwt.RefreshTokenTtl,
+            }
+        }
     }
 }
