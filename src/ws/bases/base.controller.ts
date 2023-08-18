@@ -21,7 +21,7 @@ export abstract class BaseSocketController {
 
     @OnConnect()
     async connect(@ConnectedSocket() socket: IODefaultSocket) {
-        await this.wsSetupService.onConnection(socket);
+        await this.wsSetupService.onConnect(socket);
     }
 
     @OnMessage(CLIENT_TO_SERVER_EVENTS.Default.Authenticate)

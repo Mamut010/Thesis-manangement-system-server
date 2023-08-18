@@ -3,6 +3,6 @@ import { WsAuthenticateResponse } from "../../contracts/responses/ws-authenticat
 import { IODefaultSocket } from "../../contracts/types/io";
 
 export interface WsSetupServiceInterface {
-    onConnection(socket: IODefaultSocket): Promise<void>;
+    onConnect(socket: IODefaultSocket): Promise<void>;
     onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse>;
 }

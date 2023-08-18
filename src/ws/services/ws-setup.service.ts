@@ -21,13 +21,13 @@ export class WsSetupService implements WsSetupServiceInterface {
         
     }
 
-    async onConnection(socket: IODefaultSocket): Promise<void> {
+    async onConnect(socket: IODefaultSocket): Promise<void> {
         // Force all connection from the same user to join the same room.
-        // This way, every emit to the 'userId' room will be reflected on all tabs if the client opens multiple tabs
+        // This way, every emit to the 'userId' room will be reflected on all tabs if the user opens multiple tabs
         const room = this.roomIdGenerator.generate(socket.data.user.userId);
-        await socket.join(room);
-
         const exp = getJwtPayloadExpAsDate(socket.data.authPayload.exp);
+
+        await socket.join(room);
         this.ioRoomTimerManager.startRoomTimer(socket.nsp.name, room, exp);
     }
 
