@@ -31,13 +31,13 @@ export class CryptoService implements CryptoServiceInterface {
 
     encrypt(plaintext: string): Buffer {
         // Generate a 96-bit nonce using a CSPRNG.
-        let nonce = crypto.randomBytes(AUTH_SETTINGS.Cipher.AlgorithmNonceSize);
+        const nonce = crypto.randomBytes(AUTH_SETTINGS.Cipher.AlgorithmNonceSize);
     
         // Create the cipher instance.
-        let cipher = crypto.createCipheriv(AUTH_SETTINGS.Cipher.AlgorithmName, AUTH_SETTINGS.Cipher.AlgorithmKey, nonce);
+        const cipher = crypto.createCipheriv(AUTH_SETTINGS.Cipher.AlgorithmName, AUTH_SETTINGS.Cipher.AlgorithmKey, nonce);
     
         // Encrypt and prepend nonce.
-        let ciphertext = Buffer.concat([ cipher.update(plaintext), cipher.final() ]);
+        const ciphertext = Buffer.concat([ cipher.update(plaintext), cipher.final() ]);
     
         return Buffer.concat([ nonce, ciphertext, cipher.getAuthTag() ]);
     }
@@ -52,13 +52,13 @@ export class CryptoService implements CryptoServiceInterface {
         }
     
         // Create buffers of nonce, ciphertext and tag.
-        let nonce = ciphertextAndNonce.subarray(0, AUTH_SETTINGS.Cipher.AlgorithmNonceSize);
-        let ciphertext = ciphertextAndNonce.subarray(AUTH_SETTINGS.Cipher.AlgorithmNonceSize, 
+        const nonce = ciphertextAndNonce.subarray(0, AUTH_SETTINGS.Cipher.AlgorithmNonceSize);
+        const ciphertext = ciphertextAndNonce.subarray(AUTH_SETTINGS.Cipher.AlgorithmNonceSize, 
             ciphertextAndNonce.length - AUTH_SETTINGS.Cipher.AlgorithmTagSize);
-        let tag = ciphertextAndNonce.subarray(ciphertext.length + AUTH_SETTINGS.Cipher.AlgorithmNonceSize);
+        const tag = ciphertextAndNonce.subarray(ciphertext.length + AUTH_SETTINGS.Cipher.AlgorithmNonceSize);
     
         // Create the cipher instance.
-        let cipher = crypto.createDecipheriv(AUTH_SETTINGS.Cipher.AlgorithmName, AUTH_SETTINGS.Cipher.AlgorithmKey, nonce);
+        const cipher = crypto.createDecipheriv(AUTH_SETTINGS.Cipher.AlgorithmName, AUTH_SETTINGS.Cipher.AlgorithmKey, nonce);
     
         // Decrypt and return result.
         cipher.setAuthTag(tag);

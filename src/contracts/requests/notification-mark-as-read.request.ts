@@ -5,6 +5,9 @@ export class NotificationMarkAsReadRequest {
     @Expose()
     @IsDefined()
     @IsNumber(undefined, { each: true })
-    @Transform(({ value }) => !Array.isArray(value) ? [value] : value)
+    @Transform((params) => { 
+        const value: unknown = params.value; 
+        return !Array.isArray(value) ? [value] : value as unknown[]; 
+    })
     ids!: number[]
 }

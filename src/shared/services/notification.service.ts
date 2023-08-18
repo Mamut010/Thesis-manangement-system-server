@@ -3,7 +3,7 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
-import { IOServer, NotificationsNsp } from "../../contracts/types/io";
+import { IOServer, NotificationsNsp } from "../../contracts/types/io/io";
 import { IO_NAMESPACES } from "../../ws/constants/io-namespaces";
 import { NotificationInfo } from "../types/notification";
 import { NotificationServiceInterface } from "../interfaces";
@@ -122,11 +122,11 @@ export class NotificationService implements NotificationServiceInterface {
 
         const response = new NotificationsQueryResponse();
         if (type === 'sent') {
-            response.content = userWithRecords.sentNotifications.map(this.plainTransformer.toNotification);
+            response.content = userWithRecords.sentNotifications.map(item => this.plainTransformer.toNotification(item));
             response.count = userWithCounts._count.sentNotifications;
         }
         else {
-            response.content = userWithRecords.receivedNotifications.map(this.plainTransformer.toNotification);
+            response.content = userWithRecords.receivedNotifications.map(item => this.plainTransformer.toNotification(item));
             response.count = userWithCounts._count.receivedNotifications;
         }
 
