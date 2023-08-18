@@ -2,9 +2,10 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { JwtExtractorServiceInterface, JwtServiceInterface, UuidServiceInterface } from "../../shared/interfaces";
 import { WsSetupServiceInterface } from "../interfaces";
-import { IODefaultSocket } from "../../contracts/types/io";
 import { WsAuthenticateRequest } from "../../contracts/requests/ws-authenticate.request";
 import { WsAuthenticateResponse } from "../../contracts/responses/ws-authenticate.response";
+import { sleepThenValue } from "../../utils/timer-helpers";
+import { IODefaultSocket } from "../../contracts/types/io";
 
 @injectable()
 export class WsSetupService implements WsSetupServiceInterface {
@@ -24,6 +25,7 @@ export class WsSetupService implements WsSetupServiceInterface {
 
     async onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse | undefined> {
         // TODO: Implement authentication mechanism
+        await sleepThenValue(1000, undefined);
         return { authenticated: true };
     }
 

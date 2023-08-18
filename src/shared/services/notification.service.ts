@@ -3,7 +3,6 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
-import { IOServer, NotificationsNsp } from "../../contracts/types/io/io";
 import { IO_NAMESPACES } from "../../ws/constants/io-namespaces";
 import { NotificationInfo } from "../types/notification";
 import { NotificationServiceInterface } from "../interfaces";
@@ -15,10 +14,11 @@ import { NotificationsQueryRequest } from "../../contracts/requests/notification
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { Notification } from "../../core/models";
 import { SERVER_TO_CLIENT_EVENTS } from "../../contracts/constants/io";
+import { IONotificationsNamespace, IOServer } from "../../contracts/types/io";
 
 @injectable()
 export class NotificationService implements NotificationServiceInterface {
-    private notificationsNsp: NotificationsNsp.IONotificationsNamespace;
+    private notificationsNsp: IONotificationsNamespace;
 
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,

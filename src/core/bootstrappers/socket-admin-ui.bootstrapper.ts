@@ -1,8 +1,8 @@
 import { instrument } from "@socket.io/admin-ui";
-import { IOServer } from "../../contracts/types/io";
 import { env } from "../../env";
 import { BootstrapSettingInterface, Bootstrapper } from "../../lib/bootstrapper";
 import { hashSync } from "bcrypt";
+import { IOServer } from "../../contracts/types/io";
 
 export const bootstrapSocketAdminUI: Bootstrapper = (settings?: BootstrapSettingInterface) => {
     const io = settings?.getData('io') as IOServer | undefined;

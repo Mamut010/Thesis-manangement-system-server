@@ -1,11 +1,11 @@
 import { Middleware, MiddlewareInterface } from 'socket-controllers';
-import { IODefaultSocket } from '../../contracts/types/io';
 import { inject, injectable } from 'inversify';
 import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';
 import { JwtExtractorServiceInterface, JwtServiceInterface } from '../../shared/interfaces';
 import { AuthenticationError } from '../../contracts/errors/authentication.error';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import { IO_NAMESPACES } from '../constants/io-namespaces';
+import { IODefaultSocket } from '../../contracts/types/io';
 
 @Middleware({ namespace: IO_NAMESPACES.Any })
 @injectable()
@@ -16,7 +16,7 @@ export class AuthMiddleware implements MiddlewareInterface {
 
     }
 
-    async use(socket: IODefaultSocket, next: (err?: any) => any) {
+    async use(socket: IODefaultSocket, next: (err?: any) => unknown) {
         const token: unknown = socket.handshake.auth['token'];
         if (typeof token !== 'string') {
             return next(new AuthenticationError(ERROR_MESSAGES.Auth.InvalidAccessToken));

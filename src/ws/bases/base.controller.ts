@@ -6,12 +6,12 @@ import {
     OnMessage, 
     SkipEmitOnEmptyResult 
 } from "socket-controllers";
-import { IODefaultSocket } from "../../contracts/types/io";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { WsSetupServiceInterface } from "../interfaces";
 import { CLIENT_TO_SERVER_EVENTS, SERVER_TO_CLIENT_EVENTS } from "../../contracts/constants/io";
 import { WsAuthenticateRequest } from "../../contracts/requests/ws-authenticate.request";
+import { IODefaultSocket } from "../../contracts/types/io";
 
 @injectable()
 export abstract class BaseSocketController {
