@@ -5,7 +5,6 @@ import { Server } from "socket.io";
 import { SocketControllers } from "socket-controllers";
 import { env } from "../../env";
 import { ClassTransformOptions } from 'class-transformer';
-import { CORS_OPTIONS } from "../constants/cors-options";
 import { Container } from "inversify";
 import { INJECTION_TOKENS } from "../constants/injection-tokens";
 import { IOServer } from "../../contracts/types/io";
@@ -22,7 +21,12 @@ export const bootstrapIo: Bootstrapper = (settings?: BootstrapSettingInterface) 
     /**
      * Create and configure io instance
      */
-    const io: IOServer = new Server(expressServer, { cors: CORS_OPTIONS });
+    const io: IOServer = new Server(expressServer, { 
+        cors: { 
+            origin: env.socketAdminUI.enabled ? [...env.cors.allowOrigins, env.socketAdminUI.url] : env.cors.allowOrigins,
+            credentials: env.socketAdminUI.enabled
+        } 
+    });
 
     /**
      * Pass io to socket controllers to setup the ws

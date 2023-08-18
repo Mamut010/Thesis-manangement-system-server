@@ -47,7 +47,6 @@ export const env = {
                 },
             },
             ws: {
-                port: normalizePort(process.env.APP_WS_PORT ?? getOsEnv('WS_PORT')) as number,
                 dirs: {
                     controllers: getOsPaths('WS_CONTROLLERS'),
                     middlewares: getOsPaths('WS_MIDDLEWARES'),
