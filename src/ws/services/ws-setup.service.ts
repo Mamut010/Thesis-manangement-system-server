@@ -4,7 +4,7 @@ import { JwtExtractorServiceInterface, JwtServiceInterface, UuidServiceInterface
 import { WsSetupServiceInterface } from "../interfaces";
 import { WsAuthenticateRequest } from "../../contracts/requests/ws-authenticate.request";
 import { WsAuthenticateResponse } from "../../contracts/responses/ws-authenticate.response";
-import { sleepThenValue } from "../../utils/timer-helpers";
+import { sleep } from "../../utils/timer-helpers";
 import { IODefaultSocket } from "../../contracts/types/io";
 
 @injectable()
@@ -25,7 +25,7 @@ export class WsSetupService implements WsSetupServiceInterface {
 
     async onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse | undefined> {
         // TODO: Implement authentication mechanism
-        await sleepThenValue(1000, undefined);
+        await sleep(1000);
         return { authenticated: true };
     }
 
