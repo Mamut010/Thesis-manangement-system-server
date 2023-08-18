@@ -212,59 +212,59 @@ function configWsServerServices(container: Container, settings?: BootstrapSettin
     container
         .bind<WsSetupServiceInterface>(INJECTION_TOKENS.WsSetupService)
         .to(WsSetupService)
-        .inSingletonScope();
+        .inRequestScope();
 }
 
 function configSharedServices(container: Container, settings?: BootstrapSettingInterface) {
     container
         .bind<MailServiceInterface>(INJECTION_TOKENS.MailService)
         .to(SMTPMailService)
-        .inSingletonScope();
+        .inRequestScope();
 
     container
         .bind<JwtServiceInterface>(INJECTION_TOKENS.JwtService)
         .to(JwtService)
-        .inSingletonScope();
+        .inRequestScope();
 
     container
         .bind<JwtExtractorServiceInterface>(INJECTION_TOKENS.JwtExtractor)
         .to(BearerJwtExtractorService)
-        .inSingletonScope();
+        .inRequestScope();
 
     container
         .bind<UuidServiceInterface>(INJECTION_TOKENS.UuidService)
         .to(UuidService)
-        .inSingletonScope();
+        .inRequestScope();
 
     container
         .bind<NotificationServiceInterface>(INJECTION_TOKENS.NotificationService)
         .to(NotificationService)
-        .inSingletonScope();
+        .inRequestScope();
 }
 
 function configUtils(container: Container, settings?: BootstrapSettingInterface) {
     container
         .bind<JwtCookieHandlerInterface>(INJECTION_TOKENS.JwtCookieHandler)
         .to(JwtCookieHandler)
-        .inSingletonScope();
+        .inRequestScope();
 
     container
         .bind<PlainTransformerInterface>(INJECTION_TOKENS.PlainTransformer)
         .to(PlainTransformer)
-        .inSingletonScope();
+        .inRequestScope();
 
     container
         .bind<PrismaQueryCreatorInterface>(INJECTION_TOKENS.PrismaQueryCreator)
         .to(PrismaQueryCreator)
-        .inSingletonScope();
+        .inRequestScope();
 
     container
         .bind<FormFillerInterface>(INJECTION_TOKENS.PdfFormFiller)
         .to(PdfFormFiller)
-        .inSingletonScope();   
+        .inRequestScope();   
 
     container
         .bind<PdfFormGeneratorInterface>(INJECTION_TOKENS.PdfFormGenerator)
         .to(PdfFormGenerator)
-        .inSingletonScope();
+        .inRequestScope();
 }
