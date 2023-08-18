@@ -19,12 +19,12 @@ export class AuthMiddleware implements MiddlewareInterface {
     async use(socket: IODefaultSocket, next: (err?: any) => unknown) {
         const token: unknown = socket.handshake.auth['token'];
         if (typeof token !== 'string') {
-            return next(new AuthenticationError(ERROR_MESSAGES.Auth.InvalidAccessToken));
+            return next(new AuthenticationError(ERROR_MESSAGES.Auth.AccessTokenNotFound));
         }
 
         const jwtToken = await this.jwtExtractor.extract(token);
         if(!jwtToken) {
-            return next(new AuthenticationError(ERROR_MESSAGES.Auth.InvalidAccessToken));
+            return next(new AuthenticationError(ERROR_MESSAGES.Auth.AccessTokenNotFound));
         }
 
         try {

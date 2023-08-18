@@ -58,6 +58,8 @@ const UTIL_TOKENS = {
     PrismaQueryCreator: Symbol.for('PrismaQueryCreator'),
     PdfFormFiller: Symbol.for('PdfFormFiller'),
     PdfFormGenerator: Symbol.for('PdfFormGenerator'),
+    RoomIdGenerator: Symbol.for('RoomIdGenerator'),
+    IORoomTimerManager: Symbol.for('IORoomTimerManager'),
 } as const;
 
 export const INJECTION_TOKENS = {

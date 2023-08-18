@@ -21,7 +21,7 @@ export interface InterServerDefaultEvents {
 
 export interface SocketDefaultData {
     user: AuthorizedUser;
-    authPayload: JwtAccessPayloadDto,
+    authPayload: Omit<JwtAccessPayloadDto, 'context'>,
 }
 
 export type IODefaultServer = Server<

@@ -9,10 +9,10 @@ export async function sleepThenValue<T>(ms: number, value: T, options?: Abortabl
     return setTimeout(ms, value, options);
 }
 
-export async function sleepThenCallback<T>(ms: number, callback: () => Promise<T> | T, options: Abortable)
+export async function sleepThenCallback<T>(ms: number, callback: () => Promise<T> | T, options?: Abortable)
     : Promise<T | undefined> {
     await setTimeout(ms, undefined, options);
-    if (!options.signal?.aborted) {
+    if (!options?.signal?.aborted) {
         return await callback();
     }
 }

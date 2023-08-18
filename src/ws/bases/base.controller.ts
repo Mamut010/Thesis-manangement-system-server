@@ -20,7 +20,7 @@ export abstract class BaseSocketController {
     }
 
     @OnConnect()
-    async connection(@ConnectedSocket() socket: IODefaultSocket) {
+    async connect(@ConnectedSocket() socket: IODefaultSocket) {
         await this.wsSetupService.onConnection(socket);
     }
 

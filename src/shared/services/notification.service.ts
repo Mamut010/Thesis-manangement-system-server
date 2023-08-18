@@ -6,7 +6,6 @@ import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { IO_NAMESPACES } from "../../ws/constants/io-namespaces";
 import { NotificationInfo } from "../types/notification";
 import { NotificationServiceInterface } from "../interfaces";
-import { WsSetupServiceInterface } from "../../ws/interfaces";
 import { PlainTransformerInterface } from "../utils/plain-transformer";
 import { NotificationDto } from "../dtos";
 import { NotificationsQueryResponse } from "../../contracts/responses/notifications-query.response";
@@ -15,6 +14,7 @@ import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { Notification } from "../../core/models";
 import { SERVER_TO_CLIENT_EVENTS } from "../../contracts/constants/io";
 import { IONotificationsNamespace, IOServer } from "../../contracts/types/io";
+import { RoomIdGeneratorInterface } from "../../ws/utils/room-id-generator";
 
 @injectable()
 export class NotificationService implements NotificationServiceInterface {
@@ -24,7 +24,7 @@ export class NotificationService implements NotificationServiceInterface {
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface,
-        @inject(INJECTION_TOKENS.WsSetupService) private wsSetupService: WsSetupServiceInterface,
+        @inject(INJECTION_TOKENS.RoomIdGenerator) private roomIdGenerator: RoomIdGeneratorInterface,
         @inject(INJECTION_TOKENS.IOServer) io: IOServer) {
         this.notificationsNsp = io.of(IO_NAMESPACES.Notifications);
     }
@@ -56,7 +56,7 @@ export class NotificationService implements NotificationServiceInterface {
         });
 
         const dto = this.plainTransformer.toNotification(notification);
-        const room = this.wsSetupService.getRoom(notificationInfo.receiverId);
+        const room = this.roomIdGenerator.generate(notificationInfo.receiverId);
 
         this.notificationsNsp
             .to(room)

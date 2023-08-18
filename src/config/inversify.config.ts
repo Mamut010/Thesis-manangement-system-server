@@ -65,6 +65,8 @@ import { PdfFormGenerator, PdfFormGeneratorInterface } from '../api/utils/pdf-fo
 import { WsSetupServiceInterface } from '../ws/interfaces';
 import { WsSetupService } from '../ws/services';
 import { PlainTransformer, PlainTransformerInterface } from '../shared/utils/plain-transformer';
+import { IORoomTimerManager, IORoomTimerManagerInterface } from '../ws/utils/room-timer';
+import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-generator';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -267,4 +269,14 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
         .bind<PdfFormGeneratorInterface>(INJECTION_TOKENS.PdfFormGenerator)
         .to(PdfFormGenerator)
         .inRequestScope();
+
+    container
+        .bind<RoomIdGeneratorInterface>(INJECTION_TOKENS.RoomIdGenerator)
+        .to(RoomIdGenerator)
+        .inRequestScope();
+
+    container
+        .bind<IORoomTimerManagerInterface>(INJECTION_TOKENS.IORoomTimerManager)
+        .to(IORoomTimerManager)
+        .inSingletonScope();
 }
