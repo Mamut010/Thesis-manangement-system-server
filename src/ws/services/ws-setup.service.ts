@@ -23,7 +23,7 @@ export class WsSetupService implements WsSetupServiceInterface {
         await socket.join(room);
     }
 
-    async onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse | undefined> {
+    async onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse> {
         // TODO: Implement authentication mechanism
         await sleep(1000);
         return { authenticated: true };

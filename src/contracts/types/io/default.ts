@@ -3,10 +3,11 @@ import { AuthorizedUser } from "../../../core/auth-checkers";
 import { WsAuthenticateRequest } from "../../requests/ws-authenticate.request";
 import { WsAuthenticateResponse } from "../../responses/ws-authenticate.response";
 import { CLIENT_TO_SERVER_EVENTS, SERVER_TO_CLIENT_EVENTS } from "../../constants/io";
+import { JwtAccessPayloadDto } from "../../../shared/dtos";
 
 // Default, general definition of all sockets
 export interface ServerToClientDefaultEvents {  
-    [SERVER_TO_CLIENT_EVENTS.Default.AuthenticateSuccess]:
+    [SERVER_TO_CLIENT_EVENTS.Default.AuthenticateFinished]:
         (response: WsAuthenticateResponse) => void;
 }
 
@@ -20,6 +21,7 @@ export interface InterServerDefaultEvents {
 
 export interface SocketDefaultData {
     user: AuthorizedUser;
+    authPayload: JwtAccessPayloadDto,
 }
 
 export type IODefaultServer = Server<

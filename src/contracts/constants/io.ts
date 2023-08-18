@@ -1,10 +1,10 @@
 export const SERVER_TO_CLIENT_EVENTS = {
     Default: {
-        AuthenticateSuccess: 'authenticate/success',
+        AuthenticateFinished: 'authenticate/finished',
     },
     Notifications: {
         Received: 'notification:received',
-        MarkAsReadSuccess: 'notification:mark-as-read/success',
+        MarkAsReadFinished: 'notification:mark-as-read/finished',
     },
 } as const;
 

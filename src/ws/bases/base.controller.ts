@@ -25,8 +25,7 @@ export abstract class BaseSocketController {
     }
 
     @OnMessage(CLIENT_TO_SERVER_EVENTS.Default.Authenticate)
-    @EmitOnSuccess(SERVER_TO_CLIENT_EVENTS.Default.AuthenticateSuccess)
-    @SkipEmitOnEmptyResult()
+    @EmitOnSuccess(SERVER_TO_CLIENT_EVENTS.Default.AuthenticateFinished)
     async authenticate(@ConnectedSocket() socket: IODefaultSocket, @MessageBody() request: WsAuthenticateRequest) {
         return await this.wsSetupService.onAuthenticate(socket, request);
     }

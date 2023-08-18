@@ -30,6 +30,7 @@ export class AuthMiddleware implements MiddlewareInterface {
         try {
             const payload = this.jwtService.verifyAccessToken(jwtToken);
             socket.data.user = payload.context;
+            socket.data.authPayload = payload;
         }
         catch {
             return next(new AuthenticationError(ERROR_MESSAGES.Auth.InvalidAccessToken));

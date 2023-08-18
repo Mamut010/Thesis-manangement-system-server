@@ -19,7 +19,7 @@ export class NotificationController extends BaseSocketController {
     }
 
     @OnMessage(CLIENT_TO_SERVER_EVENTS.Notifications.MarkAsRead)
-    @EmitOnSuccess(SERVER_TO_CLIENT_EVENTS.Notifications.MarkAsReadSuccess)
+    @EmitOnSuccess(SERVER_TO_CLIENT_EVENTS.Notifications.MarkAsReadFinished)
     async markAsRead(@ConnectedSocket() socket: IONotificationsSocket, @MessageBody() msg: NotificationMarkAsReadRequest) {
         return await this.notificationService.markAsRead(socket.data.user.userId, msg.ids);
     }
