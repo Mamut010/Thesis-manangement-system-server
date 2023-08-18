@@ -3,6 +3,7 @@ import { IODefaultServer } from "../../../contracts/types/io";
 import { sleepThenCallback } from "../../../utils/timer-helpers";
 import { IORoomTimerManagerInterface } from "./io-room-timer-manager.interface";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
+import { RoomData } from "./types";
 
 @injectable()
 export class IORoomTimerManager implements IORoomTimerManagerInterface {
@@ -83,13 +84,4 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
         roomData.abortController.abort();
         return true;
     }
-}
-
-// Utility type
-interface RoomData { 
-    nsp: string, 
-    room: string,
-    exp?: Date,
-    abortController: AbortController,
-    counting: boolean,
 }
