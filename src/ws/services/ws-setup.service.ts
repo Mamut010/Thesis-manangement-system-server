@@ -25,12 +25,10 @@ export class WsSetupService implements WsSetupServiceInterface {
         // Force all connection from the same user to join the same room.
         // This way, every emit to the 'userId' room will be reflected on all tabs if the client opens multiple tabs
         const room = this.roomIdGenerator.generate(socket.data.user.userId);
-        console.log(`A socket joined room <${room}> of namespace <${socket.nsp.name}> at ${new Date().toLocaleString()}`);
         await socket.join(room);
 
         const exp = getJwtPayloadExpAsDate(socket.data.authPayload.exp);
         this.ioRoomTimerManager.startRoomTimer(socket.nsp.name, room, exp);
-        console.log('Socket joined! Timer started! Exp: ' + exp.toLocaleString());
     }
 
     async onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse> {

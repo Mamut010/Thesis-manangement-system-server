@@ -62,7 +62,6 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
             const time = newExp.getTime() - Date.now();
     
             sleepThenCallback(time, () => {
-                console.log(`Disconnecting all sockets of namespace <${roomData.nsp}> in room <${roomData.room}>`);
                 this.io.of(roomData.nsp).in(roomData.room).disconnectSockets();
             },  
             { 
@@ -93,4 +92,4 @@ interface RoomData {
     exp?: Date,
     abortController: AbortController,
     counting: boolean,
-};
+}
