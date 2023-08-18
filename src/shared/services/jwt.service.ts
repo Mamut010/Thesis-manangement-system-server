@@ -8,6 +8,7 @@ import { JwtAccessContextDto, JwtAccessPayloadDto, JwtRefreshContextDto, JwtRefr
 import { instanceToPlainSkipUnset } from '../../utils/class-transformer-helpers';
 import { JwtTokenType } from '../types/jwt-token-type';
 import { JwtServiceInterface } from '../interfaces';
+import { getJwtPayloadExpAsDate } from '../../utils/jwt-helpers';
 
 @injectable()
 export class JwtService implements JwtServiceInterface {
@@ -65,8 +66,8 @@ export class JwtService implements JwtServiceInterface {
     }
 
     getTokenExp(token: string): Date {
-        const exp = (jwt.decode(token) as jwt.JwtPayload).exp ?? 0;
-        return new Date(exp * 1000);
+        const payload = jwt.decode(token) as jwt.JwtPayload | null;
+        return getJwtPayloadExpAsDate(payload ?? {});
     }
 
     private getSettingsByTokenType(tokenType: JwtTokenType) {
