@@ -3,5 +3,6 @@ export interface RoomData {
     room: string,
     exp?: Date,
     abortController: AbortController,
+    oldSignal?: AbortSignal,
     counting: boolean,
 }

@@ -27,15 +27,25 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
         return this.start(roomData, exp);
     }
 
-    resetTimer(nsp: string, room: string, newExp?: Date) {
+    resetTimer(nsp: string, room: string, newExp?: Date, options?: RoomTimerOptions) {
         const roomData = this.nspRoomEntriesMap.get(nsp)?.get(room);
         if (!roomData) {
             return false;
         }
         
         return newExp 
-            ? this.start(roomData, newExp) 
+            ? this.start(roomData, newExp, options) 
             : this.stopIfNeeded(roomData, true);
+    }
+
+    clearTimer(nsp: string, room: string) {
+        const reset = this.resetTimer(nsp, room);
+        if (!reset) {
+            return false;
+        }
+
+        this.clearRoomData(nsp, room);
+        return true;
     }
 
     pauseTimer(nsp: string, room: string) {
@@ -86,12 +96,21 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
                 abortController: new AbortController(),
                 counting: false,
             }
+            roomEntries.set(room, roomData);
         }
         return roomData;
     }
 
-    private start(roomData: RoomData, newExp: Date) {
-        if (!roomData.counting || (roomData.exp?.getTime() !== newExp.getTime())) {
+    private start(roomData: RoomData, newExp: Date, options?: RoomTimerOptions) {
+        let isExpCondSatisfied = false;
+        if (options?.ignoreSooner) {
+            isExpCondSatisfied = roomData.exp ? newExp > roomData.exp : true;
+        }
+        else {
+            isExpCondSatisfied = roomData.exp?.getTime() !== newExp.getTime();
+        }
+
+        if (!roomData.counting || isExpCondSatisfied) {
             this.stopIfNeeded(roomData, true);
 
             roomData.counting = true;
@@ -100,11 +119,18 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
     
             sleepThenCallback(time, () => {
                 this.io.of(roomData.nsp).in(roomData.room).disconnectSockets();
-                this.nspRoomEntriesMap.get(roomData.nsp)?.delete(roomData.room);
             },  
             { 
                 signal: roomData.abortController.signal
             })
+                .then(() => {
+                    this.clearRoomData(roomData.nsp, roomData.room);
+                })
+                .catch((err) => {
+                    if (!roomData.oldSignal?.aborted) {
+                        throw err;
+                    }
+                })
                 .finally(() => { 
                     roomData.counting = false; 
                 });
@@ -119,11 +145,17 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
         }
 
         roomData.abortController.abort();
+        roomData.oldSignal = roomData.abortController.signal;
+        roomData.abortController = new AbortController();
         roomData.counting = false;
 
         if (dropExp) {
             roomData.exp = undefined;
         }
         return true;
+    }
+
+    private clearRoomData(nsp: string, room: string) {
+        this.nspRoomEntriesMap.get(nsp)?.delete(room);
     }
 }

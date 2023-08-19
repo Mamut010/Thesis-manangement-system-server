@@ -3,8 +3,8 @@ import {
     EmitOnSuccess, 
     MessageBody, 
     OnConnect, 
+    OnDisconnect, 
     OnMessage, 
-    SkipEmitOnEmptyResult 
 } from "socket-controllers";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
@@ -22,6 +22,11 @@ export abstract class BaseSocketController {
     @OnConnect()
     async connect(@ConnectedSocket() socket: IODefaultSocket) {
         await this.wsSetupService.onConnect(socket);
+    }
+
+    @OnDisconnect()
+    disconnect(@ConnectedSocket() socket: IODefaultSocket) {
+        this.wsSetupService.onDisconnect(socket);
     }
 
     @OnMessage(CLIENT_TO_SERVER_EVENTS.Default.Authenticate)

@@ -1,3 +1,4 @@
 export interface RoomTimerOptions {
-    forceReset?: boolean, 
+    forceReset?: boolean,
+    ignoreSooner?: boolean, 
 }
