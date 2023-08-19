@@ -214,7 +214,7 @@ function configWsServerServices(container: Container, settings?: BootstrapSettin
     container
         .bind<WsSetupServiceInterface>(INJECTION_TOKENS.WsSetupService)
         .to(WsSetupService)
-        .inRequestScope();
+        .inSingletonScope();
 }
 
 function configSharedServices(container: Container, settings?: BootstrapSettingInterface) {
@@ -226,17 +226,17 @@ function configSharedServices(container: Container, settings?: BootstrapSettingI
     container
         .bind<JwtServiceInterface>(INJECTION_TOKENS.JwtService)
         .to(JwtService)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<JwtExtractorServiceInterface>(INJECTION_TOKENS.JwtExtractor)
         .to(BearerJwtExtractorService)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<UuidServiceInterface>(INJECTION_TOKENS.UuidService)
         .to(UuidService)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<NotificationServiceInterface>(INJECTION_TOKENS.NotificationService)
@@ -273,7 +273,7 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<RoomIdGeneratorInterface>(INJECTION_TOKENS.RoomIdGenerator)
         .to(RoomIdGenerator)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<IORoomTimerManagerInterface>(INJECTION_TOKENS.IORoomTimerManager)
