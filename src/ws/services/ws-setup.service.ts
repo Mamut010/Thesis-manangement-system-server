@@ -30,7 +30,7 @@ export class WsSetupService implements WsSetupServiceInterface {
 
         await socket.join(room);
         // Start timer for the client room
-        this.ioRoomTimerManager.startTimer(nsp, room, exp, { forceReset: true, ignoreSooner: true });
+        this.ioRoomTimerManager.startTimer(nsp, room, exp, { forceReset: true, ignoreEarlier: true });
     }
 
     async onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse> {
@@ -49,10 +49,10 @@ export class WsSetupService implements WsSetupServiceInterface {
             return { authenticated: false, message: ERROR_MESSAGES.Auth.InvalidAccessToken };
         }
 
-        // If success, reset the timer of the client room
+        // If success, reset the timer of the client room (if applicable)
         const newExp = getJwtPayloadExpAsDate(socket.data.authPayload.exp);
         const room = this.roomIdGenerator.generate(socket.data.user.userId);
-        this.ioRoomTimerManager.resetTimer(socket.nsp.name, room, newExp);
+        this.ioRoomTimerManager.resetTimer(socket.nsp.name, room, newExp, { ignoreEarlier: true });
 
         return { authenticated: true, message: COMMON_MESSAGES.AuthenticatedSuccessfully };
     }

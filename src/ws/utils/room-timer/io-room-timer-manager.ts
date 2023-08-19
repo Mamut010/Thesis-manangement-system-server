@@ -103,7 +103,7 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
 
     private start(roomData: RoomData, newExp: Date, options?: RoomTimerOptions) {
         let isExpCondSatisfied = false;
-        if (options?.ignoreSooner) {
+        if (options?.ignoreEarlier) {
             isExpCondSatisfied = roomData.exp ? newExp > roomData.exp : true;
         }
         else {
