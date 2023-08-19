@@ -26,9 +26,10 @@ export class WsSetupService implements WsSetupServiceInterface {
         // This way, every emit to the 'userId' room will be reflected on all tabs if the user opens multiple tabs
         const room = this.roomIdGenerator.generate(socket.data.user.userId);
         const exp = getJwtPayloadExpAsDate(socket.data.authPayload.exp);
+        const nsp = socket.nsp.name;
 
         await socket.join(room);
-        this.ioRoomTimerManager.startRoomTimer(socket.nsp.name, room, exp);
+        this.ioRoomTimerManager.startTimer(nsp, room, exp, { forceReset: true });
     }
 
     async onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse> {
@@ -48,7 +49,7 @@ export class WsSetupService implements WsSetupServiceInterface {
 
         const newExp = getJwtPayloadExpAsDate(socket.data.authPayload.exp);
         const room = this.roomIdGenerator.generate(socket.data.user.userId);
-        this.ioRoomTimerManager.resetRoomTimer(socket.nsp.name, room, newExp);
+        this.ioRoomTimerManager.resetTimer(socket.nsp.name, room, newExp);
 
         return { authenticated: true, message: COMMON_MESSAGES.AuthenticatedSuccessfully };
     }

@@ -1,4 +1,10 @@
+import { RoomTimerOptions } from "./options";
+
 export interface IORoomTimerManagerInterface {
-    startRoomTimer(nsp: string, room: string, exp: Date): boolean;
-    resetRoomTimer(nsp: string, room: string, newExp?: Date): boolean;
+    startTimer(nsp: string, room: string, exp: Date, options?: RoomTimerOptions): boolean;
+    resetTimer(nsp: string, room: string, newExp?: Date): boolean;
+    pauseTimer(nsp: string, room: string): boolean;
+    unpauseTimer(nsp: string, room: string): boolean;
+    hasTimer(nsp: string, room: string): boolean;
+    getTimerExp(nsp: string, room: string): Date | undefined;
 }

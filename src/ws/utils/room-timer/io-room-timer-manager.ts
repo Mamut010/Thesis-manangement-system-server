@@ -4,6 +4,7 @@ import { sleepThenCallback } from "../../../utils/timer-helpers";
 import { IORoomTimerManagerInterface } from "./io-room-timer-manager.interface";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { RoomData } from "./types";
+import { RoomTimerOptions } from "./options";
 
 @injectable()
 export class IORoomTimerManager implements IORoomTimerManagerInterface {
@@ -13,24 +14,58 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
 
     }
 
-    startRoomTimer(nsp: string, room: string, exp: Date) {
+    startTimer(nsp: string, room: string, exp: Date, options?: RoomTimerOptions) {
         if (!this.hasRoomInNsp(nsp, room)) {
             return false;
         }
 
         const roomData = this.getOrCreateRoomData(nsp, room);
-        return this.startTimer(roomData, exp);
+        if (roomData.counting && !options?.forceReset) {
+            return false;
+        }
+
+        return this.start(roomData, exp);
     }
 
-    resetRoomTimer(nsp: string, room: string, newExp?: Date) {
+    resetTimer(nsp: string, room: string, newExp?: Date) {
         const roomData = this.nspRoomEntriesMap.get(nsp)?.get(room);
         if (!roomData) {
             return false;
         }
         
         return newExp 
-            ? this.startTimer(roomData, newExp) 
-            : this.stopTimerIfNeeded(roomData);
+            ? this.start(roomData, newExp) 
+            : this.stopIfNeeded(roomData, true);
+    }
+
+    pauseTimer(nsp: string, room: string) {
+        const roomData = this.nspRoomEntriesMap.get(nsp)?.get(room);
+        if (!roomData) {
+            return false;
+        }
+
+        return this.stopIfNeeded(roomData);
+    }
+
+    unpauseTimer(nsp: string, room: string) {
+        const roomData = this.nspRoomEntriesMap.get(nsp)?.get(room);
+        if (!roomData || roomData.counting || !roomData.exp) {
+            return false;
+        }
+
+        return this.start(roomData, roomData.exp);
+    }
+
+    hasTimer(nsp: string, room: string) {
+        return !!this.nspRoomEntriesMap.get(nsp)?.get(room)?.counting;
+    }
+
+    getTimerExp(nsp: string, room: string) {
+        const roomData = this.nspRoomEntriesMap.get(nsp)?.get(room);
+        if (!roomData) {
+            return undefined;
+        }
+        return roomData.exp;
     }
 
     private hasRoomInNsp(nsp: string, room: string) {
@@ -55,15 +90,17 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
         return roomData;
     }
 
-    private startTimer(roomData: RoomData, newExp: Date) {
-        if (roomData.exp?.getTime() !== newExp.getTime()) {
-            this.stopTimerIfNeeded(roomData);
+    private start(roomData: RoomData, newExp: Date) {
+        if (!roomData.counting || (roomData.exp?.getTime() !== newExp.getTime())) {
+            this.stopIfNeeded(roomData, true);
 
             roomData.counting = true;
+            roomData.exp = newExp;
             const time = newExp.getTime() - Date.now();
     
             sleepThenCallback(time, () => {
                 this.io.of(roomData.nsp).in(roomData.room).disconnectSockets();
+                this.nspRoomEntriesMap.get(roomData.nsp)?.delete(roomData.room);
             },  
             { 
                 signal: roomData.abortController.signal
@@ -76,12 +113,17 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
         return true;
     }
 
-    private stopTimerIfNeeded(roomData: RoomData) {
+    private stopIfNeeded(roomData: RoomData, dropExp?: boolean) {
         if (!roomData.counting) {
             return false;
         }
 
         roomData.abortController.abort();
+        roomData.counting = false;
+
+        if (dropExp) {
+            roomData.exp = undefined;
+        }
         return true;
     }
 }
