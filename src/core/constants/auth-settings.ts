@@ -5,7 +5,7 @@ export const AUTH_SETTINGS = {
     Jwt: {
         AccessTokenSecret: env.auth.accessToken,
         RefreshTokenSecret: env.auth.refreshToken,
-        AccessTokenTtl: '30s',
+        AccessTokenTtl: '10m',
         RefreshTokenTtl: '30d',
         DefaultSignOptions: {
             issuer: route('auth'),
