@@ -1,5 +1,5 @@
-import { User } from "../../core/models";
-import { UserCreateRequestDto, UserUpdateRequestDto } from "../dtos";
+import { User } from "../../../core/models";
+import { UserCreateRequestDto, UserUpdateRequestDto } from "../../dtos";
 
 export interface UserRepoInterface {
     create(request: UserCreateRequestDto): Promise<User>;
