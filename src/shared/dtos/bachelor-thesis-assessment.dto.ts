@@ -9,8 +9,8 @@ export class BachelorThesisAssessmentDto {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    studentId!: number;
+    @IsString()
+    studentId!: string;
 
     @Expose()
     @IsDefined()
@@ -39,8 +39,8 @@ export class BachelorThesisAssessmentDto {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    supervisor1Id!: number | null;
+    @IsString()
+    supervisor1Id!: string | null;
 
     @Expose()
     @IsOptional()
@@ -54,8 +54,8 @@ export class BachelorThesisAssessmentDto {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    supervisor2Id!: number | null;
+    @IsString()
+    supervisor2Id!: string | null;
 
     @Expose()
     @IsOptional()

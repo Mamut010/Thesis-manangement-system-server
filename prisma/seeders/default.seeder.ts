@@ -22,28 +22,28 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
         prisma.user.createMany({
             data: [
                 { 
-                    userId: 1, username: 'admin1', password: hash('1234'), 
+                    userId: '1', username: 'admin1', password: hash('1234'), 
                     roleId: roleIds['Admin'], email: '1@example.com',
                 },
                 { 
-                    userId: 101, username: 'lecturer1.1', password: hash('lecturer1.1'), 
+                    userId: '101', username: 'lecturer1.1', password: hash('lecturer1.1'), 
                     roleId: roleIds['Lecturer1.1'], email: '101@example.com',
                 },
                 { 
-                    userId: 401, username: 'lecturer1.2', password: hash('lecturer1.2'), 
+                    userId: '401', username: 'lecturer1.2', password: hash('lecturer1.2'), 
                     roleId: roleIds['Lecturer1.2'], email: '401@example.com',
                 },
                 { 
-                    userId: 701, username: 'lecturer2', password: hash('lecturer2'), 
+                    userId: '701', username: 'lecturer2', password: hash('lecturer2'), 
                     roleId: roleIds['Lecturer2'], email: '701@example.com', 
                 },
                 { 
-                    userId: 10001, username: 'student1', password: hash('student1'), 
+                    userId: '10001', username: 'student1', password: hash('student1'), 
                     roleId: roleIds['Student'], email: '10001@example.com',
                     surname: 'Doe', forename: 'John',
                 },
                 { 
-                    userId: 10002, username: 'student2', password: hash('student2'), 
+                    userId: '10002', username: 'student2', password: hash('student2'), 
                     roleId: roleIds['Student'], email: '10002@example.com',
                     surname: 'Doe', forename: 'Jane',
                 },
@@ -51,20 +51,20 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
         }),
         prisma.admin.createMany({
             data: [
-                { userId: 1, contact: 'ABC City' },
+                { userId: '1', contact: 'ABC City' },
             ]
         }),
         prisma.lecturer.createMany({
             data: [
-                { userId: 101, title: 'Dr. A11', bio: 'Sample lecturer1.1' },
-                { userId: 401, title: 'Dr. A12', bio: 'Sample lecturer1.2' },
-                { userId: 701, title: 'Dr. A2', bio: 'Sample lecturer2' },
+                { userId: '101', title: 'Dr. A11', bio: 'Sample lecturer1.1' },
+                { userId: '401', title: 'Dr. A12', bio: 'Sample lecturer1.2' },
+                { userId: '701', title: 'Dr. A2', bio: 'Sample lecturer2' },
             ]
         }),
         prisma.student.createMany({
             data: [
-                { userId: 10001, intake: 'CSE2019' },
-                { userId: 10002, intake: 'EEIT2019' },
+                { userId: '10001', intake: 'CSE2019' },
+                { userId: '10002', intake: 'EEIT2019' },
             ]
         }),
         prisma.topic.createMany({
@@ -91,12 +91,12 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
         prisma.bachelorThesisRegistration.createMany({
             data: [
                 { 
-                    thesisId: 1, studentId: 10001, supervisor1Id: 101, supervisor2Id: 401, adminId: 1,
+                    thesisId: 1, studentId: '10001', supervisor1Id: '101', supervisor2Id: '401', adminId: '1',
                     furtherParticipants: 'Jane Doe', 
                     supervisor1Confirmed: true
                 },
                 { 
-                    thesisId: 2, studentId: 10002, supervisor1Id: 101, supervisor2Id: 401, adminId: 1,
+                    thesisId: 2, studentId: '10002', supervisor1Id: '101', supervisor2Id: '401', adminId: '1',
                     furtherParticipants: 'John Doe',
                     supervisor1Confirmed: true, supervisor2Confirmed: false
                 },
@@ -105,22 +105,22 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
         prisma.oralDefenseRegistration.createMany({
             data: [
                 { 
-                    thesisId: 1, studentId: 10001, supervisor1Id: 101, supervisor2Id: 401 
+                    thesisId: 1, studentId: '10001', supervisor1Id: '101', supervisor2Id: '401' 
                 },
                 { 
-                    thesisId: 2, studentId: 10002, supervisor1Id: 101, supervisor2Id: 401 
+                    thesisId: 2, studentId: '10002', supervisor1Id: '101', supervisor2Id: '401' 
                 },
             ]
         }),
         prisma.bachelorThesisAssessment.createMany({
             data: [
                 { 
-                    thesisId: 1, studentId: 10001, supervisor1Id: 101, supervisor2Id: 401,
+                    thesisId: 1, studentId: '10001', supervisor1Id: '101', supervisor2Id: '401',
                     furtherParticipants: 'Jane Doe', 
                     supervisor1Grade: 1, supervisor2Grade: 1,
                 },
                 { 
-                    thesisId: 2, studentId: 10002, supervisor1Id: 101, supervisor2Id: 401,
+                    thesisId: 2, studentId: '10002', supervisor1Id: '101', supervisor2Id: '401',
                     furtherParticipants: 'John Doe',
                     supervisor1Grade: 1, supervisor2Grade: 1,
                 }
@@ -129,21 +129,21 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
         prisma.oralDefenseAssessment.createMany({
             data: [
                 { 
-                    thesisId: 1, studentId: 10001, supervisor1Id: 101, supervisor2Id: 401 
+                    thesisId: 1, studentId: '10001', supervisor1Id: '101', supervisor2Id: '401' 
                 },
                 { 
-                    thesisId: 2, studentId: 10002, supervisor1Id: 101, supervisor2Id: 401 
+                    thesisId: 2, studentId: '10002', supervisor1Id: '101', supervisor2Id: '401' 
                 },
             ]
         }),
         prisma.bachelorThesisEvaluation.createMany({
             data: [
                 {
-                    thesisId: 1, studentId: 10001, supervisorId: 101,
+                    thesisId: 1, studentId: '10001', supervisorId: '101',
                     title: 'Mr', date: new Date(), supervisorConfirmed: true
                 },
                 {
-                    thesisId: 2, studentId: 10002, supervisorId: 401,
+                    thesisId: 2, studentId: '10002', supervisorId: '401',
                     title: 'Ms'
                 }
             ]

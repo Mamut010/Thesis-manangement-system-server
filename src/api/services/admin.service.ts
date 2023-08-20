@@ -15,7 +15,7 @@ export class AdminService implements AdminServiceInterface {
 
     }
 
-    async getAdminInfo(adminId: number): Promise<AdminInfoDto> {
+    async getAdminInfo(adminId: string): Promise<AdminInfoDto> {
         const admin = await this.prisma.admin.findUnique({
             where: {
                 userId: adminId

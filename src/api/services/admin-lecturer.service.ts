@@ -10,9 +10,7 @@ import {
     OralDefenseRegistrationDto
 } from "../../shared/dtos";
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
-import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
-import { Lecturer, User } from "../../core/models";
 import { bachelorThesisAndOralDefenseInclude } from "../../shared/constants/includes";
 import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
 import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
@@ -32,7 +30,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         return await this.lecturerRepo.getLecturers(lecturersQuery);
     }
 
-    async getLecturerDetail(lecturerId: number): Promise<LecturerDetailResponse> {
+    async getLecturerDetail(lecturerId: string): Promise<LecturerDetailResponse> {
         const response = new LecturerDetailResponse();
         response.lecturerInfo = await this.getLecturerInfo(lecturerId);
         response.bachelorThesisRegistrations = await this.getLecturerBachelorThesisRegistrations(lecturerId);
@@ -43,11 +41,11 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         return response;
     }
 
-    async getLecturerInfo(lecturerId: number): Promise<LecturerInfoDto> {
+    async getLecturerInfo(lecturerId: string): Promise<LecturerInfoDto> {
         return await this.lecturerRepo.getLecturerInfo(lecturerId);
     }
 
-    async getLecturerBachelorThesisRegistrations(lecturerId: number): Promise<BachelorThesisRegistrationDto[]> {
+    async getLecturerBachelorThesisRegistrations(lecturerId: string): Promise<BachelorThesisRegistrationDto[]> {
         const bachelorThesisRegistrations = await this.prisma.bachelorThesisRegistration.findMany({
             where: {
                 OR: [
@@ -65,7 +63,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         return bachelorThesisRegistrations.map(item => this.plainTransformer.toBachelorThesisRegistration(item));
     }
 
-    async getLecturerOralDefenseRegistrations(lecturerId: number): Promise<OralDefenseRegistrationDto[]> {
+    async getLecturerOralDefenseRegistrations(lecturerId: string): Promise<OralDefenseRegistrationDto[]> {
         const oralDefenseRegistrations = await this.prisma.oralDefenseRegistration.findMany({
             where: {
                 OR: [
@@ -83,7 +81,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         return oralDefenseRegistrations.map(item => this.plainTransformer.toOralDefenseRegistration(item));
     }
 
-    async getLecturerBachelorThesisAssessments(lecturerId: number): Promise<BachelorThesisAssessmentDto[]> {
+    async getLecturerBachelorThesisAssessments(lecturerId: string): Promise<BachelorThesisAssessmentDto[]> {
         const bachelorThesisAssessments = await this.prisma.bachelorThesisAssessment.findMany({
             where: {
                 OR: [
@@ -101,7 +99,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         return bachelorThesisAssessments.map(item => this.plainTransformer.toBachelorThesisAssessment(item));
     }
 
-    async getLecturerOralDefenseAssessments(lecturerId: number): Promise<OralDefenseAssessmentDto[]> {
+    async getLecturerOralDefenseAssessments(lecturerId: string): Promise<OralDefenseAssessmentDto[]> {
         const oralDefenseAssessments = await this.prisma.oralDefenseAssessment.findMany({
             where: {
                 OR: [
@@ -119,7 +117,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         return oralDefenseAssessments.map(item => this.plainTransformer.toOralDefenseAssessment(item));
     }
 
-    async updateLecturer(lecturerId: number, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {
+    async updateLecturer(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {
         return await this.lecturerRepo.updateLecturer(lecturerId, updateRequest);
     }
 }

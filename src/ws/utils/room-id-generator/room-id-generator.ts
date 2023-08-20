@@ -9,7 +9,7 @@ export class RoomIdGenerator implements RoomIdGeneratorInterface {
 
     }
 
-    generate(userId: number): string {
+    generate(userId: unknown): string {
         return this.uuidService.generate(userId);
     }
 }

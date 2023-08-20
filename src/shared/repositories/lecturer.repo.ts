@@ -49,12 +49,12 @@ export class LecturerRepo implements LecturerRepoInterface {
         return response;
     }
 
-    async getLecturerInfo(id: number): Promise<LecturerInfoDto> {
+    async getLecturerInfo(id: string): Promise<LecturerInfoDto> {
         const lecturer = await this.ensureRecordExists(id);
         return this.plainTransformer.toLecturerInfo(lecturer);
     }
 
-    async updateLecturer(id: number, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {
+    async updateLecturer(id: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {
         // Check if 'type' is a lecturer role
         // Note: This assumes that the roles are predefined and won't be changed later on
         if (updateRequest.type && !LecturerRoles.some(item => item === updateRequest.type)) {
@@ -91,7 +91,7 @@ export class LecturerRepo implements LecturerRepoInterface {
         return this.plainTransformer.toLecturerInfo(record);
     }
 
-    private async ensureRecordExists(id: number) {
+    private async ensureRecordExists(id: string) {
         const lecturer = await this.prisma.lecturer.findUnique({
             where: {
                 userId: id

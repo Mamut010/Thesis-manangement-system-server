@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsNumber } from "class-validator"
+import { IsDefined, IsNumber, IsString } from "class-validator"
 
 export class JwtRefreshContextDto {
     @Expose()
@@ -9,6 +9,6 @@ export class JwtRefreshContextDto {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    userId!: number;
+    @IsString()
+    userId!: string;
 }

@@ -4,8 +4,8 @@ import { IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-valida
 export class StudentInfoDto {
     @Expose()
     @IsDefined()
-    @IsNumber()
-    studentId!: number;
+    @IsString()
+    studentId!: string;
 
     @Expose()
     @IsDefined()

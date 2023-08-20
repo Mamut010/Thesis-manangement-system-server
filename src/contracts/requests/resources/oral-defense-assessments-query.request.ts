@@ -1,22 +1,22 @@
-import { 
-    IsNumberFilterArray,
+import {
     IsNullableBooleanFilterArray, 
     IsNullableStringFilterArray,
     IsNullableDateFilterArray,
-    IsNullableNumberFilterArray
+    IsNullableNumberFilterArray,
+    IsStringFilterArray
 } from "../../../decorators";
-import { 
-    NumberFilter,
+import {
     NullableBooleanFilter, 
     NullableStringFilter,
     NullableDateFilter,
-    NullableNumberFilter
+    NullableNumberFilter,
+    StringFilter
 } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class OralDefenseAssessmentsQueryRequest extends BaseQueryRequest {
-    @IsNumberFilterArray()
-    studentIdFilter?: NumberFilter[];
+    @IsStringFilterArray()
+    studentIdFilter?: StringFilter[];
 
     @IsNullableStringFilterArray()
     surnameFilter?: NullableStringFilter[];

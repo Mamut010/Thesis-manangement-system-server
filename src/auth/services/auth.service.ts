@@ -46,7 +46,7 @@ export class AuthService implements AuthServiceInterface {
 
     async signUp(signUpRequest: SignUpRequest): Promise<void> {
         this.tryDecryptUsernameAndPassword(signUpRequest);
-        if (await this.prisma.user.findUnique({ where: { userId: signUpRequest.id }})) {
+        if (await this.prisma.user.findUnique({ where: { userId: signUpRequest.userId }})) {
             throw new AuthenticationError(ERROR_MESSAGES.Auth.UserIdAlreadyExists);
         }
         else if (await this.prisma.user.findUnique({ where: { username: signUpRequest.username }})) {
@@ -60,7 +60,7 @@ export class AuthService implements AuthServiceInterface {
         }
 
         const userCreatingRequest = new UserCreateRequestDto();
-        userCreatingRequest.userId = signUpRequest.id;
+        userCreatingRequest.userId = signUpRequest.userId;
         userCreatingRequest.username = signUpRequest.username;
         userCreatingRequest.password = await this.cryptoService.hash(signUpRequest.password);
         userCreatingRequest.email = signUpRequest.email;

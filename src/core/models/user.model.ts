@@ -9,8 +9,8 @@ export class User {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    userId!: number;
+    @IsString()
+    userId!: string;
 
     @Expose()
     @IsOptional()

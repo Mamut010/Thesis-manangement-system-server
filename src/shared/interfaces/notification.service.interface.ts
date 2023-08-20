@@ -4,13 +4,13 @@ import { NotificationDto } from "../dtos";
 import { NotificationInfo } from "../types/notification";
 
 export interface NotificationServiceInterface {
-    getReceivedNotifications(userId: number, queryRequest: NotificationsQueryRequest)
+    getReceivedNotifications(userId: string, queryRequest: NotificationsQueryRequest)
         : Promise<NotificationsQueryResponse>;
 
-    getSentNotifications(userId: number, queryRequest: NotificationsQueryRequest)
+    getSentNotifications(userId: string, queryRequest: NotificationsQueryRequest)
         : Promise<NotificationsQueryResponse>;
         
     sendNotification(notificationInfo: NotificationInfo): Promise<NotificationDto>;
     
-    markAsRead(userId: number, ids: number[]): Promise<number>;
+    markAsRead(userId: string, ids: number[]): Promise<number>;
 }

@@ -10,13 +10,13 @@ export class BachelorThesisEvaluationUpdateRequest {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    studentId?: number;
+    @IsString()
+    studentId?: string;
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    supervisorId?: number;
+    @IsString()
+    supervisorId?: string;
 
     @Expose()
     @IsOptional()

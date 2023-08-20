@@ -10,7 +10,7 @@ datasource db {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model User {
     id                      Int             @id @default(autoincrement())
-    userId                  Int             @unique
+    userId                  String          @unique
     roleId                  Int
     username                String          @unique
     password                String
@@ -35,7 +35,7 @@ model User {
 
 model RefreshToken {
     id      Int         @id @default(autoincrement())
-    userId  Int         @unique
+    userId  String      @unique
     token   String      @db.VarChar(255)
     exp     DateTime    @db.Timestamp(6)
 
@@ -54,7 +54,7 @@ model Role {
 
 model Notification {
     id          Int         @id @default(autoincrement())
-    senderId    Int?
+    senderId    String?
     title       String?     
     content     String?
     isRead      Boolean     @default(false)
@@ -67,7 +67,7 @@ model Notification {
 
 model Admin {
     id                            Int                           @id @default(autoincrement())
-    userId                        Int                           @unique
+    userId                        String                        @unique
     contact                       String?
 
     user                          User                          @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)                        
@@ -76,7 +76,7 @@ model Admin {
 
 model Lecturer {
     id                               Int                             @id @default(autoincrement())
-    userId                           Int                             @unique
+    userId                           String                          @unique
     title                            String?                         @db.VarChar(255)
     numberOfTheses                   Int                             @default(0)
     bio                              String?                         @db.Text
@@ -95,7 +95,7 @@ model Lecturer {
 
 model Student {
     id                            Int                             @id @default(autoincrement())
-    userId                        Int                             @unique
+    userId                        String                          @unique
     intake                        String?
     ects                          Int                             @default(0)
 
@@ -164,10 +164,10 @@ model Location {
 model BachelorThesisRegistration {
     id                      Int         @id @default(autoincrement())
     thesisId                Int
-    studentId               Int         @unique
-    supervisor1Id           Int?
-    supervisor2Id           Int?
-    adminId                 Int?
+    studentId               String      @unique
+    supervisor1Id           String?
+    supervisor2Id           String?
+    adminId                 String?
     dateOfBirth             DateTime?   @db.Date
     placeOfBirth            String?     @db.VarChar(255)
     studentDate             DateTime?   @db.Date
@@ -195,10 +195,10 @@ model BachelorThesisRegistration {
 
 model OralDefenseRegistration {
     id                     Int         @id @default(autoincrement())
-    studentId              Int         @unique
+    studentId              String      @unique
     thesisId               Int
-    supervisor1Id          Int?
-    supervisor2Id          Int?
+    supervisor1Id          String?
+    supervisor2Id          String?
     room                   String?     
     areSpectatorsAllowed   Boolean?    
     weekday                String?     @db.VarChar(255)
@@ -219,10 +219,10 @@ model OralDefenseRegistration {
 
 model BachelorThesisAssessment {
     id                     Int         @id @default(autoincrement())
-    studentId              Int         @unique
+    studentId              String      @unique
     thesisId               Int
-    supervisor1Id          Int?
-    supervisor2Id          Int?
+    supervisor1Id          String?
+    supervisor2Id          String?
     furtherParticipants    String?     @db.VarChar(255)
     supervisor1Grade       Float?      @db.Float
     supervisor2Grade       Float?      @db.Float
@@ -240,10 +240,10 @@ model BachelorThesisAssessment {
 
 model OralDefenseAssessment {
     id                     Int         @id @default(autoincrement())
-    studentId              Int         @unique
+    studentId              String         @unique
     thesisId               Int
-    supervisor1Id          Int?
-    supervisor2Id          Int?
+    supervisor1Id          String?
+    supervisor2Id          String?
     dateDefense            DateTime?   @db.Date
     placeDefense           String?     @db.VarChar(255)
     startDate              DateTime?   @db.Date
@@ -266,8 +266,8 @@ model OralDefenseAssessment {
 model BachelorThesisEvaluation {
     id                      Int         @id @default(autoincrement())
     thesisId                Int
-    studentId               Int         @unique
-    supervisorId            Int
+    studentId               String      @unique
+    supervisorId            String
     title                   String?
     date                    DateTime?   @db.Date
     supervisorConfirmed     Boolean?    

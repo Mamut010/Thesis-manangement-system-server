@@ -14,18 +14,18 @@ export class BachelorThesisAssessment {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    studentId!: number;
+    @IsString()
+    studentId!: string;
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    supervisor1Id!: number | null;
+    @IsString()
+    supervisor1Id!: string | null;
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    supervisor2Id!: number | null;
+    @IsString()
+    supervisor2Id!: string | null;
 
     @Expose()
     @IsOptional()

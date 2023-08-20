@@ -9,8 +9,8 @@ export class Notification {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    senderId!: number | null;
+    @IsString()
+    senderId!: string | null;
 
     @Expose()
     @IsOptional()

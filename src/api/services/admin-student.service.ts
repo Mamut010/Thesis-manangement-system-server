@@ -49,7 +49,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         return response;
     }
 
-    async getStudentDetail(studentId: number): Promise<StudentDetailResponse> {
+    async getStudentDetail(studentId: string): Promise<StudentDetailResponse> {
         const response = new StudentDetailResponse();
         response.studentInfo = await this.getStudentInfo(studentId);
         response.bachelorThesisRegistration = await this.getStudentBachelorThesisRegistration(studentId);
@@ -60,7 +60,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         return response;
     }
 
-    async getStudentInfo(studentId: number): Promise<StudentInfoDto> {
+    async getStudentInfo(studentId: string): Promise<StudentInfoDto> {
         const student = await this.prisma.student.findUnique({
             where: {
                 userId: studentId
@@ -77,7 +77,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         return this.plainTransformer.toStudentInfo(student);
     }
 
-    async getStudentBachelorThesisRegistration(studentId: number): Promise<BachelorThesisRegistrationDto> {
+    async getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationDto> {
         const bachelorThesisRegistration = await this.prisma.bachelorThesisRegistration.findUnique({
             where: {
                 studentId: studentId
@@ -92,7 +92,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         return this.plainTransformer.toBachelorThesisRegistration(bachelorThesisRegistration);
     }
 
-    async getStudentOralDefenseRegistration(studentId: number): Promise<OralDefenseRegistrationDto> {
+    async getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto> {
         const oralDefenseRegistration = await this.prisma.oralDefenseRegistration.findUnique({
             where: {
                 studentId: studentId
@@ -107,7 +107,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         return this.plainTransformer.toOralDefenseRegistration(oralDefenseRegistration);
     }
 
-    async getStudentBachelorThesisAssessment(studentId: number): Promise<BachelorThesisAssessmentDto> {
+    async getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentDto> {
         const bachelorThesisAssessment = await this.prisma.bachelorThesisAssessment.findUnique({
             where: {
                 studentId: studentId
@@ -122,7 +122,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         return this.plainTransformer.toBachelorThesisAssessment(bachelorThesisAssessment);
     }
 
-    async getStudentOralDefenseAssessment(studentId: number): Promise<OralDefenseAssessmentDto> {
+    async getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentDto> {
         const oralDefenseAssessment = await this.prisma.oralDefenseAssessment.findUnique({
             where: {
                 studentId: studentId

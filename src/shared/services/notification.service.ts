@@ -29,12 +29,12 @@ export class NotificationService implements NotificationServiceInterface {
         this.notificationsNsp = io.of(IO_NAMESPACES.Notifications);
     }
 
-    async getReceivedNotifications(userId: number, queryRequest: NotificationsQueryRequest)
+    async getReceivedNotifications(userId: string, queryRequest: NotificationsQueryRequest)
         : Promise<NotificationsQueryResponse> {
         return this.getNotifications(userId, queryRequest, 'received');
     }
 
-    async getSentNotifications(userId: number, queryRequest: NotificationsQueryRequest)
+    async getSentNotifications(userId: string, queryRequest: NotificationsQueryRequest)
         : Promise<NotificationsQueryResponse> {
         return this.getNotifications(userId, queryRequest, 'sent');
     }
@@ -65,7 +65,7 @@ export class NotificationService implements NotificationServiceInterface {
         return dto;
     }
 
-    async markAsRead(userId: number, ids: number[]): Promise<number> {
+    async markAsRead(userId: string, ids: number[]): Promise<number> {
         const notifications = await this.prisma.notification.updateMany({
             where: {
                 id: {
@@ -86,8 +86,8 @@ export class NotificationService implements NotificationServiceInterface {
         return notifications.count;
     }
 
-    private async ensureUsersExists(...userIds: (number | undefined)[]) {
-        const ids = userIds.filter((id: number | null | undefined): id is number => typeof id === 'number');
+    private async ensureUsersExists(...userIds: (string | undefined)[]) {
+        const ids = userIds.filter((id: string | null | undefined): id is string => typeof id === 'string');
         const users = await this.prisma.user.findMany({ where: { userId: { in: ids } } });
         if (users.length !== ids.length) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
@@ -96,7 +96,7 @@ export class NotificationService implements NotificationServiceInterface {
         return users;
     }
 
-    private async getNotifications(userId: number, queryRequest: NotificationsQueryRequest, type: 'sent' | 'received') {
+    private async getNotifications(userId: string, queryRequest: NotificationsQueryRequest, type: 'sent' | 'received') {
         const model = this.queryCreator.createQueryModel(Notification);
         const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest);
 
