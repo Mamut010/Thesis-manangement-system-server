@@ -42,10 +42,14 @@ export const ERROR_MESSAGES = {
     Forbidden: {
         DefaultMessage: 'Access is denied',
         DefaultResourceMessage: 'Access to resource is denied',
+        UnpermittedRole: 'Role not allowed',
         BachelorThesisRegistrationDenied: 'Access to bachelor thesis registration is denied',
         BachelorThesisAssessmentDenied: 'Access to bachelor thesis assessment is denied',
         BachelorThesisEvaluationDenied: 'Access to bachelor thesis evaluation is denied',
         OralDefenseRegistrationDenied: 'Access to oral defense registration is denied',
         OralDefenseAssessmentDenied: 'Access to oral defense assessment is denied',
+    },
+    Invalid: {
+        RoleInvalid: 'Invalid role',
     }
 } as const;

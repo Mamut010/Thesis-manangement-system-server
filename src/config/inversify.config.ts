@@ -45,11 +45,13 @@ import {
     CryptoServiceInterface,
     JwtExtractorServiceInterface,
     UuidServiceInterface,
-    NotificationServiceInterface
+    NotificationServiceInterface,
+    LecturerRepoInterface
 } from '../shared/interfaces';
 import { 
     UserRepo,
-    RefreshTokenRepo
+    RefreshTokenRepo,
+    LecturerRepo
 } from '../shared/repositories';
 import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
 import { 
@@ -128,6 +130,11 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
         .bind<RefreshTokenRepoInterface>(INJECTION_TOKENS.RefreshTokenRepo)
         .to(RefreshTokenRepo)
         .inRequestScope();
+        
+    container
+        .bind<LecturerRepoInterface>(INJECTION_TOKENS.LecturerRepo)
+        .to(LecturerRepo)
+        .inRequestScope();      
 }
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {

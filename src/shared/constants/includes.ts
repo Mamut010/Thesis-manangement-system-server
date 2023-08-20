@@ -1,3 +1,11 @@
+export const userInclude = {
+    user: {
+        include: {
+            role: true
+        }
+    }
+} as const;
+
 export const bachelorThesisAndOralDefenseInclude = {
     student: {
         include: {

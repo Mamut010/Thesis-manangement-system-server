@@ -16,7 +16,7 @@ import { OralDefenseRegistration } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainOralDefenseRegistration } from "../../../shared/types/plain-types";
 import { anyChanges } from "../../../utils/crud-helpers";
-import { bachelorThesisAndOralDefenseInclude } from "../../constants/includes";
+import { bachelorThesisAndOralDefenseInclude } from "../../../shared/constants/includes";
 
 @injectable()
 export class OralDefenseRegistrationService implements OralDefenseRegistrationServiceInterface {

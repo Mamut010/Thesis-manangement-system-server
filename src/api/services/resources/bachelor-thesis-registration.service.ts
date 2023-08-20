@@ -16,7 +16,7 @@ import { BachelorThesisRegistration } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainBachelorThesisRegistration } from "../../../shared/types/plain-types";
 import { anyChanges } from "../../../utils/crud-helpers";
-import { bachelorThesisAndOralDefenseInclude } from "../../constants/includes";
+import { bachelorThesisAndOralDefenseInclude } from "../../../shared/constants/includes";
 
 @injectable()
 export class BachelorThesisRegistrationService implements BachelorThesisRegistrationServiceInterface {

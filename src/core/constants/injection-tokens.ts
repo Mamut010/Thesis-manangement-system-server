@@ -15,6 +15,7 @@ const PRISMA_TOKENS = {
 const REPOSITORY_TOKENS = {
     UserRepo: Symbol.for('UserRepo'),
     RefreshTokenRepo: Symbol.for('RefreshTokenRepo'),
+    LecturerRepo: Symbol.for('LecturerRepo'),
 } as const;
 
 const AUTH_SERVICE_TOKENS = {

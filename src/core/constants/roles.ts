@@ -7,3 +7,5 @@ export const ROLES = {
 } as const;
 
 export const RoleValues = Object.values(ROLES);
+
+export const LecturerRoles = [ROLES.Lecturer1_1, ROLES.Lecturer1_2, ROLES.Lecturer2] as const;

@@ -17,7 +17,7 @@ import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
 import { Student, User } from "../../core/models";
 import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
-import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
+import { bachelorThesisAndOralDefenseInclude } from "../../shared/constants/includes";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {

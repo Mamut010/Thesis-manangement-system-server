@@ -1,3 +1,4 @@
+import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
 import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
@@ -17,4 +18,5 @@ export interface AdminLecturerServiceInterface {
     getLecturerOralDefenseRegistrations(lecturerId: number): Promise<OralDefenseRegistrationDto[]>;
     getLecturerBachelorThesisAssessments(lecturerId: number): Promise<BachelorThesisAssessmentDto[]>;
     getLecturerOralDefenseAssessments(lecturerId: number): Promise<OralDefenseAssessmentDto[]>;
+    updateLecturer(lecturerId: number, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto>;
 }

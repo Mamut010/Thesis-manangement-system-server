@@ -1,10 +1,12 @@
 import { inject, injectable } from "inversify";
 import { 
     Authorized, 
+    Body, 
     Get, 
     HttpCode, 
     JsonController, 
     Param,
+    Post,
     QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -22,6 +24,7 @@ import {
 import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
+import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 
 @JsonController('admin/lecturers')
 //@Authorized(ROLES.Admin)
@@ -82,5 +85,11 @@ export class AdminLecturerController {
     @ResponseSchema(OralDefenseAssessmentDto, { isArray: true })
     getLecturerOralDefenseAssessments(@Param('id') id: number) {
         return this.adminLecturerService.getLecturerOralDefenseAssessments(id);
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Post('/:id')
+    updateLecturer(@Param('id') id: number, @Body({ required: true }) updateRequest: LecturerUpdateRequest) {
+        return this.adminLecturerService.updateLecturer(id, updateRequest);
     }
 }

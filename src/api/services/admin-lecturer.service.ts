@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import { AdminLecturerServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { 
     BachelorThesisAssessmentDto, 
     BachelorThesisRegistrationDto, 
@@ -10,51 +9,27 @@ import {
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto
 } from "../../shared/dtos";
-import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
 import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
 import { Lecturer, User } from "../../core/models";
-import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
+import { bachelorThesisAndOralDefenseInclude } from "../../shared/constants/includes";
 import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
+import { LecturerRepoInterface } from "../../shared/interfaces";
+import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
-        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface) {
+        @inject(INJECTION_TOKENS.LecturerRepo) private lecturerRepo: LecturerRepoInterface) {
 
     }
 
     async getLecturers(lecturersQuery: LecturersQueryRequest): Promise<LecturersQueryResponse> {
-        const model = {
-            ...this.queryCreator.createQueryModel(Lecturer),
-            user: this.queryCreator.createQueryModel(User)
-        }
-        const prismaQuery = this.queryCreator.createQueryObject(model, lecturersQuery, { 
-            fieldNameMap: { 
-                lecturerId: 'userId' 
-            } 
-        });
-
-        const count = await this.prisma.lecturer.count({ ...prismaQuery, skip: undefined, take: undefined });
-        const lecturers = await this.prisma.lecturer.findMany({
-            ...prismaQuery,
-            include: {
-                user: {
-                    include: {
-                        role: true
-                    }
-                }
-            }
-        })
-
-        const response = new LecturersQueryResponse();
-        response.content = lecturers.map(item => this.plainTransformer.toLecturerInfo(item));
-        response.count = count;
-        return response;
+        return await this.lecturerRepo.getLecturers(lecturersQuery);
     }
 
     async getLecturerDetail(lecturerId: number): Promise<LecturerDetailResponse> {
@@ -69,24 +44,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
     }
 
     async getLecturerInfo(lecturerId: number): Promise<LecturerInfoDto> {
-        const lecturer = await this.prisma.lecturer.findUnique({
-            where: {
-                userId: lecturerId
-            },
-            include: {
-                user: {
-                    include: {
-                        role: true
-                    }
-                }
-            }
-        })
-
-        if (!lecturer) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.LecturerNotFound);
-        }
-
-        return this.plainTransformer.toLecturerInfo(lecturer);
+        return await this.lecturerRepo.getLecturerInfo(lecturerId);
     }
 
     async getLecturerBachelorThesisRegistrations(lecturerId: number): Promise<BachelorThesisRegistrationDto[]> {
@@ -159,5 +117,9 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         });
 
         return oralDefenseAssessments.map(item => this.plainTransformer.toOralDefenseAssessment(item));
+    }
+
+    async updateLecturer(lecturerId: number, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {
+        return await this.lecturerRepo.updateLecturer(lecturerId, updateRequest);
     }
 }

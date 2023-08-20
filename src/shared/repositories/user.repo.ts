@@ -5,7 +5,7 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { ITXClientDenyList } from '@prisma/client/runtime/library';
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
-import { ROLES } from "../../core/constants/roles";
+import { LecturerRoles, ROLES } from "../../core/constants/roles";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { UserRepoInterface } from "../interfaces";
@@ -13,6 +13,7 @@ import { User } from "../../core/models";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { UserCreateRequestDto, UserUpdateRequestDto } from "../dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
+import { ForbiddenError } from "../../contracts/errors/forbidden.error";
 
 @injectable()
 export class UserRepo implements UserRepoInterface {
@@ -88,16 +89,16 @@ export class UserRepo implements UserRepoInterface {
                 where: {
                     userId: userId
             }});
-
-            await this.prisma.user.delete({
-                where: {
-                    userId: userId
-                }
-            });
         }
         catch {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
         }
+
+        await this.prisma.user.delete({
+            where: {
+                userId: userId
+            }
+        });
     }
 
     private createRecordInAssociatedRepoByRole(tx: Omit<PrismaClient, ITXClientDenyList>, request: UserCreateRequestDto) {
@@ -120,7 +121,7 @@ export class UserRepo implements UserRepoInterface {
         else if (roleName === ROLES.Student) {
             return 'student';
         }
-        else if ([ROLES.Lecturer1_1, ROLES.Lecturer1_2, ROLES.Lecturer2].find(role => role === roleName)) {
+        else if (LecturerRoles.some(role => role === roleName)) {
             return 'lecturer';
         }
 
