@@ -16,6 +16,7 @@ const REPOSITORY_TOKENS = {
     UserRepo: Symbol.for('UserRepo'),
     RefreshTokenRepo: Symbol.for('RefreshTokenRepo'),
     LecturerRepo: Symbol.for('LecturerRepo'),
+    BachelorThesisRegistrationRepo: Symbol.for('BachelorThesisRegistrationRepo'),
 } as const;
 
 const AUTH_SERVICE_TOKENS = {

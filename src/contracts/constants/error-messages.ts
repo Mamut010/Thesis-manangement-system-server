@@ -34,6 +34,7 @@ export const ERROR_MESSAGES = {
     },
     UniqueConstraint: {
         RoleAlreadyExists: 'The role already exists',
+        StudentAlreadyConnectedBachelorThesisRegistration: 'The student already associates with a bachelor thesis registration',
     },
     MethodNotAllowed: {
         RoleCreationNotAllowed: 'Role creation is not allowed',

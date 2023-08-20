@@ -38,22 +38,25 @@ import {
     BachelorThesisEvaluationService
 } from '../api/services';
 import { 
-    UserRepoInterface,
+    BachelorThesisRegistrationRepoInterface, 
+    LecturerRepoInterface, 
     RefreshTokenRepoInterface, 
+    UserRepoInterface 
+} from '../dal/interfaces';
+import { 
+    UserRepo,
+    RefreshTokenRepo,
+    LecturerRepo,
+    BachelorThesisRegistrationRepo
+} from '../dal/repositories';
+import {
     MailServiceInterface,
     JwtServiceInterface,
     CryptoServiceInterface,
     JwtExtractorServiceInterface,
     UuidServiceInterface,
     NotificationServiceInterface,
-    LecturerRepoInterface
 } from '../shared/interfaces';
-import { 
-    UserRepo,
-    RefreshTokenRepo,
-    LecturerRepo
-} from '../shared/repositories';
-import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
 import { 
     BearerJwtExtractorService,
     CryptoService,
@@ -62,6 +65,7 @@ import {
     SMTPMailService, 
     UuidService
 } from '../shared/services';
+import { PrismaQueryCreator, PrismaQueryCreatorInterface } from '../lib/query';
 import { FormFillerInterface, PdfFormFiller } from '../lib/form-filler';
 import { PdfFormGenerator, PdfFormGeneratorInterface } from '../api/utils/pdf-form-generator';
 import { WsSetupServiceInterface } from '../ws/interfaces';
@@ -134,7 +138,12 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<LecturerRepoInterface>(INJECTION_TOKENS.LecturerRepo)
         .to(LecturerRepo)
-        .inRequestScope();      
+        .inRequestScope();
+
+    container
+        .bind<BachelorThesisRegistrationRepoInterface>(INJECTION_TOKENS.BachelorThesisRegistrationRepo)
+        .to(BachelorThesisRegistrationRepo)
+        .inRequestScope();
 }
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {

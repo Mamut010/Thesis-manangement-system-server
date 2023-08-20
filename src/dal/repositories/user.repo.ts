@@ -11,7 +11,7 @@ import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { UserRepoInterface } from "../interfaces";
 import { User } from "../../core/models";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { UserCreateRequestDto, UserUpdateRequestDto } from "../dtos";
+import { UserCreateRequestDto, UserUpdateRequestDto } from "../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 
 @injectable()

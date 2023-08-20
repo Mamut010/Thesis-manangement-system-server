@@ -19,9 +19,7 @@ import { Role, RefreshToken } from '../../core/models';
 import { plainToInstanceExactMatch } from '../../utils/class-transformer-helpers';
 import { JwtCookieHandlerInterface } from '../utils/jwt-cookie-handlers';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
-import { 
-    UserRepoInterface, 
-    RefreshTokenRepoInterface, 
+import {
     JwtServiceInterface,
     CryptoServiceInterface,
     JwtExtractorServiceInterface
@@ -30,6 +28,7 @@ import { StringResponse } from '../../contracts/responses/string.response';
 import { StringArrayResponse } from '../../contracts/responses/string-array.response';
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { env } from '../../env';
+import { RefreshTokenRepoInterface, UserRepoInterface } from '../../dal/interfaces';
 
 @injectable()
 export class AuthService implements AuthServiceInterface {

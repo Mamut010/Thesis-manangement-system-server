@@ -1,7 +1,3 @@
-export * from './repositories/user.repo.interface';
-export * from './repositories/refresh-token.repo.interface';
-export * from './repositories/lecturer.repo.interface';
-
 export * from './mail.service.interface';
 export * from './jwt.service.interface';
 export * from './crypto.service.interface';

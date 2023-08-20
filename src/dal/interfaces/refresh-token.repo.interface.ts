@@ -1,4 +1,4 @@
-import { RefreshToken } from "../../../core/models/refresh-token.model";
+import { RefreshToken } from "@prisma/client";
 
 export interface RefreshTokenRepoInterface {
     create(refreshToken: RefreshToken): Promise<RefreshToken>;
