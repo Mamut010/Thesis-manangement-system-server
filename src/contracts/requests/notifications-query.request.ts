@@ -1,15 +1,14 @@
-import { BooleanFilter, DateFilter, NullableNumberFilter, NullableStringFilter } from "../../lib/query";
+import { BooleanFilter, DateFilter, NullableStringFilter } from "../../lib/query";
 import { 
     IsBooleanFilterArray,
     IsDateFilterArray,
-    IsNullableNumberFilterArray, 
     IsNullableStringFilterArray 
 } from "../../decorators";
 import { BaseQueryRequest } from "../bases";
 
 export class NotificationsQueryRequest extends BaseQueryRequest {
-    @IsNullableNumberFilterArray()
-    senderIdFilter?: NullableNumberFilter[];
+    @IsNullableStringFilterArray()
+    senderIdFilter?: NullableStringFilter[];
 
     @IsNullableStringFilterArray()
     titleFilter?: NullableStringFilter[];

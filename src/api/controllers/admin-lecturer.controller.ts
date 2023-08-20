@@ -48,48 +48,48 @@ export class AdminLecturerController {
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id')
     @ResponseSchema(LecturerDetailResponse)
-    getLecturerDetail(@Param('id') id: number) {
+    getLecturerDetail(@Param('id') id: string) {
         return this.adminLecturerService.getLecturerDetail(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/lecturer-info')
     @ResponseSchema(LecturerInfoDto)
-    getLecturerInfo(@Param('id') id: number) {
+    getLecturerInfo(@Param('id') id: string) {
         return this.adminLecturerService.getLecturerInfo(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-registrations')
     @ResponseSchema(BachelorThesisRegistrationDto, { isArray: true })
-    getLecturerBachelorThesisRegistrations(@Param('id') id: number) {
+    getLecturerBachelorThesisRegistrations(@Param('id') id: string) {
         return this.adminLecturerService.getLecturerBachelorThesisRegistrations(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-registrations')
     @ResponseSchema(OralDefenseRegistrationDto, { isArray: true })
-    getLecturerOralDefenseRegistrations(@Param('id') id: number) {
+    getLecturerOralDefenseRegistrations(@Param('id') id: string) {
         return this.adminLecturerService.getLecturerOralDefenseRegistrations(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-assessments')
     @ResponseSchema(BachelorThesisAssessmentDto, { isArray: true })
-    getLecturerBachelorThesisAssessments(@Param('id') id: number) {
+    getLecturerBachelorThesisAssessments(@Param('id') id: string) {
         return this.adminLecturerService.getLecturerBachelorThesisAssessments(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-assessments')
     @ResponseSchema(OralDefenseAssessmentDto, { isArray: true })
-    getLecturerOralDefenseAssessments(@Param('id') id: number) {
+    getLecturerOralDefenseAssessments(@Param('id') id: string) {
         return this.adminLecturerService.getLecturerOralDefenseAssessments(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Post('/:id')
-    updateLecturer(@Param('id') id: number, @Body({ required: true }) updateRequest: LecturerUpdateRequest) {
+    updateLecturer(@Param('id') id: string, @Body({ required: true }) updateRequest: LecturerUpdateRequest) {
         return this.adminLecturerService.updateLecturer(id, updateRequest);
     }
 }

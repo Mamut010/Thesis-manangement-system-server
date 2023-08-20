@@ -34,7 +34,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
 
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.Surname, data.surname));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.Forename, data.forename));
-        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.MatriculationNo, data.studentId.toString()));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.MatriculationNo, data.studentId));
         fields.push(new DateField(TEMPLATE_FIELDS.BachelorThesisRegistration.DateOfBirth, data.dateOfBirth));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.PlaceOfBirth, data.placeOfBirth));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.FurtherParticipants, data.furtherParticipants));
@@ -89,7 +89,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.SecondExaminerName, data.supervisor2Title));
         fields.push(new DateField(TEMPLATE_FIELDS.BachelorThesisAssessment.AssessmentDate, data.assessmentDate));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.Forename, data.forename));
-        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.MatriculationNo, data.studentId.toString()));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.MatriculationNo, data.studentId));
         fields.push(new RadioButtonField(
             TEMPLATE_FIELDS.BachelorThesisAssessment.IndividualOrGroupStudy.Name,
             data.furtherParticipants 
@@ -119,7 +119,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
 
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Surname, data.surname));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.ThesisTitle, data.thesisTitle));
-        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.MatriculationNo, data.studentId.toString()));
+        fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.MatriculationNo, data.studentId));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Forename, data.forename));
         if (data.title === TITLES.Mr) {
             fields.push(new RadioButtonField(
@@ -147,7 +147,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.DateOfAdmission, data.admissionDate));
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Surname, data.surname));
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Forename, data.forename));
-        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.MatriculationNo, data.studentId.toString()));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.MatriculationNo, data.studentId));
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.FirstExaminerName, data.supervisor1Title));
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.SecondExaminerName, data.supervisor2Title));
         fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.Date, data.proposedDate));
@@ -196,7 +196,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new NumberField(TEMPLATE_FIELDS.OralDefenseAssessment.FirstExaminerGrade, data.supervisor1Grade, numberOptions));
         fields.push(new NumberField(TEMPLATE_FIELDS.OralDefenseAssessment.SecondExaminerGrade, data.supervisor2Grade, numberOptions));
         fields.push(new NumberField(TEMPLATE_FIELDS.OralDefenseAssessment.OverallGrade, data.overallGrade, numberOptions));
-        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.MatriculationNo, data.studentId.toString()));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.MatriculationNo, data.studentId));
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseAssessment.Place, data.placeDefense));
         fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseAssessment.AssessmentDate, data.assessmentDate));
         fields.push(new RadioButtonField(

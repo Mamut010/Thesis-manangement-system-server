@@ -9,8 +9,8 @@ export class NotificationDto {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    senderId!: number | null;
+    @IsString()
+    senderId!: string | null;
 
     @Expose()
     @IsOptional()

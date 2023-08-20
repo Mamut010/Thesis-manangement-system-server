@@ -1,15 +1,12 @@
 import { Expose, Type } from "class-transformer";
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsDefined, IsEmail, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsDefined, IsEmail, IsIn, IsOptional, IsString } from "class-validator";
 import { ROLES } from "../../core/constants/roles";
 
 export class SignUpRequest {
-    /**
-     * User ID
-     */
     @Expose()
     @IsDefined()
-    @IsNumber()
-    id!: number;
+    @IsString()
+    userId!: string;
 
     @Expose()
     @IsDefined()

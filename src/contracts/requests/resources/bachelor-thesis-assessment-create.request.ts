@@ -9,18 +9,18 @@ export class BachelorThesisAssessmentCreateRequest {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    studentId!: number;
+    @IsString()
+    studentId!: string;
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    supervisor1Id?: number;
+    @IsString()
+    supervisor1Id?: string;
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    supervisor2Id?: number;
+    @IsString()
+    supervisor2Id?: string;
 
     @Expose()
     @IsOptional()

@@ -12,11 +12,11 @@ import {
 
 export interface AdminLecturerServiceInterface {
     getLecturers(lecturersQuery: LecturersQueryRequest): Promise<LecturersQueryResponse>;
-    getLecturerDetail(lecturerId: number): Promise<LecturerDetailResponse>;
-    getLecturerInfo(lecturerId: number): Promise<LecturerInfoDto>
-    getLecturerBachelorThesisRegistrations(lecturerId: number): Promise<BachelorThesisRegistrationDto[]>;
-    getLecturerOralDefenseRegistrations(lecturerId: number): Promise<OralDefenseRegistrationDto[]>;
-    getLecturerBachelorThesisAssessments(lecturerId: number): Promise<BachelorThesisAssessmentDto[]>;
-    getLecturerOralDefenseAssessments(lecturerId: number): Promise<OralDefenseAssessmentDto[]>;
-    updateLecturer(lecturerId: number, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto>;
+    getLecturerDetail(lecturerId: string): Promise<LecturerDetailResponse>;
+    getLecturerInfo(lecturerId: string): Promise<LecturerInfoDto>
+    getLecturerBachelorThesisRegistrations(lecturerId: string): Promise<BachelorThesisRegistrationDto[]>;
+    getLecturerOralDefenseRegistrations(lecturerId: string): Promise<OralDefenseRegistrationDto[]>;
+    getLecturerBachelorThesisAssessments(lecturerId: string): Promise<BachelorThesisAssessmentDto[]>;
+    getLecturerOralDefenseAssessments(lecturerId: string): Promise<OralDefenseAssessmentDto[]>;
+    updateLecturer(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto>;
 }

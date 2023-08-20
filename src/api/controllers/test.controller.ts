@@ -486,7 +486,7 @@ export class TestController {
     @HttpCode(HTTP_CODES.Ok)
     @Get('/received-notification')
     async testReceivedNotification() {
-        const userId = 10001;
+        const userId = '10001';
         const queryRequest = new NotificationsQueryRequest();
 
         return await this.notificationService.getReceivedNotifications(userId, queryRequest);
@@ -494,7 +494,7 @@ export class TestController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Post('/send-notification/:to-id')
-    async testSendNotification(@Param('to-id') toId: number) {
+    async testSendNotification(@Param('to-id') toId: string) {
         const fromId = undefined;
         toId = toId ?? 1;
 

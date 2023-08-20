@@ -11,10 +11,10 @@ import {
 
 export interface AdminStudentServiceInterface {
     getStudents(studentsQuery: StudentsQueryRequest): Promise<StudentsQueryResponse>;
-    getStudentDetail(studentId: number): Promise<StudentDetailResponse>;
-    getStudentInfo(studentId: number): Promise<StudentInfoDto>
-    getStudentBachelorThesisRegistration(studentId: number): Promise<BachelorThesisRegistrationDto>;
-    getStudentOralDefenseRegistration(studentId: number): Promise<OralDefenseRegistrationDto>;
-    getStudentBachelorThesisAssessment(studentId: number): Promise<BachelorThesisAssessmentDto>;
-    getStudentOralDefenseAssessment(studentId: number): Promise<OralDefenseAssessmentDto>;
+    getStudentDetail(studentId: string): Promise<StudentDetailResponse>;
+    getStudentInfo(studentId: string): Promise<StudentInfoDto>
+    getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationDto>;
+    getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto>;
+    getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentDto>;
+    getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentDto>;
 }

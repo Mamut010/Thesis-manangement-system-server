@@ -5,6 +5,6 @@ import { LecturerInfoDto } from "../dtos";
 
 export interface LecturerRepoInterface {
     getLecturers(queryRequest: LecturersQueryRequest): Promise<LecturersQueryResponse>;
-    getLecturerInfo(id: number): Promise<LecturerInfoDto>;
-    updateLecturer(id: number, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto>;
+    getLecturerInfo(id: string): Promise<LecturerInfoDto>;
+    updateLecturer(id: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto>;
 }

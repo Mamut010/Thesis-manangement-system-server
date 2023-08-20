@@ -13,7 +13,6 @@ import { User } from "../../core/models";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { UserCreateRequestDto, UserUpdateRequestDto } from "../dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
-import { ForbiddenError } from "../../contracts/errors/forbidden.error";
 
 @injectable()
 export class UserRepo implements UserRepoInterface {
@@ -83,7 +82,7 @@ export class UserRepo implements UserRepoInterface {
         return plainToInstanceExactMatch(User, user);
     }
 
-    async delete(userId: number): Promise<void> {
+    async delete(userId: string): Promise<void> {
         try {
             await this.prisma.user.findUniqueOrThrow({
                 where: {

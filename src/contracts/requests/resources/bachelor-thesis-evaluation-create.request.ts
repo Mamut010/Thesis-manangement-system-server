@@ -10,13 +10,13 @@ export class BachelorThesisEvaluationCreateRequest {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    studentId!: number;
+    @IsString()
+    studentId!: string;
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    supervisorId!: number;
+    @IsString()
+    supervisorId!: string;
 
     @Expose()
     @IsOptional()

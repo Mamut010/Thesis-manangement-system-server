@@ -3,8 +3,8 @@ import { IsNumberFilterArray, IsStringFilterArray } from "../../decorators";
 import { BaseQueryRequest } from "../bases";
 
 export class StudentsQueryRequest extends BaseQueryRequest {
-    @IsNumberFilterArray()
-    studentIdFilter?: NumberFilter[];
+    @IsStringFilterArray()
+    studentIdFilter?: StringFilter[];
 
     @IsStringFilterArray()
     usernameFilter?: StringFilter[];

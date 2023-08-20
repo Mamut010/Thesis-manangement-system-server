@@ -9,8 +9,8 @@ export class Admin {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    userId!: number;
+    @IsString()
+    userId!: string;
 
     @Expose()
     @IsOptional()

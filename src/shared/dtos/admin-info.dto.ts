@@ -1,11 +1,11 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDefined, IsEmail, IsOptional, IsString } from "class-validator";
 
 export class AdminInfoDto {
     @Expose()
     @IsDefined()
-    @IsNumber()
-    adminId!: number;
+    @IsString()
+    adminId!: string;
 
     @Expose()
     @IsOptional()

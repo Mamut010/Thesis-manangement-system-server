@@ -4,8 +4,8 @@ import { Expose } from "class-transformer";
 export class UserUpdateRequestDto {
     @Expose()
     @IsDefined()
-    @IsNumber()
-    userId!: number;
+    @IsString()
+    userId!: string;
 
     @Expose()
     @IsOptional()

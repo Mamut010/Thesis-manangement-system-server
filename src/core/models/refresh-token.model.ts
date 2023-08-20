@@ -9,8 +9,8 @@ export class RefreshToken {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    userId!: number
+    @IsString()
+    userId!: string
 
     @Expose()
     @IsDefined()

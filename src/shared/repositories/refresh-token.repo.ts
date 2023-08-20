@@ -27,7 +27,7 @@ export class RefreshTokenRepo implements RefreshTokenRepoInterface {
         }
     }
 
-    public async deleteAll(userId: number): Promise<number> {
+    public async deleteAll(userId: string): Promise<number> {
         try {
             const { count } = await this.prisma.refreshToken.deleteMany({
                 where: {

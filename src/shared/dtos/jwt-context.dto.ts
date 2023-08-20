@@ -10,8 +10,8 @@ export class JwtAccessContextDto {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    userId!: number;
+    @IsString()
+    userId!: string;
 
     @Expose()
     @IsDefined()

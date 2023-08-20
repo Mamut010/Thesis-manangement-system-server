@@ -1,12 +1,12 @@
-import { IsDefined, IsEmail, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsDefined, IsEmail, IsOptional, IsString, ValidateNested } from "class-validator";
 import { Role } from "../../core/models";
 import { Expose, Type } from "class-transformer";
 
 export class UserCreateRequestDto {
     @Expose()
     @IsDefined()
-    @IsNumber()
-    userId!: number;
+    @IsString()
+    userId!: string;
 
     @Expose()
     @IsDefined()
