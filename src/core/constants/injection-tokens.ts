@@ -16,6 +16,7 @@ const REPOSITORY_TOKENS = {
     UserRepo: Symbol.for('UserRepo'),
     RefreshTokenRepo: Symbol.for('RefreshTokenRepo'),
     LecturerRepo: Symbol.for('LecturerRepo'),
+    AdminRepo: Symbol.for('AdminRepo'),
     BachelorThesisRegistrationRepo: Symbol.for('BachelorThesisRegistrationRepo'),
     BachelorThesisAssessmentRepo: Symbol.for('BachelorThesisAssessmentRepo'),
     BachelorThesisEvaluationRepo: Symbol.for('BachelorThesisEvaluationRepo'),

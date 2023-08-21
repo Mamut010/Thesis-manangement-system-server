@@ -10,7 +10,7 @@ import { PlainTransformerInterface } from "../../shared/utils/plain-transformer"
 import { LecturerRepoInterface } from "../interfaces";
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
-import { PrismaQueryCreatorInterface } from "../../lib/query";
+import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { Lecturer, User } from "../../core/models";
 
 @injectable()
@@ -23,15 +23,7 @@ export class LecturerRepo implements LecturerRepoInterface {
     }
 
     async query(queryRequest: LecturersQueryRequest): Promise<LecturersQueryResponse> {
-        const model = {
-            ...this.queryCreator.createQueryModel(Lecturer),
-            user: this.queryCreator.createQueryModel(User)
-        }
-        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest, { 
-            fieldNameMap: { 
-                lecturerId: 'userId' 
-            } 
-        });
+        const prismaQuery = this.createPrismaQuery(queryRequest);
 
         const count = await this.prisma.lecturer.count({ where: prismaQuery.where });
         const lecturers = await this.prisma.lecturer.findMany({
@@ -95,6 +87,18 @@ export class LecturerRepo implements LecturerRepoInterface {
                 userId: id
             },
             include: userWithRoleInclude
+        });
+    }
+
+    private createPrismaQuery(queryRequest: AutoQueryCreatable) {
+        const model = {
+            ...this.queryCreator.createQueryModel(Lecturer),
+            user: this.queryCreator.createQueryModel(User)
+        }
+        return this.queryCreator.createQueryObject(model, queryRequest, { 
+            fieldNameMap: { 
+                lecturerId: 'userId' 
+            } 
         });
     }
 }

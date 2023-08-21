@@ -38,6 +38,7 @@ import {
     BachelorThesisEvaluationService
 } from '../api/services';
 import { 
+    AdminRepoInterface,
     BachelorThesisAssessmentRepoInterface,
     BachelorThesisEvaluationRepoInterface,
     BachelorThesisRegistrationRepoInterface, 
@@ -65,7 +66,8 @@ import {
     ThesisRepo,
     TopicRepo,
     LocationRepo,
-    RoleRepo
+    RoleRepo,
+    AdminRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -156,6 +158,11 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<LecturerRepoInterface>(INJECTION_TOKENS.LecturerRepo)
         .to(LecturerRepo)
+        .inRequestScope();
+
+    container
+        .bind<AdminRepoInterface>(INJECTION_TOKENS.AdminRepo)
+        .to(AdminRepo)
         .inRequestScope();
 
     container

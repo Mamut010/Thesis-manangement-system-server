@@ -1,34 +1,34 @@
 import { inject, injectable } from "inversify";
 import { AdminServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { AdminInfoDto } from "../../shared/dtos";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { AdminRepoInterface } from "../../dal/interfaces";
+import { AdminUpdateRequest } from "../../contracts/requests/admin-update.request";
 
 @injectable()
 export class AdminService implements AdminServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface) {
+        @inject(INJECTION_TOKENS.AdminRepo) private adminRepo: AdminRepoInterface) {
 
     }
 
     async getAdminInfo(adminId: string): Promise<AdminInfoDto> {
-        const admin = await this.prisma.admin.findUnique({
-            where: {
-                userId: adminId
-            },
-            include: {
-                user: true,
-            }
-        });
-
-        if (!admin) {
+        const result = await this.adminRepo.findOneById(adminId);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.AdminNotFound);
         }
 
-        return this.plainTransformer.toAdminInfo(admin);
+        return result;
+    }
+
+    async updateAdmin(adminId: string, updateRequest: AdminUpdateRequest): Promise<AdminInfoDto> {
+        const result = await this.adminRepo.update(adminId, updateRequest);
+        if (!result) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.AdminNotFound);
+        }
+
+        return result;
     }
 }
