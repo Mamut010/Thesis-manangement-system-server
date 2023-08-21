@@ -54,17 +54,17 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         const response = new LecturerDetailResponse();
         response.lecturerInfo = await this.getLecturerInfo(lecturerId);
 
-        response.bachelorThesisRegistrations = await this.getLecturerBachelorThesisRegistrations
-            (lecturerId, lecturerAssetsQueryRequest);
+        response.bachelorThesisRegistrations = await this.getLecturerBachelorThesisRegistrations(lecturerId, 
+            lecturerAssetsQueryRequest);
 
-        response.oralDefenseRegistrations = await this.getLecturerOralDefenseRegistrations
-            (lecturerId, lecturerAssetsQueryRequest);
+        response.oralDefenseRegistrations = await this.getLecturerOralDefenseRegistrations(lecturerId, 
+            lecturerAssetsQueryRequest);
 
-        response.bachelorThesisAssessments = await this.getLecturerBachelorThesisAssessments
-            (lecturerId, lecturerAssetsQueryRequest);
+        response.bachelorThesisAssessments = await this.getLecturerBachelorThesisAssessments(lecturerId, 
+            lecturerAssetsQueryRequest);
             
-        response.oralDefenseAssessments = await this.getLecturerOralDefenseAssessments
-            (lecturerId, lecturerAssetsQueryRequest);
+        response.oralDefenseAssessments = await this.getLecturerOralDefenseAssessments(lecturerId, 
+            lecturerAssetsQueryRequest);
 
         return response;
     }

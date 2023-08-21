@@ -1,87 +1,52 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
 import { FieldServiceInterface } from "../../interfaces";
 import { FieldsQueryRequest } from "../../../contracts/requests/resources/fields-query.request";
 import { FieldsQueryResponse } from "../../../contracts/responses/resources/fields-query.response";
-import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { FieldDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { FieldCreateRequest } from "../../../contracts/requests/resources/field-create.request";
 import { FieldUpdateRequest } from "../../../contracts/requests/resources/field-update.request";
-import { Field } from "../../../core/models";
-import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
-import { anyChanges } from "../../../utils/crud-helpers";
+import { FieldRepoInterface } from "../../../dal/interfaces";
 
 @injectable()
 export class FieldService implements FieldServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
-        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
-    ) {
+        @inject(INJECTION_TOKENS.FieldRepo) private fieldRepo: FieldRepoInterface) {
 
     }
 
     async getFields(queryRequest: FieldsQueryRequest): Promise<FieldsQueryResponse> {
-        const model = this.queryCreator.createQueryModel(Field);
-        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest);
-
-        const count = await this.prisma.field.count({ where: prismaQuery.where });
-        const fields = await this.prisma.field.findMany(prismaQuery);
-
-        const response = new FieldsQueryResponse();
-        response.content = fields.map(item => this.plainTransformer.toField(item));
-        response.count = count;
-        return response;
+        return await this.fieldRepo.query(queryRequest);
     }
 
     async getField(id: number): Promise<FieldDto> {
-        const field = await this.ensureRecordExists(id);
-        return this.plainTransformer.toField(field);
+        return await this.ensureRecordExists(id);
     }
 
     async createField(createRequest: FieldCreateRequest): Promise<FieldDto> {
-        const field = await this.prisma.field.create({
-            data: createRequest
-        });
-        return this.plainTransformer.toField(field);
+        return await this.fieldRepo.create(createRequest);
     }
 
     async updateField(id: number, updateRequest: FieldUpdateRequest): Promise<FieldDto> {
-        let record = await this.ensureRecordExists(id);
-        if (anyChanges(record, updateRequest)) {
-            record = await this.prisma.field.update({
-                where: {
-                    id: id
-                },
-                data: updateRequest
-            });
+        const record = await this.fieldRepo.update(id, updateRequest);
+        if (!record) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.FieldNotFound);
         }
 
-        return this.plainTransformer.toField(record);
+        return record;
     }
 
     async deleteField(id: number): Promise<void> {
-        await this.ensureRecordExists(id);
-
-        await this.prisma.field.delete({
-            where: {
-                id: id
-            }
-        });
+        await this.fieldRepo.delete(id);
     }
 
     private async ensureRecordExists(id: number) {
-        try {
-            return await this.prisma.field.findUniqueOrThrow({
-                where: {
-                    id: id
-            }});
-        }
-        catch {
+        const result = await this.fieldRepo.findOneById(id);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.FieldNotFound);
         }
+        return result;
     }
 }
