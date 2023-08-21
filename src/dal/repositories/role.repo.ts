@@ -10,7 +10,7 @@ import { Role } from "../../core/models";
 import { RoleDto } from "../../shared/dtos";
 import { RoleCreateRequest } from "../../contracts/requests/resources/role-create.request";
 import { RoleUpdateRequest } from "../../contracts/requests/resources/role-update.request";
-import { anyChanges } from "../../utils/crud-helpers";
+import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 

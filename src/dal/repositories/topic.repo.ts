@@ -10,7 +10,7 @@ import { Topic } from "../../core/models";
 import { TopicDto } from "../../shared/dtos";
 import { TopicCreateRequest } from "../../contracts/requests/resources/topic-create.request";
 import { TopicUpdateRequest } from "../../contracts/requests/resources/topic-update.request";
-import { anyChanges } from "../../utils/crud-helpers";
+import { anyChanges } from "../utils/crud-helpers";
 
 @injectable()
 export class TopicRepo implements TopicRepoInterface {

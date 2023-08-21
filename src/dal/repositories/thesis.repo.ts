@@ -10,7 +10,7 @@ import { Thesis } from "../../core/models";
 import { ThesisDto } from "../../shared/dtos";
 import { ThesisCreateRequest } from "../../contracts/requests/resources/thesis-create.request";
 import { ThesisUpdateRequest } from "../../contracts/requests/resources/thesis-update.request";
-import { anyChanges } from "../../utils/crud-helpers";
+import { anyChanges } from "../utils/crud-helpers";
 import { thesisInclude } from "../constants/includes";
 
 @injectable()

@@ -10,7 +10,7 @@ import { Location } from "../../core/models";
 import { LocationDto } from "../../shared/dtos";
 import { LocationCreateRequest } from "../../contracts/requests/resources/location-create.request";
 import { LocationUpdateRequest } from "../../contracts/requests/resources/location-update.request";
-import { anyChanges } from "../../utils/crud-helpers";
+import { anyChanges } from "../utils/crud-helpers";
 
 @injectable()
 export class LocationRepo implements LocationRepoInterface {

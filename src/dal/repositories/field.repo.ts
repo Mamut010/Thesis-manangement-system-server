@@ -10,7 +10,7 @@ import { Field } from "../../core/models";
 import { FieldDto } from "../../shared/dtos";
 import { FieldCreateRequest } from "../../contracts/requests/resources/field-create.request";
 import { FieldUpdateRequest } from "../../contracts/requests/resources/field-update.request";
-import { anyChanges } from "../../utils/crud-helpers";
+import { anyChanges } from "../utils/crud-helpers";
 
 @injectable()
 export class FieldRepo implements FieldRepoInterface {

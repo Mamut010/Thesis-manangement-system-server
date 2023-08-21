@@ -1,4 +1,4 @@
-import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "./object-helpers";
+import { compareObjectByEntries, isObjectEmptyOrAllUndefined } from "../../utils/object-helpers";
 
 export function anyChanges<T extends Record<string, any>, U extends Record<string, any>>
     (existingRecord: T, updateRequest: U): boolean {

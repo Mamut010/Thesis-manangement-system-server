@@ -10,7 +10,7 @@ import { bachelorThesisEvaluationInclude } from "../constants/includes";
 import { BachelorThesisEvaluationDto } from "../../shared/dtos";
 import { BachelorThesisEvaluationCreateRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluation-create.request";
 import { BachelorThesisEvaluationUpdateRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluation-update.request";
-import { anyChanges } from "../../utils/crud-helpers";
+import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BachelorThesisEvaluationRepoInterface } from "../interfaces";

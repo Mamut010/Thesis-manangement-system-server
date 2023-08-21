@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 import { LecturerInfoDto } from "../../shared/dtos";
 import { userWithRoleInclude } from "../constants/includes";
-import { anyChanges } from "../../utils/crud-helpers";
+import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
 import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
 import { LecturerRepoInterface } from "../interfaces";
