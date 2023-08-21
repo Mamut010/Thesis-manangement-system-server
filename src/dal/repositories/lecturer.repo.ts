@@ -3,7 +3,7 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 import { LecturerInfoDto } from "../../shared/dtos";
-import { userInclude } from "../../shared/constants/includes";
+import { userWithRoleInclude } from "../../shared/constants/includes";
 import { anyChanges } from "../../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
 import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
@@ -36,7 +36,7 @@ export class LecturerRepo implements LecturerRepoInterface {
         const count = await this.prisma.lecturer.count({ where: prismaQuery.where });
         const lecturers = await this.prisma.lecturer.findMany({
             ...prismaQuery,
-            include: userInclude
+            include: userWithRoleInclude
         })
 
         const response = new LecturersQueryResponse();
@@ -82,7 +82,7 @@ export class LecturerRepo implements LecturerRepoInterface {
                         }
                     }
                 },
-                include: userInclude
+                include: userWithRoleInclude
             });
         }
 
@@ -94,7 +94,7 @@ export class LecturerRepo implements LecturerRepoInterface {
             where: {
                 userId: id
             },
-            include: userInclude
+            include: userWithRoleInclude
         });
     }
 }

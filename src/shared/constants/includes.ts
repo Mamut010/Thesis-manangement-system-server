@@ -1,4 +1,8 @@
 export const userInclude = {
+    user: true
+} as const;
+
+export const userWithRoleInclude = {
     user: {
         include: {
             role: true
