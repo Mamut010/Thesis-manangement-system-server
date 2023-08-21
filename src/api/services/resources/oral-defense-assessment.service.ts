@@ -1,30 +1,20 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
 import { OralDefenseAssessmentsQueryRequest } from "../../../contracts/requests/resources/oral-defense-assessments-query.request";
 import { OralDefenseAssessmentsQueryResponse } from "../../../contracts/responses/resources/oral-defense-assessments-query.response";
-import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { OralDefenseAssessmentDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { OralDefenseAssessmentCreateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-create.request";
 import { OralDefenseAssessmentUpdateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-update.request";
-import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { OralDefenseAssessmentServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { OralDefenseAssessment } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
-import { PlainOralDefenseAssessment } from "../../../shared/types/plain-types";
-import { anyChanges } from "../../../utils/crud-helpers";
-import { bachelorThesisAndOralDefenseInclude } from "../../../dal/constants/includes";
 import { OralDefenseAssessmentRepoInterface } from "../../../dal/interfaces";
 
 @injectable()
 export class OralDefenseAssessmentService implements OralDefenseAssessmentServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
-        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface,
         @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface) {
 
     }

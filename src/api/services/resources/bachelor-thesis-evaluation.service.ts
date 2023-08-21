@@ -1,21 +1,15 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
 import { BachelorThesisEvaluationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
 import { BachelorThesisEvaluationsQueryResponse } from "../../../contracts/responses/resources/bachelor-thesis-evaluations-query.response";
-import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { BachelorThesisEvaluationDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { BachelorThesisEvaluationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-create.request";
 import { BachelorThesisEvaluationUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-update.request";
-import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { BachelorThesisEvaluationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { BachelorThesisEvaluation } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
-import { PlainBachelorThesisEvaluation } from "../../../shared/types/plain-types";
-import { anyChanges } from "../../../utils/crud-helpers";
 import { BachelorThesisEvaluationRepoInterface } from "../../../dal/interfaces";
 
 @injectable()
@@ -31,9 +25,6 @@ export class BachelorThesisEvaluationService implements BachelorThesisEvaluation
     } as const;
     
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
-        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface,
         @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface) {
 
     }
