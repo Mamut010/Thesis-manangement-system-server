@@ -18,7 +18,6 @@ model User {
     surname                 String?         @db.VarChar(255)
     forename                String?         @db.VarChar(255)
     signature               String?         @db.MediumText
-    socketId                String?         @db.VarChar(255)
     createdAt               DateTime        @default(now()) @db.Timestamp(6)
     updatedAt               DateTime        @updatedAt @db.Timestamp(6)
 

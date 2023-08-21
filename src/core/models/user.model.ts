@@ -48,11 +48,6 @@ export class User {
     signature!: string | null;
 
     @Expose()
-    @IsOptional()
-    @IsString()
-    socketId!: string | null;
-
-    @Expose()
     @IsDefined()
     @IsDate()
     createdAt!: Date;

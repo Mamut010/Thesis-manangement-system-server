@@ -26,9 +26,4 @@ export class UserUpdateRequestDto {
     @IsOptional()
     @IsEmail()
     email?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    socketId?: string;
 }
