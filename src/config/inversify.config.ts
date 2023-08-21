@@ -43,9 +43,13 @@ import {
     BachelorThesisRegistrationRepoInterface, 
     FieldRepoInterface, 
     LecturerRepoInterface, 
+    LocationRepoInterface, 
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface, 
     RefreshTokenRepoInterface, 
+    RoleRepoInterface, 
+    ThesisRepoInterface, 
+    TopicRepoInterface, 
     UserRepoInterface 
 } from '../dal/interfaces';
 import { 
@@ -57,7 +61,11 @@ import {
     OralDefenseRegistrationRepo,
     OralDefenseAssessmentRepo,
     BachelorThesisEvaluationRepo,
-    FieldRepo
+    FieldRepo,
+    ThesisRepo,
+    TopicRepo,
+    LocationRepo,
+    RoleRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -176,8 +184,28 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
         .inRequestScope();
 
     container
+        .bind<ThesisRepoInterface>(INJECTION_TOKENS.ThesisRepo)
+        .to(ThesisRepo)
+        .inRequestScope();
+
+    container
         .bind<FieldRepoInterface>(INJECTION_TOKENS.FieldRepo)
         .to(FieldRepo)
+        .inRequestScope();
+
+    container
+        .bind<TopicRepoInterface>(INJECTION_TOKENS.TopicRepo)
+        .to(TopicRepo)
+        .inRequestScope();
+
+    container
+        .bind<LocationRepoInterface>(INJECTION_TOKENS.LocationRepo)
+        .to(LocationRepo)
+        .inRequestScope();
+
+    container
+        .bind<RoleRepoInterface>(INJECTION_TOKENS.RoleRepo)
+        .to(RoleRepo)
         .inRequestScope();
 }
 

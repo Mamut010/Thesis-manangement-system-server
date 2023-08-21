@@ -21,7 +21,11 @@ const REPOSITORY_TOKENS = {
     BachelorThesisEvaluationRepo: Symbol.for('BachelorThesisEvaluationRepo'),
     OralDefenseRegistrationRepo: Symbol.for('OralDefenseRegistrationRepo'),
     OralDefenseAssessmentRepo: Symbol.for('OralDefenseAssessmentRepo'),
+    ThesisRepo: Symbol.for('ThesisRepo'),
     FieldRepo: Symbol.for('FieldRepo'),
+    TopicRepo: Symbol.for('TopicRepo'),
+    LocationRepo: Symbol.for('LocationRepo'),
+    RoleRepo: Symbol.for('RoleRepo'),
 } as const;
 
 const AUTH_SERVICE_TOKENS = {

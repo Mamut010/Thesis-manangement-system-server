@@ -8,3 +8,6 @@ export * from './oral-defense-registration.repo';
 export * from './oral-defense-assessment.repo';
 export * from './thesis.repo';
 export * from './field.repo';
+export * from './topic.repo';
+export * from './location.repo';
+export * from './role.repo';
