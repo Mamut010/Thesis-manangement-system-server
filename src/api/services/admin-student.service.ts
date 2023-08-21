@@ -144,6 +144,6 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         studentIdFilter.operator = 'equals';
 
         const queryRequest = new cls();
-        return Object.assign(queryRequest, { studentIdFilter });
+        return Object.assign(queryRequest, { studentIdFilter: [studentIdFilter] });
     }
 }
