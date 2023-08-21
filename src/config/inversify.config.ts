@@ -41,6 +41,8 @@ import {
     BachelorThesisAssessmentRepoInterface,
     BachelorThesisRegistrationRepoInterface, 
     LecturerRepoInterface, 
+    OralDefenseAssessmentRepoInterface, 
+    OralDefenseRegistrationRepoInterface, 
     RefreshTokenRepoInterface, 
     UserRepoInterface 
 } from '../dal/interfaces';
@@ -49,7 +51,9 @@ import {
     RefreshTokenRepo,
     LecturerRepo,
     BachelorThesisRegistrationRepo,
-    BachelorThesisAssessmentRepo
+    BachelorThesisAssessmentRepo,
+    OralDefenseRegistrationRepo,
+    OralDefenseAssessmentRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -150,6 +154,16 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<BachelorThesisAssessmentRepoInterface>(INJECTION_TOKENS.BachelorThesisAssessmentRepo)
         .to(BachelorThesisAssessmentRepo)
+        .inRequestScope();
+
+    container
+        .bind<OralDefenseRegistrationRepoInterface>(INJECTION_TOKENS.OralDefenseRegistrationRepo)
+        .to(OralDefenseRegistrationRepo)
+        .inRequestScope();
+
+    container
+        .bind<OralDefenseAssessmentRepoInterface>(INJECTION_TOKENS.OralDefenseAssessmentRepo)
+        .to(OralDefenseAssessmentRepo)
         .inRequestScope();
 }
 

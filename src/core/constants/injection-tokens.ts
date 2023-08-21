@@ -18,6 +18,8 @@ const REPOSITORY_TOKENS = {
     LecturerRepo: Symbol.for('LecturerRepo'),
     BachelorThesisRegistrationRepo: Symbol.for('BachelorThesisRegistrationRepo'),
     BachelorThesisAssessmentRepo: Symbol.for('BachelorThesisAssessmentRepo'),
+    OralDefenseRegistrationRepo: Symbol.for('OralDefenseRegistrationRepo'),
+    OralDefenseAssessmentRepo: Symbol.for('OralDefenseAssessmentRepo'),
 } as const;
 
 const AUTH_SERVICE_TOKENS = {

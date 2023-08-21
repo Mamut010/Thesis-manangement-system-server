@@ -1,115 +1,63 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
 import { OralDefenseRegistrationsQueryRequest } from "../../../contracts/requests/resources/oral-defense-registrations-query.request";
 import { OralDefenseRegistrationsQueryResponse } from "../../../contracts/responses/resources/oral-defense-registrations-query.response";
-import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { OralDefenseRegistrationDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { OralDefenseRegistrationCreateRequest } from "../../../contracts/requests/resources/oral-defense-registration-create.request";
 import { OralDefenseRegistrationUpdateRequest } from "../../../contracts/requests/resources/oral-defense-registration-update.request";
-import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { OralDefenseRegistrationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { OralDefenseRegistration } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
-import { PlainOralDefenseRegistration } from "../../../shared/types/plain-types";
-import { anyChanges } from "../../../utils/crud-helpers";
-import { bachelorThesisAndOralDefenseInclude } from "../../../shared/constants/includes";
+import { OralDefenseRegistrationRepoInterface } from "../../../dal/interfaces";
 
 @injectable()
 export class OralDefenseRegistrationService implements OralDefenseRegistrationServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
-        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
-    ) {
+        @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface) {
 
     }
 
     async getOralDefenseRegistrations(user: AuthorizedUser, queryRequest: OralDefenseRegistrationsQueryRequest)
         : Promise<OralDefenseRegistrationsQueryResponse> {
-        const fieldMap = {
-            surname: 'student.user.surname',
-            forename: 'student.user.forename',
-            thesisTitle: 'thesis.title',
-            supervisor1Title: 'supervisor1.title',
-            supervisor2Title: 'supervisor2.title',
-        };
-        const model = this.queryCreator.createQueryModel(OralDefenseRegistration);
-        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
-
-        const count = await this.prisma.oralDefenseRegistration.count({ where: prismaQuery.where });
-        const oralDefenseRegistrations = await this.prisma.oralDefenseRegistration.findMany({
-            ...prismaQuery,
-            include: bachelorThesisAndOralDefenseInclude,
-        });
-
-        const response = new OralDefenseRegistrationsQueryResponse();
-        response.content = oralDefenseRegistrations.map(item => this.plainTransformer.toOralDefenseRegistration(item));
-        response.count = count;
-        return response;
+            return await this.odrRepo.query(queryRequest);
     }
 
     async getOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<OralDefenseRegistrationDto> {
-        const oralDefenseRegistration = await this.ensureRecordExists(id);
-        return this.plainTransformer.toOralDefenseRegistration(oralDefenseRegistration);
+        return await this.ensureRecordExists(id);
     }
 
     async createOralDefenseRegistration(user: AuthorizedUser, createRequest: OralDefenseRegistrationCreateRequest)
         : Promise<OralDefenseRegistrationDto> {
-        const oralDefenseRegistration = await this.prisma.oralDefenseRegistration.create({
-            data: createRequest,
-            include: bachelorThesisAndOralDefenseInclude,
-        });
-        return this.plainTransformer.toOralDefenseRegistration(oralDefenseRegistration);
+        return await this.odrRepo.create(createRequest);
     }
 
     async updateOralDefenseRegistration(user: AuthorizedUser, id: number, 
         updateRequest: OralDefenseRegistrationUpdateRequest) : Promise<OralDefenseRegistrationDto> {
-        let record = await this.ensureRecordExists(id);
+        const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
-        if (anyChanges(record, updateRequest)) {
-            record = await this.prisma.oralDefenseRegistration.update({
-                where: {
-                    id: id
-                },
-                data: updateRequest,
-                include: bachelorThesisAndOralDefenseInclude,
-            });
-        }
-
-        return this.plainTransformer.toOralDefenseRegistration(record);
+        const result = await this.odrRepo.update(id, updateRequest);
+        return result!;
     }
 
     async deleteOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<void> {
         const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
-        await this.prisma.oralDefenseRegistration.delete({
-            where: {
-                id: id
-            }
-        });
+        await this.odrRepo.delete(id);
     }
 
     private async ensureRecordExists(id: number) {
-        try {
-            return await this.prisma.oralDefenseRegistration.findUniqueOrThrow({
-                where: {
-                    id: id
-                },
-                include: bachelorThesisAndOralDefenseInclude,
-            });
-        }
-        catch {
+        const result = await this.odrRepo.findOneById(id);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseRegistrationNotFound);
         }
+        return result;
     }
 
-    private ensureValidModification(user: AuthorizedUser, record: PlainOralDefenseRegistration) {
+    private ensureValidModification(user: AuthorizedUser, record: OralDefenseRegistrationDto) {
         const isValid = true;
         if (!isValid) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.OralDefenseRegistrationDenied);

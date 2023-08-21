@@ -1,7 +1,6 @@
 import { inject, injectable } from "inversify";
 import { AdminLecturerServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
 import { 
     BachelorThesisAssessmentDto, 
     BachelorThesisRegistrationDto, 
@@ -11,10 +10,14 @@ import {
 } from "../../shared/dtos";
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
-import { bachelorThesisAndOralDefenseInclude } from "../../shared/constants/includes";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
 import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
-import { BachelorThesisRegistrationRepoInterface, LecturerRepoInterface } from "../../dal/interfaces";
+import { 
+    BachelorThesisAssessmentRepoInterface, 
+    BachelorThesisRegistrationRepoInterface, 
+    LecturerRepoInterface, 
+    OralDefenseAssessmentRepoInterface, 
+    OralDefenseRegistrationRepoInterface
+} from "../../dal/interfaces";
 import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
 import { LecturerRoles } from "../../core/constants/roles";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
@@ -25,10 +28,11 @@ import { LecturerAssetsQueryRequest } from "../../contracts/requests/lecturer-as
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
         @inject(INJECTION_TOKENS.LecturerRepo) private lecturerRepo: LecturerRepoInterface,
-        @inject(INJECTION_TOKENS.BachelorThesisRegistrationRepo) private btrRepo: BachelorThesisRegistrationRepoInterface) {
+        @inject(INJECTION_TOKENS.BachelorThesisRegistrationRepo) private btrRepo: BachelorThesisRegistrationRepoInterface,
+        @inject(INJECTION_TOKENS.BachelorThesisAssessmentRepo) private btaRepo: BachelorThesisAssessmentRepoInterface,
+        @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface,
+        @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface) {
 
     }
 
@@ -70,61 +74,19 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         return await this.btrRepo.queryLecturerAssets(lecturerId, lecturerAssetsQueryRequest);
     }
 
-    async getLecturerOralDefenseRegistrations(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
-        : Promise<OralDefenseRegistrationDto[]> {
-        const oralDefenseRegistrations = await this.prisma.oralDefenseRegistration.findMany({
-            where: {
-                OR: [
-                    {
-                        supervisor1Id: lecturerId,
-                    },
-                    {
-                        supervisor2Id: lecturerId,
-                    }
-                ]
-            },
-            include: bachelorThesisAndOralDefenseInclude,
-        });
-
-        return oralDefenseRegistrations.map(item => this.plainTransformer.toOralDefenseRegistration(item));
-    }
-
     async getLecturerBachelorThesisAssessments(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
         : Promise<BachelorThesisAssessmentDto[]> {
-        const bachelorThesisAssessments = await this.prisma.bachelorThesisAssessment.findMany({
-            where: {
-                OR: [
-                    {
-                        supervisor1Id: lecturerId,
-                    },
-                    {
-                        supervisor2Id: lecturerId,
-                    }
-                ]
-            },
-            include: bachelorThesisAndOralDefenseInclude,
-        });
+        return await this.btaRepo.queryLecturerAssets(lecturerId, lecturerAssetsQueryRequest);
+    }
 
-        return bachelorThesisAssessments.map(item => this.plainTransformer.toBachelorThesisAssessment(item));
+    async getLecturerOralDefenseRegistrations(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
+        : Promise<OralDefenseRegistrationDto[]> {
+        return await this.odrRepo.queryLecturerAssets(lecturerId, lecturerAssetsQueryRequest);
     }
 
     async getLecturerOralDefenseAssessments(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
         : Promise<OralDefenseAssessmentDto[]> {
-        const oralDefenseAssessments = await this.prisma.oralDefenseAssessment.findMany({
-            where: {
-                OR: [
-                    {
-                        supervisor1Id: lecturerId,
-                    },
-                    {
-                        supervisor2Id: lecturerId,
-                    }
-                ]
-            },
-            include: bachelorThesisAndOralDefenseInclude,
-        });
-
-        return oralDefenseAssessments.map(item => this.plainTransformer.toOralDefenseAssessment(item));
+        return await this.odaRepo.queryLecturerAssets(lecturerId, lecturerAssetsQueryRequest);
     }
 
     async updateLecturer(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {

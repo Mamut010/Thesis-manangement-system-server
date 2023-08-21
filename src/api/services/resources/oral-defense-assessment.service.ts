@@ -17,99 +17,57 @@ import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { PlainOralDefenseAssessment } from "../../../shared/types/plain-types";
 import { anyChanges } from "../../../utils/crud-helpers";
 import { bachelorThesisAndOralDefenseInclude } from "../../../shared/constants/includes";
+import { OralDefenseAssessmentRepoInterface } from "../../../dal/interfaces";
 
 @injectable()
 export class OralDefenseAssessmentService implements OralDefenseAssessmentServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
-        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
-    ) {
+        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface,
+        @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface) {
 
     }
 
     async getOralDefenseAssessments(user: AuthorizedUser, queryRequest: OralDefenseAssessmentsQueryRequest)
         : Promise<OralDefenseAssessmentsQueryResponse> {
-        const fieldMap = {
-            surname: 'student.user.surname',
-            forename: 'student.user.forename',
-            thesisTitle: 'thesis.title',
-            supervisor1Title: 'supervisor1.title',
-            supervisor2Title: 'supervisor2.title',
-        };
-        const model = this.queryCreator.createQueryModel(OralDefenseAssessment);
-        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
-
-        const count = await this.prisma.oralDefenseAssessment.count({ where: prismaQuery.where });
-        const oralDefenseAssessments = await this.prisma.oralDefenseAssessment.findMany({
-            ...prismaQuery,
-            include:  bachelorThesisAndOralDefenseInclude,
-        });
-
-        const response = new OralDefenseAssessmentsQueryResponse();
-        response.content = oralDefenseAssessments.map(item => this.plainTransformer.toOralDefenseAssessment(item));
-        response.count = count;
-        return response;
+        return await this.odaRepo.query(queryRequest);
     }
 
     async getOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<OralDefenseAssessmentDto> {
-        const oralDefenseAssessment = await this.ensureRecordExists(id);
-        return this.plainTransformer.toOralDefenseAssessment(oralDefenseAssessment);
+        return await this.ensureRecordExists(id);
     }
 
     async createOralDefenseAssessment(user: AuthorizedUser, createRequest: OralDefenseAssessmentCreateRequest)
         : Promise<OralDefenseAssessmentDto> {
-        const oralDefenseAssessment = await this.prisma.oralDefenseAssessment.create({
-            data: createRequest,
-            include:  bachelorThesisAndOralDefenseInclude
-        });
-        return this.plainTransformer.toOralDefenseAssessment(oralDefenseAssessment);
+        return await this.odaRepo.create(createRequest);
     }
 
     async updateOralDefenseAssessment(user: AuthorizedUser, id: number, 
         updateRequest: OralDefenseAssessmentUpdateRequest) : Promise<OralDefenseAssessmentDto> {
-        let record = await this.ensureRecordExists(id);
+        const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
-        if (anyChanges(record, updateRequest)) {
-            record = await this.prisma.oralDefenseAssessment.update({
-                where: {
-                    id: id
-                },
-                data: updateRequest,
-                include:  bachelorThesisAndOralDefenseInclude
-            });
-        }
-
-        return this.plainTransformer.toOralDefenseAssessment(record);
+        const result = await this.odaRepo.update(id, updateRequest);
+        return result!;
     }
 
     async deleteOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<void> {
         const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
-        await this.prisma.oralDefenseAssessment.delete({
-            where: {
-                id: id
-            }
-        });
+        await this.odaRepo.delete(id);
     }
 
     private async ensureRecordExists(id: number) {
-        try {
-            return await this.prisma.oralDefenseAssessment.findUniqueOrThrow({
-                where: {
-                    id: id
-                },
-                include:  bachelorThesisAndOralDefenseInclude
-            });
-        }
-        catch {
+        const result = await this.odaRepo.findOneById(id);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseAssessmentNotFound);
         }
+        return result;
     }
 
-    private ensureValidModification(user: AuthorizedUser, record: PlainOralDefenseAssessment) {
+    private ensureValidModification(user: AuthorizedUser, record: OralDefenseAssessmentDto) {
         const isValid = true;
         if (!isValid) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.OralDefenseAssessmentDenied);
