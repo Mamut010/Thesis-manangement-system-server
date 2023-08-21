@@ -1,115 +1,63 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
 import { BachelorThesisAssessmentsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
 import { BachelorThesisAssessmentsQueryResponse } from "../../../contracts/responses/resources/bachelor-thesis-assessments-query.response";
-import { PrismaQueryCreatorInterface } from "../../../lib/query";
 import { BachelorThesisAssessmentDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { BachelorThesisAssessmentCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-create.request";
 import { BachelorThesisAssessmentUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-update.request";
-import { PlainTransformerInterface } from "../../../shared/utils/plain-transformer";
 import { BachelorThesisAssessmentServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { BachelorThesisAssessment } from "../../../core/models";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
-import { PlainBachelorThesisAssessment } from "../../../shared/types/plain-types";
-import { anyChanges } from "../../../utils/crud-helpers";
-import { bachelorThesisAndOralDefenseInclude } from "../../../shared/constants/includes";
+import { BachelorThesisAssessmentRepoInterface } from "../../../dal/interfaces";
 
 @injectable()
 export class BachelorThesisAssessmentService implements BachelorThesisAssessmentServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
-        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
-    ) {
+        @inject(INJECTION_TOKENS.BachelorThesisAssessmentRepo) private btaRepo: BachelorThesisAssessmentRepoInterface) {
 
     }
 
     async getBachelorThesisAssessments(user: AuthorizedUser, queryRequest: BachelorThesisAssessmentsQueryRequest)
         : Promise<BachelorThesisAssessmentsQueryResponse> {
-        const fieldMap = {
-            surname: 'student.user.surname',
-            forename: 'student.user.forename',
-            thesisTitle: 'thesis.title',
-            supervisor1Title: 'supervisor1.title',
-            supervisor2Title: 'supervisor2.title',
-        };
-        const model = this.queryCreator.createQueryModel(BachelorThesisAssessment);
-        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
-
-        const count = await this.prisma.bachelorThesisAssessment.count({ where: prismaQuery.where });
-        const bachelorThesisAssessments = await this.prisma.bachelorThesisAssessment.findMany({
-            ...prismaQuery,
-            include:  bachelorThesisAndOralDefenseInclude,
-        });
-
-        const response = new BachelorThesisAssessmentsQueryResponse();
-        response.content = bachelorThesisAssessments.map(item => this.plainTransformer.toBachelorThesisAssessment(item));
-        response.count = count;
-        return response;
+            return await this.btaRepo.query(queryRequest);
     }
 
     async getBachelorThesisAssessment(user: AuthorizedUser, id: number): Promise<BachelorThesisAssessmentDto> {
-        const bachelorThesisAssessment = await this.ensureRecordExists(id);
-        return this.plainTransformer.toBachelorThesisAssessment(bachelorThesisAssessment);
+        return await this.ensureRecordExists(id);
     }
 
     async createBachelorThesisAssessment(user: AuthorizedUser, createRequest: BachelorThesisAssessmentCreateRequest)
         : Promise<BachelorThesisAssessmentDto> {
-        const bachelorThesisAssessment = await this.prisma.bachelorThesisAssessment.create({
-            data: createRequest,
-            include:  bachelorThesisAndOralDefenseInclude,
-        });
-        return this.plainTransformer.toBachelorThesisAssessment(bachelorThesisAssessment);
+        return await this.btaRepo.create(createRequest);
     }
 
     async updateBachelorThesisAssessment(user: AuthorizedUser, id: number, 
         updateRequest: BachelorThesisAssessmentUpdateRequest) : Promise<BachelorThesisAssessmentDto> {
-        let record = await this.ensureRecordExists(id);
+        const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
-        if (anyChanges(record, updateRequest)) {
-            record = await this.prisma.bachelorThesisAssessment.update({
-                where: {
-                    id: id
-                },
-                data: updateRequest,
-                include: bachelorThesisAndOralDefenseInclude,
-            });
-        }
-
-        return this.plainTransformer.toBachelorThesisAssessment(record);
+        const result = await this.btaRepo.update(id, updateRequest);
+        return result!;
     }
 
     async deleteBachelorThesisAssessment(user: AuthorizedUser, id: number): Promise<void> {
         const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
-        await this.prisma.bachelorThesisAssessment.delete({
-            where: {
-                id: id
-            }
-        });
+        await this.btaRepo.delete(id);
     }
 
     private async ensureRecordExists(id: number) {
-        try {
-            return await this.prisma.bachelorThesisAssessment.findUniqueOrThrow({
-                where: {
-                    id: id
-                },
-                include: bachelorThesisAndOralDefenseInclude,
-            });
-        }
-        catch {
+        const result = await this.btaRepo.findOneById(id);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisAssessmentNotFound);
         }
+        return result;
     }
 
-    private ensureValidModification(user: AuthorizedUser, record: PlainBachelorThesisAssessment) {
+    private ensureValidModification(user: AuthorizedUser, record: BachelorThesisAssessmentDto) {
         const isValid = true;
         if (!isValid) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.BachelorThesisAssessmentDenied);

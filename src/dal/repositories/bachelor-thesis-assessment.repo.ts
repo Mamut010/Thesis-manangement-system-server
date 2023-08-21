@@ -3,21 +3,21 @@ import { PrismaClient } from "@prisma/client";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
-import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
-import { BachelorThesisRegistrationsQueryResponse } from "../../contracts/responses/resources/bachelor-thesis-registrations-query.response";
-import { BachelorThesisRegistration } from "../../core/models";
+import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
+import { BachelorThesisAssessmentsQueryResponse } from "../../contracts/responses/resources/bachelor-thesis-assessments-query.response";
+import { BachelorThesisAssessment } from "../../core/models";
 import { bachelorThesisAndOralDefenseInclude } from "../../shared/constants/includes";
-import { BachelorThesisRegistrationDto } from "../../shared/dtos";
-import { BachelorThesisRegistrationCreateRequest } from "../../contracts/requests/resources/bachelor-thesis-registration-create.request";
-import { BachelorThesisRegistrationUpdateRequest } from "../../contracts/requests/resources/bachelor-thesis-registration-update.request";
+import { BachelorThesisAssessmentDto } from "../../shared/dtos";
+import { BachelorThesisAssessmentCreateRequest } from "../../contracts/requests/resources/bachelor-thesis-assessment-create.request";
+import { BachelorThesisAssessmentUpdateRequest } from "../../contracts/requests/resources/bachelor-thesis-assessment-update.request";
 import { anyChanges } from "../../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
-import { BachelorThesisRegistrationRepoInterface } from "../interfaces";
+import { BachelorThesisAssessmentRepoInterface } from "../interfaces";
 import { LecturerAssetsQueryRequest } from "../../contracts/requests/lecturer-assets-query.request";
 
 @injectable()
-export class BachelorThesisRegistrationRepo implements BachelorThesisRegistrationRepoInterface {
+export class BachelorThesisAssessmentRepo implements BachelorThesisAssessmentRepoInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
@@ -26,43 +26,43 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
 
     }
 
-    async query(queryRequest: BachelorThesisRegistrationsQueryRequest): Promise<BachelorThesisRegistrationsQueryResponse> {
+    async query(queryRequest: BachelorThesisAssessmentsQueryRequest): Promise<BachelorThesisAssessmentsQueryResponse> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
 
-        const count = await this.prisma.bachelorThesisRegistration.count({ where: prismaQuery.where });
-        const records = await this.prisma.bachelorThesisRegistration.findMany({
+        const count = await this.prisma.bachelorThesisAssessment.count({ where: prismaQuery.where });
+        const records = await this.prisma.bachelorThesisAssessment.findMany({
             ...prismaQuery,
             include:  bachelorThesisAndOralDefenseInclude,
         });
 
-        const response = new BachelorThesisRegistrationsQueryResponse();
-        response.content = records.map(item => this.plainTransformer.toBachelorThesisRegistration(item));
+        const response = new BachelorThesisAssessmentsQueryResponse();
+        response.content = records.map(item => this.plainTransformer.toBachelorThesisAssessment(item));
         response.count = count;
         return response;
     }
 
-    async findOneById(id: number): Promise<BachelorThesisRegistrationDto | null> {
+    async findOneById(id: number): Promise<BachelorThesisAssessmentDto | null> {
         const record = await this.findRecordById(id);
         if (!record) {
             return null;
         }
-        return this.plainTransformer.toBachelorThesisRegistration(record);
+        return this.plainTransformer.toBachelorThesisAssessment(record);
     }
 
-    async create(createRequest: BachelorThesisRegistrationCreateRequest): Promise<BachelorThesisRegistrationDto> {
+    async create(createRequest: BachelorThesisAssessmentCreateRequest): Promise<BachelorThesisAssessmentDto> {
         const impl = async () => {
-            const record = await this.prisma.bachelorThesisRegistration.create({
+            const record = await this.prisma.bachelorThesisAssessment.create({
                 data: createRequest,
                 include:  bachelorThesisAndOralDefenseInclude
             });
-            return this.plainTransformer.toBachelorThesisRegistration(record);
+            return this.plainTransformer.toBachelorThesisAssessment(record);
         }
 
-        return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.StudentAlreadyConnectedBachelorThesisRegistration);
+        return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.StudentAlreadyConnectedBachelorThesisAssessment);
     }
 
-    async update(id: number, updateRequest: BachelorThesisRegistrationUpdateRequest)
-        : Promise<BachelorThesisRegistrationDto | null> {
+    async update(id: number, updateRequest: BachelorThesisAssessmentUpdateRequest)
+        : Promise<BachelorThesisAssessmentDto | null> {
         const impl = async () => {
             let record = await this.findRecordById(id);
             if (!record) {
@@ -70,7 +70,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
             }
 
             if (anyChanges(record, updateRequest)) {
-                record = await this.prisma.bachelorThesisRegistration.update({
+                record = await this.prisma.bachelorThesisAssessment.update({
                     where: {
                         id: id
                     },
@@ -79,10 +79,10 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
                 });
             }
     
-            return this.plainTransformer.toBachelorThesisRegistration(record);
+            return this.plainTransformer.toBachelorThesisAssessment(record);
         }
 
-        return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.StudentAlreadyConnectedBachelorThesisRegistration);
+        return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.StudentAlreadyConnectedBachelorThesisAssessment);
     }
 
     async delete(id: number): Promise<void> {
@@ -94,10 +94,10 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
     }
 
     async queryLecturerAssets(lecturerId: string, queryRequest: LecturerAssetsQueryRequest)
-        : Promise<BachelorThesisRegistrationDto[]> {
+        : Promise<BachelorThesisAssessmentDto[]> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
 
-        const records = await this.prisma.bachelorThesisRegistration.findMany({
+        const records = await this.prisma.bachelorThesisAssessment.findMany({
             where: {
                 OR: [
                     {
@@ -114,11 +114,11 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
             take: prismaQuery.take,
         });
 
-        return records.map(item => this.plainTransformer.toBachelorThesisRegistration(item));
+        return records.map(item => this.plainTransformer.toBachelorThesisAssessment(item));
     }
     
     private async findRecordById(id: number) {
-        return await this.prisma.bachelorThesisRegistration.findUnique({
+        return await this.prisma.bachelorThesisAssessment.findUnique({
             where: {
                 id: id
             },
@@ -134,7 +134,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
             supervisor1Title: 'supervisor1.title',
             supervisor2Title: 'supervisor2.title',
         };
-        const model = this.queryCreator.createQueryModel(BachelorThesisRegistration);
+        const model = this.queryCreator.createQueryModel(BachelorThesisAssessment);
         return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
     }
 }
