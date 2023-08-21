@@ -26,6 +26,10 @@ import { LecturersQueryResponse } from "../../contracts/responses/lecturers-quer
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
 import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 import { LecturerAssetsQueryRequest } from "../../contracts/requests/lecturer-assets-query.request";
+import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
+import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
+import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
+import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
 
 @JsonController('admin/lecturers')
 //@Authorized(ROLES.Admin)
@@ -64,32 +68,32 @@ export class AdminLecturerController {
     @Get('/:id/bachelor-thesis-registrations')
     @ResponseSchema(BachelorThesisRegistrationDto, { isArray: true })
     getLecturerBachelorThesisRegistrations(@Param('id') id: string, 
-        @QueryParams() lecturerAssetsQueryRequest: LecturerAssetsQueryRequest) {
-        return this.adminLecturerService.getLecturerBachelorThesisRegistrations(id, lecturerAssetsQueryRequest);
+        @QueryParams() btrQueryRequest: BachelorThesisRegistrationsQueryRequest) {
+        return this.adminLecturerService.getLecturerBachelorThesisRegistrations(id, btrQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-registrations')
     @ResponseSchema(OralDefenseRegistrationDto, { isArray: true })
     getLecturerOralDefenseRegistrations(@Param('id') id: string, 
-        @QueryParams() lecturerAssetsQueryRequest: LecturerAssetsQueryRequest) {
-        return this.adminLecturerService.getLecturerOralDefenseRegistrations(id, lecturerAssetsQueryRequest);
+        @QueryParams() btaQueryRequest: BachelorThesisAssessmentsQueryRequest) {
+        return this.adminLecturerService.getLecturerOralDefenseRegistrations(id, btaQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-assessments')
     @ResponseSchema(BachelorThesisAssessmentDto, { isArray: true })
     getLecturerBachelorThesisAssessments(@Param('id') id: string, 
-        @QueryParams() lecturerAssetsQueryRequest: LecturerAssetsQueryRequest) {
-        return this.adminLecturerService.getLecturerBachelorThesisAssessments(id, lecturerAssetsQueryRequest);
+        @QueryParams() odrQueryRequest: OralDefenseRegistrationsQueryRequest) {
+        return this.adminLecturerService.getLecturerBachelorThesisAssessments(id, odrQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-assessments')
     @ResponseSchema(OralDefenseAssessmentDto, { isArray: true })
     getLecturerOralDefenseAssessments(@Param('id') id: string, 
-        @QueryParams() lecturerAssetsQueryRequest: LecturerAssetsQueryRequest) {
-        return this.adminLecturerService.getLecturerOralDefenseAssessments(id, lecturerAssetsQueryRequest);
+        @QueryParams() odaQueryRequest: OralDefenseAssessmentsQueryRequest) {
+        return this.adminLecturerService.getLecturerOralDefenseAssessments(id, odaQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)

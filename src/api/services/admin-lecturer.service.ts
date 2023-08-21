@@ -24,6 +24,10 @@ import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { LecturerAssetsQueryRequest } from "../../contracts/requests/lecturer-assets-query.request";
+import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
+import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
+import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
+import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
@@ -69,24 +73,24 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         return response;
     }
 
-    async getLecturerBachelorThesisRegistrations(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
+    async getLecturerBachelorThesisRegistrations(lecturerId: string, btrQueryRequest: BachelorThesisRegistrationsQueryRequest)
         : Promise<BachelorThesisRegistrationDto[]> {
-        return await this.btrRepo.queryLecturerAssets(lecturerId, lecturerAssetsQueryRequest);
+        return await this.btrRepo.queryLecturerAssets(lecturerId, btrQueryRequest);
     }
 
-    async getLecturerBachelorThesisAssessments(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
+    async getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest: BachelorThesisAssessmentsQueryRequest)
         : Promise<BachelorThesisAssessmentDto[]> {
-        return await this.btaRepo.queryLecturerAssets(lecturerId, lecturerAssetsQueryRequest);
+        return await this.btaRepo.queryLecturerAssets(lecturerId, btaQueryRequest);
     }
 
-    async getLecturerOralDefenseRegistrations(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
+    async getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest: OralDefenseRegistrationsQueryRequest)
         : Promise<OralDefenseRegistrationDto[]> {
-        return await this.odrRepo.queryLecturerAssets(lecturerId, lecturerAssetsQueryRequest);
+        return await this.odrRepo.queryLecturerAssets(lecturerId, odrQueryRequest);
     }
 
-    async getLecturerOralDefenseAssessments(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
+    async getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest: OralDefenseAssessmentsQueryRequest)
         : Promise<OralDefenseAssessmentDto[]> {
-        return await this.odaRepo.queryLecturerAssets(lecturerId, lecturerAssetsQueryRequest);
+        return await this.odaRepo.queryLecturerAssets(lecturerId, odaQueryRequest);
     }
 
     async updateLecturerInfo(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {

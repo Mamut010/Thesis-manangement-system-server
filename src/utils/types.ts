@@ -45,3 +45,4 @@ export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<
  */
 export type KeysOfType<T, K> = { [P in keyof T]: T[P] extends K ? P : never }[keyof T];
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export type ClassConstructor<T> = new(...args: any[]) => T;

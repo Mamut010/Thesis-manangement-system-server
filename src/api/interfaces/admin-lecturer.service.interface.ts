@@ -1,6 +1,10 @@
 import { LecturerAssetsQueryRequest } from "../../contracts/requests/lecturer-assets-query.request";
 import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
+import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
+import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
+import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
+import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
 import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
 import { 
@@ -19,16 +23,16 @@ export interface AdminLecturerServiceInterface {
     getLecturerDetail(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
         : Promise<LecturerDetailResponse>;
 
-    getLecturerBachelorThesisRegistrations(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
+    getLecturerBachelorThesisRegistrations(lecturerId: string, btrQueryRequest: BachelorThesisRegistrationsQueryRequest)
         : Promise<BachelorThesisRegistrationDto[]>;
 
-    getLecturerOralDefenseRegistrations(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
-        : Promise<OralDefenseRegistrationDto[]>;
-
-    getLecturerBachelorThesisAssessments(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
+    getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest: BachelorThesisAssessmentsQueryRequest)
         : Promise<BachelorThesisAssessmentDto[]>;
 
-    getLecturerOralDefenseAssessments(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
+    getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest: OralDefenseRegistrationsQueryRequest)
+        : Promise<OralDefenseRegistrationDto[]>;
+
+    getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest: OralDefenseAssessmentsQueryRequest)
         : Promise<OralDefenseAssessmentDto[]>;
 
     updateLecturerInfo(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto>;
