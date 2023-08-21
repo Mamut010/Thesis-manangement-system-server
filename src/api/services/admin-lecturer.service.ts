@@ -89,7 +89,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         return await this.odaRepo.queryLecturerAssets(lecturerId, lecturerAssetsQueryRequest);
     }
 
-    async updateLecturer(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {
+    async updateLecturerInfo(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {
         // Check if 'type' is a lecturer role
         // Note: This assumes that the roles are predefined and won't be changed later on
         if (updateRequest.type && !LecturerRoles.some(item => item === updateRequest.type)) {

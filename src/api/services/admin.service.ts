@@ -23,7 +23,7 @@ export class AdminService implements AdminServiceInterface {
         return result;
     }
 
-    async updateAdmin(adminId: string, updateRequest: AdminUpdateRequest): Promise<AdminInfoDto> {
+    async updateAdminInfo(adminId: string, updateRequest: AdminUpdateRequest): Promise<AdminInfoDto> {
         const result = await this.adminRepo.update(adminId, updateRequest);
         if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.AdminNotFound);

@@ -93,8 +93,8 @@ export class AdminLecturerController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Post('/:id')
-    updateLecturer(@Param('id') id: string, @Body({ required: true }) updateRequest: LecturerUpdateRequest) {
-        return this.adminLecturerService.updateLecturer(id, updateRequest);
+    @Post('/:id/lecturer-info')
+    updateLecturerInfo(@Param('id') id: string, @Body({ required: true }) updateRequest: LecturerUpdateRequest) {
+        return this.adminLecturerService.updateLecturerInfo(id, updateRequest);
     }
 }

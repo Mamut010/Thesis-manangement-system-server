@@ -39,7 +39,7 @@ export class AdminController {
     @HttpCode(HTTP_CODES.Ok)
     @Post('/info')
     @ResponseSchema(AdminInfoDto)
-    updateAdmin(@CurrentUser({ required: true }) user: AuthorizedUser, @Body({ required: true }) updateRequest: AdminUpdateRequest) {
-        return this.adminService.updateAdmin(user.userId, updateRequest);
+    updateAdminInfo(@CurrentUser({ required: true }) user: AuthorizedUser, @Body({ required: true }) updateRequest: AdminUpdateRequest) {
+        return this.adminService.updateAdminInfo(user.userId, updateRequest);
     }
 }

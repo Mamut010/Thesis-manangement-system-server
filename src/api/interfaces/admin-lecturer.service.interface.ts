@@ -31,5 +31,5 @@ export interface AdminLecturerServiceInterface {
     getLecturerOralDefenseAssessments(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
         : Promise<OralDefenseAssessmentDto[]>;
 
-    updateLecturer(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto>;
+    updateLecturerInfo(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto>;
 }
