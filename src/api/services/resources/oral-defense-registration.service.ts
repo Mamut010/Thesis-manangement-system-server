@@ -21,7 +21,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
 
     async getOralDefenseRegistrations(user: AuthorizedUser, queryRequest: OralDefenseRegistrationsQueryRequest)
         : Promise<OralDefenseRegistrationsQueryResponse> {
-            return await this.odrRepo.query(queryRequest);
+        return await this.odrRepo.query(queryRequest);
     }
 
     async getOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<OralDefenseRegistrationDto> {

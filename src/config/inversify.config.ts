@@ -39,6 +39,7 @@ import {
 } from '../api/services';
 import { 
     BachelorThesisAssessmentRepoInterface,
+    BachelorThesisEvaluationRepoInterface,
     BachelorThesisRegistrationRepoInterface, 
     LecturerRepoInterface, 
     OralDefenseAssessmentRepoInterface, 
@@ -53,7 +54,8 @@ import {
     BachelorThesisRegistrationRepo,
     BachelorThesisAssessmentRepo,
     OralDefenseRegistrationRepo,
-    OralDefenseAssessmentRepo
+    OralDefenseAssessmentRepo,
+    BachelorThesisEvaluationRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -154,6 +156,11 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<BachelorThesisAssessmentRepoInterface>(INJECTION_TOKENS.BachelorThesisAssessmentRepo)
         .to(BachelorThesisAssessmentRepo)
+        .inRequestScope();
+
+    container
+        .bind<BachelorThesisEvaluationRepoInterface>(INJECTION_TOKENS.BachelorThesisEvaluationRepo)
+        .to(BachelorThesisEvaluationRepo)
         .inRequestScope();
 
     container

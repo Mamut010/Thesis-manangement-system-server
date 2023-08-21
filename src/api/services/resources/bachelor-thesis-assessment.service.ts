@@ -21,7 +21,7 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
 
     async getBachelorThesisAssessments(user: AuthorizedUser, queryRequest: BachelorThesisAssessmentsQueryRequest)
         : Promise<BachelorThesisAssessmentsQueryResponse> {
-            return await this.btaRepo.query(queryRequest);
+        return await this.btaRepo.query(queryRequest);
     }
 
     async getBachelorThesisAssessment(user: AuthorizedUser, id: number): Promise<BachelorThesisAssessmentDto> {

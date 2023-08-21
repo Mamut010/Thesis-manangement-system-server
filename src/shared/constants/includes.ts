@@ -20,3 +20,13 @@ export const bachelorThesisAndOralDefenseInclude = {
     supervisor1: true,
     supervisor2: true,
 } as const;
+
+export const bachelorThesisEvaluationInclude = {
+    student: {
+        include: {
+            user: true
+        }
+    },
+    supervisor: true,
+    thesis: true,
+} as const;
