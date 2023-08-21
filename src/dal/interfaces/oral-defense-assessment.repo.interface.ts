@@ -13,7 +13,7 @@ export interface OralDefenseAssessmentRepoInterface {
 
     update(id: number, updateRequest: OralDefenseAssessmentUpdateRequest): Promise<OralDefenseAssessmentDto | null>;
 
-    delete(id: number): Promise<void>;
+    delete(id: number): Promise<boolean>;
 
     queryLecturerAssets(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
         : Promise<OralDefenseAssessmentDto[]>;

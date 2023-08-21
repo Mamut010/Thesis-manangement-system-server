@@ -85,12 +85,13 @@ export class BachelorThesisEvaluationRepo implements BachelorThesisEvaluationRep
         return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.StudentAlreadyConnectedBachelorThesisEvaluation);
     }
 
-    async delete(id: number): Promise<void> {
-        await this.prisma.bachelorThesisEvaluation.delete({
+    async delete(id: number): Promise<boolean> {
+        const { count } = await this.prisma.bachelorThesisEvaluation.deleteMany({
             where: {
                 id: id
             }
         });
+        return count > 0;
     }
     
     private async findRecordById(id: number) {

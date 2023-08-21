@@ -82,22 +82,13 @@ export class UserRepo implements UserRepoInterface {
         return plainToInstanceExactMatch(User, user);
     }
 
-    async delete(userId: string): Promise<void> {
-        try {
-            await this.prisma.user.findUniqueOrThrow({
-                where: {
-                    userId: userId
-            }});
-        }
-        catch {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
-        }
-
-        await this.prisma.user.delete({
+    async delete(userId: string): Promise<boolean> {
+        const { count } = await this.prisma.user.deleteMany({
             where: {
                 userId: userId
             }
         });
+        return count > 0;
     }
 
     private createRecordInAssociatedRepoByRole(tx: Omit<PrismaClient, ITXClientDenyList>, request: UserCreateRequestDto) {

@@ -13,7 +13,7 @@ export interface BachelorThesisAssessmentRepoInterface {
 
     update(id: number, updateRequest: BachelorThesisAssessmentUpdateRequest): Promise<BachelorThesisAssessmentDto | null>;
 
-    delete(id: number): Promise<void>;
+    delete(id: number): Promise<boolean>;
 
     queryLecturerAssets(lecturerId: string, queryRequest: BachelorThesisAssessmentsQueryRequest)
     : Promise<BachelorThesisAssessmentDto[]>;

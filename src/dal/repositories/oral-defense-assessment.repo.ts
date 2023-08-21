@@ -85,12 +85,13 @@ export class OralDefenseAssessmentRepo implements OralDefenseAssessmentRepoInter
         return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.StudentAlreadyConnectedOralDefenseAssessment);
     }
 
-    async delete(id: number): Promise<void> {
-        await this.prisma.oralDefenseAssessment.delete({
+    async delete(id: number): Promise<boolean> {
+        const { count } = await this.prisma.oralDefenseAssessment.deleteMany({
             where: {
                 id: id
             }
         });
+        return count > 0;
     }
 
     async queryLecturerAssets(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)

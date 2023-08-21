@@ -85,12 +85,13 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
         return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.StudentAlreadyConnectedBachelorThesisRegistration);
     }
 
-    async delete(id: number): Promise<void> {
-        await this.prisma.bachelorThesisRegistration.delete({
+    async delete(id: number): Promise<boolean> {
+        const { count } = await this.prisma.bachelorThesisRegistration.deleteMany({
             where: {
                 id: id
             }
         });
+        return count > 0;
     }
 
     async queryLecturerAssets(lecturerId: string, queryRequest: BachelorThesisRegistrationsQueryRequest)

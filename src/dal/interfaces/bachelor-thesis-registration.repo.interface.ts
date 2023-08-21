@@ -13,7 +13,7 @@ export interface BachelorThesisRegistrationRepoInterface {
 
     update(id: number, updateRequest: BachelorThesisRegistrationUpdateRequest): Promise<BachelorThesisRegistrationDto | null>;
 
-    delete(id: number): Promise<void>;
+    delete(id: number): Promise<boolean>;
 
     queryLecturerAssets(lecturerId: string, queryRequest: BachelorThesisRegistrationsQueryRequest)
         : Promise<BachelorThesisRegistrationDto[]>;

@@ -13,5 +13,5 @@ export interface BachelorThesisEvaluationRepoInterface {
 
     update(id: number, updateRequest: BachelorThesisEvaluationUpdateRequest): Promise<BachelorThesisEvaluationDto | null>;
 
-    delete(id: number): Promise<void>;
+    delete(id: number): Promise<boolean>;
 }
