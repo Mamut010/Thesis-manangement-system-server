@@ -14,7 +14,7 @@ import { anyChanges } from "../../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { OralDefenseAssessmentRepoInterface } from "../interfaces";
-import { LecturerAssetsQueryRequest } from "../../contracts/requests/lecturer-assets-query.request";
+import { getLecturerAssetsQuery } from "../utils/lecturer-assets-helpers";
 
 @injectable()
 export class OralDefenseAssessmentRepo implements OralDefenseAssessmentRepoInterface {
@@ -93,27 +93,10 @@ export class OralDefenseAssessmentRepo implements OralDefenseAssessmentRepoInter
         });
     }
 
-    async queryLecturerAssets(lecturerId: string, queryRequest: LecturerAssetsQueryRequest)
+    async queryLecturerAssets(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
         : Promise<OralDefenseAssessmentDto[]> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
-
-        const records = await this.prisma.oralDefenseAssessment.findMany({
-            where: {
-                OR: [
-                    {
-                        supervisor1Id: lecturerId,
-                    },
-                    {
-                        supervisor2Id: lecturerId,
-                    }
-                ]
-            },
-            include: bachelorThesisAndOralDefenseInclude,
-            orderBy: prismaQuery.orderBy,
-            skip: prismaQuery.skip,
-            take: prismaQuery.take,
-        });
-
+        const records = await this.prisma.oralDefenseAssessment.findMany(getLecturerAssetsQuery(lecturerId, prismaQuery));
         return records.map(item => this.plainTransformer.toOralDefenseAssessment(item));
     }
     

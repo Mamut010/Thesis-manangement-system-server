@@ -92,23 +92,6 @@ export class BachelorThesisEvaluationRepo implements BachelorThesisEvaluationRep
             }
         });
     }
-
-    async queryLecturerAssets(lecturerId: string, queryRequest: LecturerAssetsQueryRequest)
-        : Promise<BachelorThesisEvaluationDto[]> {
-        const prismaQuery = this.createPrismaQuery(queryRequest);
-
-        const records = await this.prisma.bachelorThesisEvaluation.findMany({
-            where: {
-                supervisorId: lecturerId,
-            },
-            include: bachelorThesisEvaluationInclude,
-            orderBy: prismaQuery.orderBy,
-            skip: prismaQuery.skip,
-            take: prismaQuery.take,
-        });
-
-        return records.map(item => this.plainTransformer.toBachelorThesisEvaluation(item));
-    }
     
     private async findRecordById(id: number) {
         return await this.prisma.bachelorThesisEvaluation.findUnique({

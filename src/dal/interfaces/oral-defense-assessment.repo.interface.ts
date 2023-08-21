@@ -1,4 +1,3 @@
-import { LecturerAssetsQueryRequest } from "../../contracts/requests/lecturer-assets-query.request";
 import { OralDefenseAssessmentCreateRequest } from "../../contracts/requests/resources/oral-defense-assessment-create.request";
 import { OralDefenseAssessmentUpdateRequest } from "../../contracts/requests/resources/oral-defense-assessment-update.request";
 import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
@@ -7,9 +6,15 @@ import { OralDefenseAssessmentDto } from "../../shared/dtos";
 
 export interface OralDefenseAssessmentRepoInterface {
     query(queryRequest: OralDefenseAssessmentsQueryRequest): Promise<OralDefenseAssessmentsQueryResponse>;
+
     findOneById(id: number): Promise<OralDefenseAssessmentDto | null>;
+
     create(createRequest: OralDefenseAssessmentCreateRequest): Promise<OralDefenseAssessmentDto>;
+
     update(id: number, updateRequest: OralDefenseAssessmentUpdateRequest): Promise<OralDefenseAssessmentDto | null>;
+
     delete(id: number): Promise<void>;
-    queryLecturerAssets(lecturerId: string, queryRequest: LecturerAssetsQueryRequest): Promise<OralDefenseAssessmentDto[]>;
+
+    queryLecturerAssets(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
+        : Promise<OralDefenseAssessmentDto[]>;
 }
