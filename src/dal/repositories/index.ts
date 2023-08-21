@@ -6,4 +6,5 @@ export * from './bachelor-thesis-assessment.repo';
 export * from './bachelor-thesis-evaluation.repo';
 export * from './oral-defense-registration.repo';
 export * from './oral-defense-assessment.repo';
+export * from './thesis.repo';
 export * from './field.repo';

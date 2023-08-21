@@ -30,3 +30,8 @@ export const bachelorThesisEvaluationInclude = {
     supervisor: true,
     thesis: true,
 } as const;
+
+export const thesisInclude = {
+    topic: true,
+    field: true,
+} as const;

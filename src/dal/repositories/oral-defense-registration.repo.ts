@@ -6,7 +6,7 @@ import { PlainTransformerInterface } from "../../shared/utils/plain-transformer"
 import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
 import { OralDefenseRegistrationsQueryResponse } from "../../contracts/responses/resources/oral-defense-registrations-query.response";
 import { OralDefenseRegistration } from "../../core/models";
-import { bachelorThesisAndOralDefenseInclude } from "../../shared/constants/includes";
+import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
 import { OralDefenseRegistrationDto } from "../../shared/dtos";
 import { OralDefenseRegistrationCreateRequest } from "../../contracts/requests/resources/oral-defense-registration-create.request";
 import { OralDefenseRegistrationUpdateRequest } from "../../contracts/requests/resources/oral-defense-registration-update.request";

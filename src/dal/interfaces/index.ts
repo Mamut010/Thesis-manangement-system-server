@@ -6,4 +6,8 @@ export * from './bachelor-thesis-assessment.repo.interface';
 export * from './bachelor-thesis-evaluation.repo.interface';
 export * from './oral-defense-registration.repo.interface';
 export * from './oral-defense-assessment.repo.interface';
+export * from './thesis.repo.interface';
 export * from './field.repo.interface';
+export * from './topic.repo.interface';
+export * from './location.repo.interface';
+export * from './role.repo.interface';

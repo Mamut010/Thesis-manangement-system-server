@@ -6,7 +6,7 @@ import { PlainTransformerInterface } from "../../shared/utils/plain-transformer"
 import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
 import { BachelorThesisEvaluationsQueryResponse } from "../../contracts/responses/resources/bachelor-thesis-evaluations-query.response";
 import { BachelorThesisEvaluation } from "../../core/models";
-import { bachelorThesisEvaluationInclude } from "../../shared/constants/includes";
+import { bachelorThesisEvaluationInclude } from "../constants/includes";
 import { BachelorThesisEvaluationDto } from "../../shared/dtos";
 import { BachelorThesisEvaluationCreateRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluation-create.request";
 import { BachelorThesisEvaluationUpdateRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluation-update.request";

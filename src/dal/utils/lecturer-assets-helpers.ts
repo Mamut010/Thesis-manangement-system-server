@@ -1,5 +1,5 @@
 import { PrismaQueryObject } from "../../lib/query";
-import { bachelorThesisAndOralDefenseInclude } from "../../shared/constants/includes";
+import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
 
 export function getLecturerAssetsQuery(lecturerId: string, prismaQuery: PrismaQueryObject) {
     return {
