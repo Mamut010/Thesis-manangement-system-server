@@ -13,3 +13,4 @@ export * from './field.repo.interface';
 export * from './topic.repo.interface';
 export * from './location.repo.interface';
 export * from './role.repo.interface';
+export * from './notification.repo.interface';

@@ -6,15 +6,15 @@ import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { IO_NAMESPACES } from "../../ws/constants/io-namespaces";
 import { NotificationInfo } from "../types/notification";
 import { NotificationServiceInterface } from "../interfaces";
-import { PlainTransformerInterface } from "../utils/plain-transformer";
 import { NotificationDto } from "../dtos";
 import { NotificationsQueryResponse } from "../../contracts/responses/notifications-query.response";
 import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
-import { PrismaQueryCreatorInterface } from "../../lib/query";
-import { Notification } from "../../core/models";
 import { SERVER_TO_CLIENT_EVENTS } from "../../contracts/constants/io";
 import { IONotificationsNamespace, IOServer } from "../../contracts/types/io";
 import { RoomIdGeneratorInterface } from "../../ws/utils/room-id-generator";
+import { NotificationRepoInterface } from "../../dal/interfaces";
+import { NotificationCreateRequest } from "../../contracts/requests/notification-create.request";
+import { BooleanFilter } from "../../lib/query";
 
 @injectable()
 export class NotificationService implements NotificationServiceInterface {
@@ -22,8 +22,7 @@ export class NotificationService implements NotificationServiceInterface {
 
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
-        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface,
+        @inject(INJECTION_TOKENS.NotificationRepo) private notificationRepo: NotificationRepoInterface,
         @inject(INJECTION_TOKENS.RoomIdGenerator) private roomIdGenerator: RoomIdGeneratorInterface,
         @inject(INJECTION_TOKENS.IOServer) io: IOServer) {
         this.notificationsNsp = io.of(IO_NAMESPACES.Notifications);
@@ -31,59 +30,53 @@ export class NotificationService implements NotificationServiceInterface {
 
     async getReceivedNotifications(userId: string, queryRequest: NotificationsQueryRequest)
         : Promise<NotificationsQueryResponse> {
-        return this.getNotifications(userId, queryRequest, 'received');
+        const result = await this.notificationRepo.queryReceived(userId, queryRequest);
+        if (!result) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
+        }
+
+        return result;
     }
 
     async getSentNotifications(userId: string, queryRequest: NotificationsQueryRequest)
         : Promise<NotificationsQueryResponse> {
-        return this.getNotifications(userId, queryRequest, 'sent');
+        const result = await this.notificationRepo.querySent(userId, queryRequest);
+        if (!result) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
+        }
+
+        return result;
     }
 
     async sendNotification(notificationInfo: NotificationInfo): Promise<NotificationDto> {
-        await this.ensureUsersExists(notificationInfo.receiverId, notificationInfo.senderId);
-        
-        const notification = await this.prisma.notification.create({
-            data: {
-                senderId: notificationInfo.senderId,
-                receivers: {
-                    connect: {
-                        userId: notificationInfo.receiverId
-                    }
-                },
-                title: notificationInfo.title,
-                content: notificationInfo.content
-            }
-        });
+        await this.ensureUsersExists(...notificationInfo.receiverId, notificationInfo.senderId);
 
-        const dto = this.plainTransformer.toNotification(notification);
-        const room = this.roomIdGenerator.generate(notificationInfo.receiverId);
+        const createRequest = new NotificationCreateRequest();
+        createRequest.senderId = notificationInfo.senderId;
+        createRequest.receiverIds = Array.isArray(notificationInfo.receiverId) 
+            ? notificationInfo.receiverId 
+            : [notificationInfo.receiverId];
+        createRequest.title = notificationInfo.title;
+        createRequest.content = notificationInfo.content;
+
+        const record = await this.notificationRepo.create(createRequest);
+        const rooms = createRequest.receiverIds.map(item => this.roomIdGenerator.generate(item));
 
         this.notificationsNsp
-            .to(room)
-            .emit(SERVER_TO_CLIENT_EVENTS.Notifications.Received, dto);
+            .to(rooms)
+            .emit(SERVER_TO_CLIENT_EVENTS.Notifications.Received, record);
 
-        return dto;
+        return record;
     }
 
     async markAsRead(userId: string, ids: number[]): Promise<number> {
-        const notifications = await this.prisma.notification.updateMany({
-            where: {
-                id: {
-                    in: ids
-                },
-                receivers: {
-                    some: {
-                        userId: userId
-                    }
-                },
-                isRead: false,
-            },
-            data: {
-                isRead: true
-            }
-        });
+        const isReadFilter = new BooleanFilter();
+        isReadFilter.value = false;
+        const queryRequest = new NotificationsQueryRequest();
+        queryRequest.isReadFilter = [isReadFilter];
 
-        return notifications.count;
+        const count = await this.notificationRepo.updateMany(ids, { isRead: true }, { receiverId: userId, queryRequest } );
+        return count;
     }
 
     private async ensureUsersExists(...userIds: (string | undefined)[]) {
@@ -94,42 +87,5 @@ export class NotificationService implements NotificationServiceInterface {
         }
         
         return users;
-    }
-
-    private async getNotifications(userId: string, queryRequest: NotificationsQueryRequest, type: 'sent' | 'received') {
-        const model = this.queryCreator.createQueryModel(Notification);
-        const prismaQuery = this.queryCreator.createQueryObject(model, queryRequest);
-
-        const userWithCounts = await this.prisma.user.findUnique({
-            where: { userId },
-            select: { _count: { select: { 
-                sentNotifications: type === 'sent' ? { where: prismaQuery.where } : undefined,
-                receivedNotifications: type === 'received' ? { where: prismaQuery.where } : undefined,
-            } } }
-        });
-
-        if (!userWithCounts) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
-        }
-
-        const userWithRecords = await this.prisma.user.findUniqueOrThrow({
-            where: { userId },
-            select: { 
-                sentNotifications: type === 'sent' ? prismaQuery : undefined,
-                receivedNotifications: type === 'received' ? prismaQuery : undefined,
-            }
-        });
-
-        const response = new NotificationsQueryResponse();
-        if (type === 'sent') {
-            response.content = userWithRecords.sentNotifications.map(item => this.plainTransformer.toNotification(item));
-            response.count = userWithCounts._count.sentNotifications;
-        }
-        else {
-            response.content = userWithRecords.receivedNotifications.map(item => this.plainTransformer.toNotification(item));
-            response.count = userWithCounts._count.receivedNotifications;
-        }
-
-        return response;
     }
 }

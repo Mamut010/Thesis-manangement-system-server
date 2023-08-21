@@ -1,6 +1,6 @@
 export interface NotificationInfo {
     senderId?: string,
-    receiverId: string,
+    receiverId: string | string[],
     title?: string,
-    content: string,
+    content?: string,
 }

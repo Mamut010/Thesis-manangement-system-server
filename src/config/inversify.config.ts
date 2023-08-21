@@ -45,6 +45,7 @@ import {
     FieldRepoInterface, 
     LecturerRepoInterface, 
     LocationRepoInterface, 
+    NotificationRepoInterface, 
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface, 
     RefreshTokenRepoInterface, 
@@ -69,7 +70,8 @@ import {
     LocationRepo,
     RoleRepo,
     AdminRepo,
-    StudentRepo
+    StudentRepo,
+    NotificationRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -220,6 +222,11 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<RoleRepoInterface>(INJECTION_TOKENS.RoleRepo)
         .to(RoleRepo)
+        .inRequestScope();
+
+    container
+        .bind<NotificationRepoInterface>(INJECTION_TOKENS.NotificationRepo)
+        .to(NotificationRepo)
         .inRequestScope();
 }
 

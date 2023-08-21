@@ -28,6 +28,7 @@ const REPOSITORY_TOKENS = {
     TopicRepo: Symbol.for('TopicRepo'),
     LocationRepo: Symbol.for('LocationRepo'),
     RoleRepo: Symbol.for('RoleRepo'),
+    NotificationRepo: Symbol.for('NotificationRepo'),
 } as const;
 
 const AUTH_SERVICE_TOKENS = {
