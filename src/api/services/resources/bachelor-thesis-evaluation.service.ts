@@ -14,16 +14,6 @@ import { BachelorThesisEvaluationRepoInterface } from "../../../dal/interfaces";
 
 @injectable()
 export class BachelorThesisEvaluationService implements BachelorThesisEvaluationServiceInterface {
-    private static readonly include = {
-        student: {
-            include: {
-                user: true
-            }
-        },
-        supervisor: true,
-        thesis: true,
-    } as const;
-    
     constructor(
         @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface) {
 
