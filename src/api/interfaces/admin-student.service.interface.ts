@@ -1,3 +1,4 @@
+import { StudentUpdateRequest } from "../../contracts/requests/student-update.request";
 import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
 import { StudentDetailResponse } from "../../contracts/responses/student-info.response";
 import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
@@ -17,4 +18,5 @@ export interface AdminStudentServiceInterface {
     getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto>;
     getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentDto>;
     getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentDto>;
+    updateStudent(studentId: string, updateRequest: StudentUpdateRequest): Promise<StudentInfoDto>;
 }

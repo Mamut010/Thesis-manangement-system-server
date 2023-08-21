@@ -13,40 +13,32 @@ import {
 } from "../../shared/dtos";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
-import { PrismaQueryCreatorInterface } from "../../lib/query";
 import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
-import { Student, User } from "../../core/models";
 import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
 import { bachelorThesisAndOralDefenseInclude } from "../../dal/constants/includes";
+import { StudentRepoInterface } from "../../dal/interfaces";
+import { StudentUpdateRequest } from "../../contracts/requests/student-update.request";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
-        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface) {
+        @inject(INJECTION_TOKENS.StudentRepo) private studentRepo: StudentRepoInterface) {
 
     }
 
     async getStudents(studentsQuery: StudentsQueryRequest): Promise<StudentsQueryResponse> {
-        const model = {
-            ...this.queryCreator.createQueryModel(Student),
-            user: this.queryCreator.createQueryModel(User),
-        };
-        const prismaQuery = this.queryCreator.createQueryObject(model, studentsQuery, { fieldNameMap: { studentId: 'userId' } });
-        
-        const count = await this.prisma.student.count({ where: prismaQuery.where });
-        const students = await this.prisma.student.findMany({ 
-            ...prismaQuery,
-            include: {
-                user: true
-            }
-        });
+        return await this.studentRepo.query(studentsQuery);
+    }
 
-        const response = new StudentsQueryResponse();
-        response.content = students.map(item => this.plainTransformer.toStudentInfo(item));
-        response.count = count;
-        return response;
+    async getStudentInfo(studentId: string): Promise<StudentInfoDto> {
+        const result = await this.studentRepo.findOneById(studentId);
+        if (!result) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
+        }
+
+        return result;
     }
 
     async getStudentDetail(studentId: string): Promise<StudentDetailResponse> {
@@ -58,23 +50,6 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         response.oralDefenseAssessment = await this.getStudentOralDefenseAssessment(studentId);
 
         return response;
-    }
-
-    async getStudentInfo(studentId: string): Promise<StudentInfoDto> {
-        const student = await this.prisma.student.findUnique({
-            where: {
-                userId: studentId
-            },
-            include: {
-                user: true,
-            }
-        });
-
-        if (!student) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
-        }
-
-        return this.plainTransformer.toStudentInfo(student);
     }
 
     async getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationDto> {
@@ -135,5 +110,14 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         }
 
         return this.plainTransformer.toOralDefenseAssessment(oralDefenseAssessment);
+    }
+
+    async updateStudent(studentId: string, updateRequest: StudentUpdateRequest): Promise<StudentInfoDto> {
+        const result = await this.studentRepo.update(studentId, updateRequest);
+        if (!result) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
+        }
+
+        return result;
     }
 }

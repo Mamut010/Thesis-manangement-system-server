@@ -6,11 +6,6 @@ export class StudentInfoDto {
     @IsDefined()
     @IsString()
     studentId!: string;
-
-    @Expose()
-    @IsDefined()
-    @IsString()
-    username!: string;
     
     @Expose()
     @IsOptional()

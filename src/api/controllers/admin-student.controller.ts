@@ -1,10 +1,12 @@
 import { inject, injectable } from "inversify";
 import { 
     Authorized, 
+    Body, 
     Get, 
     HttpCode, 
     JsonController, 
     Param,
+    Post,
     QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -21,6 +23,8 @@ import {
     StudentInfoDto 
 } from "../../shared/dtos";
 import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
+import { StudentUpdateRequest } from "../../contracts/requests/student-update.request";
+import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
 
 @JsonController('admin/students')
 //@Authorized(ROLES.Admin)
@@ -36,7 +40,7 @@ export class AdminStudentController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get()
-    @ResponseSchema(StudentDetailResponse)
+    @ResponseSchema(StudentsQueryResponse)
     getStudents(@QueryParams() studentsQuery: StudentsQueryRequest) {
         return this.adminStudentService.getStudents(studentsQuery);
     }
@@ -81,5 +85,12 @@ export class AdminStudentController {
     @ResponseSchema(OralDefenseAssessmentDto)
     getStudentOralDefenseAssessment(@Param('id') id: string) {
         return this.adminStudentService.getStudentOralDefenseAssessment(id);
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Post('/:id/student-info')
+    @ResponseSchema(StudentInfoDto)
+    updateStudentInfo(@Param('id') id: string, @Body({ required: true }) updateRequest: StudentUpdateRequest) {
+        return this.adminStudentService.updateStudent(id, updateRequest);
     }
 }

@@ -2,6 +2,7 @@ export * from './refresh-token.repo.interface';
 export * from './user.repo.interface';
 export * from './lecturer.repo.interface';
 export * from './admin.repo.interface';
+export * from './student.repo.interface';
 export * from './bachelor-thesis-registration.repo.interface';
 export * from './bachelor-thesis-assessment.repo.interface';
 export * from './bachelor-thesis-evaluation.repo.interface';
