@@ -5,7 +5,7 @@ import { AuthorizedUser } from "../../core/auth-checkers";
 import { UserOutputDto } from "../../shared/dtos";
 
 export interface UserServiceInterface {
-    getUsers(queryRequest: AuthUsersQueryRequest): Promise<AuthUsersQueryResponse>;
+    getUsers(currentUser: AuthorizedUser, queryRequest: AuthUsersQueryRequest): Promise<AuthUsersQueryResponse>;
     updateUser(currentUser: AuthorizedUser, userId: string, updateRequest: AuthUserUpdateRequest): Promise<UserOutputDto>;
     deleteUser(currentUser: AuthorizedUser, userId: string): Promise<void>;
 }

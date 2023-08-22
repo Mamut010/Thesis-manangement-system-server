@@ -21,7 +21,7 @@ export class UserService implements UserServiceInterface {
 
     }
 
-    async getUsers(queryRequest: AuthUsersQueryRequest): Promise<AuthUsersQueryResponse> {
+    async getUsers(currentUser: AuthorizedUser, queryRequest: AuthUsersQueryRequest): Promise<AuthUsersQueryResponse> {
         const users = await this.userRepo.query(queryRequest);
         return {
             content: users.content.map(item => plainToInstanceExactMatch(UserOutputDto, item)),
@@ -46,7 +46,7 @@ export class UserService implements UserServiceInterface {
         }
 
         const result = await this.userRepo.update(userId, updateRequest);
-        return result!;
+        return plainToInstanceExactMatch(UserOutputDto, result);
     }
 
     async deleteUser(currentUser: AuthorizedUser, userId: string): Promise<void> {
