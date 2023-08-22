@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { PrismaClient } from "@prisma/client";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
 import { BachelorThesisAssessmentsQueryResponse } from "../../contracts/responses/resources/bachelor-thesis-assessments-query.response";
 import { BachelorThesisAssessment } from "../../core/models";

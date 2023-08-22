@@ -6,7 +6,7 @@ import { LecturerInfoDto } from "../../shared/dtos";
 import { userWithRoleInclude } from "../constants/includes";
 import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { LecturerRepoInterface } from "../interfaces";
 import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
 import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";

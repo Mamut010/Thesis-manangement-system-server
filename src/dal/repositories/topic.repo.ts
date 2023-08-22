@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { TopicRepoInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { TopicsQueryRequest } from "../../contracts/requests/resources/topics-query.request";
 import { TopicsQueryResponse } from "../../contracts/responses/resources/topics-query.response";

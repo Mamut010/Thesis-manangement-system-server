@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { ThesisRepoInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { ThesesQueryRequest } from "../../contracts/requests/resources/theses-query.request";
 import { ThesesQueryResponse } from "../../contracts/responses/resources/theses-query.response";

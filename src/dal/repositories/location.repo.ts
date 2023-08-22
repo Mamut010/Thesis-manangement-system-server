@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { LocationRepoInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { LocationsQueryRequest } from "../../contracts/requests/resources/locations-query.request";
 import { LocationsQueryResponse } from "../../contracts/responses/resources/locations-query.response";

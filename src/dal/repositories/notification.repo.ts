@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { NotificationRepoInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { NotificationCreateRequest } from "../../contracts/requests/notification-create.request";
 import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";

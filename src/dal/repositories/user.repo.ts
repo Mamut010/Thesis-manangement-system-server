@@ -14,7 +14,7 @@ import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 import { UserCreateRequest } from "../../contracts/requests/user-create-request.dto";
 import { UserUpdateRequest } from "../../contracts/requests/user-update-request.dto";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { UserDto } from "../../shared/dtos";
 import { UsersQueryRequest } from "../../contracts/requests/users-query.request";

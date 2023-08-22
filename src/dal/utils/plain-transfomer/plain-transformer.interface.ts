@@ -15,7 +15,7 @@ import {
     ThesisDto,
     TopicDto,
     UserDto
-} from "../../dtos";
+} from "../../../shared/dtos";
 import { 
     PlainAdmin,
     PlainBachelorThesisAssessment,

@@ -16,7 +16,7 @@ import {
     ThesisDto,
     TopicDto,
     UserDto
-} from "../../dtos";
+} from "../../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 import { flattenObject } from "../../../utils/object-helpers";
 import { 

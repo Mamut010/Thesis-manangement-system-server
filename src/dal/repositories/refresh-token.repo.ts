@@ -7,7 +7,7 @@ import { RefreshToken } from "../../core/models/refresh-token.model";
 import { RefreshTokenRepoInterface } from "../interfaces";
 import { RefreshTokenCreateRequest } from "../../contracts/requests/refresh-token-create.request";
 import { RefreshTokenDto } from "../../shared/dtos";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 
 @injectable()
 export class RefreshTokenRepo implements RefreshTokenRepoInterface {

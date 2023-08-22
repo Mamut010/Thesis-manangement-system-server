@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { RoleRepoInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { RolesQueryRequest } from "../../contracts/requests/resources/roles-query.request";
 import { RolesQueryResponse } from "../../contracts/responses/resources/roles-query.response";

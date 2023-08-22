@@ -6,7 +6,7 @@ import { StudentInfoDto } from "../../shared/dtos";
 import { userInclude } from "../constants/includes";
 import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { StudentRepoInterface } from "../interfaces";
 import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
 import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";

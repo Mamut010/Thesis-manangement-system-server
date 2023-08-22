@@ -22,7 +22,7 @@ import { prettyJSON } from "../../utils/string-helpers";
 import { LoggerInterface } from "../../lib/logger";
 import { logger } from "../../decorators";
 import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../../dal/utils/plain-transfomer";
 import { compareObjectByEntries, defaultOrGiven } from "../../utils/object-helpers";
 import { MailServiceInterface, NotificationServiceInterface } from "../../shared/interfaces";
 import { Attachment, MailMessage, MailOptions, MailWithoutMessageOptions } from "../../shared/types/mail";

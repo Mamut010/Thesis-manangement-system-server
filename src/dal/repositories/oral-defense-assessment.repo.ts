@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { PrismaClient } from "@prisma/client";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
 import { OralDefenseAssessmentsQueryResponse } from "../../contracts/responses/resources/oral-defense-assessments-query.response";
 import { OralDefenseAssessment } from "../../core/models";

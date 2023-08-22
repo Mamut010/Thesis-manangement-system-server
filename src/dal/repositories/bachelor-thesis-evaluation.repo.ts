@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { PrismaClient } from "@prisma/client";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
-import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
 import { BachelorThesisEvaluationsQueryResponse } from "../../contracts/responses/resources/bachelor-thesis-evaluations-query.response";
 import { BachelorThesisEvaluation } from "../../core/models";
@@ -14,7 +14,6 @@ import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BachelorThesisEvaluationRepoInterface } from "../interfaces";
-import { LecturerAssetsQueryRequest } from "../../contracts/requests/lecturer-assets-query.request";
 
 @injectable()
 export class BachelorThesisEvaluationRepo implements BachelorThesisEvaluationRepoInterface {

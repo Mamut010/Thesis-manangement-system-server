@@ -94,7 +94,7 @@ import { FormFillerInterface, PdfFormFiller } from '../lib/form-filler';
 import { PdfFormGenerator, PdfFormGeneratorInterface } from '../api/utils/pdf-form-generator';
 import { WsSetupServiceInterface } from '../ws/interfaces';
 import { WsSetupService } from '../ws/services';
-import { PlainTransformer, PlainTransformerInterface } from '../shared/utils/plain-transformer';
+import { PlainTransformer, PlainTransformerInterface } from '../dal/utils/plain-transfomer';
 import { IORoomTimerManager, IORoomTimerManagerInterface } from '../ws/utils/room-timer';
 import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-generator';
 
