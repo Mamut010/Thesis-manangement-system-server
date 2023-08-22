@@ -2,6 +2,7 @@ import { Expose, Type } from "class-transformer";
 import { IsArray, IsDefined, ValidateNested } from "class-validator";
 import {
     BachelorThesisAssessmentDto,
+    BachelorThesisEvaluationDto,
     BachelorThesisRegistrationDto,
     LecturerInfoDto,
     OralDefenseAssessmentDto,
@@ -26,15 +27,22 @@ export class LecturerDetailResponse {
     @IsArray()
     @IsDefined()
     @ValidateNested({ each: true })
-    @Type(() => OralDefenseRegistrationDto)
-    oralDefenseRegistrations!: OralDefenseRegistrationDto[];
+    @Type(() => BachelorThesisAssessmentDto)
+    bachelorThesisAssessments!: BachelorThesisAssessmentDto[];
 
     @Expose()
     @IsArray()
     @IsDefined()
     @ValidateNested({ each: true })
-    @Type(() => BachelorThesisAssessmentDto)
-    bachelorThesisAssessments!: BachelorThesisAssessmentDto[];
+    @Type(() => BachelorThesisEvaluationDto)
+    bachelorThesisEvaluations!: BachelorThesisEvaluationDto[];
+
+    @Expose()
+    @IsArray()
+    @IsDefined()
+    @ValidateNested({ each: true })
+    @Type(() => OralDefenseRegistrationDto)
+    oralDefenseRegistrations!: OralDefenseRegistrationDto[];
 
     @Expose()
     @IsArray()

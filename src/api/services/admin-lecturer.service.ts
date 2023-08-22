@@ -3,6 +3,7 @@ import { AdminLecturerServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { 
     BachelorThesisAssessmentDto, 
+    BachelorThesisEvaluationDto, 
     BachelorThesisRegistrationDto, 
     LecturerInfoDto, 
     OralDefenseAssessmentDto, 
@@ -13,6 +14,7 @@ import { LecturersQueryResponse } from "../../contracts/responses/api/lecturers-
 import { LecturerUpdateRequest } from "../../contracts/requests/api/lecturer-update.request";
 import { 
     BachelorThesisAssessmentRepoInterface, 
+    BachelorThesisEvaluationRepoInterface, 
     BachelorThesisRegistrationRepoInterface, 
     LecturerRepoInterface, 
     OralDefenseAssessmentRepoInterface, 
@@ -28,6 +30,9 @@ import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/request
 import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
 import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
 import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
+import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
+import { StringFilter } from "../../lib/query";
+import { makeArray } from "../../utils/array-helpers";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
@@ -35,6 +40,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         @inject(INJECTION_TOKENS.LecturerRepo) private lecturerRepo: LecturerRepoInterface,
         @inject(INJECTION_TOKENS.BachelorThesisRegistrationRepo) private btrRepo: BachelorThesisRegistrationRepoInterface,
         @inject(INJECTION_TOKENS.BachelorThesisAssessmentRepo) private btaRepo: BachelorThesisAssessmentRepoInterface,
+        @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface,
         @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface,
         @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface) {
 
@@ -61,10 +67,13 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         response.bachelorThesisRegistrations = await this.getLecturerBachelorThesisRegistrations(lecturerId, 
             lecturerAssetsQueryRequest);
 
-        response.oralDefenseRegistrations = await this.getLecturerOralDefenseRegistrations(lecturerId, 
+        response.bachelorThesisAssessments = await this.getLecturerBachelorThesisAssessments(lecturerId, 
             lecturerAssetsQueryRequest);
 
-        response.bachelorThesisAssessments = await this.getLecturerBachelorThesisAssessments(lecturerId, 
+        response.bachelorThesisEvaluations = await this.getLecturerBachelorThesisEvaluations(lecturerId, 
+            lecturerAssetsQueryRequest);
+
+        response.oralDefenseRegistrations = await this.getLecturerOralDefenseRegistrations(lecturerId, 
             lecturerAssetsQueryRequest);
             
         response.oralDefenseAssessments = await this.getLecturerOralDefenseAssessments(lecturerId, 
@@ -81,6 +90,16 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
     async getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest: BachelorThesisAssessmentsQueryRequest)
         : Promise<BachelorThesisAssessmentDto[]> {
         return await this.btaRepo.queryLecturerAssets(lecturerId, btaQueryRequest);
+    }
+
+    async getLecturerBachelorThesisEvaluations(lecturerId: string, bteQueryRequest: BachelorThesisEvaluationsQueryRequest)
+        : Promise<BachelorThesisEvaluationDto[]> {
+        const queryRequest = new BachelorThesisEvaluationsQueryRequest();
+        const supervisorIdFilter = new StringFilter();
+        supervisorIdFilter.value = lecturerId;
+        supervisorIdFilter.operator = 'equals';
+        queryRequest.supervisorIdFilter = makeArray(supervisorIdFilter);
+        return (await this.bteRepo.query(queryRequest)).content;
     }
 
     async getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest: OralDefenseRegistrationsQueryRequest)
