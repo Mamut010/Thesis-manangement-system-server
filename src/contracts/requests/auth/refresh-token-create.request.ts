@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer"
-import { IsDate, IsDefined, IsNumber, IsString } from "class-validator"
+import { IsDate, IsDefined, IsString } from "class-validator"
 
 export class RefreshTokenCreateRequest {
     @Expose()

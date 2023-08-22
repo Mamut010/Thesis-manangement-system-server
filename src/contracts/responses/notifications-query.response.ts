@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { LecturerInfoDto, NotificationDto } from "../../shared/dtos";
+import { NotificationDto } from "../../shared/dtos";
 import { IsDefined, ValidateNested } from "class-validator";
 import { QueryResponse } from "../interfaces";
 import { BaseQueryResponse } from "../bases";
