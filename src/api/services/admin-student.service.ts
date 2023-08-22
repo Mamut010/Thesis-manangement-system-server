@@ -5,6 +5,7 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { 
     BachelorThesisAssessmentDto, 
+    BachelorThesisEvaluationDto, 
     BachelorThesisRegistrationDto,
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
@@ -15,6 +16,7 @@ import { StudentsQueryRequest } from "../../contracts/requests/api/students-quer
 import { StudentsQueryResponse } from "../../contracts/responses/api/students-query.response";
 import { 
     BachelorThesisAssessmentRepoInterface, 
+    BachelorThesisEvaluationRepoInterface, 
     BachelorThesisRegistrationRepoInterface, 
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface, 
@@ -27,6 +29,7 @@ import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/
 import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
 import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
 import { ClassConstructor } from "../../utils/types";
+import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
@@ -34,6 +37,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         @inject(INJECTION_TOKENS.StudentRepo) private studentRepo: StudentRepoInterface,
         @inject(INJECTION_TOKENS.BachelorThesisRegistrationRepo) private btrRepo: BachelorThesisRegistrationRepoInterface,
         @inject(INJECTION_TOKENS.BachelorThesisAssessmentRepo) private btaRepo: BachelorThesisAssessmentRepoInterface,
+        @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface,
         @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface,
         @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface) {
 
@@ -58,11 +62,13 @@ export class AdminStudentService implements AdminStudentServiceInterface {
 
         const studentBtr = await this.queryStudentBachelorThesisRegistration(studentId);
         const studentBta = await this.queryStudentBachelorThesisAssessment(studentId);
+        const studentBte = await this.queryStudentBachelorThesisEvaluation(studentId);
         const studentOdr = await this.queryStudentOralDefenseRegistration(studentId);
         const studentOda = await this.queryStudentOralDefenseAssessment(studentId);
 
         response.bachelorThesisRegistration = studentBtr.length > 0 ? studentBtr[0] : null;
         response.bachelorThesisAssessment = studentBta.length > 0 ? studentBta[0] : null;
+        response.bachelorThesisEvaluation = studentBte.length > 0 ? studentBte[0] : null;
         response.oralDefenseRegistration = studentOdr.length > 0 ? studentOdr[0] : null;
         response.oralDefenseAssessment = studentOda.length > 0 ? studentOda[0] : null;
 
@@ -82,6 +88,15 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         const result = await this.queryStudentBachelorThesisAssessment(studentId);
         if (result.length === 0) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisAssessmentNotFound);
+        }
+
+        return result[0];
+    }
+
+    async getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationDto> {
+        const result = await this.queryStudentBachelorThesisEvaluation(studentId);
+        if (result.length === 0) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisEvaluationNotFound);
         }
 
         return result[0];
@@ -123,6 +138,12 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     private async queryStudentBachelorThesisAssessment(studentId: string) {
         const queryRequest = this.createQueryRequest(BachelorThesisAssessmentsQueryRequest, studentId);
         const queryResponse = await this.btaRepo.query(queryRequest);
+        return queryResponse.content;
+    }
+
+    private async queryStudentBachelorThesisEvaluation(studentId: string) {
+        const queryRequest = this.createQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
+        const queryResponse = await this.bteRepo.query(queryRequest);
         return queryResponse.content;
     }
 

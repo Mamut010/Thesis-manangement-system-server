@@ -4,6 +4,7 @@ import { StudentDetailResponse } from "../../contracts/responses/api/student-inf
 import { StudentsQueryResponse } from "../../contracts/responses/api/students-query.response";
 import { 
     BachelorThesisAssessmentDto, 
+    BachelorThesisEvaluationDto, 
     BachelorThesisRegistrationDto,
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
@@ -15,8 +16,9 @@ export interface AdminStudentServiceInterface {
     getStudentDetail(studentId: string): Promise<StudentDetailResponse>;
     getStudentInfo(studentId: string): Promise<StudentInfoDto>
     getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationDto>;
-    getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto>;
     getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentDto>;
+    getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationDto>;
+    getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto>;
     getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentDto>;
     updateStudent(studentId: string, updateRequest: StudentUpdateRequest): Promise<StudentInfoDto>;
 }

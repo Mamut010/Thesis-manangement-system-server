@@ -5,7 +5,8 @@ import {
     BachelorThesisAssessmentDto,
     BachelorThesisRegistrationDto,
     OralDefenseAssessmentDto,
-    OralDefenseRegistrationDto
+    OralDefenseRegistrationDto,
+    BachelorThesisEvaluationDto
 } from "../../../shared/dtos";
 
 export class StudentDetailResponse {
@@ -24,14 +25,20 @@ export class StudentDetailResponse {
     @Expose()
     @IsOptional()
     @ValidateNested()
-    @Type(() => OralDefenseRegistrationDto)
-    oralDefenseRegistration!: OralDefenseRegistrationDto | null;
+    @Type(() => BachelorThesisAssessmentDto)
+    bachelorThesisAssessment!: BachelorThesisAssessmentDto | null;
 
     @Expose()
     @IsOptional()
     @ValidateNested()
-    @Type(() => BachelorThesisAssessmentDto)
-    bachelorThesisAssessment!: BachelorThesisAssessmentDto | null;
+    @Type(() => BachelorThesisEvaluationDto)
+    bachelorThesisEvaluation!: BachelorThesisEvaluationDto | null;
+
+    @Expose()
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => OralDefenseRegistrationDto)
+    oralDefenseRegistration!: OralDefenseRegistrationDto | null;
 
     @Expose()
     @IsOptional()

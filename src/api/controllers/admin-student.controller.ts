@@ -17,6 +17,7 @@ import { HTTP_CODES } from "../../core/constants/http-codes";
 import { StudentDetailResponse } from "../../contracts/responses/api/student-info.response";
 import { 
     BachelorThesisAssessmentDto,
+    BachelorThesisEvaluationDto,
     BachelorThesisRegistrationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
@@ -67,17 +68,24 @@ export class AdminStudentController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/:id/oral-defense-registration')
-    @ResponseSchema(OralDefenseRegistrationDto)
-    getStudentOralDefenseRegistration(@Param('id') id: string) {
-        return this.adminStudentService.getStudentOralDefenseRegistration(id);
-    }
-
-    @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-assessment')
     @ResponseSchema(BachelorThesisAssessmentDto)
     getStudentBachelorThesisAssessment(@Param('id') id: string) {
         return this.adminStudentService.getStudentBachelorThesisAssessment(id);
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Get('/:id/bachelor-thesis-evaluation')
+    @ResponseSchema(BachelorThesisEvaluationDto)
+    getStudentBachelorThesisEvaluation(@Param('id') id: string) {
+        return this.adminStudentService.getStudentBachelorThesisEvaluation(id);
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Get('/:id/oral-defense-registration')
+    @ResponseSchema(OralDefenseRegistrationDto)
+    getStudentOralDefenseRegistration(@Param('id') id: string) {
+        return this.adminStudentService.getStudentOralDefenseRegistration(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
