@@ -15,6 +15,11 @@ export class UserDto {
     @Expose()
     @IsDefined()
     @IsString()
+    roleName!: string;
+
+    @Expose()
+    @IsDefined()
+    @IsString()
     username!: string;
 
     @Expose()

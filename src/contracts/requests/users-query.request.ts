@@ -10,6 +10,9 @@ export class UsersQueryRequest extends BaseQueryRequest {
     roleIdFilter?: NumberFilter[];
 
     @IsStringFilterArray()
+    roleNameFilter?: StringFilter[];
+
+    @IsStringFilterArray()
     usernameFilter?: StringFilter[];
 
     @IsNullableStringFilterArray()

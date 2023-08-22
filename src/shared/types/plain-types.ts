@@ -16,7 +16,9 @@ import {
     User 
 } from "../../core/models"
 
-export type PlainUser = User;
+export type PlainUser = User & {
+    role: Role
+};
 
 export type PlainNotification = Notification;
 

@@ -21,6 +21,7 @@ import { UsersQueryRequest } from "../../contracts/requests/users-query.request"
 import { UsersQueryResponse } from "../../contracts/responses/users-query.response";
 import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
+import { roleInclude } from "../constants/includes";
 
 @injectable()
 export class UserRepo implements UserRepoInterface {
@@ -36,7 +37,10 @@ export class UserRepo implements UserRepoInterface {
         const prismaQuery = this.createPrismaQuery(queryRequest);
 
         const count = await this.prisma.user.count({ where: prismaQuery.where });
-        const users = await this.prisma.user.findMany(prismaQuery);
+        const users = await this.prisma.user.findMany({
+            ...prismaQuery,
+            include: roleInclude,
+        });
 
         const response = new UsersQueryResponse();
         response.content = users.map(item => this.plainTransformer.toUser(item));
@@ -59,6 +63,7 @@ export class UserRepo implements UserRepoInterface {
                     in: ids
                 }
             },
+            include: roleInclude,
         });
         return records.map(item => this.plainTransformer.toUser(item));
     }
@@ -86,9 +91,7 @@ export class UserRepo implements UserRepoInterface {
                         create: {}
                     }
                 },
-                include: {
-                    role: true
-                }
+                include: roleInclude,
             });
 
             return this.plainTransformer.toUser(record);
@@ -110,6 +113,7 @@ export class UserRepo implements UserRepoInterface {
                         userId: id
                     },
                     data: updateRequest,
+                    include: roleInclude,
                 });
             }
     
@@ -133,12 +137,16 @@ export class UserRepo implements UserRepoInterface {
             where: {
                 userId: id
             },
+            include: roleInclude,
         });
     }
 
     private createPrismaQuery(queryRequest: AutoQueryCreatable) {
+        const fieldMap = {
+            roleName: 'role.name',
+        };
         const model = this.queryCreator.createQueryModel(User);
-        return this.queryCreator.createQueryObject(model, queryRequest);
+        return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
     }
 
     private getAssociatedRepoByRole(roleName: string) {

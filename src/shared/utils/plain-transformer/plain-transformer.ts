@@ -43,7 +43,9 @@ export class PlainTransformer implements PlainTransformerInterface {
         = ['thesis', 'supervisor', 'supervisor1', 'supervisor2'];
 
     public toUser(plain: PlainUser): UserDto {
-        const dto = plainToInstanceExactMatch(UserDto, plain);
+        const dto = plainToInstanceExactMatch(UserDto, flattenObject(plain, {
+            transformedProps: ['role']
+        }));
         return dto;
     }
 
