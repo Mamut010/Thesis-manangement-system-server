@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
-import { PRISMA_ERROR_CODES } from "../core/constants/prisma-error-codes";
-import { ConflictError } from "../contracts/errors/conflict.error";
+import { PRISMA_ERROR_CODES } from "../../core/constants/prisma-error-codes";
+import { ConflictError } from "../../contracts/errors/conflict.error";
 
 export const wrapUniqueConstraint = <T>(fn: () => T, errMsg?: string): T => {
     try {

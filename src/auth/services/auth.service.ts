@@ -5,8 +5,7 @@ import {
     JwtAccessContextDto, 
     JwtAccessPayloadDto, 
     JwtRefreshContextDto, 
-    JwtRefreshPayloadDto, 
-    UserCreateRequestDto 
+    JwtRefreshPayloadDto,
 } from '../../shared/dtos';
 import { AuthServiceInterface } from '../interfaces';
 import { LoginRequest } from '../../contracts/requests/login.request';
@@ -15,7 +14,7 @@ import { UnauthorizedError } from '../../contracts/errors/unauthorized.error';
 import { UnexpectedError } from '../../contracts/errors/unexpected.error';
 import { SignUpRequest } from '../../contracts/requests/sign-up.request';
 import { AuthenticationError } from '../../contracts/errors/authentication.error';
-import { Role, RefreshToken } from '../../core/models';
+import { RefreshToken } from '../../core/models';
 import { plainToInstanceExactMatch } from '../../utils/class-transformer-helpers';
 import { JwtCookieHandlerInterface } from '../utils/jwt-cookie-handlers';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
@@ -29,6 +28,7 @@ import { StringArrayResponse } from '../../contracts/responses/string-array.resp
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { env } from '../../env';
 import { RefreshTokenRepoInterface, UserRepoInterface } from '../../dal/interfaces';
+import { UserCreateRequest } from '../../contracts/requests/user-create-request.dto';
 
 @injectable()
 export class AuthService implements AuthServiceInterface {
@@ -52,18 +52,18 @@ export class AuthService implements AuthServiceInterface {
             throw new AuthenticationError(ERROR_MESSAGES.Auth.UsernameAlreadyExists);
         }
 
-        const role = await this.prisma.role.findUnique({ where: { name: signUpRequest.roles[0] }});
+        const role = await this.prisma.role.findUnique({ where: { name: signUpRequest.role }});
 
         if (!role) {
             throw new UnexpectedError(ERROR_MESSAGES.NotFound.RoleNotFound);
         }
 
-        const userCreatingRequest = new UserCreateRequestDto();
+        const userCreatingRequest = new UserCreateRequest();
         userCreatingRequest.userId = signUpRequest.userId;
         userCreatingRequest.username = signUpRequest.username;
         userCreatingRequest.password = await this.cryptoService.hash(signUpRequest.password);
         userCreatingRequest.email = signUpRequest.email;
-        userCreatingRequest.role = plainToInstanceExactMatch(Role, role);
+        userCreatingRequest.roleName = signUpRequest.role;
 
         await this.userRepo.create(userCreatingRequest);
     }

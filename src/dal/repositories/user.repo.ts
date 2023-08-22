@@ -11,100 +11,137 @@ import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { UserRepoInterface } from "../interfaces";
 import { User } from "../../core/models";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { UserCreateRequestDto, UserUpdateRequestDto } from "../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
+import { UserCreateRequest } from "../../contracts/requests/user-create-request.dto";
+import { UserUpdateRequest } from "../../contracts/requests/user-update-request.dto";
+import { PlainTransformerInterface } from "../../shared/utils/plain-transformer";
+import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
+import { UserDto } from "../../shared/dtos";
+import { UsersQueryRequest } from "../../contracts/requests/users-query.request";
+import { UsersQueryResponse } from "../../contracts/responses/users-query.response";
+import { anyChanges } from "../utils/crud-helpers";
+import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 
 @injectable()
 export class UserRepo implements UserRepoInterface {
-    constructor(@inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient) {
+    constructor(
+        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
+        @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
+        @inject(INJECTION_TOKENS.PrismaQueryCreator) private queryCreator: PrismaQueryCreatorInterface
+    ) {
 
     }
 
-    async create(request: UserCreateRequestDto): Promise<User> {
-        try {
-            return await this.prisma.$transaction(async (tx) => {
-                const user = await tx.user.create({
-                    data: {
-                        userId: request.userId,
-                        username: request.username,
-                        password: request.password,
-                        email: request.email,
-                        role: {
-                            connect: {
-                                id: request.role.id
-                            }
-                        }
-                    }
-                });
+    async query(queryRequest: UsersQueryRequest): Promise<UsersQueryResponse> {
+        const prismaQuery = this.createPrismaQuery(queryRequest);
 
-                const recordCreatingPromise = this.createRecordInAssociatedRepoByRole(tx, request);
-                if (!recordCreatingPromise) {
-                    throw new BadRequestError(ERROR_MESSAGES.NotFound.RoleNotFound);
-                }
+        const count = await this.prisma.user.count({ where: prismaQuery.where });
+        const users = await this.prisma.user.findMany(prismaQuery);
 
-                await recordCreatingPromise;
-
-                return plainToInstanceExactMatch(User, user);
-            });
-        }
-        catch (err) {
-            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.UserCreationFailed);
-        }
+        const response = new UsersQueryResponse();
+        response.content = users.map(item => this.plainTransformer.toUser(item));
+        response.count = count;
+        return response;
     }
 
-    async update(request: UserUpdateRequestDto): Promise<User> {
-        try {
-            await this.prisma.user.findUniqueOrThrow({
-                where: {
-                    userId: request.userId,
-                }
-            });
+    async findOneById(id: string): Promise<UserDto | null> {
+        const record = await this.findRecordById(id);
+        if (!record) {
+            return null;
         }
-        catch {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
-        }
+        return this.plainTransformer.toUser(record);
+    }
 
-        const user = await this.prisma.user.update({
+    async findManyByIds(ids: string[]): Promise<UserDto[]> {
+        const records = await this.prisma.user.findMany({
             where: {
-                userId: request.userId,
-            },
-            data: {
-                ...request,
-                roleId: undefined,
-                role: {
-                    connect: {
-                        id: request.roleId
-                    }
+                userId: {
+                    in: ids
                 }
-            }
+            },
         });
-
-        return plainToInstanceExactMatch(User, user);
+        return records.map(item => this.plainTransformer.toUser(item));
     }
 
-    async delete(userId: string): Promise<boolean> {
+    async create(createRequest: UserCreateRequest): Promise<UserDto> {
+        const associatedRepo = this.getAssociatedRepoByRole(createRequest.roleName);
+        if (!associatedRepo) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.RoleNotFound);
+        }
+
+        const impl = async () => {
+            const record = await this.prisma.user.create({
+                data: {
+                    userId: createRequest.userId,
+                    username: createRequest.username,
+                    password: createRequest.password,
+                    email: createRequest.email,
+                    signature: createRequest.signature,
+                    role: {
+                        connect: {
+                            name: createRequest.roleName
+                        }
+                    },
+                    [associatedRepo]: {
+                        create: {}
+                    }
+                },
+                include: {
+                    role: true
+                }
+            });
+
+            return this.plainTransformer.toUser(record);
+        }
+
+        return wrapUniqueConstraint(impl, ERROR_MESSAGES.Unexpected.UserCreationFailed);
+    }
+
+    async update(id: string, updateRequest: UserUpdateRequest): Promise<UserDto | null> {
+        const impl = async () => {
+            let record = await this.findRecordById(id);
+            if (!record) {
+                return null;
+            }
+    
+            if (anyChanges(record, updateRequest)) {
+                record = await this.prisma.user.update({
+                    where: {
+                        userId: id
+                    },
+                    data: updateRequest,
+                });
+            }
+    
+            return this.plainTransformer.toUser(record);
+        }
+
+        return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.UserAlreadyExists);
+    }
+
+    async delete(id: string): Promise<boolean> {
         const { count } = await this.prisma.user.deleteMany({
             where: {
-                userId: userId
+                userId: id
             }
         });
         return count > 0;
     }
 
-    private createRecordInAssociatedRepoByRole(tx: Omit<PrismaClient, ITXClientDenyList>, request: UserCreateRequestDto) {
-        const associatedRepo = this.getAssociatedRepoByRole(request.role.name);
-
-        if (associatedRepo) {
-            const prismaRepo: any = tx[associatedRepo as never];
-            return prismaRepo.create({
-                data: {
-                    userId: request.userId
-                }
-            }) as Promise<any>;
-        }
+    private async findRecordById(id: string) {
+        return await this.prisma.user.findUnique({
+            where: {
+                userId: id
+            },
+        });
     }
 
-    private getAssociatedRepoByRole(roleName: string): string | undefined {
+    private createPrismaQuery(queryRequest: AutoQueryCreatable) {
+        const model = this.queryCreator.createQueryModel(User);
+        return this.queryCreator.createQueryObject(model, queryRequest);
+    }
+
+    private getAssociatedRepoByRole(roleName: string) {
         if (roleName === ROLES.Admin) {
             return 'admin';
         }

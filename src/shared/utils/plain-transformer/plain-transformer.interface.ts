@@ -12,7 +12,8 @@ import {
     RoleDto, 
     StudentInfoDto,
     ThesisDto,
-    TopicDto
+    TopicDto,
+    UserDto
 } from "../../dtos";
 import { 
     PlainAdmin,
@@ -29,9 +30,11 @@ import {
     PlainStudent,
     PlainThesis,
     PlainTopic,
+    PlainUser,
 } from "../../types/plain-types";
 
 export interface PlainTransformerInterface {
+    toUser(plain: PlainUser): UserDto;
     toNotification(plain: PlainNotification): NotificationDto;
     toAdminInfo(plain: PlainAdmin): AdminInfoDto;
     toStudentInfo(plain: PlainStudent): StudentInfoDto;

@@ -1,6 +1,6 @@
-import { Expose, Type } from "class-transformer";
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsDefined, IsEmail, IsIn, IsOptional, IsString } from "class-validator";
-import { ROLES } from "../../core/constants/roles";
+import { Expose } from "class-transformer";
+import { IsDefined, IsEmail, IsIn, IsOptional, IsString } from "class-validator";
+import { RoleValues } from "../../core/constants/roles";
 
 export class SignUpRequest {
     @Expose()
@@ -20,12 +20,9 @@ export class SignUpRequest {
 
     @Expose()
     @IsDefined()
-    @IsArray()
-    @ArrayMinSize(1)
-    @ArrayMaxSize(1)
-    @IsIn(Object.values(ROLES), { each: true })
-    @Type(() => String)
-    roles!: string[]
+    @IsString()
+    @IsIn(RoleValues)
+    role!: string
 
     @Expose()
     @IsOptional()

@@ -11,7 +11,7 @@ import { BachelorThesisRegistrationDto } from "../../shared/dtos";
 import { BachelorThesisRegistrationCreateRequest } from "../../contracts/requests/resources/bachelor-thesis-registration-create.request";
 import { BachelorThesisRegistrationUpdateRequest } from "../../contracts/requests/resources/bachelor-thesis-registration-update.request";
 import { anyChanges } from "../utils/crud-helpers";
-import { wrapUniqueConstraint } from "../../utils/prisma-helpers";
+import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BachelorThesisRegistrationRepoInterface } from "../interfaces";
 import { getLecturerAssetsQuery } from "../utils/lecturer-assets-helpers";

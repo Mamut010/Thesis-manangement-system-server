@@ -1,12 +1,7 @@
-import { IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 import { Expose } from "class-transformer";
 
-export class UserUpdateRequestDto {
-    @Expose()
-    @IsDefined()
-    @IsString()
-    userId!: string;
-
+export class UserUpdateRequest {
     @Expose()
     @IsOptional()
     @IsNumber()
@@ -26,4 +21,19 @@ export class UserUpdateRequestDto {
     @IsOptional()
     @IsEmail()
     email?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    surname?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    forename?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    signature?: string;
 }

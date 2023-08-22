@@ -11,7 +11,7 @@ import { OralDefenseAssessmentDto } from "../../shared/dtos";
 import { OralDefenseAssessmentCreateRequest } from "../../contracts/requests/resources/oral-defense-assessment-create.request";
 import { OralDefenseAssessmentUpdateRequest } from "../../contracts/requests/resources/oral-defense-assessment-update.request";
 import { anyChanges } from "../utils/crud-helpers";
-import { wrapUniqueConstraint } from "../../utils/prisma-helpers";
+import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { OralDefenseAssessmentRepoInterface } from "../interfaces";
 import { getLecturerAssetsQuery } from "../utils/lecturer-assets-helpers";

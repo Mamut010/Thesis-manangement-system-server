@@ -1,12 +1,7 @@
 import { Expose } from "class-transformer";
-import { IsDate, IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class User {
-    @Expose()
-    @IsDefined()
-    @IsNumber()
-    id!: number;
-
+export class UserDto {
     @Expose()
     @IsDefined()
     @IsString()
@@ -46,14 +41,4 @@ export class User {
     @IsOptional()
     @IsString()
     signature!: string | null;
-
-    @Expose()
-    @IsDefined()
-    @IsDate()
-    createdAt!: Date;
-
-    @Expose()
-    @IsDefined()
-    @IsDate()
-    updatedAt!: Date;
 }

@@ -11,7 +11,7 @@ import { BachelorThesisAssessmentDto } from "../../shared/dtos";
 import { BachelorThesisAssessmentCreateRequest } from "../../contracts/requests/resources/bachelor-thesis-assessment-create.request";
 import { BachelorThesisAssessmentUpdateRequest } from "../../contracts/requests/resources/bachelor-thesis-assessment-update.request";
 import { anyChanges } from "../utils/crud-helpers";
-import { wrapUniqueConstraint } from "../../utils/prisma-helpers";
+import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BachelorThesisAssessmentRepoInterface } from "../interfaces";
 import { getLecturerAssetsQuery } from "../utils/lecturer-assets-helpers";

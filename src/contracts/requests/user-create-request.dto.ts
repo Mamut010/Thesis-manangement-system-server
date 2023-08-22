@@ -1,8 +1,7 @@
-import { IsDefined, IsEmail, IsOptional, IsString, ValidateNested } from "class-validator";
-import { Role } from "../../core/models";
-import { Expose, Type } from "class-transformer";
+import { IsDefined, IsEmail, IsOptional, IsString } from "class-validator";
+import { Expose, } from "class-transformer";
 
-export class UserCreateRequestDto {
+export class UserCreateRequest {
     @Expose()
     @IsDefined()
     @IsString()
@@ -20,12 +19,16 @@ export class UserCreateRequestDto {
 
     @Expose()
     @IsDefined()
-    @ValidateNested()
-    @Type(() => Role)
-    role!: Role;
+    @IsString()
+    roleName!: string;
 
     @Expose()
     @IsOptional()
     @IsEmail()
     email?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    signature?: string;
 }
