@@ -1,4 +1,4 @@
-import { BaseQueryRequest } from "../bases";
+import { BaseQueryRequest } from "../../bases";
 
 export class LecturerAssetsQueryRequest extends BaseQueryRequest {
 }

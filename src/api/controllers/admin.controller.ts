@@ -15,7 +15,7 @@ import { AdminServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
 import { AdminInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
-import { AdminUpdateRequest } from "../../contracts/requests/admin-update.request";
+import { AdminUpdateRequest } from "../../contracts/requests/api/admin-update.request";
 
 @JsonController('admin')
 @Authorized(ROLES.Admin)

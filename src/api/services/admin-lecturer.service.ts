@@ -8,9 +8,9 @@ import {
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto
 } from "../../shared/dtos";
-import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
-import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
-import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
+import { LecturersQueryRequest } from "../../contracts/requests/api/lecturers-query.request";
+import { LecturersQueryResponse } from "../../contracts/responses/api/lecturers-query.response";
+import { LecturerUpdateRequest } from "../../contracts/requests/api/lecturer-update.request";
 import { 
     BachelorThesisAssessmentRepoInterface, 
     BachelorThesisRegistrationRepoInterface, 
@@ -18,12 +18,12 @@ import {
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface
 } from "../../dal/interfaces";
-import { LecturerDetailResponse } from "../../contracts/responses/lecturer-info.response";
+import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-info.response";
 import { LecturerRoles } from "../../core/constants/roles";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { LecturerAssetsQueryRequest } from "../../contracts/requests/lecturer-assets-query.request";
+import { LecturerAssetsQueryRequest } from "../../contracts/requests/api/lecturer-assets-query.request";
 import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
 import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
 import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";

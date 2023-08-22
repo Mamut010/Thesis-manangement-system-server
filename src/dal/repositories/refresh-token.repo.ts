@@ -5,7 +5,7 @@ import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { RefreshToken } from "../../core/models/refresh-token.model";
 import { RefreshTokenRepoInterface } from "../interfaces";
-import { RefreshTokenCreateRequest } from "../../contracts/requests/refresh-token-create.request";
+import { RefreshTokenCreateRequest } from "../../contracts/requests/auth/refresh-token-create.request";
 import { RefreshTokenDto } from "../../shared/dtos";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 

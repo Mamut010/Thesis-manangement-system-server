@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { JwtAccessPayloadDto } from '../../shared/dtos';
 import { LoginRequest } from '../../contracts/requests/auth/login.request';
 import { SignUpRequest } from '../../contracts/requests/auth/sign-up.request';
-import { StringArrayResponse } from '../../contracts/responses/string-array.response';
-import { StringResponse } from '../../contracts/responses/string.response';
+import { StringArrayResponse } from '../../contracts/responses/general/string-array.response';
+import { StringResponse } from '../../contracts/responses/general/string.response';
 
 export interface AuthServiceInterface {
     signUp(signUpRequest: SignUpRequest): Promise<void>;

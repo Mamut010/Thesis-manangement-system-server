@@ -20,8 +20,8 @@ import {
     CryptoServiceInterface,
     JwtExtractorServiceInterface
 } from '../../shared/interfaces';
-import { StringResponse } from '../../contracts/responses/string.response';
-import { StringArrayResponse } from '../../contracts/responses/string-array.response';
+import { StringResponse } from '../../contracts/responses/general/string.response';
+import { StringArrayResponse } from '../../contracts/responses/general/string-array.response';
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { env } from '../../env';
 import { RefreshTokenRepoInterface, RoleRepoInterface, UserRepoInterface } from '../../dal/interfaces';
@@ -32,7 +32,7 @@ import { makeArray } from '../../utils/array-helpers';
 import { NotFoundError } from '../../contracts/errors/not-found.error';
 import { ROLES } from '../../core/constants/roles';
 import { ForbiddenError } from '../../contracts/errors/forbidden.error';
-import { RefreshTokenCreateRequest } from '../../contracts/requests/refresh-token-create.request';
+import { RefreshTokenCreateRequest } from '../../contracts/requests/auth/refresh-token-create.request';
 
 @injectable()
 export class AuthService implements AuthServiceInterface {

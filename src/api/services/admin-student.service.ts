@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { AdminStudentServiceInterface } from "../interfaces";
-import { StudentDetailResponse } from "../../contracts/responses/student-info.response";
+import { StudentDetailResponse } from "../../contracts/responses/api/student-info.response";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { 
@@ -11,8 +11,8 @@ import {
     StudentInfoDto
 } from "../../shared/dtos";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
-import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
+import { StudentsQueryRequest } from "../../contracts/requests/api/students-query.request";
+import { StudentsQueryResponse } from "../../contracts/responses/api/students-query.response";
 import { 
     BachelorThesisAssessmentRepoInterface, 
     BachelorThesisRegistrationRepoInterface, 
@@ -20,7 +20,7 @@ import {
     OralDefenseRegistrationRepoInterface, 
     StudentRepoInterface 
 } from "../../dal/interfaces";
-import { StudentUpdateRequest } from "../../contracts/requests/student-update.request";
+import { StudentUpdateRequest } from "../../contracts/requests/api/student-update.request";
 import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
 import { StringFilter } from "../../lib/query";
 import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";

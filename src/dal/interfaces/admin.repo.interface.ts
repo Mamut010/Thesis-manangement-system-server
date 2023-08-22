@@ -1,4 +1,4 @@
-import { AdminUpdateRequest } from "../../contracts/requests/admin-update.request";
+import { AdminUpdateRequest } from "../../contracts/requests/api/admin-update.request";
 import { AdminInfoDto } from "../../shared/dtos";
 
 export interface AdminRepoInterface {

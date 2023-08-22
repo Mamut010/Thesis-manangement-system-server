@@ -6,7 +6,7 @@ import {
     BachelorThesisRegistrationDto,
     OralDefenseAssessmentDto,
     OralDefenseRegistrationDto
-} from "../../shared/dtos";
+} from "../../../shared/dtos";
 
 export class StudentDetailResponse {
     @Expose()

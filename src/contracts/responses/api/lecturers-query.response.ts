@@ -1,8 +1,8 @@
 import { Expose, Type } from "class-transformer";
-import { LecturerInfoDto } from "../../shared/dtos";
+import { LecturerInfoDto } from "../../../shared/dtos";
 import { IsDefined, ValidateNested } from "class-validator";
-import { QueryResponse } from "../interfaces";
-import { BaseQueryResponse } from "../bases";
+import { QueryResponse } from "../../interfaces";
+import { BaseQueryResponse } from "../../bases";
 
 export class LecturersQueryResponse extends BaseQueryResponse implements QueryResponse<LecturerInfoDto> {
     @Expose()

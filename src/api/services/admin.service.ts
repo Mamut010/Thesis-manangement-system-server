@@ -5,7 +5,7 @@ import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { AdminInfoDto } from "../../shared/dtos";
 import { AdminRepoInterface } from "../../dal/interfaces";
-import { AdminUpdateRequest } from "../../contracts/requests/admin-update.request";
+import { AdminUpdateRequest } from "../../contracts/requests/api/admin-update.request";
 
 @injectable()
 export class AdminService implements AdminServiceInterface {

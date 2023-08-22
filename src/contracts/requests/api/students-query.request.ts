@@ -1,6 +1,6 @@
-import { NumberFilter, StringFilter } from "../../lib/query";
-import { IsNumberFilterArray, IsStringFilterArray } from "../../decorators";
-import { BaseQueryRequest } from "../bases";
+import { NumberFilter, StringFilter } from "../../../lib/query";
+import { IsNumberFilterArray, IsStringFilterArray } from "../../../decorators";
+import { BaseQueryRequest } from "../../bases";
 
 export class StudentsQueryRequest extends BaseQueryRequest {
     @IsStringFilterArray()

@@ -21,7 +21,7 @@ import {
 import { prettyJSON } from "../../utils/string-helpers";
 import { LoggerInterface } from "../../lib/logger";
 import { logger } from "../../decorators";
-import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
+import { StudentsQueryRequest } from "../../contracts/requests/api/students-query.request";
 import { PlainTransformerInterface } from "../../dal/utils/plain-transfomer";
 import { compareObjectByEntries, defaultOrGiven } from "../../utils/object-helpers";
 import { MailServiceInterface, NotificationServiceInterface } from "../../shared/interfaces";
