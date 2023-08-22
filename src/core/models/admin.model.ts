@@ -15,5 +15,10 @@ export class Admin {
     @Expose()
     @IsOptional()
     @IsString()
+    title!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     contact!: string | null;
 }

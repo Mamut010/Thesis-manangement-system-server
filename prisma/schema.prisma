@@ -68,6 +68,7 @@ model Admin {
     id                            Int                           @id @default(autoincrement())
     userId                        String                        @unique
     contact                       String?
+    title                         String?
 
     user                          User                          @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)                        
     bachelorThesisRegistrations   BachelorThesisRegistration[]

@@ -10,6 +10,11 @@ export class AdminInfoDto {
     @Expose()
     @IsOptional()
     @IsString()
+    title!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     signature!: string | null;
 
     @Expose()

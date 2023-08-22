@@ -51,7 +51,7 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
         }),
         prisma.admin.createMany({
             data: [
-                { userId: '1', contact: 'ABC City' },
+                { userId: '1', 'title': 'Ms. Lan', contact: 'ABC City' },
             ]
         }),
         prisma.lecturer.createMany({
