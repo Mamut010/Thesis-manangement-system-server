@@ -48,6 +48,7 @@ export const ERROR_MESSAGES = {
     Forbidden: {
         DefaultMessage: 'Access is denied',
         DefaultResourceMessage: 'Access to resource is denied',
+        UnpermittedAction: 'Action not allowed',
         UnpermittedRole: 'Role not allowed',
         BachelorThesisRegistrationDenied: 'Access to bachelor thesis registration is denied',
         BachelorThesisAssessmentDenied: 'Access to bachelor thesis assessment is denied',

@@ -1,7 +1,7 @@
 import { Namespace, Socket } from "socket.io";
 import { NotificationDto } from "../../../shared/dtos";
 import { CLIENT_TO_SERVER_EVENTS, SERVER_TO_CLIENT_EVENTS } from "../../constants/io";
-import { NotificationMarkAsReadRequest } from "../../requests/notification-mark-as-read.request";
+import { NotificationMarkAsReadRequest } from "../../requests/ws/notification-mark-as-read.request";
 import { 
     ClientToServerDefaultEvents, 
     InterServerDefaultEvents, 

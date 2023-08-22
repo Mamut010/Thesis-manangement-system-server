@@ -4,8 +4,8 @@ import { INJECTION_TOKENS } from '../core/constants/injection-tokens';
 import { PrismaClient } from '@prisma/client';
 import { BootstrapSettingInterface } from '../lib/bootstrapper';
 import { Configuration } from './configuration';
-import { AuthService } from '../auth/services';
-import {  AuthServiceInterface } from '../auth/interfaces';
+import { AuthService, UserService } from '../auth/services';
+import {  AuthServiceInterface, UserServiceInterface } from '../auth/interfaces';
 import { JwtCookieHandler, JwtCookieHandlerInterface } from '../auth/utils/jwt-cookie-handlers';
 import { 
     AdminLecturerServiceInterface,
@@ -232,13 +232,13 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {
     container
-        .bind<CryptoServiceInterface>(INJECTION_TOKENS.CryptoService)
-        .to(CryptoService)
+        .bind<AuthServiceInterface>(INJECTION_TOKENS.AuthService)
+        .to(AuthService)
         .inRequestScope();
 
     container
-        .bind<AuthServiceInterface>(INJECTION_TOKENS.AuthService)
-        .to(AuthService)
+        .bind<UserServiceInterface>(INJECTION_TOKENS.UserService)
+        .to(UserService)
         .inRequestScope();
 }
 
@@ -332,6 +332,11 @@ function configSharedServices(container: Container, settings?: BootstrapSettingI
         .bind<JwtExtractorServiceInterface>(INJECTION_TOKENS.JwtExtractor)
         .to(BearerJwtExtractorService)
         .inSingletonScope();
+
+    container
+        .bind<CryptoServiceInterface>(INJECTION_TOKENS.CryptoService)
+        .to(CryptoService)
+        .inRequestScope();
 
     container
         .bind<UuidServiceInterface>(INJECTION_TOKENS.UuidService)

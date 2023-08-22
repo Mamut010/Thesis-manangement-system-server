@@ -33,6 +33,7 @@ const REPOSITORY_TOKENS = {
 
 const AUTH_SERVICE_TOKENS = {
     AuthService: Symbol.for('AuthService'),
+    UserService: Symbol.for('UserService'),
 } as const;
 
 const API_SERVICE_TOKENS = {

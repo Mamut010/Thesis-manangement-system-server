@@ -6,7 +6,7 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { NotificationServiceInterface } from "../../shared/interfaces";
 import { WsSetupServiceInterface } from "../interfaces";
 import { CLIENT_TO_SERVER_EVENTS, SERVER_TO_CLIENT_EVENTS } from "../../contracts/constants/io";
-import { NotificationMarkAsReadRequest } from "../../contracts/requests/notification-mark-as-read.request";
+import { NotificationMarkAsReadRequest } from "../../contracts/requests/ws/notification-mark-as-read.request";
 import { IONotificationsSocket } from "../../contracts/types/io";
 
 @SocketController(IO_NAMESPACES.Notifications)

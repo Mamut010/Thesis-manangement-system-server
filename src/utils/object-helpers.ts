@@ -17,6 +17,10 @@ export function isEnumerableObject(obj: unknown): obj is { [property: PropertyKe
         && !isDateObject(obj);
 }
 
+export function isNullOrUndefined(obj: unknown): obj is null | undefined {
+    return obj === null || typeof obj === 'undefined';
+}
+
 export function isDateObject(obj: unknown, strict?: boolean): obj is Date {
     if (strict) {
         return isDate(obj) && !isNaN(+obj);
@@ -497,4 +501,8 @@ export function merge<T>(...objs: (SingleOrArray<T> | undefined)[]): SingleOrArr
     }, []);
 
     return singleOrArrayOrUndefined(merged);
+}
+
+export function equalsOrUndefined<T>(undefinable: T | undefined, comparedTarget: T): boolean {
+    return typeof undefinable !== 'undefined' ? undefinable === comparedTarget : true;
 }

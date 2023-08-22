@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import { ArrayMaxSize, ArrayMinSize, IsDefined, IsEmail, IsIn, IsNumber, IsOptional, IsString } from "class-validator"
-import { ROLES } from "../../core/constants/roles";
+import { ROLES } from "../../../core/constants/roles";
 
 export class JwtAccessContextDto {
     @Expose()

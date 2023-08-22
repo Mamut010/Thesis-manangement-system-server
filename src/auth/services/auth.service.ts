@@ -8,9 +8,9 @@ import {
     JwtRefreshPayloadDto,
 } from '../../shared/dtos';
 import { AuthServiceInterface } from '../interfaces';
-import { LoginRequest } from '../../contracts/requests/login.request';
+import { LoginRequest } from '../../contracts/requests/auth/login.request';
 import { UnauthorizedError } from '../../contracts/errors/unauthorized.error';
-import { SignUpRequest } from '../../contracts/requests/sign-up.request';
+import { SignUpRequest } from '../../contracts/requests/auth/sign-up.request';
 import { AuthenticationError } from '../../contracts/errors/authentication.error';
 import { plainToInstanceExactMatch } from '../../utils/class-transformer-helpers';
 import { JwtCookieHandlerInterface } from '../utils/jwt-cookie-handlers';

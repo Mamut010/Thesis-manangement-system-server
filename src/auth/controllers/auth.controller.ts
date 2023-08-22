@@ -15,8 +15,8 @@ import {
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { HTTP_CODES } from "../../core/constants/http-codes";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { LoginRequest } from "../../contracts/requests/login.request";
-import { SignUpRequest } from "../../contracts/requests/sign-up.request";
+import { LoginRequest } from "../../contracts/requests/auth/login.request";
+import { SignUpRequest } from "../../contracts/requests/auth/sign-up.request";
 import { AuthServiceInterface } from "../interfaces";
 import { ROLES } from '../../core/constants/roles';
 import { StringResponse } from '../../contracts/responses/string.response';
@@ -35,14 +35,14 @@ export class AuthController {
     @HttpCode(HTTP_CODES.Created)
     @Post('login')
     @ResponseSchema(StringResponse)
-    public login(@Res() res: Response, @Body() loginRequest: LoginRequest) {
+    public login(@Res() res: Response, @Body({ required: true }) loginRequest: LoginRequest) {
         return this.authService.login(loginRequest, res);
     }
 
     @Authorized(ROLES.Admin)
     @Post('signup')
     @OnUndefined(HTTP_CODES.Created)
-    public signUp(@Body() signUpRequest: SignUpRequest) {
+    public signUp(@Body({ required: true }) signUpRequest: SignUpRequest) {
         return this.authService.signUp(signUpRequest);
     }
 
