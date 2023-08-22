@@ -16,9 +16,4 @@ export class AdminUpdateRequest {
     @IsOptional()
     @IsEmail()
     email?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    signature?: string;
 }

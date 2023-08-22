@@ -21,4 +21,9 @@ export class Student {
     @IsDefined()
     @IsNumber()
     ects!: number;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    signature!: string | null;
 }

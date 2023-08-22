@@ -36,9 +36,4 @@ export class UserUpdateRequest {
     @IsOptional()
     @IsString()
     forename?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    signature?: string;
 }

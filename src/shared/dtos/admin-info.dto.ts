@@ -15,11 +15,6 @@ export class AdminInfoDto {
     @Expose()
     @IsOptional()
     @IsString()
-    signature!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
     contact!: string | null;
 
     @Expose()

@@ -20,6 +20,7 @@ import { PrismaClient } from "@prisma/client";
 import { TITLES } from "../../../contracts/constants/title";
 import { DATETIME_FORMATS } from "../../constants/datetime";
 import { LOCALES } from "../../constants/locales";
+import { getWeekday } from "../../../utils/date-helpers";
 
 @injectable()
 export class PdfFormGenerator implements PdfFormGeneratorInterface {
@@ -141,6 +142,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
 
     async generateOralDefenseRegistration(data: OralDefenseRegistrationDto): Promise<Buffer> {
         const fields: FormField[] = [];
+        const weekday = data.proposedDate ? getWeekday(data.proposedDate) : undefined;
         const timeConfig = { locale: LOCALES.EN, format: DATETIME_FORMATS.TIME_12HOUR };
 
         fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.DateReceived, data.dateReceived));
@@ -151,7 +153,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.FirstExaminerName, data.supervisor1Title));
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.SecondExaminerName, data.supervisor2Title));
         fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.Date, data.proposedDate));
-        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Weekday, data.weekday));
+        fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Weekday, weekday));
         fields.push(new DateField(TEMPLATE_FIELDS.OralDefenseRegistration.Time, data.proposedDate, timeConfig));
         fields.push(new TextField(TEMPLATE_FIELDS.OralDefenseRegistration.Room, data.room));
         fields.push(new RadioButtonField(
@@ -233,16 +235,16 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         const signatures = await (this.prisma[model] as any).findUniqueOrThrow({
             where: { id },
             select: {
-                student: { select: { user: { select: { signature: true } } } },
-                supervisor1: { select: { user: { select: { signature: true } } } },
-                supervisor2: { select: { user: { select: { signature: true } } } } 
+                student: { select: { signature: true } },
+                supervisor1: { select: { signature: true } },
+                supervisor2: { select: { signature: true } } 
             }
         });
 
         return {
-            studentSignature: signatures.student.user.signature as string | null,
-            supervisor1Signature: signatures.supervisor1?.user.signature as string | null | undefined,
-            supervisor2Signature: signatures.supervisor2?.user.signature as string | null | undefined,
+            studentSignature: signatures.student.signature as string | null,
+            supervisor1Signature: signatures.supervisor1?.signature as string | null | undefined,
+            supervisor2Signature: signatures.supervisor2?.signature as string | null | undefined,
         }
     }
 
@@ -250,10 +252,10 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         const signatures = await this.prisma.bachelorThesisEvaluation.findUniqueOrThrow({
             where: { id },
             select: {
-                supervisor: { select: { user: { select: { signature: true } } } },
+                supervisor: { select: { signature: true } },
             }
         });
 
-        return signatures.supervisor.user.signature;
+        return signatures.supervisor.signature;
     }
 }

@@ -17,7 +17,6 @@ model User {
     email                   String?
     surname                 String?         @db.VarChar(255)
     forename                String?         @db.VarChar(255)
-    signature               String?         @db.MediumText
     createdAt               DateTime        @default(now()) @db.Timestamp(6)
     updatedAt               DateTime        @updatedAt @db.Timestamp(6)
 
@@ -54,8 +53,8 @@ model Role {
 model Notification {
     id          Int         @id @default(autoincrement())
     senderId    String?
-    title       String?     
-    content     String?
+    title       String?     @db.VarChar(255)
+    content     String?     @db.Text
     isRead      Boolean     @default(false)
     createdAt   DateTime    @default(now()) @db.Timestamp(6)
     updatedAt   DateTime    @updatedAt @db.Timestamp(6)
@@ -67,8 +66,8 @@ model Notification {
 model Admin {
     id                            Int                           @id @default(autoincrement())
     userId                        String                        @unique
-    contact                       String?
-    title                         String?
+    contact                       String?                       @db.VarChar(255)
+    title                         String?                       @db.VarChar(255)
 
     user                          User                          @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)                        
     bachelorThesisRegistrations   BachelorThesisRegistration[]
@@ -79,7 +78,8 @@ model Lecturer {
     userId                           String                          @unique
     title                            String?                         @db.VarChar(255)
     numberOfTheses                   Int                             @default(0)
-    bio                              String?                         @db.Text
+    bio                              String?                         @db.MediumText
+    signature                        String?                         @db.VarChar(255)
 
     user                             User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     sup1BachelorThesisRegistrations  BachelorThesisRegistration[]    @relation("supervisor1BachelorThesisRegistrations")
@@ -98,6 +98,7 @@ model Student {
     userId                        String                          @unique
     intake                        String?
     ects                          Int                             @default(0)
+    signature                     String?                         @db.TinyText
 
     user                          User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     bachelorThesisRegistration    BachelorThesisRegistration?
@@ -109,7 +110,7 @@ model Student {
 
 model Topic {
     id              Int         @id @default(autoincrement())
-    title           String
+    title           String      @db.VarChar(255)
     description     String?     @db.Text
     createdAt       DateTime    @default(now()) @db.Timestamp(6)
     updatedAt       DateTime    @updatedAt @db.Timestamp(6)
@@ -119,7 +120,7 @@ model Topic {
 
 model Field {
     id              Int         @id @default(autoincrement())
-    title           String
+    title           String      @db.VarChar(255)
     description     String?     @db.Text
     createdAt       DateTime    @default(now()) @db.Timestamp(6)
     updatedAt       DateTime    @updatedAt @db.Timestamp(6)
@@ -154,11 +155,11 @@ model Thesis {
 }
 
 model Location {
-    id                        Int                             @id @default(autoincrement())
-    title                     String
-    description               String?                         @db.Text
-    createdAt       DateTime    @default(now()) @db.Timestamp(6)
-    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
+    id                  Int             @id @default(autoincrement())
+    title               String          @db.VarChar(255)
+    description         String?         @db.Text
+    createdAt           DateTime        @default(now()) @db.Timestamp(6)
+    updatedAt           DateTime        @updatedAt @db.Timestamp(6)
 }
 
 model BachelorThesisRegistration {
@@ -199,9 +200,8 @@ model OralDefenseRegistration {
     thesisId               Int
     supervisor1Id          String?
     supervisor2Id          String?
-    room                   String?     
+    room                   String?     @db.Text
     areSpectatorsAllowed   Boolean?    
-    weekday                String?     @db.VarChar(255)
     proposedDate           DateTime?   @db.DateTime
     actualDate             DateTime?   @db.DateTime
     concernedAgreed        Int?        @default(0)
@@ -240,7 +240,7 @@ model BachelorThesisAssessment {
 
 model OralDefenseAssessment {
     id                     Int         @id @default(autoincrement())
-    studentId              String         @unique
+    studentId              String      @unique
     thesisId               Int
     supervisor1Id          String?
     supervisor2Id          String?
@@ -268,7 +268,7 @@ model BachelorThesisEvaluation {
     thesisId                Int
     studentId               String      @unique
     supervisorId            String
-    title                   String?
+    title                   String?     @db.VarChar(255)
     date                    DateTime?   @db.Date
     supervisorConfirmed     Boolean?    
     createdAt               DateTime    @default(now()) @db.Timestamp(6)

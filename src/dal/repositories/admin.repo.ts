@@ -43,7 +43,6 @@ export class AdminRepo implements AdminRepoInterface {
                     user: {
                         update: {
                             email: updateRequest.email,
-                            signature: updateRequest.signature
                         }
                     }
                 },

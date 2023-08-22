@@ -70,7 +70,6 @@ export class AuthService implements AuthServiceInterface {
         userCreatingRequest.password = await this.cryptoService.hash(signUpRequest.password);
         userCreatingRequest.roleName = role.name;
         userCreatingRequest.email = signUpRequest.email;
-        userCreatingRequest.signature = signUpRequest.signature;
 
         await this.userRepo.create(userCreatingRequest);
     }

@@ -23,7 +23,4 @@ export class UsersQueryRequest extends BaseQueryRequest {
 
     @IsNullableStringFilterArray()
     forenameFilter?: NullableStringFilter[];
-
-    @IsNullableStringFilterArray()
-    signatureFilter?: NullableStringFilter[];
 }

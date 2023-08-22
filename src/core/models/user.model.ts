@@ -43,11 +43,6 @@ export class User {
     forename!: string | null;
 
     @Expose()
-    @IsOptional()
-    @IsString()
-    signature!: string | null;
-
-    @Expose()
     @IsDefined()
     @IsDate()
     createdAt!: Date;

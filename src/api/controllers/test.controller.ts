@@ -139,7 +139,6 @@ export class TestController {
                 surname: true,
                 forename: true,
                 email: true,
-                signature: true
             }
         };
 

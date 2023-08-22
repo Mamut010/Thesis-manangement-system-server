@@ -81,7 +81,6 @@ export class UserRepo implements UserRepoInterface {
                     username: createRequest.username,
                     password: createRequest.password,
                     email: createRequest.email,
-                    signature: createRequest.signature,
                     role: {
                         connect: {
                             name: createRequest.roleName

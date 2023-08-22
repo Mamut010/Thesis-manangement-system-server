@@ -62,10 +62,10 @@ export class LecturerRepo implements LecturerRepoInterface {
                     title: updateRequest.title,
                     numberOfTheses: updateRequest.numberOfTheses,
                     bio: updateRequest.bio,
+                    signature: updateRequest.signature,
                     user: {
                         update: {
                             email: updateRequest.email,
-                            signature: updateRequest.signature,
                             role: updateRequest.type ? {
                                 connect: {
                                     name: updateRequest.type

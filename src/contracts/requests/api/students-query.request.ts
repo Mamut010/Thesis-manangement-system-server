@@ -19,9 +19,6 @@ export class StudentsQueryRequest extends BaseQueryRequest {
     emailFilter?: StringFilter[];
 
     @IsStringFilterArray()
-    signatureFilter?: StringFilter[];
-
-    @IsStringFilterArray()
     intakeFilter?: StringFilter[];
 
     @IsNumberFilterArray()

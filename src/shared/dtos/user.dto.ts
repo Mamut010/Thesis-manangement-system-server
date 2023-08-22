@@ -41,9 +41,4 @@ export class UserDto {
     @IsOptional()
     @IsString()
     forename!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    signature!: string | null;
 }

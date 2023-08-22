@@ -26,4 +26,9 @@ export class Lecturer {
     @IsOptional()
     @IsString()
     bio!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    signature!: string | null;
 }

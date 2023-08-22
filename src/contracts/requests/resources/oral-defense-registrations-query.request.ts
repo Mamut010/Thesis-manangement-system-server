@@ -1,13 +1,11 @@
-import { 
-    IsNumberFilterArray,
+import {
     IsNullableBooleanFilterArray, 
     IsNullableStringFilterArray,
     IsNullableDateFilterArray,
     IsNullableNumberFilterArray,
     IsStringFilterArray
 } from "../../../decorators";
-import { 
-    NumberFilter,
+import {
     NullableBooleanFilter, 
     NullableStringFilter,
     NullableDateFilter,
@@ -37,9 +35,6 @@ export class OralDefenseRegistrationsQueryRequest extends BaseQueryRequest {
 
     @IsNullableBooleanFilterArray()
     areSpectatorsAllowedFilter?: NullableBooleanFilter[];
-
-    @IsNullableStringFilterArray()
-    weekdayFilter?: NullableStringFilter[];
 
     @IsNullableDateFilterArray()
     proposedDateFilter?: NullableDateFilter[];
