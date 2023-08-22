@@ -24,7 +24,7 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
             return false;
         }
 
-        return this.start(roomData, exp);
+        return this.start(roomData, exp, options);
     }
 
     resetTimer(nsp: string, room: string, newExp?: Date, options?: RoomTimerOptions) {
