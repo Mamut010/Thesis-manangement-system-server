@@ -10,6 +10,7 @@ import {
     NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
+    RefreshTokenDto, 
     RoleDto, 
     StudentInfoDto,
     ThesisDto,
@@ -36,6 +37,7 @@ import {
     PlainUser
 } from "../../types/plain-types";
 import { PlainTransformerInterface } from "./plain-transformer.interface";
+import { RefreshToken } from "../../../core/models";
 
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
@@ -46,6 +48,11 @@ export class PlainTransformer implements PlainTransformerInterface {
         const dto = plainToInstanceExactMatch(UserDto, flattenObject(plain, {
             transformedProps: ['role']
         }));
+        return dto;
+    }
+
+    public toRefreshToken(plain: RefreshToken): RefreshTokenDto {
+        const dto = plainToInstanceExactMatch(RefreshTokenDto, plain);
         return dto;
     }
 

@@ -9,12 +9,9 @@ import {
 } from '../../shared/dtos';
 import { AuthServiceInterface } from '../interfaces';
 import { LoginRequest } from '../../contracts/requests/login.request';
-import { PrismaClient } from '@prisma/client';
 import { UnauthorizedError } from '../../contracts/errors/unauthorized.error';
-import { UnexpectedError } from '../../contracts/errors/unexpected.error';
 import { SignUpRequest } from '../../contracts/requests/sign-up.request';
 import { AuthenticationError } from '../../contracts/errors/authentication.error';
-import { RefreshToken } from '../../core/models';
 import { plainToInstanceExactMatch } from '../../utils/class-transformer-helpers';
 import { JwtCookieHandlerInterface } from '../utils/jwt-cookie-handlers';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
@@ -27,75 +24,78 @@ import { StringResponse } from '../../contracts/responses/string.response';
 import { StringArrayResponse } from '../../contracts/responses/string-array.response';
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { env } from '../../env';
-import { RefreshTokenRepoInterface, UserRepoInterface } from '../../dal/interfaces';
+import { RefreshTokenRepoInterface, RoleRepoInterface, UserRepoInterface } from '../../dal/interfaces';
 import { UserCreateRequest } from '../../contracts/requests/user-create-request.dto';
+import { UsersQueryRequest } from '../../contracts/requests/users-query.request';
+import { StringFilter } from '../../lib/query';
+import { makeArray } from '../../utils/array-helpers';
+import { NotFoundError } from '../../contracts/errors/not-found.error';
+import { ROLES } from '../../core/constants/roles';
+import { ForbiddenError } from '../../contracts/errors/forbidden.error';
+import { RefreshTokenCreateRequest } from '../../contracts/requests/refresh-token-create.request';
 
 @injectable()
 export class AuthService implements AuthServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
+        @inject(INJECTION_TOKENS.RoleRepo) private roleRepo: RoleRepoInterface,
+        @inject(INJECTION_TOKENS.RefreshTokenRepo) private refreshTokenRepo: RefreshTokenRepoInterface,
         @inject(INJECTION_TOKENS.CryptoService) private cryptoService: CryptoServiceInterface,
         @inject(INJECTION_TOKENS.JwtService) private jwtService: JwtServiceInterface,
         @inject(INJECTION_TOKENS.JwtExtractor) private jwtExtractor: JwtExtractorServiceInterface,
-        @inject(INJECTION_TOKENS.JwtCookieHandler) private jwtCookieHandler: JwtCookieHandlerInterface,
-        @inject(INJECTION_TOKENS.RefreshTokenRepo) private refreshTokenRepo: RefreshTokenRepoInterface) {
+        @inject(INJECTION_TOKENS.JwtCookieHandler) private jwtCookieHandler: JwtCookieHandlerInterface) {
 
     }
 
     async signUp(signUpRequest: SignUpRequest): Promise<void> {
         this.tryDecryptUsernameAndPassword(signUpRequest);
-        if (await this.prisma.user.findUnique({ where: { userId: signUpRequest.userId }})) {
+        if (await this.userRepo.findOneById(signUpRequest.userId)) {
             throw new AuthenticationError(ERROR_MESSAGES.Auth.UserIdAlreadyExists);
         }
-        else if (await this.prisma.user.findUnique({ where: { username: signUpRequest.username }})) {
+        else if (await this.getUserByUsername(signUpRequest.username)) {
             throw new AuthenticationError(ERROR_MESSAGES.Auth.UsernameAlreadyExists);
         }
 
-        const role = await this.prisma.role.findUnique({ where: { name: signUpRequest.role }});
-
+        const role = await this.roleRepo.findOneById(signUpRequest.roleId);
         if (!role) {
-            throw new UnexpectedError(ERROR_MESSAGES.NotFound.RoleNotFound);
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.RoleNotFound);
+        }
+        else if (role.name === ROLES.Admin) {
+            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.UnpermittedRole);
         }
 
         const userCreatingRequest = new UserCreateRequest();
         userCreatingRequest.userId = signUpRequest.userId;
         userCreatingRequest.username = signUpRequest.username;
         userCreatingRequest.password = await this.cryptoService.hash(signUpRequest.password);
+        userCreatingRequest.roleName = role.name;
         userCreatingRequest.email = signUpRequest.email;
-        userCreatingRequest.roleName = signUpRequest.role;
+        userCreatingRequest.signature = signUpRequest.signature;
 
         await this.userRepo.create(userCreatingRequest);
     }
 
     async login(loginRequest: LoginRequest, response: Response): Promise<StringResponse> {
         this.tryDecryptUsernameAndPassword(loginRequest);
-        const user = await this.prisma.user.findUnique({
-            where: {
-                username: loginRequest.username
-            },
-            include: {
-                role: true
-            }
-        });
-
+        const user = await this.getUserByUsername(loginRequest.username);
         if (!user ||
             !(await this.cryptoService.verifyHash(loginRequest.password, user.password))) {
             throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidLoginCredentials);
         }
 
         const jwtAccessContext = plainToInstanceExactMatch(JwtAccessContextDto, user);
-        jwtAccessContext.roles = [user.role.name];
+        jwtAccessContext.roles = [user.roleName];
         const jwtRefreshContext = plainToInstanceExactMatch(JwtRefreshContextDto, user);
 
         const { accessToken, refreshToken } = this.jwtService.generateTokens(jwtAccessContext, jwtRefreshContext);
 
+        const refreshTokenCreateRequest = new RefreshTokenCreateRequest();
+        refreshTokenCreateRequest.userId = user.userId;
+        refreshTokenCreateRequest.token = await this.cryptoService.hash(refreshToken);
+        refreshTokenCreateRequest.exp = this.jwtService.getTokenExp(refreshToken);
+
         await this.refreshTokenRepo.deleteAll(user.userId);
-        await this.refreshTokenRepo.create(plainToInstanceExactMatch(RefreshToken, {
-            userId: user.userId, 
-            token: await this.cryptoService.hash(refreshToken), 
-            exp: this.jwtService.getTokenExp(refreshToken),
-        }));
+        await this.refreshTokenRepo.create(refreshTokenCreateRequest);
         await this.jwtCookieHandler.attachRefreshTokenToCookie(response, refreshToken);
 
         return new StringResponse(accessToken);
@@ -107,18 +107,7 @@ export class AuthService implements AuthServiceInterface {
             throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidAccessToken);
         }
 
-        const user = await this.prisma.user.findUnique({
-            where: {
-                id: payload.context.id,
-                userId: payload.context.userId,
-                username: payload.context.username,
-                role: {
-                    name: {
-                        in: payload.context.roles
-                    }
-                }
-            }
-        });
+        const user = await this.userRepo.findOneById(payload.context.userId);
         if (!user) {
             throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidEmbeddedCredentials);
         }
@@ -147,29 +136,21 @@ export class AuthService implements AuthServiceInterface {
             // verify the token payload
             payload = this.jwtService.verifyRefreshToken(refreshToken);
             
-            // verify if the user really associates with the token in the DB and the token is really valid
-            const user = await this.prisma.user.findUnique({
-                where: {
-                    id: payload.context.id,
-                    userId: payload.context.userId,
-                },
-                include: {
-                    refreshToken: true,
-                    role: true,
-                }
-            });
-
+            // verify if the token against records in the DB
+            const user = await this.userRepo.findOneById(payload.context.userId);
             if (!user) {
                 throw new AuthenticationError(ERROR_MESSAGES.Auth.InvalidEmbeddedCredentials);
             }
-            else if (!user.refreshToken ||
-                !(await this.cryptoService.verifyHash(refreshToken, user.refreshToken.token))) {
+
+            const storedToken = (await this.refreshTokenRepo.findOneByUserId(payload.context.userId))?.token;
+            if (!storedToken ||
+                !(await this.cryptoService.verifyHash(refreshToken, storedToken))) {
                 throw new AuthenticationError(ERROR_MESSAGES.Auth.InvalidRefreshToken);
             }
     
             // If everything is valid, issue new access token
             const jwtAccessContext = plainToInstanceExactMatch(JwtAccessContextDto, user);
-            jwtAccessContext.roles = [user.role.name];
+            jwtAccessContext.roles = [user.roleName];
             return new StringResponse(this.jwtService.generateAccessToken(jwtAccessContext));
         }
         catch (err) {
@@ -220,5 +201,16 @@ export class AuthService implements AuthServiceInterface {
         catch {
             throw new BadRequestError(ERROR_MESSAGES.Auth.InvalidCredentials);
         }
+    }
+
+    private async getUserByUsername(username: string) {
+        const usernameFilter = new StringFilter();
+        usernameFilter.value = username;
+        usernameFilter.operator = 'equals';
+        const queryRequest = new UsersQueryRequest();
+        queryRequest.usernameFilter = makeArray(usernameFilter);
+        
+        const user = await this.userRepo.query(queryRequest);
+        return user.count > 0 ? user.content[0] : null;
     }
 }

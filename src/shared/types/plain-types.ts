@@ -9,6 +9,7 @@ import {
     Notification, 
     OralDefenseAssessment, 
     OralDefenseRegistration, 
+    RefreshToken, 
     Role, 
     Student, 
     Thesis, 
@@ -19,6 +20,8 @@ import {
 export type PlainUser = User & {
     role: Role
 };
+
+export type PlainRefreshToken = RefreshToken;
 
 export type PlainNotification = Notification;
 

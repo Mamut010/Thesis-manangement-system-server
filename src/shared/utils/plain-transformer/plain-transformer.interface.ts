@@ -9,6 +9,7 @@ import {
     NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
+    RefreshTokenDto, 
     RoleDto, 
     StudentInfoDto,
     ThesisDto,
@@ -26,6 +27,7 @@ import {
     PlainNotification, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
+    PlainRefreshToken, 
     PlainRole, 
     PlainStudent,
     PlainThesis,
@@ -35,6 +37,7 @@ import {
 
 export interface PlainTransformerInterface {
     toUser(plain: PlainUser): UserDto;
+    toRefreshToken(plain: PlainRefreshToken): RefreshTokenDto;
     toNotification(plain: PlainNotification): NotificationDto;
     toAdminInfo(plain: PlainAdmin): AdminInfoDto;
     toStudentInfo(plain: PlainStudent): StudentInfoDto;

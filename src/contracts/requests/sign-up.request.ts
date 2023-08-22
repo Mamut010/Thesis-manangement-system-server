@@ -1,6 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsEmail, IsIn, IsOptional, IsString } from "class-validator";
-import { RoleValues } from "../../core/constants/roles";
+import { IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class SignUpRequest {
     @Expose()
@@ -20,12 +19,16 @@ export class SignUpRequest {
 
     @Expose()
     @IsDefined()
-    @IsString()
-    @IsIn(RoleValues)
-    role!: string
+    @IsNumber()
+    roleId!: number;
 
     @Expose()
     @IsOptional()
     @IsEmail()
     email?: string
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    signature?: string
 }

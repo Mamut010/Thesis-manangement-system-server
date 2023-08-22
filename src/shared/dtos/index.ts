@@ -3,6 +3,7 @@ export * from './jwt-payload.dto';
 export * from './jwt-context.dto';
 export * from './jwt-refresh-payload.dto';
 export * from './jwt-refresh-context.dto';
+export * from './refresh-token.dto';
 export * from './notification.dto';
 export * from './admin-info.dto';
 export * from './student-info.dto';

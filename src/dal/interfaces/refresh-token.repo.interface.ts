@@ -1,6 +1,8 @@
-import { RefreshToken } from "@prisma/client";
+import { RefreshTokenCreateRequest } from "../../contracts/requests/refresh-token-create.request";
+import { RefreshTokenDto } from "../../shared/dtos";
 
 export interface RefreshTokenRepoInterface {
-    create(refreshToken: RefreshToken): Promise<RefreshToken>;
+    findOneByUserId(userId: string): Promise<RefreshTokenDto | null>;
+    create(createRequest: RefreshTokenCreateRequest): Promise<RefreshTokenDto>;
     deleteAll(userId: string): Promise<number>;
 }
