@@ -325,8 +325,8 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         return Object.keys(where).length > 0 ? where : undefined;
     }
 
-    private constructActualWhereWithFieldMap<T>(model: T, query: AutoWhereQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
-        creationOptions: AutoQueryCreationOptions): WhereWithFieldMap {
+    private constructActualWhereWithFieldMap<T extends AutoQueryModel>(model: T, query: AutoWhereQueryCreatable, 
+        binaryAndListFilters: BinaryAndListFilters, creationOptions: AutoQueryCreationOptions): WhereWithFieldMap {
         const initialConfig: WhereObjectCreationConfig = {
             fieldNamePrefix: '',
             reversedFieldNameMap: creationOptions.fieldNameMap ? flipMap(creationOptions.fieldNameMap) : undefined,
@@ -334,14 +334,18 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         return this.constructActualWhereWithFieldMapImpl(model, query, binaryAndListFilters, creationOptions, initialConfig);
     }
 
-    private constructActualWhereWithFieldMapImpl<T>(model: T, query: AutoWhereQueryCreatable, binaryAndListFilters: BinaryAndListFilters, 
-        creationOptions: AutoQueryCreationOptions, config: WhereObjectCreationConfig): WhereWithFieldMap {
+    private constructActualWhereWithFieldMapImpl<T extends AutoQueryModel>(model: T, query: AutoWhereQueryCreatable, 
+        binaryAndListFilters: BinaryAndListFilters, creationOptions: AutoQueryCreationOptions, 
+        config: WhereObjectCreationConfig): WhereWithFieldMap {
         let where: WhereQueryObject = {};
         let fieldMap: Record<string, string> = {};
 
         for(const key in model) {
             const value = model[key];
-            if (isEnumerableObject(value)) {
+            if (!value) {
+                continue;
+            }
+            else if (isEnumerableObject(value)) {
                 const innerConfig: WhereObjectCreationConfig = { 
                     ...config,
                     fieldNamePrefix: config.fieldNamePrefix + key + PrismaQueryCreator.DOT 
