@@ -37,7 +37,7 @@ export class UserController {
     @HttpCode(HTTP_CODES.Ok)
     @Get()
     @ResponseSchema(AuthUsersQueryResponse)
-    getTheses(@QueryParams() queryRequest: AuthUsersQueryRequest) {
+    getUsers(@QueryParams() queryRequest: AuthUsersQueryRequest) {
         return this.userService.getUsers(queryRequest);
     }
 
