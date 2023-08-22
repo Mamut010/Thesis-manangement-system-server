@@ -5,7 +5,7 @@ export class AdminUpdateRequest {
     @Expose()
     @IsOptional()
     @IsString()
-    signature?: string;
+    title?: string;
 
     @Expose()
     @IsOptional()
@@ -16,4 +16,9 @@ export class AdminUpdateRequest {
     @IsOptional()
     @IsEmail()
     email?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    signature?: string;
 }

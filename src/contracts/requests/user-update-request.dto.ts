@@ -4,6 +4,11 @@ import { Expose } from "class-transformer";
 export class UserUpdateRequest {
     @Expose()
     @IsOptional()
+    @IsString()
+    userId?: string;
+
+    @Expose()
+    @IsOptional()
     @IsNumber()
     roleId?: number;
 
