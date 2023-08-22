@@ -26,6 +26,10 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
                     roleId: roleIds['Admin'], email: '1@example.com',
                 },
                 { 
+                    userId: '2', username: 'admin2', password: hash('1234'), 
+                    roleId: roleIds['Admin'], email: '1@example.com',
+                },
+                { 
                     userId: '101', username: 'lecturer1.1', password: hash('lecturer1.1'), 
                     roleId: roleIds['Lecturer1.1'], email: '101@example.com',
                 },
@@ -51,7 +55,8 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
         }),
         prisma.admin.createMany({
             data: [
-                { userId: '1', 'title': 'Ms. Lan', contact: 'ABC City' },
+                { userId: '1', title: 'Ms. Lan', contact: 'ABC City' },
+                { userId: '2', title: 'Mr. Fred', contact: 'HCM City' },
             ]
         }),
         prisma.lecturer.createMany({
