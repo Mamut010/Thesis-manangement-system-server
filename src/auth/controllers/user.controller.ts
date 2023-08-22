@@ -19,7 +19,7 @@ import { UserServiceInterface } from "../interfaces";
 import { ROLES } from '../../core/constants/roles';
 import { AuthUserUpdateRequest } from '../../contracts/requests/auth/auth-user-update.request';
 import { AuthorizedUser } from '../../core/auth-checkers';
-import { UserOutputDto } from '../../shared/dtos';
+import { UserInfoDto } from '../../shared/dtos';
 import { AuthUsersQueryRequest } from "../../contracts/requests/auth/auth-users-query.request";
 import { AuthUsersQueryResponse } from "../../contracts/responses/auth/auth-users-query.response";
 
@@ -43,7 +43,7 @@ export class UserController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Post('/:id')
-    @ResponseSchema(UserOutputDto)
+    @ResponseSchema(UserInfoDto)
     public updateUser(@CurrentUser() currentUser: AuthorizedUser, @Param('id') userId: string, 
         @Body({ required: true }) updateRequest: AuthUserUpdateRequest) {
         return this.userService.updateUser(currentUser, userId, updateRequest);

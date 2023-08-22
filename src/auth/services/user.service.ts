@@ -5,7 +5,7 @@ import { UserRepoInterface } from "../../dal/interfaces";
 import { AuthUserUpdateRequest } from "../../contracts/requests/auth/auth-user-update.request";
 import { AuthUsersQueryRequest } from "../../contracts/requests/auth/auth-users-query.request";
 import { AuthUsersQueryResponse } from "../../contracts/responses/auth/auth-users-query.response";
-import { UserDto, UserOutputDto } from "../../shared/dtos";
+import { UserDto, UserInfoDto } from "../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
@@ -24,13 +24,13 @@ export class UserService implements UserServiceInterface {
     async getUsers(currentUser: AuthorizedUser, queryRequest: AuthUsersQueryRequest): Promise<AuthUsersQueryResponse> {
         const users = await this.userRepo.query(queryRequest);
         return {
-            content: users.content.map(item => plainToInstanceExactMatch(UserOutputDto, item)),
+            content: users.content.map(item => plainToInstanceExactMatch(UserInfoDto, item)),
             count: users.count
         }
     }
 
     async updateUser(currentUser: AuthorizedUser, userId: string, updateRequest: AuthUserUpdateRequest)
-        : Promise<UserOutputDto> {
+        : Promise<UserInfoDto> {
         const record = await this.ensureRecordExists(userId);
 
         // If intending to update an admin account
@@ -46,7 +46,7 @@ export class UserService implements UserServiceInterface {
         }
 
         const result = await this.userRepo.update(userId, updateRequest);
-        return plainToInstanceExactMatch(UserOutputDto, result);
+        return plainToInstanceExactMatch(UserInfoDto, result);
     }
 
     async deleteUser(currentUser: AuthorizedUser, userId: string): Promise<void> {

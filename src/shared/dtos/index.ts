@@ -26,4 +26,4 @@ export * from './auth/jwt-payload.dto';
 export * from './auth/jwt-context.dto';
 export * from './auth/jwt-refresh-payload.dto';
 export * from './auth/jwt-refresh-context.dto';
-export * from './auth/user-output.dto';
+export * from './auth/user-info.dto';
