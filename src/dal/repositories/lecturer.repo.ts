@@ -1,15 +1,14 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
+import { LecturerUpdateRequest, LecturersQueryRequest } from "../../contracts/requests";
 import { LecturerDto } from "../../shared/dtos";
 import { userWithRoleInclude } from "../constants/includes";
 import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { LecturerRepoInterface } from "../interfaces";
-import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
-import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
+import { LecturersQueryResponse } from "../../contracts/responses";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { Lecturer, User } from "../../core/models";
 

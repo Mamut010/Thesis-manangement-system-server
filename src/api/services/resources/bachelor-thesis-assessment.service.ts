@@ -1,17 +1,19 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { BachelorThesisAssessmentsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
+import { 
+    BachelorThesisAssessmentsQueryRequest, 
+    BachelorThesisAssessmentCreateRequest, 
+    BachelorThesisAssessmentUpdateRequest
+} from "../../../contracts/requests";
 import { BachelorThesisAssessmentDto, BachelorThesisAssessmentInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
-import { BachelorThesisAssessmentCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-create.request";
-import { BachelorThesisAssessmentUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-update.request";
 import { BachelorThesisAssessmentServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { BachelorThesisAssessmentRepoInterface } from "../../../dal/interfaces";
 import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
-import { BachelorThesisAssessmentInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-assessment-infos-query.response";
+import { BachelorThesisAssessmentInfosQueryResponse } from "../../../contracts/responses";
 
 @injectable()
 export class BachelorThesisAssessmentService implements BachelorThesisAssessmentServiceInterface {

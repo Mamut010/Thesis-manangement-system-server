@@ -1,16 +1,18 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { BachelorThesisRegistrationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
+import { 
+    BachelorThesisRegistrationsQueryRequest,
+    BachelorThesisRegistrationCreateRequest,
+    BachelorThesisRegistrationUpdateRequest
+} from "../../../contracts/requests";
 import { BachelorThesisRegistrationDto, BachelorThesisRegistrationInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
-import { BachelorThesisRegistrationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-registration-create.request";
-import { BachelorThesisRegistrationUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-registration-update.request";
 import { BachelorThesisRegistrationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { BachelorThesisRegistrationRepoInterface } from "../../../dal/interfaces";
-import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-registration-infos-query.response";
+import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses";
 import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 
 @injectable()

@@ -1,7 +1,9 @@
-import { BachelorThesisRegistrationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-registration-create.request";
-import { BachelorThesisRegistrationUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-registration-update.request";
-import { BachelorThesisRegistrationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
-import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-registration-infos-query.response";
+import { 
+    BachelorThesisRegistrationCreateRequest,
+    BachelorThesisRegistrationUpdateRequest,
+    BachelorThesisRegistrationsQueryRequest
+} from "../../../contracts/requests";
+import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisRegistrationInfoDto } from "../../../shared/dtos";
 

@@ -17,13 +17,15 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { BachelorThesisEvaluationServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { BachelorThesisEvaluationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
+import { 
+    BachelorThesisEvaluationsQueryRequest,
+    BachelorThesisEvaluationCreateRequest,
+    BachelorThesisEvaluationUpdateRequest
+} from "../../../contracts/requests";
 import { BachelorThesisEvaluationInfoDto } from "../../../shared/dtos";
-import { BachelorThesisEvaluationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-create.request";
-import { BachelorThesisEvaluationUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-update.request";
 import { ROLES } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-evaluation-infos-query.response";
+import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses";
 
 @JsonController('bachelor-thesis-evaluations')
 //@Authorized()

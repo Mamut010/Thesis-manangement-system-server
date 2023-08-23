@@ -17,13 +17,15 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { OralDefenseRegistrationServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { OralDefenseRegistrationsQueryRequest } from "../../../contracts/requests/resources/oral-defense-registrations-query.request";
+import { 
+    OralDefenseRegistrationsQueryRequest,
+    OralDefenseRegistrationCreateRequest,
+    OralDefenseRegistrationUpdateRequest
+} from "../../../contracts/requests";
 import { OralDefenseRegistrationInfoDto } from "../../../shared/dtos";
-import { OralDefenseRegistrationCreateRequest } from "../../../contracts/requests/resources/oral-defense-registration-create.request";
-import { OralDefenseRegistrationUpdateRequest } from "../../../contracts/requests/resources/oral-defense-registration-update.request";
 import { ROLES } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses/api/oral-defense-registration-infos-query.response";
+import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses";
 
 @JsonController('oral-defense-registrations')
 //@Authorized()

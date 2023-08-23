@@ -1,7 +1,9 @@
-import { BachelorThesisAssessmentCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-create.request";
-import { BachelorThesisAssessmentUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-update.request";
-import { BachelorThesisAssessmentsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
-import { BachelorThesisAssessmentInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-assessment-infos-query.response";
+import { 
+    BachelorThesisAssessmentCreateRequest,
+    BachelorThesisAssessmentUpdateRequest,
+    BachelorThesisAssessmentsQueryRequest
+} from "../../../contracts/requests";
+import { BachelorThesisAssessmentInfosQueryResponse } from "../../../contracts/responses";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisAssessmentInfoDto } from "../../../shared/dtos";
 

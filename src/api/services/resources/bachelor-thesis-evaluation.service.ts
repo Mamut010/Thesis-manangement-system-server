@@ -1,16 +1,18 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { BachelorThesisEvaluationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
+import { 
+    BachelorThesisEvaluationsQueryRequest,
+    BachelorThesisEvaluationCreateRequest,
+    BachelorThesisEvaluationUpdateRequest
+} from "../../../contracts/requests";
 import { BachelorThesisEvaluationDto, BachelorThesisEvaluationInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
-import { BachelorThesisEvaluationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-create.request";
-import { BachelorThesisEvaluationUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-update.request";
 import { BachelorThesisEvaluationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { BachelorThesisEvaluationRepoInterface } from "../../../dal/interfaces";
-import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-evaluation-infos-query.response";
+import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses";
 import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 
 @injectable()

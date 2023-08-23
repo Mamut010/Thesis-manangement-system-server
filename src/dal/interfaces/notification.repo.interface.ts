@@ -1,7 +1,7 @@
-import { NotificationCreateRequest } from "../../contracts/requests/notification-create.request";
-import { NotificationUpdateRequest } from "../../contracts/requests/notification-update.request";
-import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
-import { NotificationsQueryResponse } from "../../contracts/responses/notifications-query.response";
+import { NotificationCreateRequest } from "../../contracts/requests";
+import { NotificationUpdateRequest } from "../../contracts/requests";
+import { NotificationsQueryRequest } from "../../contracts/requests";
+import { NotificationsQueryResponse } from "../../contracts/responses";
 import { NotificationDto } from "../../shared/dtos";
 import { NotificationUpdateManyFilter } from "../types/notification";
 

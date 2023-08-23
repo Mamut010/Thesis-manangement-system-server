@@ -1,7 +1,5 @@
-import { ThesisCreateRequest } from "../../../contracts/requests/resources/thesis-create.request";
-import { ThesesQueryRequest } from "../../../contracts/requests/resources/theses-query.request";
-import { ThesisUpdateRequest } from "../../../contracts/requests/resources/thesis-update.request";
-import { ThesesQueryResponse } from "../../../contracts/responses/resources/theses-query.response";
+import { ThesisCreateRequest, ThesesQueryRequest, ThesisUpdateRequest } from "../../../contracts/requests";
+import { ThesesQueryResponse } from "../../../contracts/responses";
 import { ThesisDto } from "../../../shared/dtos";
 
 export interface ThesisServiceInterface {

@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { IsBoolean, IsDate, IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class OralDefenseRegistrationCreateRequest {
     @Expose()

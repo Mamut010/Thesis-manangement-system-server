@@ -4,9 +4,8 @@ import { ThesisDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
-import { ThesesQueryRequest } from "../../../contracts/requests/resources/theses-query.request";
-import { ThesesQueryResponse } from "../../../contracts/responses/resources/theses-query.response";
-import { ThesisCreateRequest } from "../../../contracts/requests/resources/thesis-create.request";
+import { ThesesQueryRequest, ThesisCreateRequest, ThesisUpdateRequest } from "../../../contracts/requests";
+import { ThesesQueryResponse } from "../../../contracts/responses";
 import { ThesisRepoInterface } from "../../../dal/interfaces";
 
 @injectable()
@@ -28,7 +27,7 @@ export class ThesisService implements ThesisServiceInterface {
         return await this.thesisRepo.create(createRequest);
     }
 
-    async updateThesis(id: number, updateRequest: ThesisCreateRequest): Promise<ThesisDto> {
+    async updateThesis(id: number, updateRequest: ThesisUpdateRequest): Promise<ThesisDto> {
         const record = await this.thesisRepo.update(id, updateRequest);
         if (!record) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);

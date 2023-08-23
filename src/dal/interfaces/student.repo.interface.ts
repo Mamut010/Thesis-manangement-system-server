@@ -1,6 +1,5 @@
-import { StudentUpdateRequest } from "../../contracts/requests/student-update.request";
-import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
-import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
+import { StudentUpdateRequest, StudentsQueryRequest } from "../../contracts/requests";
+import { StudentsQueryResponse } from "../../contracts/responses";
 import { StudentDto } from "../../shared/dtos";
 
 export interface StudentRepoInterface {

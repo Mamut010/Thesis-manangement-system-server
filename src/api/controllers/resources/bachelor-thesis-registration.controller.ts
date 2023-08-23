@@ -17,13 +17,15 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { BachelorThesisRegistrationServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { BachelorThesisRegistrationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
+import { 
+    BachelorThesisRegistrationsQueryRequest,
+    BachelorThesisRegistrationCreateRequest,
+    BachelorThesisRegistrationUpdateRequest
+} from "../../../contracts/requests";
 import { BachelorThesisRegistrationInfoDto } from "../../../shared/dtos";
-import { BachelorThesisRegistrationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-registration-create.request";
-import { BachelorThesisRegistrationUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-registration-update.request";
 import { ROLES } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-registration-infos-query.response";
+import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses";
 
 @JsonController('bachelor-thesis-registrations')
 //@Authorized()

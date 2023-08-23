@@ -1,13 +1,14 @@
-import { LecturerAssetsQueryRequest } from "../../contracts/requests/api/lecturer-assets-query.request";
-import { LecturerInfoUpdateRequest } from "../../contracts/requests/api/lecturer-info-update.request";
-import { LecturerInfosQueryRequest } from "../../contracts/requests/api/lecturer-infos-query.request";
-import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
-import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
-import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
-import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
-import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
-import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-detail.response";
-import { LecturerInfosQueryResponse } from "../../contracts/responses/api/lecturer-infos-query.response";
+import { 
+    LecturerAssetsQueryRequest,
+    LecturerInfoUpdateRequest,
+    LecturerInfosQueryRequest,
+    BachelorThesisAssessmentsQueryRequest,
+    BachelorThesisEvaluationsQueryRequest,
+    BachelorThesisRegistrationsQueryRequest,
+    OralDefenseAssessmentsQueryRequest,
+    OralDefenseRegistrationsQueryRequest
+} from "../../contracts/requests";
+import { LecturerInfosQueryResponse, LecturerDetailResponse } from "../../contracts/responses";
 import { 
     BachelorThesisAssessmentInfoDto, 
     BachelorThesisEvaluationInfoDto, 

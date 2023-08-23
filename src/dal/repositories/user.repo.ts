@@ -1,24 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { ITXClientDenyList } from '@prisma/client/runtime/library';
-import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { LecturerRoles, ROLES } from "../../core/constants/roles";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
-import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { UserRepoInterface } from "../interfaces";
 import { User } from "../../core/models";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
-import { UserCreateRequest } from "../../contracts/requests/user-create.request";
-import { UserUpdateRequest } from "../../contracts/requests/user-update.request";
+import { UserCreateRequest, UserUpdateRequest, UsersQueryRequest } from "../../contracts/requests";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { UserDto } from "../../shared/dtos";
-import { UsersQueryRequest } from "../../contracts/requests/users-query.request";
-import { UsersQueryResponse } from "../../contracts/responses/users-query.response";
+import { UsersQueryResponse } from "../../contracts/responses";
 import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { roleInclude } from "../constants/includes";

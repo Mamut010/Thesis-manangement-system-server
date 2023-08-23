@@ -1,7 +1,5 @@
-import { StudentInfoUpdateRequest } from "../../contracts/requests/api/student-info-update.request";
-import { StudentInfosQueryRequest } from "../../contracts/requests/api/student-infos-query.request";
-import { StudentDetailResponse } from "../../contracts/responses/api/student-detail.response";
-import { StudentInfosQueryResponse } from "../../contracts/responses/api/student-infos-query.response";
+import { StudentInfoUpdateRequest, StudentInfosQueryRequest } from "../../contracts/requests";
+import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
 import { 
     BachelorThesisAssessmentInfoDto, 
     BachelorThesisEvaluationInfoDto, 

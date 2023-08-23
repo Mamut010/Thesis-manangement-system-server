@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { AdminStudentServiceInterface } from "../interfaces";
-import { StudentDetailResponse } from "../../contracts/responses/api/student-detail.response";
+import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { 
@@ -20,18 +20,19 @@ import {
     OralDefenseRegistrationRepoInterface, 
     StudentRepoInterface 
 } from "../../dal/interfaces";
-import { StudentUpdateRequest } from "../../contracts/requests/student-update.request";
-import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
+import { 
+    StudentUpdateRequest,
+    BachelorThesisRegistrationsQueryRequest,
+    BachelorThesisAssessmentsQueryRequest,
+    OralDefenseRegistrationsQueryRequest,
+    OralDefenseAssessmentsQueryRequest,
+    BachelorThesisEvaluationsQueryRequest,
+    StudentInfosQueryRequest
+} from "../../contracts/requests";
 import { StringFilter } from "../../lib/query";
-import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
-import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
-import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
 import { ClassConstructor } from "../../utils/types";
-import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
 import { singleOrDefault } from "../../utils/array-helpers";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
-import { StudentInfosQueryResponse } from "../../contracts/responses/api/student-infos-query.response";
-import { StudentInfosQueryRequest } from "../../contracts/requests/api/student-infos-query.request";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {

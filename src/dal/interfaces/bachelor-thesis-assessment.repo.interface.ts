@@ -1,7 +1,9 @@
-import { BachelorThesisAssessmentCreateRequest } from "../../contracts/requests/resources/bachelor-thesis-assessment-create.request";
-import { BachelorThesisAssessmentUpdateRequest } from "../../contracts/requests/resources/bachelor-thesis-assessment-update.request";
-import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
-import { BachelorThesisAssessmentsQueryResponse } from "../../contracts/responses/resources/bachelor-thesis-assessments-query.response";
+import { 
+    BachelorThesisAssessmentCreateRequest,
+    BachelorThesisAssessmentUpdateRequest,
+    BachelorThesisAssessmentsQueryRequest
+} from "../../contracts/requests";
+import { BachelorThesisAssessmentsQueryResponse } from "../../contracts/responses";
 import { BachelorThesisAssessmentDto } from "../../shared/dtos";
 
 export interface BachelorThesisAssessmentRepoInterface {

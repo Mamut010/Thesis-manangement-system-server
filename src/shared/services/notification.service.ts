@@ -6,13 +6,12 @@ import { IO_NAMESPACES } from "../../ws/constants/io-namespaces";
 import { NotificationInfo } from "../types/notification";
 import { NotificationServiceInterface } from "../interfaces";
 import { NotificationDto } from "../dtos";
-import { NotificationsQueryResponse } from "../../contracts/responses/notifications-query.response";
-import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
+import { NotificationsQueryResponse } from "../../contracts/responses";
+import { NotificationsQueryRequest, NotificationCreateRequest } from "../../contracts/requests";
 import { SERVER_TO_CLIENT_EVENTS } from "../../contracts/constants/io";
 import { IONotificationsNamespace, IOServer } from "../../contracts/types/io";
 import { RoomIdGeneratorInterface } from "../../ws/utils/room-id-generator";
 import { NotificationRepoInterface, UserRepoInterface } from "../../dal/interfaces";
-import { NotificationCreateRequest } from "../../contracts/requests/notification-create.request";
 import { BooleanFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
 

@@ -14,29 +14,25 @@ import { ROLES } from "../../core/constants/roles";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AdminLecturerServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
-import { 
-    BachelorThesisAssessmentDto,
-    BachelorThesisRegistrationDto, 
-    OralDefenseAssessmentDto, 
-    OralDefenseRegistrationDto, 
-    LecturerInfoDto, 
-    BachelorThesisEvaluationDto,
+import {
+    LecturerInfoDto,
     BachelorThesisRegistrationInfoDto,
     BachelorThesisAssessmentInfoDto,
     BachelorThesisEvaluationInfoDto,
     OralDefenseRegistrationInfoDto,
     OralDefenseAssessmentInfoDto
 } from "../../shared/dtos";
-import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-detail.response";
-import { LecturerAssetsQueryRequest } from "../../contracts/requests/api/lecturer-assets-query.request";
-import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
-import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
-import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
-import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
-import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
-import { LecturerInfosQueryRequest } from "../../contracts/requests/api/lecturer-infos-query.request";
-import { LecturerInfosQueryResponse } from "../../contracts/responses/api/lecturer-infos-query.response";
-import { LecturerInfoUpdateRequest } from "../../contracts/requests/api/lecturer-info-update.request";
+import { LecturerDetailResponse, LecturerInfosQueryResponse } from "../../contracts/responses";
+import { 
+    LecturerAssetsQueryRequest,
+    BachelorThesisRegistrationsQueryRequest,
+    BachelorThesisAssessmentsQueryRequest,
+    OralDefenseRegistrationsQueryRequest,
+    OralDefenseAssessmentsQueryRequest,
+    BachelorThesisEvaluationsQueryRequest,
+    LecturerInfosQueryRequest,
+    LecturerInfoUpdateRequest
+} from "../../contracts/requests";
 
 @JsonController('admin/lecturers')
 //@Authorized(ROLES.Admin)

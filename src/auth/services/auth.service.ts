@@ -21,19 +21,21 @@ import {
     CryptoServiceInterface,
     JwtExtractorServiceInterface
 } from '../../shared/interfaces';
-import { StringResponse } from '../../contracts/responses/general/string.response';
-import { StringArrayResponse } from '../../contracts/responses/general/string-array.response';
+import { StringResponse, StringArrayResponse } from '../../contracts/responses';
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { env } from '../../env';
 import { RefreshTokenRepoInterface, RoleRepoInterface, UserRepoInterface } from '../../dal/interfaces';
-import { UserCreateRequest } from '../../contracts/requests/user-create.request';
-import { UsersQueryRequest } from '../../contracts/requests/users-query.request';
+import { 
+    UserCreateRequest, 
+    UsersQueryRequest,
+    RefreshTokenUpsertCreateRequest, 
+    RefreshTokenUpsertUpdateRequest
+} from '../../contracts/requests';
 import { StringFilter } from '../../lib/query';
 import { makeArray, singleOrDefault } from '../../utils/array-helpers';
 import { NotFoundError } from '../../contracts/errors/not-found.error';
 import { ROLES } from '../../core/constants/roles';
 import { ForbiddenError } from '../../contracts/errors/forbidden.error';
-import { RefreshTokenUpsertCreateRequest, RefreshTokenUpsertUpdateRequest } from '../../contracts/requests/auth/refresh-token-upsert.request';
 import { AuthorizedUser } from '../../core/auth-checkers';
 import { Credentials } from '../types/credentials';
 
@@ -113,7 +115,7 @@ export class AuthService implements AuthServiceInterface {
         await this.jwtCookieHandler.detachRefreshTokenFromCookie(response);
     }
 
-    async getRoles(user: AuthorizedUser): Promise<StringArrayResponse> {
+    getRoles(user: AuthorizedUser): StringArrayResponse {
         return new StringArrayResponse(user.roles);
     }
 

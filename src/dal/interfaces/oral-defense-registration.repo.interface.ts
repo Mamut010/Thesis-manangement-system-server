@@ -1,7 +1,7 @@
-import { OralDefenseRegistrationCreateRequest } from "../../contracts/requests/resources/oral-defense-registration-create.request";
-import { OralDefenseRegistrationUpdateRequest } from "../../contracts/requests/resources/oral-defense-registration-update.request";
-import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
-import { OralDefenseRegistrationsQueryResponse } from "../../contracts/responses/resources/oral-defense-registrations-query.response";
+import { OralDefenseRegistrationCreateRequest } from "../../contracts/requests";
+import { OralDefenseRegistrationUpdateRequest } from "../../contracts/requests";
+import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests";
+import { OralDefenseRegistrationsQueryResponse } from "../../contracts/responses";
 import { OralDefenseRegistrationDto } from "../../shared/dtos";
 
 export interface OralDefenseRegistrationRepoInterface {

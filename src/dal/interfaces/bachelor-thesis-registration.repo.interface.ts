@@ -1,7 +1,9 @@
-import { BachelorThesisRegistrationCreateRequest } from "../../contracts/requests/resources/bachelor-thesis-registration-create.request";
-import { BachelorThesisRegistrationUpdateRequest } from "../../contracts/requests/resources/bachelor-thesis-registration-update.request";
-import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
-import { BachelorThesisRegistrationsQueryResponse } from "../../contracts/responses/resources/bachelor-thesis-registrations-query.response";
+import { 
+    BachelorThesisRegistrationCreateRequest,
+    BachelorThesisRegistrationUpdateRequest,
+    BachelorThesisRegistrationsQueryRequest
+} from "../../contracts/requests";
+import { BachelorThesisRegistrationsQueryResponse } from "../../contracts/responses";
 import { BachelorThesisRegistrationDto } from "../../shared/dtos";
 
 export interface BachelorThesisRegistrationRepoInterface {

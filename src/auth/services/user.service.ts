@@ -1,10 +1,9 @@
 import { inject, injectable } from "inversify";
-import { UserServiceInterface } from "../interfaces";
+import { AuthServiceInterface, UserServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { UserRepoInterface } from "../../dal/interfaces";
-import { UserInfoUpdateRequest } from "../../contracts/requests/auth/user-info-update.request";
-import { UserInfosQueryRequest } from "../../contracts/requests/auth/user-infos-query.request";
-import { UserInfosQueryResponse } from "../../contracts/responses/auth/user-infos-query.response";
+import { UserInfoUpdateRequest, UserInfosQueryRequest } from "../../contracts/requests";
+import { UserInfosQueryResponse } from "../../contracts/responses";
 import { UserInfoDto } from "../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
@@ -13,13 +12,12 @@ import { AuthorizedUser } from "../../core/auth-checkers";
 import { ForbiddenError } from "../../contracts/errors/forbidden.error";
 import { ROLES } from "../../core/constants/roles";
 import { equalsOrUndefined } from "../../utils/object-helpers";
-import { AuthService } from "./auth.service";
 
 @injectable()
 export class UserService implements UserServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
-        @inject(INJECTION_TOKENS.AuthService) private authService: AuthService) {
+        @inject(INJECTION_TOKENS.AuthService) private authService: AuthServiceInterface) {
 
     }
 

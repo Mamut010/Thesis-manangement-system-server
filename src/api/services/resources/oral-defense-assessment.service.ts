@@ -1,16 +1,18 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { OralDefenseAssessmentsQueryRequest } from "../../../contracts/requests/resources/oral-defense-assessments-query.request";
+import { 
+    OralDefenseAssessmentsQueryRequest, 
+    OralDefenseAssessmentCreateRequest,
+    OralDefenseAssessmentUpdateRequest
+} from "../../../contracts/requests";
 import { OralDefenseAssessmentDto, OralDefenseAssessmentInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
-import { OralDefenseAssessmentCreateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-create.request";
-import { OralDefenseAssessmentUpdateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-update.request";
 import { OralDefenseAssessmentServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { OralDefenseAssessmentRepoInterface } from "../../../dal/interfaces";
-import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses/api/oral-defense-assessment-infos-query.response";
+import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses";
 import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 
 @injectable()

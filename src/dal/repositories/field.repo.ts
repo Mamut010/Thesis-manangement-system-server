@@ -4,12 +4,10 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
-import { FieldsQueryRequest } from "../../contracts/requests/resources/fields-query.request";
-import { FieldsQueryResponse } from "../../contracts/responses/resources/fields-query.response";
+import { FieldsQueryRequest, FieldCreateRequest, FieldUpdateRequest } from "../../contracts/requests";
+import { FieldsQueryResponse } from "../../contracts/responses";
 import { Field } from "../../core/models";
 import { FieldDto } from "../../shared/dtos";
-import { FieldCreateRequest } from "../../contracts/requests/resources/field-create.request";
-import { FieldUpdateRequest } from "../../contracts/requests/resources/field-update.request";
 import { anyChanges } from "../utils/crud-helpers";
 
 @injectable()

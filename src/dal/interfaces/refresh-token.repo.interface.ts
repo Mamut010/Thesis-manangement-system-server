@@ -1,5 +1,4 @@
-import { RefreshTokenCreateRequest } from "../../contracts/requests/auth/refresh-token-create.request";
-import { RefreshTokenUpsertRequest } from "../../contracts/requests/auth/refresh-token-upsert.request";
+import { RefreshTokenCreateRequest, RefreshTokenUpsertRequest } from "../../contracts/requests";
 import { RefreshTokenDto } from "../../shared/dtos";
 
 export interface RefreshTokenRepoInterface {

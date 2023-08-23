@@ -7,7 +7,7 @@ import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AdminRepoInterface } from "../interfaces";
-import { AdminUpdateRequest } from "../../contracts/requests/admin-update.request";
+import { AdminUpdateRequest } from "../../contracts/requests";
 
 @injectable()
 export class AdminRepo implements AdminRepoInterface {

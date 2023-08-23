@@ -17,13 +17,15 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { BachelorThesisAssessmentServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { BachelorThesisAssessmentsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
+import { 
+    BachelorThesisAssessmentsQueryRequest,
+    BachelorThesisAssessmentCreateRequest,
+    BachelorThesisAssessmentUpdateRequest
+} from "../../../contracts/requests";
 import { BachelorThesisAssessmentInfoDto } from "../../../shared/dtos";
-import { BachelorThesisAssessmentCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-create.request";
-import { BachelorThesisAssessmentUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-assessment-update.request";
 import { ROLES } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { BachelorThesisAssessmentInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-assessment-infos-query.response";
+import { BachelorThesisAssessmentInfosQueryResponse } from "../../../contracts/responses";
 
 @JsonController('bachelor-thesis-assessments')
 //@Authorized()

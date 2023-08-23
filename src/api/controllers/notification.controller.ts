@@ -4,9 +4,9 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { NotificationServiceInterface } from "../../shared/interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
-import { NotificationsQueryResponse } from "../../contracts/responses/notifications-query.response";
+import { NotificationsQueryResponse } from "../../contracts/responses";
 import { AuthorizedUser } from "../../core/auth-checkers";
-import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
+import { NotificationsQueryRequest } from "../../contracts/requests";
 
 @JsonController('notifications')
 @Authorized()

@@ -18,10 +18,8 @@ import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { ThesisServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { ThesisDto } from "../../../shared/dtos";
-import { ThesesQueryResponse } from "../../../contracts/responses/resources/theses-query.response";
-import { ThesesQueryRequest } from "../../../contracts/requests/resources/theses-query.request";
-import { ThesisCreateRequest } from "../../../contracts/requests/resources/thesis-create.request";
-import { ThesisUpdateRequest } from "../../../contracts/requests/resources/thesis-update.request";
+import { ThesesQueryResponse } from "../../../contracts/responses";
+import { ThesesQueryRequest, ThesisCreateRequest, ThesisUpdateRequest } from "../../../contracts/requests";
 
 @JsonController('theses')
 //@Authorized()

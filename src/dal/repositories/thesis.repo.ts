@@ -4,12 +4,10 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
-import { ThesesQueryRequest } from "../../contracts/requests/resources/theses-query.request";
-import { ThesesQueryResponse } from "../../contracts/responses/resources/theses-query.response";
+import { ThesesQueryRequest, ThesisCreateRequest, ThesisUpdateRequest } from "../../contracts/requests";
+import { ThesesQueryResponse } from "../../contracts/responses";
 import { Thesis } from "../../core/models";
 import { ThesisDto } from "../../shared/dtos";
-import { ThesisCreateRequest } from "../../contracts/requests/resources/thesis-create.request";
-import { ThesisUpdateRequest } from "../../contracts/requests/resources/thesis-update.request";
 import { anyChanges } from "../utils/crud-helpers";
 import { thesisInclude } from "../constants/includes";
 

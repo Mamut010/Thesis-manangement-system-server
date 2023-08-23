@@ -1,6 +1,6 @@
-import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
-import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
-import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
+import { LecturerUpdateRequest } from "../../contracts/requests";
+import { LecturersQueryRequest } from "../../contracts/requests";
+import { LecturersQueryResponse } from "../../contracts/responses";
 import { LecturerDto } from "../../shared/dtos";
 
 export interface LecturerRepoInterface {

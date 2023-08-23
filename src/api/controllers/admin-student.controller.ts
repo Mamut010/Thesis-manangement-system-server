@@ -14,7 +14,7 @@ import { ROLES } from "../../core/constants/roles";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AdminStudentServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
-import { StudentDetailResponse } from "../../contracts/responses/api/student-detail.response";
+import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
 import { 
     BachelorThesisAssessmentInfoDto,
     BachelorThesisEvaluationInfoDto,
@@ -23,9 +23,7 @@ import {
     OralDefenseRegistrationInfoDto, 
     StudentInfoDto 
 } from "../../shared/dtos";
-import { StudentInfosQueryResponse } from "../../contracts/responses/api/student-infos-query.response";
-import { StudentInfosQueryRequest } from "../../contracts/requests/api/student-infos-query.request";
-import { StudentInfoUpdateRequest } from "../../contracts/requests/api/student-info-update.request";
+import { StudentInfosQueryRequest, StudentInfoUpdateRequest } from "../../contracts/requests";
 
 @JsonController('admin/students')
 //@Authorized(ROLES.Admin)

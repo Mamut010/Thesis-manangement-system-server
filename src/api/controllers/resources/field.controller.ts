@@ -16,11 +16,9 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { FieldServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { FieldsQueryResponse } from "../../../contracts/responses/resources/fields-query.response";
-import { FieldsQueryRequest } from "../../../contracts/requests/resources/fields-query.request";
+import { FieldsQueryResponse } from "../../../contracts/responses";
+import { FieldsQueryRequest, FieldCreateRequest, FieldUpdateRequest } from "../../../contracts/requests";
 import { FieldDto } from "../../../shared/dtos";
-import { FieldCreateRequest } from "../../../contracts/requests/resources/field-create.request";
-import { FieldUpdateRequest } from "../../../contracts/requests/resources/field-update.request";
 import { ROLES } from "../../../core/constants/roles";
 
 @JsonController('fields')

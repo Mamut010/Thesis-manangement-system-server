@@ -3,13 +3,15 @@ import { PrismaClient } from "@prisma/client";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
-import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
-import { OralDefenseRegistrationsQueryResponse } from "../../contracts/responses/resources/oral-defense-registrations-query.response";
+import { 
+    OralDefenseRegistrationsQueryRequest, 
+    OralDefenseRegistrationCreateRequest, 
+    OralDefenseRegistrationUpdateRequest
+} from "../../contracts/requests";
+import { OralDefenseRegistrationsQueryResponse } from "../../contracts/responses";
 import { OralDefenseRegistration } from "../../core/models";
 import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
 import { OralDefenseRegistrationDto } from "../../shared/dtos";
-import { OralDefenseRegistrationCreateRequest } from "../../contracts/requests/resources/oral-defense-registration-create.request";
-import { OralDefenseRegistrationUpdateRequest } from "../../contracts/requests/resources/oral-defense-registration-update.request";
 import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";

@@ -1,15 +1,14 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { StudentUpdateRequest } from "../../contracts/requests/student-update.request";
+import { StudentUpdateRequest, StudentsQueryRequest } from "../../contracts/requests";
 import { StudentDto } from "../../shared/dtos";
 import { userInclude } from "../constants/includes";
 import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { StudentRepoInterface } from "../interfaces";
-import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
-import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
+import { StudentsQueryResponse } from "../../contracts/responses";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { Student, User } from "../../core/models";
 

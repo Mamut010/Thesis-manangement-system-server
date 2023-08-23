@@ -16,12 +16,10 @@ import {
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { HTTP_CODES } from "../../core/constants/http-codes";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { LoginRequest } from "../../contracts/requests/auth/login.request";
-import { SignUpRequest } from "../../contracts/requests/auth/sign-up.request";
+import { LoginRequest, SignUpRequest } from "../../contracts/requests";
 import { AuthServiceInterface } from "../interfaces";
 import { ROLES } from '../../core/constants/roles';
-import { StringResponse } from '../../contracts/responses/general/string.response';
-import { StringArrayResponse } from '../../contracts/responses/general/string-array.response';
+import { StringResponse, StringArrayResponse } from '../../contracts/responses';
 import { AuthorizedUser } from '../../core/auth-checkers';
 import { UserInfoDto } from '../../shared/dtos';
 

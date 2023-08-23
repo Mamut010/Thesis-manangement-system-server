@@ -1,4 +1,4 @@
-import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
+import { NotificationsQueryRequest } from "../../contracts/requests";
 
 export interface NotificationUpdateManyFilter {
     queryRequest?: NotificationsQueryRequest,

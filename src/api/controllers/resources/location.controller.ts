@@ -16,11 +16,9 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { LocationServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { LocationsQueryResponse } from "../../../contracts/responses/resources/locations-query.response";
-import { LocationsQueryRequest } from "../../../contracts/requests/resources/locations-query.request";
+import { LocationsQueryResponse } from "../../../contracts/responses";
+import { LocationsQueryRequest, LocationCreateRequest, LocationUpdateRequest } from "../../../contracts/requests";
 import { LocationDto } from "../../../shared/dtos";
-import { LocationCreateRequest } from "../../../contracts/requests/resources/location-create.request";
-import { LocationUpdateRequest } from "../../../contracts/requests/resources/location-update.request";
 import { ROLES } from "../../../core/constants/roles";
 
 @JsonController('locations')

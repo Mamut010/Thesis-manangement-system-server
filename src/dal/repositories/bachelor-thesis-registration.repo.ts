@@ -3,13 +3,15 @@ import { PrismaClient } from "@prisma/client";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
-import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
-import { BachelorThesisRegistrationsQueryResponse } from "../../contracts/responses/resources/bachelor-thesis-registrations-query.response";
+import { 
+    BachelorThesisRegistrationsQueryRequest,
+    BachelorThesisRegistrationCreateRequest,
+    BachelorThesisRegistrationUpdateRequest
+} from "../../contracts/requests";
+import { BachelorThesisRegistrationsQueryResponse } from "../../contracts/responses";
 import { BachelorThesisRegistration } from "../../core/models";
 import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
 import { BachelorThesisRegistrationDto } from "../../shared/dtos";
-import { BachelorThesisRegistrationCreateRequest } from "../../contracts/requests/resources/bachelor-thesis-registration-create.request";
-import { BachelorThesisRegistrationUpdateRequest } from "../../contracts/requests/resources/bachelor-thesis-registration-update.request";
 import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";

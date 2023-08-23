@@ -1,7 +1,5 @@
-import { UserCreateRequest } from "../../contracts/requests/user-create.request";
-import { UserUpdateRequest } from "../../contracts/requests/user-update.request";
-import { UsersQueryRequest } from "../../contracts/requests/users-query.request";
-import { UsersQueryResponse } from "../../contracts/responses/users-query.response";
+import { UserCreateRequest, UserUpdateRequest, UsersQueryRequest } from "../../contracts/requests";
+import { UsersQueryResponse } from "../../contracts/responses";
 import { UserDto } from "../../shared/dtos";
 
 export interface UserRepoInterface {

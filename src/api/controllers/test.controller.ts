@@ -21,7 +21,7 @@ import {
 import { prettyJSON } from "../../utils/string-helpers";
 import { LoggerInterface } from "../../lib/logger";
 import { logger } from "../../decorators";
-import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
+import { StudentsQueryRequest } from "../../contracts/requests";
 import { PlainTransformerInterface } from "../../dal/utils/plain-transfomer";
 import { compareObjectByEntries, defaultOrGiven } from "../../utils/object-helpers";
 import { MailServiceInterface, NotificationServiceInterface } from "../../shared/interfaces";
@@ -40,7 +40,7 @@ import { rimraf } from 'rimraf';
 import { PDFDocument, PDFRadioGroup } from "pdf-lib";
 import { createDir, deleteDir } from "../../utils/dir-helpers";
 import { PdfFormGeneratorInterface } from "../utils/pdf-form-generator";
-import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
+import { NotificationsQueryRequest } from "../../contracts/requests";
 import { BachelorThesisEvaluationService } from "../services";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { 
@@ -50,7 +50,12 @@ import {
     OralDefenseRegistrationServiceInterface 
 } from "../interfaces";
 import { IO_NAMESPACES } from "../../ws/constants/io-namespaces";
-import { BachelorThesisAssessmentRepoInterface, BachelorThesisEvaluationRepoInterface, OralDefenseAssessmentRepoInterface, OralDefenseRegistrationRepoInterface } from "../../dal/interfaces";
+import { 
+    BachelorThesisAssessmentRepoInterface, 
+    BachelorThesisEvaluationRepoInterface, 
+    OralDefenseAssessmentRepoInterface, 
+    OralDefenseRegistrationRepoInterface 
+} from "../../dal/interfaces";
 
 @JsonController('test')
 //@Authorized(ROLES.Admin)

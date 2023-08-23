@@ -1,6 +1,6 @@
-import { UserInfoUpdateRequest } from "../../contracts/requests/auth/user-info-update.request";
-import { UserInfosQueryRequest } from "../../contracts/requests/auth/user-infos-query.request";
-import { UserInfosQueryResponse } from "../../contracts/responses/auth/user-infos-query.response";
+import { UserInfoUpdateRequest } from "../../contracts/requests";
+import { UserInfosQueryRequest } from "../../contracts/requests";
+import { UserInfosQueryResponse } from "../../contracts/responses";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { UserInfoDto } from "../../shared/dtos";
 

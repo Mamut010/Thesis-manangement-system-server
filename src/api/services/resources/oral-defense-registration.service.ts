@@ -1,17 +1,19 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { OralDefenseRegistrationsQueryRequest } from "../../../contracts/requests/resources/oral-defense-registrations-query.request";
+import { 
+    OralDefenseRegistrationsQueryRequest, 
+    OralDefenseRegistrationCreateRequest,
+    OralDefenseRegistrationUpdateRequest
+} from "../../../contracts/requests";
 import { OralDefenseRegistrationDto, OralDefenseRegistrationInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
-import { OralDefenseRegistrationCreateRequest } from "../../../contracts/requests/resources/oral-defense-registration-create.request";
-import { OralDefenseRegistrationUpdateRequest } from "../../../contracts/requests/resources/oral-defense-registration-update.request";
 import { OralDefenseRegistrationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { OralDefenseRegistrationRepoInterface } from "../../../dal/interfaces";
 import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
-import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses/api/oral-defense-registration-infos-query.response";
+import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses";
 
 @injectable()
 export class OralDefenseRegistrationService implements OralDefenseRegistrationServiceInterface {
@@ -36,7 +38,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
 
     async createOralDefenseRegistration(user: AuthorizedUser, createRequest: OralDefenseRegistrationCreateRequest)
         : Promise<OralDefenseRegistrationInfoDto> {
-        const result = this.odrRepo.create(createRequest);
+        const result = await this.odrRepo.create(createRequest);
         return plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, result);
     }
 

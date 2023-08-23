@@ -4,12 +4,10 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
-import { TopicsQueryRequest } from "../../contracts/requests/resources/topics-query.request";
-import { TopicsQueryResponse } from "../../contracts/responses/resources/topics-query.response";
+import { TopicsQueryRequest, TopicCreateRequest, TopicUpdateRequest } from "../../contracts/requests";
+import { TopicsQueryResponse } from "../../contracts/responses";
 import { Topic } from "../../core/models";
 import { TopicDto } from "../../shared/dtos";
-import { TopicCreateRequest } from "../../contracts/requests/resources/topic-create.request";
-import { TopicUpdateRequest } from "../../contracts/requests/resources/topic-update.request";
 import { anyChanges } from "../utils/crud-helpers";
 
 @injectable()

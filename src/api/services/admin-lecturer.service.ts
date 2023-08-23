@@ -9,7 +9,16 @@ import {
     OralDefenseAssessmentInfoDto, 
     OralDefenseRegistrationInfoDto
 } from "../../shared/dtos";
-import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
+import { 
+    LecturerUpdateRequest,
+    LecturerAssetsQueryRequest,
+    BachelorThesisRegistrationsQueryRequest,
+    BachelorThesisAssessmentsQueryRequest,
+    OralDefenseRegistrationsQueryRequest,
+    OralDefenseAssessmentsQueryRequest,
+    BachelorThesisEvaluationsQueryRequest,
+    LecturerInfosQueryRequest
+} from "../../contracts/requests";
 import { 
     BachelorThesisAssessmentRepoInterface, 
     BachelorThesisEvaluationRepoInterface, 
@@ -18,22 +27,14 @@ import {
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface
 } from "../../dal/interfaces";
-import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-detail.response";
+import { LecturerDetailResponse, LecturerInfosQueryResponse } from "../../contracts/responses";
 import { LecturerRoles } from "../../core/constants/roles";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { LecturerAssetsQueryRequest } from "../../contracts/requests/api/lecturer-assets-query.request";
-import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
-import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
-import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
-import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
-import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
 import { StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
-import { LecturerInfosQueryResponse } from "../../contracts/responses/api/lecturer-infos-query.response";
-import { LecturerInfosQueryRequest } from "../../contracts/requests/api/lecturer-infos-query.request";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
@@ -135,6 +136,6 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.LecturerNotFound);
         }
 
-        return plainToInstanceExactMatch(LecturerInfoDto, result);;
+        return plainToInstanceExactMatch(LecturerInfoDto, result);
     }
 }

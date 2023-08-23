@@ -1,13 +1,11 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { TopicServiceInterface } from "../../interfaces";
-import { TopicsQueryRequest } from "../../../contracts/requests/resources/topics-query.request";
-import { TopicsQueryResponse } from "../../../contracts/responses/resources/topics-query.response";
+import { TopicsQueryRequest, TopicCreateRequest, TopicUpdateRequest } from "../../../contracts/requests";
+import { TopicsQueryResponse } from "../../../contracts/responses";
 import { TopicDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
-import { TopicCreateRequest } from "../../../contracts/requests/resources/topic-create.request";
-import { TopicUpdateRequest } from "../../../contracts/requests/resources/topic-update.request";
 import { TopicRepoInterface } from "../../../dal/interfaces";
 
 @injectable()

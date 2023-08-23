@@ -1,13 +1,11 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { LocationServiceInterface } from "../../interfaces";
-import { LocationsQueryRequest } from "../../../contracts/requests/resources/locations-query.request";
-import { LocationsQueryResponse } from "../../../contracts/responses/resources/locations-query.response";
+import { LocationsQueryRequest, LocationCreateRequest, LocationUpdateRequest } from "../../../contracts/requests";
+import { LocationsQueryResponse } from "../../../contracts/responses";
 import { LocationDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
-import { LocationCreateRequest } from "../../../contracts/requests/resources/location-create.request";
-import { LocationUpdateRequest } from "../../../contracts/requests/resources/location-update.request";
 import { LocationRepoInterface } from "../../../dal/interfaces";
 
 @injectable()

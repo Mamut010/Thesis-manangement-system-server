@@ -1,5 +1,5 @@
-import { WsAuthenticateRequest } from "../../contracts/requests/ws/ws-authenticate.request";
-import { WsAuthenticateResponse } from "../../contracts/responses/ws/ws-authenticate.response";
+import { WsAuthenticateRequest } from "../../contracts/requests";
+import { WsAuthenticateResponse } from "../../contracts/responses";
 import { IODefaultSocket } from "../../contracts/types/io";
 
 export interface WsSetupServiceInterface {

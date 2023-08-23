@@ -16,11 +16,9 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { TopicServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { TopicsQueryResponse } from "../../../contracts/responses/resources/topics-query.response";
-import { TopicsQueryRequest } from "../../../contracts/requests/resources/topics-query.request";
+import { TopicsQueryResponse } from "../../../contracts/responses";
+import { TopicsQueryRequest, TopicCreateRequest, TopicUpdateRequest } from "../../../contracts/requests";
 import { TopicDto } from "../../../shared/dtos";
-import { TopicCreateRequest } from "../../../contracts/requests/resources/topic-create.request";
-import { TopicUpdateRequest } from "../../../contracts/requests/resources/topic-update.request";
 import { ROLES } from "../../../core/constants/roles";
 
 @JsonController('topics')

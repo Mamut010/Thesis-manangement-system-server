@@ -4,12 +4,14 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
-import { LocationsQueryRequest } from "../../contracts/requests/resources/locations-query.request";
-import { LocationsQueryResponse } from "../../contracts/responses/resources/locations-query.response";
+import { 
+    LocationsQueryRequest, 
+    LocationCreateRequest, 
+    LocationUpdateRequest
+} from "../../contracts/requests";
+import { LocationsQueryResponse } from "../../contracts/responses";
 import { Location } from "../../core/models";
 import { LocationDto } from "../../shared/dtos";
-import { LocationCreateRequest } from "../../contracts/requests/resources/location-create.request";
-import { LocationUpdateRequest } from "../../contracts/requests/resources/location-update.request";
 import { anyChanges } from "../utils/crud-helpers";
 
 @injectable()

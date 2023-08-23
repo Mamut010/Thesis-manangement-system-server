@@ -1,7 +1,5 @@
-import { TopicCreateRequest } from "../../../contracts/requests/resources/topic-create.request";
-import { TopicUpdateRequest } from "../../../contracts/requests/resources/topic-update.request";
-import { TopicsQueryRequest } from "../../../contracts/requests/resources/topics-query.request";
-import { TopicsQueryResponse } from "../../../contracts/responses/resources/topics-query.response";
+import { TopicCreateRequest, TopicUpdateRequest, TopicsQueryRequest } from "../../../contracts/requests";
+import { TopicsQueryResponse } from "../../../contracts/responses";
 import { TopicDto } from "../../../shared/dtos";
 
 export interface TopicServiceInterface {

@@ -17,13 +17,15 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { OralDefenseAssessmentServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { OralDefenseAssessmentsQueryRequest } from "../../../contracts/requests/resources/oral-defense-assessments-query.request";
+import { 
+    OralDefenseAssessmentsQueryRequest, 
+    OralDefenseAssessmentCreateRequest, 
+    OralDefenseAssessmentUpdateRequest 
+} from "../../../contracts/requests";
 import { OralDefenseAssessmentInfoDto } from "../../../shared/dtos";
-import { OralDefenseAssessmentCreateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-create.request";
-import { OralDefenseAssessmentUpdateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-update.request";
 import { ROLES } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses/api/oral-defense-assessment-infos-query.response";
+import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses";
 
 @JsonController('oral-defense-assessments')
 //@Authorized()

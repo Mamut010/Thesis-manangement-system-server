@@ -1,7 +1,7 @@
-import { LocationCreateRequest } from "../../contracts/requests/resources/location-create.request";
-import { LocationUpdateRequest } from "../../contracts/requests/resources/location-update.request";
-import { LocationsQueryRequest } from "../../contracts/requests/resources/locations-query.request";
-import { LocationsQueryResponse } from "../../contracts/responses/resources/locations-query.response";
+import { LocationCreateRequest } from "../../contracts/requests";
+import { LocationUpdateRequest } from "../../contracts/requests";
+import { LocationsQueryRequest } from "../../contracts/requests";
+import { LocationsQueryResponse } from "../../contracts/responses";
 import { LocationDto } from "../../shared/dtos";
 
 export interface LocationRepoInterface {

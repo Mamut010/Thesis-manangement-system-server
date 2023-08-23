@@ -9,6 +9,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
+    Patch, 
     Post,
     QueryParams,
 } from "routing-controllers";
@@ -17,11 +18,10 @@ import { HTTP_CODES } from "../../core/constants/http-codes";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { UserServiceInterface } from "../interfaces";
 import { ROLES } from '../../core/constants/roles';
-import { UserInfoUpdateRequest } from '../../contracts/requests/auth/user-info-update.request';
+import { UserInfoUpdateRequest, UserInfosQueryRequest } from '../../contracts/requests';
 import { AuthorizedUser } from '../../core/auth-checkers';
 import { UserInfoDto } from '../../shared/dtos';
-import { UserInfosQueryRequest } from "../../contracts/requests/auth/user-infos-query.request";
-import { UserInfosQueryResponse } from "../../contracts/responses/auth/user-infos-query.response";
+import { UserInfosQueryResponse } from "../../contracts/responses";
 
 @JsonController('users')
 @Authorized(ROLES.Admin)
@@ -42,7 +42,7 @@ export class UserController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Post('/:id')
+    @Patch('/:id')
     @ResponseSchema(UserInfoDto)
     public updateUser(@CurrentUser() currentUser: AuthorizedUser, @Param('id') userId: string, 
         @Body({ required: true }) updateRequest: UserInfoUpdateRequest) {

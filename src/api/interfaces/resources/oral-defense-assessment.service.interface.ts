@@ -1,7 +1,9 @@
-import { OralDefenseAssessmentCreateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-create.request";
-import { OralDefenseAssessmentUpdateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-update.request";
-import { OralDefenseAssessmentsQueryRequest } from "../../../contracts/requests/resources/oral-defense-assessments-query.request";
-import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses/api/oral-defense-assessment-infos-query.response";
+import { 
+    OralDefenseAssessmentCreateRequest,
+    OralDefenseAssessmentUpdateRequest,
+    OralDefenseAssessmentsQueryRequest
+} from "../../../contracts/requests";
+import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { OralDefenseAssessmentInfoDto } from "../../../shared/dtos";
 

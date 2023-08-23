@@ -1,5 +1,5 @@
-import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
-import { NotificationsQueryResponse } from "../../contracts/responses/notifications-query.response";
+import { NotificationsQueryRequest } from "../../contracts/requests";
+import { NotificationsQueryResponse } from "../../contracts/responses";
 import { NotificationDto } from "../dtos";
 import { NotificationInfo } from "../types/notification";
 

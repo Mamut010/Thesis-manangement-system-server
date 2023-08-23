@@ -9,7 +9,7 @@ import { env } from '../../env';
 import { container } from '../../core/bootstrappers';
 import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';
 import { Logger } from '../../lib/logger';
-import { ErrorResponse } from '../../contracts/responses/general/error.response';
+import { ErrorResponse } from '../../contracts/responses';
 import { isEnumerableObject } from '../../utils/object-helpers';
 
 @Middleware({ type: 'after' })

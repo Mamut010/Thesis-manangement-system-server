@@ -4,12 +4,10 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
-import { NotificationCreateRequest } from "../../contracts/requests/notification-create.request";
-import { NotificationsQueryRequest } from "../../contracts/requests/notifications-query.request";
-import { NotificationsQueryResponse } from "../../contracts/responses/notifications-query.response";
+import { NotificationCreateRequest, NotificationsQueryRequest, NotificationUpdateRequest } from "../../contracts/requests";
+import { NotificationsQueryResponse } from "../../contracts/responses";
 import { NotificationDto } from "../../shared/dtos";
 import { Notification } from "../../core/models";
-import { NotificationUpdateRequest } from "../../contracts/requests/notification-update.request";
 import { NotificationUpdateManyFilter } from "../types/notification";
 import { isObjectEmptyOrAllUndefined } from "../../utils/object-helpers";
 

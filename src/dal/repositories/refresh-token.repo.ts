@@ -4,10 +4,9 @@ import { PrismaClient } from "@prisma/client";
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { RefreshTokenRepoInterface } from "../interfaces";
-import { RefreshTokenCreateRequest } from "../../contracts/requests/auth/refresh-token-create.request";
+import { RefreshTokenCreateRequest, RefreshTokenUpsertRequest } from "../../contracts/requests";
 import { RefreshTokenDto } from "../../shared/dtos";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
-import { RefreshTokenUpsertRequest } from "../../contracts/requests/auth/refresh-token-upsert.request";
 
 @injectable()
 export class RefreshTokenRepo implements RefreshTokenRepoInterface {
