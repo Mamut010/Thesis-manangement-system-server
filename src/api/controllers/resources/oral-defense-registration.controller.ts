@@ -9,6 +9,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
+    Patch, 
     Post, 
     QueryParams 
 } from "routing-controllers";
@@ -16,13 +17,13 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { OralDefenseRegistrationServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { OralDefenseRegistrationsQueryResponse } from "../../../contracts/responses/resources/oral-defense-registrations-query.response";
 import { OralDefenseRegistrationsQueryRequest } from "../../../contracts/requests/resources/oral-defense-registrations-query.request";
-import { OralDefenseRegistrationDto } from "../../../shared/dtos";
+import { OralDefenseRegistrationInfoDto } from "../../../shared/dtos";
 import { OralDefenseRegistrationCreateRequest } from "../../../contracts/requests/resources/oral-defense-registration-create.request";
 import { OralDefenseRegistrationUpdateRequest } from "../../../contracts/requests/resources/oral-defense-registration-update.request";
 import { ROLES } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
+import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses/api/oral-defense-registration-infos-query.response";
 
 @JsonController('oral-defense-registrations')
 //@Authorized()
@@ -39,7 +40,7 @@ export class OralDefenseRegistrationController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get()
-    @ResponseSchema(OralDefenseRegistrationsQueryResponse)
+    @ResponseSchema(OralDefenseRegistrationInfosQueryResponse)
     getOralDefenseRegistrations(@CurrentUser() user: AuthorizedUser, 
         @QueryParams() queryRequest: OralDefenseRegistrationsQueryRequest) {
         return this.oralDefenseRegistrationService.getOralDefenseRegistrations(user, queryRequest);
@@ -47,7 +48,7 @@ export class OralDefenseRegistrationController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id')
-    @ResponseSchema(OralDefenseRegistrationDto)
+    @ResponseSchema(OralDefenseRegistrationInfoDto)
     getOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {
         return this.oralDefenseRegistrationService.getOralDefenseRegistration(user, id);
     }
@@ -55,7 +56,7 @@ export class OralDefenseRegistrationController {
     @HttpCode(HTTP_CODES.Created)
     //@Authorized(ROLES.Admin)
     @Post()
-    @ResponseSchema(OralDefenseRegistrationDto)
+    @ResponseSchema(OralDefenseRegistrationInfoDto)
     createOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, 
         @Body({ required: true }) createRequest: OralDefenseRegistrationCreateRequest) {
         return this.oralDefenseRegistrationService.createOralDefenseRegistration(user, createRequest);
@@ -63,8 +64,8 @@ export class OralDefenseRegistrationController {
 
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized(ROLES.Admin)
-    @Post('/:id')
-    @ResponseSchema(OralDefenseRegistrationDto)
+    @Patch('/:id')
+    @ResponseSchema(OralDefenseRegistrationInfoDto)
     updateOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
         @Body({ required: true }) updateRequest: OralDefenseRegistrationUpdateRequest) {
         return this.oralDefenseRegistrationService.updateOralDefenseRegistration(user, id, updateRequest);

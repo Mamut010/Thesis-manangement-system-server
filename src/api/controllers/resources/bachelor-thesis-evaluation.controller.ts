@@ -9,6 +9,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
+    Patch, 
     Post, 
     QueryParams 
 } from "routing-controllers";
@@ -16,13 +17,13 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { BachelorThesisEvaluationServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { BachelorThesisEvaluationsQueryResponse } from "../../../contracts/responses/resources/bachelor-thesis-evaluations-query.response";
 import { BachelorThesisEvaluationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
-import { BachelorThesisEvaluationDto } from "../../../shared/dtos";
+import { BachelorThesisEvaluationInfoDto } from "../../../shared/dtos";
 import { BachelorThesisEvaluationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-create.request";
 import { BachelorThesisEvaluationUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-update.request";
 import { ROLES } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
+import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-evaluation-infos-query.response";
 
 @JsonController('bachelor-thesis-evaluations')
 //@Authorized()
@@ -39,7 +40,7 @@ export class BachelorThesisEvaluationController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get()
-    @ResponseSchema(BachelorThesisEvaluationsQueryResponse)
+    @ResponseSchema(BachelorThesisEvaluationInfosQueryResponse)
     getBachelorThesisEvaluations(@CurrentUser() user: AuthorizedUser, 
         @QueryParams() queryRequest: BachelorThesisEvaluationsQueryRequest) {
         return this.bachelorThesisEvaluationService.getBachelorThesisEvaluations(user, queryRequest);
@@ -47,7 +48,7 @@ export class BachelorThesisEvaluationController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id')
-    @ResponseSchema(BachelorThesisEvaluationDto)
+    @ResponseSchema(BachelorThesisEvaluationInfoDto)
     getBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {
         return this.bachelorThesisEvaluationService.getBachelorThesisEvaluation(user, id);
     }
@@ -55,7 +56,7 @@ export class BachelorThesisEvaluationController {
     @HttpCode(HTTP_CODES.Created)
     //@Authorized([ROLES.Admin, ROLES.Lecturer1_1, ROLES.Lecturer1_2])
     @Post()
-    @ResponseSchema(BachelorThesisEvaluationDto)
+    @ResponseSchema(BachelorThesisEvaluationInfoDto)
     createBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser, 
         @Body({ required: true }) createRequest: BachelorThesisEvaluationCreateRequest) {
         return this.bachelorThesisEvaluationService.createBachelorThesisEvaluation(user, createRequest);
@@ -63,8 +64,8 @@ export class BachelorThesisEvaluationController {
 
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized([ROLES.Admin, ROLES.Lecturer1_1, ROLES.Lecturer1_2])
-    @Post('/:id')
-    @ResponseSchema(BachelorThesisEvaluationDto)
+    @Patch('/:id')
+    @ResponseSchema(BachelorThesisEvaluationInfoDto)
     updateBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
         @Body({ required: true }) updateRequest: BachelorThesisEvaluationUpdateRequest) {
         return this.bachelorThesisEvaluationService.updateBachelorThesisEvaluation(user, id, updateRequest);

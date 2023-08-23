@@ -6,7 +6,7 @@ import {
     HttpCode, 
     JsonController, 
     Param,
-    Post,
+    Patch,
     QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -16,11 +16,11 @@ import { AdminStudentServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
 import { StudentDetailResponse } from "../../contracts/responses/api/student-detail.response";
 import { 
-    BachelorThesisAssessmentDto,
-    BachelorThesisEvaluationDto,
-    BachelorThesisRegistrationDto, 
-    OralDefenseAssessmentDto, 
-    OralDefenseRegistrationDto, 
+    BachelorThesisAssessmentInfoDto,
+    BachelorThesisEvaluationInfoDto,
+    BachelorThesisRegistrationInfoDto,
+    OralDefenseAssessmentInfoDto,
+    OralDefenseRegistrationInfoDto, 
     StudentInfoDto 
 } from "../../shared/dtos";
 import { StudentInfosQueryResponse } from "../../contracts/responses/api/student-infos-query.response";
@@ -62,41 +62,41 @@ export class AdminStudentController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-registration')
-    @ResponseSchema(BachelorThesisRegistrationDto)
+    @ResponseSchema(BachelorThesisRegistrationInfoDto)
     getStudentBachelorThesisRegistration(@Param('id') id: string) {
         return this.adminStudentService.getStudentBachelorThesisRegistration(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-assessment')
-    @ResponseSchema(BachelorThesisAssessmentDto)
+    @ResponseSchema(BachelorThesisAssessmentInfoDto)
     getStudentBachelorThesisAssessment(@Param('id') id: string) {
         return this.adminStudentService.getStudentBachelorThesisAssessment(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-evaluation')
-    @ResponseSchema(BachelorThesisEvaluationDto)
+    @ResponseSchema(BachelorThesisEvaluationInfoDto)
     getStudentBachelorThesisEvaluation(@Param('id') id: string) {
         return this.adminStudentService.getStudentBachelorThesisEvaluation(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-registration')
-    @ResponseSchema(OralDefenseRegistrationDto)
+    @ResponseSchema(OralDefenseRegistrationInfoDto)
     getStudentOralDefenseRegistration(@Param('id') id: string) {
         return this.adminStudentService.getStudentOralDefenseRegistration(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-assessment')
-    @ResponseSchema(OralDefenseAssessmentDto)
+    @ResponseSchema(OralDefenseAssessmentInfoDto)
     getStudentOralDefenseAssessment(@Param('id') id: string) {
         return this.adminStudentService.getStudentOralDefenseAssessment(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Post('/:id/student-info')
+    @Patch('/:id/student-info')
     @ResponseSchema(StudentInfoDto)
     updateStudentInfo(@Param('id') id: string, @Body({ required: true }) updateRequest: StudentInfoUpdateRequest) {
         return this.adminStudentService.updateStudent(id, updateRequest);

@@ -7,6 +7,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
+    Patch, 
     Post, 
     QueryParams
 } from "routing-controllers";
@@ -58,7 +59,7 @@ export class ThesisController {
 
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized([ROLES.Admin, ROLES.Lecturer1_1, ROLES.Lecturer1_2, ROLES.Lecturer2])
-    @Post('/:id')
+    @Patch('/:id')
     @ResponseSchema(ThesisDto)
     updateThesis(@Param('id') id: number, @Body({ required: true }) updateRequest: ThesisUpdateRequest) {
         return this.thesisService.updateThesis(id, updateRequest);

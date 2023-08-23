@@ -6,7 +6,7 @@ import {
     HttpCode, 
     JsonController, 
     Param,
-    Post,
+    Patch,
     QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -20,12 +20,14 @@ import {
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
     LecturerInfoDto, 
-    BachelorThesisEvaluationDto
+    BachelorThesisEvaluationDto,
+    BachelorThesisRegistrationInfoDto,
+    BachelorThesisAssessmentInfoDto,
+    BachelorThesisEvaluationInfoDto,
+    OralDefenseRegistrationInfoDto,
+    OralDefenseAssessmentInfoDto
 } from "../../shared/dtos";
 import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-detail.response";
-import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
-import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
-import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 import { LecturerAssetsQueryRequest } from "../../contracts/requests/api/lecturer-assets-query.request";
 import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
 import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
@@ -71,7 +73,7 @@ export class AdminLecturerController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-registrations')
-    @ResponseSchema(BachelorThesisRegistrationDto, { isArray: true })
+    @ResponseSchema(BachelorThesisRegistrationInfoDto, { isArray: true })
     getLecturerBachelorThesisRegistrations(@Param('id') id: string, 
         @QueryParams() btrQueryRequest: BachelorThesisRegistrationsQueryRequest) {
         return this.adminLecturerService.getLecturerBachelorThesisRegistrations(id, btrQueryRequest);
@@ -79,7 +81,7 @@ export class AdminLecturerController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-assessments')
-    @ResponseSchema(BachelorThesisAssessmentDto, { isArray: true })
+    @ResponseSchema(BachelorThesisAssessmentInfoDto, { isArray: true })
     getLecturerBachelorThesisAssessments(@Param('id') id: string, 
         @QueryParams() btaQueryRequest: BachelorThesisAssessmentsQueryRequest) {
         return this.adminLecturerService.getLecturerBachelorThesisAssessments(id, btaQueryRequest);
@@ -87,7 +89,7 @@ export class AdminLecturerController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/bachelor-thesis-evaluations')
-    @ResponseSchema(BachelorThesisEvaluationDto, { isArray: true })
+    @ResponseSchema(BachelorThesisEvaluationInfoDto, { isArray: true })
     getLecturerBachelorThesisEvaluations(@Param('id') id: string, 
         @QueryParams() bteQueryRequest: BachelorThesisEvaluationsQueryRequest) {
         return this.adminLecturerService.getLecturerBachelorThesisEvaluations(id, bteQueryRequest);
@@ -95,7 +97,7 @@ export class AdminLecturerController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-registrations')
-    @ResponseSchema(OralDefenseRegistrationDto, { isArray: true })
+    @ResponseSchema(OralDefenseRegistrationInfoDto, { isArray: true })
     getLecturerOralDefenseRegistrations(@Param('id') id: string, 
         @QueryParams() odrQueryRequest: OralDefenseRegistrationsQueryRequest) {
         return this.adminLecturerService.getLecturerOralDefenseRegistrations(id, odrQueryRequest);
@@ -103,14 +105,15 @@ export class AdminLecturerController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id/oral-defense-assessments')
-    @ResponseSchema(OralDefenseAssessmentDto, { isArray: true })
+    @ResponseSchema(OralDefenseAssessmentInfoDto, { isArray: true })
     getLecturerOralDefenseAssessments(@Param('id') id: string, 
         @QueryParams() odaQueryRequest: OralDefenseAssessmentsQueryRequest) {
         return this.adminLecturerService.getLecturerOralDefenseAssessments(id, odaQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Post('/:id/lecturer-info')
+    @Patch('/:id/lecturer-info')
+    @ResponseSchema(LecturerInfoDto)
     updateLecturerInfo(@Param('id') id: string, @Body({ required: true }) updateRequest: LecturerInfoUpdateRequest) {
         return this.adminLecturerService.updateLecturerInfo(id, updateRequest);
     }

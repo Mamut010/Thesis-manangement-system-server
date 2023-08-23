@@ -8,6 +8,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
+    Patch, 
     Post, 
     QueryParams 
 } from "routing-controllers";
@@ -58,7 +59,7 @@ export class TopicController {
 
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized(ROLES.Admin)
-    @Post('/:id')
+    @Patch('/:id')
     @ResponseSchema(TopicDto)
     updateTopic(@Param('id') id: number, @Body({ required: true }) updateRequest: TopicUpdateRequest) {
         return this.topicService.updateTopic(id, updateRequest);

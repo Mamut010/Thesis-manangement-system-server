@@ -5,7 +5,7 @@ import {
     Get, 
     HttpCode, 
     JsonController, 
-    Post
+    Patch
 } from "routing-controllers";
 import { ROLES } from "../../core/constants/roles";
 import { inject, injectable } from "inversify";
@@ -37,7 +37,7 @@ export class AdminController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Post('/info')
+    @Patch('/info')
     @ResponseSchema(AdminInfoDto)
     updateAdminInfo(@CurrentUser({ required: true }) user: AuthorizedUser, 
         @Body({ required: true }) updateRequest: AdminInfoUpdateRequest) {

@@ -8,6 +8,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
+    Patch, 
     Post, 
     QueryParams 
 } from "routing-controllers";
@@ -58,7 +59,7 @@ export class RoleController {
 
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized(ROLES.Admin)
-    @Post('/:id')
+    @Patch('/:id')
     @ResponseSchema(RoleDto)
     updateRole(@Param('id') id: number, @Body({ required: true }) updateRequest: RoleUpdateRequest) {
         return this.roleService.updateRole(id, updateRequest);

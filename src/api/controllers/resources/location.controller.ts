@@ -8,6 +8,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
+    Patch, 
     Post, 
     QueryParams 
 } from "routing-controllers";
@@ -58,7 +59,7 @@ export class LocationController {
 
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized(ROLES.Admin)
-    @Post('/:id')
+    @Patch('/:id')
     @ResponseSchema(LocationDto)
     updateLocation(@Param('id') id: number, @Body({ required: true }) updateRequest: LocationUpdateRequest) {
         return this.locationService.updateLocation(id, updateRequest);
