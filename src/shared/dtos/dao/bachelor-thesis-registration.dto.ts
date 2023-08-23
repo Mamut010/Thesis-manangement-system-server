@@ -29,6 +29,11 @@ export class BachelorThesisRegistrationDto {
 
     @Expose()
     @IsOptional()
+    @IsString()
+    studentSignature!: string | null;
+
+    @Expose()
+    @IsOptional()
     @IsDate()
     dateOfBirth!: Date | null;
 
@@ -75,6 +80,11 @@ export class BachelorThesisRegistrationDto {
     @Expose()
     @IsOptional()
     @IsString()
+    supervisor1Signature!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     supervisor2Id!: string | null;
 
     @Expose()
@@ -94,8 +104,18 @@ export class BachelorThesisRegistrationDto {
 
     @Expose()
     @IsOptional()
+    @IsString()
+    supervisor2Signature!: string | null;
+
+    @Expose()
+    @IsOptional()
     @IsBoolean()
     adminConfirmed!: boolean | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    adminSignature!: string | null;
 
     @Expose()
     @IsOptional()

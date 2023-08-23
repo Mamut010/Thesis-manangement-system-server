@@ -9,12 +9,12 @@ import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/r
 import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-detail.response";
 import { LecturerInfosQueryResponse } from "../../contracts/responses/api/lecturer-infos-query.response";
 import { 
-    BachelorThesisAssessmentDto, 
-    BachelorThesisEvaluationDto, 
-    BachelorThesisRegistrationDto,
+    BachelorThesisAssessmentInfoDto, 
+    BachelorThesisEvaluationInfoDto, 
+    BachelorThesisRegistrationInfoDto,
     LecturerInfoDto, 
-    OralDefenseAssessmentDto, 
-    OralDefenseRegistrationDto
+    OralDefenseAssessmentInfoDto, 
+    OralDefenseRegistrationInfoDto
 } from "../../shared/dtos";
 
 export interface AdminLecturerServiceInterface {
@@ -26,19 +26,19 @@ export interface AdminLecturerServiceInterface {
         : Promise<LecturerDetailResponse>;
 
     getLecturerBachelorThesisRegistrations(lecturerId: string, btrQueryRequest: BachelorThesisRegistrationsQueryRequest)
-        : Promise<BachelorThesisRegistrationDto[]>;
+        : Promise<BachelorThesisRegistrationInfoDto[]>;
 
     getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest: BachelorThesisAssessmentsQueryRequest)
-        : Promise<BachelorThesisAssessmentDto[]>;
+        : Promise<BachelorThesisAssessmentInfoDto[]>;
 
     getLecturerBachelorThesisEvaluations(lecturerId: string, bteQueryRequest: BachelorThesisEvaluationsQueryRequest)
-        : Promise<BachelorThesisEvaluationDto[]>
+        : Promise<BachelorThesisEvaluationInfoDto[]>
 
     getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest: OralDefenseRegistrationsQueryRequest)
-        : Promise<OralDefenseRegistrationDto[]>;
+        : Promise<OralDefenseRegistrationInfoDto[]>;
 
     getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentDto[]>;
+        : Promise<OralDefenseAssessmentInfoDto[]>;
 
     updateLecturerInfo(lecturerId: string, updateRequest: LecturerInfoUpdateRequest): Promise<LecturerInfoDto>;
 }

@@ -30,6 +30,11 @@ export class OralDefenseRegistrationDto {
     @Expose()
     @IsOptional()
     @IsString()
+    studentSignature!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     thesisTitle!: string | null;
 
     @Expose()
@@ -45,12 +50,22 @@ export class OralDefenseRegistrationDto {
     @Expose()
     @IsOptional()
     @IsString()
+    supervisor1Signature!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     supervisor2Id!: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
     supervisor2Title!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    supervisor2Signature!: string | null;
 
     @Expose()
     @IsOptional()

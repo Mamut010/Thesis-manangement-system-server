@@ -1,22 +1,22 @@
 /**
- * Basic DTOs: mapped directly from DB
+ * Data Access Object DTOs: mapped directly from DB
  */
-export * from './basic/user.dto';
-export * from './basic/refresh-token.dto';
-export * from './basic/notification.dto';
-export * from './basic/admin.dto';
-export * from './basic/student.dto';
-export * from './basic/lecturer.dto';
-export * from './basic/role.dto';
-export * from './basic/thesis.dto';
-export * from './basic/field.dto';
-export * from './basic/topic.dto';
-export * from './basic/location.dto';
-export * from './basic/bachelor-thesis-registration.dto';
-export * from './basic/bachelor-thesis-assessment.dto';
-export * from './basic/bachelor-thesis-evaluation.dto';
-export * from './basic/oral-defense-registration.dto';
-export * from './basic/oral-defense-assessment.dto';
+export * from './dao/user.dto';
+export * from './dao/refresh-token.dto';
+export * from './dao/notification.dto';
+export * from './dao/admin.dto';
+export * from './dao/student.dto';
+export * from './dao/lecturer.dto';
+export * from './dao/role.dto';
+export * from './dao/thesis.dto';
+export * from './dao/field.dto';
+export * from './dao/topic.dto';
+export * from './dao/location.dto';
+export * from './dao/bachelor-thesis-registration.dto';
+export * from './dao/bachelor-thesis-assessment.dto';
+export * from './dao/bachelor-thesis-evaluation.dto';
+export * from './dao/oral-defense-registration.dto';
+export * from './dao/oral-defense-assessment.dto';
 
 /**
  * Other DTOs
@@ -32,3 +32,8 @@ export * from './auth/user-info.dto';
 export * from './api/admin-info.dto';
 export * from './api/lecturer-info.dto';
 export * from './api/student-info.dto';
+export * from './api/bachelor-thesis-registration-info.dto';
+export * from './api/bachelor-thesis-assessment-info.dto';
+export * from './api/bachelor-thesis-evaluation.dto';
+export * from './api/oral-defense-registration-info.dto';
+export * from './api/oral-defense-assessment-info.dto';

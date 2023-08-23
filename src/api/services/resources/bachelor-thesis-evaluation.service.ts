@@ -1,8 +1,7 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { BachelorThesisEvaluationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
-import { BachelorThesisEvaluationsQueryResponse } from "../../../contracts/responses/resources/bachelor-thesis-evaluations-query.response";
-import { BachelorThesisEvaluationDto } from "../../../shared/dtos";
+import { BachelorThesisEvaluationDto, BachelorThesisEvaluationInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { BachelorThesisEvaluationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-create.request";
@@ -11,6 +10,8 @@ import { BachelorThesisEvaluationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { BachelorThesisEvaluationRepoInterface } from "../../../dal/interfaces";
+import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-evaluation-infos-query.response";
+import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 
 @injectable()
 export class BachelorThesisEvaluationService implements BachelorThesisEvaluationServiceInterface {
@@ -20,26 +21,32 @@ export class BachelorThesisEvaluationService implements BachelorThesisEvaluation
     }
 
     async getBachelorThesisEvaluations(user: AuthorizedUser, queryRequest: BachelorThesisEvaluationsQueryRequest)
-        : Promise<BachelorThesisEvaluationsQueryResponse> {
-        return await this.bteRepo.query(queryRequest);
+        : Promise<BachelorThesisEvaluationInfosQueryResponse> {
+        const result = await this.bteRepo.query(queryRequest);
+        return {
+            content: result.content.map(item => plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, item)),
+            count: result.count
+        }
     }
 
-    async getBachelorThesisEvaluation(user: AuthorizedUser, id: number): Promise<BachelorThesisEvaluationDto> {
-        return await this.ensureRecordExists(id);
+    async getBachelorThesisEvaluation(user: AuthorizedUser, id: number): Promise<BachelorThesisEvaluationInfoDto> {
+        const result = await this.ensureRecordExists(id);
+        return plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, result);
     }
 
     async createBachelorThesisEvaluation(user: AuthorizedUser, createRequest: BachelorThesisEvaluationCreateRequest)
-        : Promise<BachelorThesisEvaluationDto> {
-        return await this.bteRepo.create(createRequest);
+        : Promise<BachelorThesisEvaluationInfoDto> {
+        const result = await this.bteRepo.create(createRequest);
+        return plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, result);
     }
 
     async updateBachelorThesisEvaluation(user: AuthorizedUser, id: number, 
-        updateRequest: BachelorThesisEvaluationUpdateRequest) : Promise<BachelorThesisEvaluationDto> {
+        updateRequest: BachelorThesisEvaluationUpdateRequest) : Promise<BachelorThesisEvaluationInfoDto> {
         const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
         const result = await this.bteRepo.update(id, updateRequest);
-        return result!;
+        return plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, result);
     }
 
     async deleteBachelorThesisEvaluation(user: AuthorizedUser, id: number): Promise<void> {

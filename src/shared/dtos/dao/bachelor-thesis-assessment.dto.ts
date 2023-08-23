@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
-import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class OralDefenseAssessmentDto {
+export class BachelorThesisAssessmentDto {
     @Expose()
     @IsDefined()
     @IsNumber()
@@ -30,32 +30,17 @@ export class OralDefenseAssessmentDto {
     @Expose()
     @IsOptional()
     @IsString()
-    thesisTitle!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    dateDefense!: Date | null;
+    studentSignature!: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    placeDefense!: string | null;
+    thesisTitle!: string | null;
 
     @Expose()
     @IsOptional()
-    @IsDate()
-    startDate!: Date | null;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    finishDate!: Date | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    stateOfHealth!: boolean | null;
+    @IsString()
+    furtherParticipants!: string | null;
 
     @Expose()
     @IsOptional()
@@ -75,6 +60,11 @@ export class OralDefenseAssessmentDto {
     @Expose()
     @IsOptional()
     @IsString()
+    supervisor1Signature!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     supervisor2Id!: string | null;
 
     @Expose()
@@ -89,13 +79,18 @@ export class OralDefenseAssessmentDto {
 
     @Expose()
     @IsOptional()
+    @IsString()
+    supervisor2Signature!: string | null;
+
+    @Expose()
+    @IsOptional()
     @IsNumber()
     overallGrade!: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    record!: string | null;
+    assessmentDescription!: string | null;
 
     @Expose()
     @IsOptional()

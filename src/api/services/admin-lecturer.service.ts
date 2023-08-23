@@ -2,12 +2,12 @@ import { inject, injectable } from "inversify";
 import { AdminLecturerServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { 
-    BachelorThesisAssessmentDto, 
-    BachelorThesisEvaluationDto, 
-    BachelorThesisRegistrationDto,
+    BachelorThesisAssessmentInfoDto, 
+    BachelorThesisEvaluationInfoDto, 
+    BachelorThesisRegistrationInfoDto,
     LecturerInfoDto, 
-    OralDefenseAssessmentDto, 
-    OralDefenseRegistrationDto
+    OralDefenseAssessmentInfoDto, 
+    OralDefenseRegistrationInfoDto
 } from "../../shared/dtos";
 import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 import { 
@@ -88,33 +88,39 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
     }
 
     async getLecturerBachelorThesisRegistrations(lecturerId: string, btrQueryRequest: BachelorThesisRegistrationsQueryRequest)
-        : Promise<BachelorThesisRegistrationDto[]> {
-        return await this.btrRepo.queryLecturerAssets(lecturerId, btrQueryRequest);
+        : Promise<BachelorThesisRegistrationInfoDto[]> {
+        const result = await this.btrRepo.queryLecturerAssets(lecturerId, btrQueryRequest);
+        return result.map(item => plainToInstanceExactMatch(BachelorThesisRegistrationInfoDto, item));
     }
 
     async getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest: BachelorThesisAssessmentsQueryRequest)
-        : Promise<BachelorThesisAssessmentDto[]> {
-        return await this.btaRepo.queryLecturerAssets(lecturerId, btaQueryRequest);
+        : Promise<BachelorThesisAssessmentInfoDto[]> {
+        const result = await this.btaRepo.queryLecturerAssets(lecturerId, btaQueryRequest);
+        return result.map(item => plainToInstanceExactMatch(BachelorThesisAssessmentInfoDto, item));
     }
 
     async getLecturerBachelorThesisEvaluations(lecturerId: string, bteQueryRequest: BachelorThesisEvaluationsQueryRequest)
-        : Promise<BachelorThesisEvaluationDto[]> {
+        : Promise<BachelorThesisEvaluationInfoDto[]> {
         const queryRequest = new BachelorThesisEvaluationsQueryRequest();
         const supervisorIdFilter = new StringFilter();
         supervisorIdFilter.value = lecturerId;
         supervisorIdFilter.operator = 'equals';
         queryRequest.supervisorIdFilter = makeArray(supervisorIdFilter);
-        return (await this.bteRepo.query(queryRequest)).content;
+
+        const result = (await this.bteRepo.query(queryRequest)).content;
+        return result.map(item => plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, item));
     }
 
     async getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest: OralDefenseRegistrationsQueryRequest)
-        : Promise<OralDefenseRegistrationDto[]> {
-        return await this.odrRepo.queryLecturerAssets(lecturerId, odrQueryRequest);
+        : Promise<OralDefenseRegistrationInfoDto[]> {
+        const result = await this.odrRepo.queryLecturerAssets(lecturerId, odrQueryRequest);
+        return result.map(item => plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, item));
     }
 
     async getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentDto[]> {
-        return await this.odaRepo.queryLecturerAssets(lecturerId, odaQueryRequest);
+        : Promise<OralDefenseAssessmentInfoDto[]> {
+        const result = await this.odaRepo.queryLecturerAssets(lecturerId, odaQueryRequest);
+        return result.map(item => plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, item));
     }
 
     async updateLecturerInfo(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {

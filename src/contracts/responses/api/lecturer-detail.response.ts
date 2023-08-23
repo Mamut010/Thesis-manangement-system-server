@@ -1,12 +1,12 @@
 import { Expose, Type } from "class-transformer";
 import { IsArray, IsDefined, ValidateNested } from "class-validator";
 import {
-    BachelorThesisAssessmentDto,
-    BachelorThesisEvaluationDto,
-    BachelorThesisRegistrationDto,
+    BachelorThesisAssessmentInfoDto,
+    BachelorThesisEvaluationInfoDto,
+    BachelorThesisRegistrationInfoDto,
     LecturerInfoDto,
-    OralDefenseAssessmentDto,
-    OralDefenseRegistrationDto
+    OralDefenseAssessmentInfoDto,
+    OralDefenseRegistrationInfoDto
 } from "../../../shared/dtos";
 
 export class LecturerDetailResponse {
@@ -20,34 +20,34 @@ export class LecturerDetailResponse {
     @IsArray()
     @IsDefined()
     @ValidateNested({ each: true })
-    @Type(() => BachelorThesisRegistrationDto)
-    bachelorThesisRegistrations!: BachelorThesisRegistrationDto[];
+    @Type(() => BachelorThesisRegistrationInfoDto)
+    bachelorThesisRegistrations!: BachelorThesisRegistrationInfoDto[];
 
     @Expose()
     @IsArray()
     @IsDefined()
     @ValidateNested({ each: true })
-    @Type(() => BachelorThesisAssessmentDto)
-    bachelorThesisAssessments!: BachelorThesisAssessmentDto[];
+    @Type(() => BachelorThesisAssessmentInfoDto)
+    bachelorThesisAssessments!: BachelorThesisAssessmentInfoDto[];
 
     @Expose()
     @IsArray()
     @IsDefined()
     @ValidateNested({ each: true })
-    @Type(() => BachelorThesisEvaluationDto)
-    bachelorThesisEvaluations!: BachelorThesisEvaluationDto[];
+    @Type(() => BachelorThesisEvaluationInfoDto)
+    bachelorThesisEvaluations!: BachelorThesisEvaluationInfoDto[];
 
     @Expose()
     @IsArray()
     @IsDefined()
     @ValidateNested({ each: true })
-    @Type(() => OralDefenseRegistrationDto)
-    oralDefenseRegistrations!: OralDefenseRegistrationDto[];
+    @Type(() => OralDefenseRegistrationInfoDto)
+    oralDefenseRegistrations!: OralDefenseRegistrationInfoDto[];
 
     @Expose()
     @IsArray()
     @IsDefined()
     @ValidateNested({ each: true })
-    @Type(() => OralDefenseAssessmentDto)
-    oralDefenseAssessments!: OralDefenseAssessmentDto[];
+    @Type(() => OralDefenseAssessmentInfoDto)
+    oralDefenseAssessments!: OralDefenseAssessmentInfoDto[];
 }

@@ -1,21 +1,21 @@
 import { BachelorThesisEvaluationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-create.request";
 import { BachelorThesisEvaluationUpdateRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluation-update.request";
 import { BachelorThesisEvaluationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
-import { BachelorThesisEvaluationsQueryResponse } from "../../../contracts/responses/resources/bachelor-thesis-evaluations-query.response";
+import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-evaluation-infos-query.response";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { BachelorThesisEvaluationDto } from "../../../shared/dtos";
+import { BachelorThesisEvaluationInfoDto } from "../../../shared/dtos";
 
 export interface BachelorThesisEvaluationServiceInterface {
     getBachelorThesisEvaluations(user: AuthorizedUser, queryRequest: BachelorThesisEvaluationsQueryRequest)
-        : Promise<BachelorThesisEvaluationsQueryResponse>;
+        : Promise<BachelorThesisEvaluationInfosQueryResponse>;
 
-    getBachelorThesisEvaluation(user: AuthorizedUser, id: number): Promise<BachelorThesisEvaluationDto>;
+    getBachelorThesisEvaluation(user: AuthorizedUser, id: number): Promise<BachelorThesisEvaluationInfoDto>;
 
     createBachelorThesisEvaluation(user: AuthorizedUser, createRequest: BachelorThesisEvaluationCreateRequest)
-        : Promise<BachelorThesisEvaluationDto>;
+        : Promise<BachelorThesisEvaluationInfoDto>;
 
     updateBachelorThesisEvaluation(user: AuthorizedUser, id: number, updateRequest: BachelorThesisEvaluationUpdateRequest)
-        : Promise<BachelorThesisEvaluationDto>;
+        : Promise<BachelorThesisEvaluationInfoDto>;
         
     deleteBachelorThesisEvaluation(user: AuthorizedUser, id: number): Promise<void>;
 }

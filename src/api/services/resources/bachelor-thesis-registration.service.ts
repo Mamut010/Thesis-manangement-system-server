@@ -1,8 +1,7 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { BachelorThesisRegistrationsQueryRequest } from "../../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
-import { BachelorThesisRegistrationsQueryResponse } from "../../../contracts/responses/resources/bachelor-thesis-registrations-query.response";
-import { BachelorThesisRegistrationDto } from "../../../shared/dtos";
+import { BachelorThesisRegistrationDto, BachelorThesisRegistrationInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { BachelorThesisRegistrationCreateRequest } from "../../../contracts/requests/resources/bachelor-thesis-registration-create.request";
@@ -11,6 +10,8 @@ import { BachelorThesisRegistrationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { BachelorThesisRegistrationRepoInterface } from "../../../dal/interfaces";
+import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses/api/bachelor-thesis-registration-infos-query.response";
+import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 
 @injectable()
 export class BachelorThesisRegistrationService implements BachelorThesisRegistrationServiceInterface {
@@ -20,26 +21,32 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
     }
 
     async getBachelorThesisRegistrations(user: AuthorizedUser, queryRequest: BachelorThesisRegistrationsQueryRequest)
-        : Promise<BachelorThesisRegistrationsQueryResponse> {
-        return await this.btrRepo.query(queryRequest);
+        : Promise<BachelorThesisRegistrationInfosQueryResponse> {
+        const result = await this.btrRepo.query(queryRequest);
+        return {
+            content: result.content.map(item => plainToInstanceExactMatch(BachelorThesisRegistrationInfoDto, item)),
+            count: result.count
+        }
     }
 
-    async getBachelorThesisRegistration(user: AuthorizedUser, id: number): Promise<BachelorThesisRegistrationDto> {
-        return await this.ensureRecordExists(id);
+    async getBachelorThesisRegistration(user: AuthorizedUser, id: number): Promise<BachelorThesisRegistrationInfoDto> {
+        const result = await this.ensureRecordExists(id);
+        return plainToInstanceExactMatch(BachelorThesisRegistrationInfoDto, result);
     }
 
     async createBachelorThesisRegistration(user: AuthorizedUser, createRequest: BachelorThesisRegistrationCreateRequest)
-        : Promise<BachelorThesisRegistrationDto> {
-        return await this.btrRepo.create(createRequest);
+        : Promise<BachelorThesisRegistrationInfoDto> {
+        const result = await this.btrRepo.create(createRequest);
+        return plainToInstanceExactMatch(BachelorThesisRegistrationInfoDto, result);
     }
 
     async updateBachelorThesisRegistration(user: AuthorizedUser, id: number, 
-        updateRequest: BachelorThesisRegistrationUpdateRequest): Promise<BachelorThesisRegistrationDto> {
+        updateRequest: BachelorThesisRegistrationUpdateRequest): Promise<BachelorThesisRegistrationInfoDto> {
         const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
         const result = await this.btrRepo.update(id, updateRequest);
-        return result!;
+        return plainToInstanceExactMatch(BachelorThesisRegistrationInfoDto, result);
     }
 
     async deleteBachelorThesisRegistration(user: AuthorizedUser, id: number): Promise<void> {

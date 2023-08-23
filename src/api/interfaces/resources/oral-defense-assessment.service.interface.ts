@@ -1,21 +1,21 @@
 import { OralDefenseAssessmentCreateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-create.request";
 import { OralDefenseAssessmentUpdateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-update.request";
 import { OralDefenseAssessmentsQueryRequest } from "../../../contracts/requests/resources/oral-defense-assessments-query.request";
-import { OralDefenseAssessmentsQueryResponse } from "../../../contracts/responses/resources/oral-defense-assessments-query.response";
+import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses/api/oral-defense-assessment-infos-query.response";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { OralDefenseAssessmentDto } from "../../../shared/dtos";
+import { OralDefenseAssessmentInfoDto } from "../../../shared/dtos";
 
 export interface OralDefenseAssessmentServiceInterface {
     getOralDefenseAssessments(user: AuthorizedUser, queryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentsQueryResponse>;
+        : Promise<OralDefenseAssessmentInfosQueryResponse>;
 
-    getOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<OralDefenseAssessmentDto>;
+    getOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<OralDefenseAssessmentInfoDto>;
 
     createOralDefenseAssessment(user: AuthorizedUser, createRequest: OralDefenseAssessmentCreateRequest)
-        : Promise<OralDefenseAssessmentDto>;
+        : Promise<OralDefenseAssessmentInfoDto>;
 
     updateOralDefenseAssessment(user: AuthorizedUser, id: number, updateRequest: OralDefenseAssessmentUpdateRequest)
-        : Promise<OralDefenseAssessmentDto>;
+        : Promise<OralDefenseAssessmentInfoDto>;
         
     deleteOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<void>;
 }

@@ -2,11 +2,11 @@ import { Expose, Type } from "class-transformer";
 import { IsDefined, IsOptional, ValidateNested } from "class-validator";
 import { 
     StudentInfoDto,
-    BachelorThesisAssessmentDto,
-    BachelorThesisRegistrationDto,
-    OralDefenseAssessmentDto,
-    OralDefenseRegistrationDto,
-    BachelorThesisEvaluationDto
+    BachelorThesisAssessmentInfoDto,
+    BachelorThesisRegistrationInfoDto,
+    OralDefenseAssessmentInfoDto,
+    OralDefenseRegistrationInfoDto,
+    BachelorThesisEvaluationInfoDto
 } from "../../../shared/dtos";
 
 export class StudentDetailResponse {
@@ -19,30 +19,30 @@ export class StudentDetailResponse {
     @Expose()
     @IsOptional()
     @ValidateNested()
-    @Type(() => BachelorThesisRegistrationDto)
-    bachelorThesisRegistration!: BachelorThesisRegistrationDto | null;
+    @Type(() => BachelorThesisRegistrationInfoDto)
+    bachelorThesisRegistration!: BachelorThesisRegistrationInfoDto | null;
 
     @Expose()
     @IsOptional()
     @ValidateNested()
-    @Type(() => BachelorThesisAssessmentDto)
-    bachelorThesisAssessment!: BachelorThesisAssessmentDto | null;
+    @Type(() => BachelorThesisAssessmentInfoDto)
+    bachelorThesisAssessment!: BachelorThesisAssessmentInfoDto | null;
 
     @Expose()
     @IsOptional()
     @ValidateNested()
-    @Type(() => BachelorThesisEvaluationDto)
-    bachelorThesisEvaluation!: BachelorThesisEvaluationDto | null;
+    @Type(() => BachelorThesisEvaluationInfoDto)
+    bachelorThesisEvaluation!: BachelorThesisEvaluationInfoDto | null;
 
     @Expose()
     @IsOptional()
     @ValidateNested()
-    @Type(() => OralDefenseRegistrationDto)
-    oralDefenseRegistration!: OralDefenseRegistrationDto | null;
+    @Type(() => OralDefenseRegistrationInfoDto)
+    oralDefenseRegistration!: OralDefenseRegistrationInfoDto | null;
 
     @Expose()
     @IsOptional()
     @ValidateNested()
-    @Type(() => OralDefenseAssessmentDto)
-    oralDefenseAssessment!: OralDefenseAssessmentDto | null;
+    @Type(() => OralDefenseAssessmentInfoDto)
+    oralDefenseAssessment!: OralDefenseAssessmentInfoDto | null;
 }

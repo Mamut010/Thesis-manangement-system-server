@@ -18,6 +18,11 @@ import { getLecturerAssetsQuery } from "../utils/lecturer-assets-helpers";
 
 @injectable()
 export class BachelorThesisRegistrationRepo implements BachelorThesisRegistrationRepoInterface {
+    private static readonly include = {
+        ...bachelorThesisAndOralDefenseInclude,
+        admin: true
+    }
+
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.PlainTransformer) private plainTransformer: PlainTransformerInterface,
@@ -32,7 +37,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
         const count = await this.prisma.bachelorThesisRegistration.count({ where: prismaQuery.where });
         const records = await this.prisma.bachelorThesisRegistration.findMany({
             ...prismaQuery,
-            include:  bachelorThesisAndOralDefenseInclude,
+            include: BachelorThesisRegistrationRepo.include,
         });
 
         const response = new BachelorThesisRegistrationsQueryResponse();
@@ -53,7 +58,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
         const impl = async () => {
             const record = await this.prisma.bachelorThesisRegistration.create({
                 data: createRequest,
-                include:  bachelorThesisAndOralDefenseInclude
+                include: BachelorThesisRegistrationRepo.include,
             });
             return this.plainTransformer.toBachelorThesisRegistration(record);
         }
@@ -75,7 +80,10 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
                         id: id
                     },
                     data: updateRequest,
-                    include:  bachelorThesisAndOralDefenseInclude
+                    include: {
+                        ...bachelorThesisAndOralDefenseInclude,
+                        admin: true
+                    }
                 });
             }
     
@@ -97,7 +105,11 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
     async queryLecturerAssets(lecturerId: string, queryRequest: BachelorThesisRegistrationsQueryRequest)
         : Promise<BachelorThesisRegistrationDto[]> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
-        const records = await this.prisma.bachelorThesisRegistration.findMany(getLecturerAssetsQuery(lecturerId, prismaQuery));
+        const assetsQuery = getLecturerAssetsQuery(lecturerId, prismaQuery);
+        const records = await this.prisma.bachelorThesisRegistration.findMany({
+            ...assetsQuery,
+            include: BachelorThesisRegistrationRepo.include,
+        });
         return records.map(item => this.plainTransformer.toBachelorThesisRegistration(item));
     }
     
@@ -106,7 +118,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
             where: {
                 id: id
             },
-            include:  bachelorThesisAndOralDefenseInclude
+            include:  BachelorThesisRegistrationRepo.include,
         });
     }
 

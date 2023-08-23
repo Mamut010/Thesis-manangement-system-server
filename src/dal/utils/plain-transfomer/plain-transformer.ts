@@ -113,22 +113,27 @@ export class PlainTransformer implements PlainTransformerInterface {
 
     public toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisRegistrationDto, plain);
+        dto.studentSignature = plain.student.signature;
+        dto.adminSignature = plain.admin?.signature ?? null;
         return dto;
     }
 
     public toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseRegistrationDto, plain);
+        dto.studentSignature = plain.student.signature;
         return dto;
     }
 
     public toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisAssessmentDto, plain);
+        dto.studentSignature = plain.student.signature;
         dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
         return dto;
     }
 
     public toOralDefenseAssessment(plain: PlainOralDefenseAssessment): OralDefenseAssessmentDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseAssessmentDto, plain);
+        dto.studentSignature = plain.student.signature;
         dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
         return dto;
     }

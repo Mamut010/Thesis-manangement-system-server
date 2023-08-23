@@ -62,7 +62,9 @@ export type PlainStudentWithThesis = {
     thesis: Thesis,
 }
 
-export type PlainBachelorThesisRegistration = BachelorThesisRegistration & PlainStudentWithThesis & Supervisors;
+export type PlainBachelorThesisRegistration = BachelorThesisRegistration & PlainStudentWithThesis & Supervisors & {
+    admin: Admin | null
+};
 
 export type PlainOralDefenseRegistration = OralDefenseRegistration & PlainStudentWithThesis & Supervisors;
 

@@ -50,6 +50,7 @@ import {
     OralDefenseRegistrationServiceInterface 
 } from "../interfaces";
 import { IO_NAMESPACES } from "../../ws/constants/io-namespaces";
+import { BachelorThesisAssessmentRepoInterface, BachelorThesisEvaluationRepoInterface, OralDefenseAssessmentRepoInterface, OralDefenseRegistrationRepoInterface } from "../../dal/interfaces";
 
 @JsonController('test')
 //@Authorized(ROLES.Admin)
@@ -186,18 +187,15 @@ export class TestController {
                     id: 1 
                 },
                 include: {
-                    student: {
-                        include: {
-                            user: true
-                        }
-                    },
+                    student: true,
                     supervisor1: true,
                     supervisor2: true,
                     thesis: {
                         include: {
                             field: true
                         }
-                    }
+                    },
+                    admin: true
                 } 
             }
         );
@@ -207,21 +205,21 @@ export class TestController {
         const pdfBuffer1 = await this.pdfFormGenerator.generateBachelorThesisRegistration(dto1);
         
         ////////////
-        const bachelorThesisAssessmentService = this.container.get(INJECTION_TOKENS.BachelorThesisAssessmentService) as 
-            BachelorThesisAssessmentServiceInterface;
-        const dto2 = await bachelorThesisAssessmentService.getBachelorThesisAssessment(user, 1);
+        const btaRepo = this.container.get(INJECTION_TOKENS.BachelorThesisAssessmentRepo) as 
+            BachelorThesisAssessmentRepoInterface;
+        const dto2 = (await btaRepo.findOneById(1))!;
         dto2.assessmentDate = new Date();
         dto2.assessmentDescription = 'Lorem ipsum '.repeat(40);
         const pdfBuffer2 = await this.pdfFormGenerator.generateBachelorThesisAssessment(dto2);
         ////////////
-        const bachelorThesisEvaluationService = this.container.get(INJECTION_TOKENS.BachelorThesisEvaluationService) as 
-            BachelorThesisEvaluationServiceInterface;
-        const dto3 = await bachelorThesisEvaluationService.getBachelorThesisEvaluation(user, 1);
+        const bteRepo = this.container.get(INJECTION_TOKENS.BachelorThesisEvaluationRepo) as 
+            BachelorThesisEvaluationRepoInterface;
+        const dto3 = (await bteRepo.findOneById(1))!;
         const pdfBuffer3 = await this.pdfFormGenerator.generateBachelorThesisEvaluation(dto3);
         ////////////
-        const oralDefenseRegistrationService = this.container.get(INJECTION_TOKENS.OralDefenseRegistrationService) as 
-            OralDefenseRegistrationServiceInterface
-        const dto4 = await oralDefenseRegistrationService.getOralDefenseRegistration(user, 1);
+        const odrRepo = this.container.get(INJECTION_TOKENS.OralDefenseRegistrationRepo) as 
+            OralDefenseRegistrationRepoInterface;
+        const dto4 = (await odrRepo.findOneById(1))!;
         dto4.proposedDate = new Date();
         const admissionDate = new Date();
         const dateReceived = new Date();
@@ -231,9 +229,9 @@ export class TestController {
         dto4.admissionDate = admissionDate;
         const pdfBuffer4 = await this.pdfFormGenerator.generateOralDefenseRegistration(dto4);
         ////////////
-        const oralDefenseAssessmentService = this.container.get(INJECTION_TOKENS.OralDefenseAssessmentService) as 
-            OralDefenseAssessmentServiceInterface;
-        const dto5 = await oralDefenseAssessmentService.getOralDefenseAssessment(user, 1);
+        const odaRepo = this.container.get(INJECTION_TOKENS.OralDefenseAssessmentRepo) as 
+            OralDefenseAssessmentRepoInterface;
+        const dto5 = (await odaRepo.findOneById(1))!;
         dto5.placeDefense = 'ABC Building';
         dto5.supervisor1Grade = 2.3;
         dto5.supervisor2Grade = 3;

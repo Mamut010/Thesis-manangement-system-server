@@ -1,8 +1,7 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { OralDefenseRegistrationsQueryRequest } from "../../../contracts/requests/resources/oral-defense-registrations-query.request";
-import { OralDefenseRegistrationsQueryResponse } from "../../../contracts/responses/resources/oral-defense-registrations-query.response";
-import { OralDefenseRegistrationDto } from "../../../shared/dtos";
+import { OralDefenseRegistrationDto, OralDefenseRegistrationInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { OralDefenseRegistrationCreateRequest } from "../../../contracts/requests/resources/oral-defense-registration-create.request";
@@ -11,6 +10,8 @@ import { OralDefenseRegistrationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { OralDefenseRegistrationRepoInterface } from "../../../dal/interfaces";
+import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
+import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses/api/oral-defense-registration-infos-query.response";
 
 @injectable()
 export class OralDefenseRegistrationService implements OralDefenseRegistrationServiceInterface {
@@ -20,26 +21,32 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
     }
 
     async getOralDefenseRegistrations(user: AuthorizedUser, queryRequest: OralDefenseRegistrationsQueryRequest)
-        : Promise<OralDefenseRegistrationsQueryResponse> {
-        return await this.odrRepo.query(queryRequest);
+        : Promise<OralDefenseRegistrationInfosQueryResponse> {
+        const result = await this.odrRepo.query(queryRequest);
+        return {
+            content: result.content.map(item => plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, item)),
+            count: result.count
+        }
     }
 
-    async getOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<OralDefenseRegistrationDto> {
-        return await this.ensureRecordExists(id);
+    async getOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<OralDefenseRegistrationInfoDto> {
+        const result = await this.ensureRecordExists(id);
+        return plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, result);
     }
 
     async createOralDefenseRegistration(user: AuthorizedUser, createRequest: OralDefenseRegistrationCreateRequest)
-        : Promise<OralDefenseRegistrationDto> {
-        return await this.odrRepo.create(createRequest);
+        : Promise<OralDefenseRegistrationInfoDto> {
+        const result = this.odrRepo.create(createRequest);
+        return plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, result);
     }
 
     async updateOralDefenseRegistration(user: AuthorizedUser, id: number, 
-        updateRequest: OralDefenseRegistrationUpdateRequest) : Promise<OralDefenseRegistrationDto> {
+        updateRequest: OralDefenseRegistrationUpdateRequest) : Promise<OralDefenseRegistrationInfoDto> {
         const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
         const result = await this.odrRepo.update(id, updateRequest);
-        return result!;
+        return plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, result);
     }
 
     async deleteOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<void> {

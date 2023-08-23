@@ -1,8 +1,7 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { OralDefenseAssessmentsQueryRequest } from "../../../contracts/requests/resources/oral-defense-assessments-query.request";
-import { OralDefenseAssessmentsQueryResponse } from "../../../contracts/responses/resources/oral-defense-assessments-query.response";
-import { OralDefenseAssessmentDto } from "../../../shared/dtos";
+import { OralDefenseAssessmentDto, OralDefenseAssessmentInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { OralDefenseAssessmentCreateRequest } from "../../../contracts/requests/resources/oral-defense-assessment-create.request";
@@ -11,6 +10,8 @@ import { OralDefenseAssessmentServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { OralDefenseAssessmentRepoInterface } from "../../../dal/interfaces";
+import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses/api/oral-defense-assessment-infos-query.response";
+import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 
 @injectable()
 export class OralDefenseAssessmentService implements OralDefenseAssessmentServiceInterface {
@@ -20,26 +21,32 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
     }
 
     async getOralDefenseAssessments(user: AuthorizedUser, queryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentsQueryResponse> {
-        return await this.odaRepo.query(queryRequest);
+        : Promise<OralDefenseAssessmentInfosQueryResponse> {
+        const result = await this.odaRepo.query(queryRequest);
+        return {
+            content: result.content.map(item => plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, item)),
+            count: result.count
+        }
     }
 
-    async getOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<OralDefenseAssessmentDto> {
-        return await this.ensureRecordExists(id);
+    async getOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<OralDefenseAssessmentInfoDto> {
+        const result = await this.ensureRecordExists(id);
+        return plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, result);
     }
 
     async createOralDefenseAssessment(user: AuthorizedUser, createRequest: OralDefenseAssessmentCreateRequest)
-        : Promise<OralDefenseAssessmentDto> {
-        return await this.odaRepo.create(createRequest);
+        : Promise<OralDefenseAssessmentInfoDto> {
+        const result = await this.odaRepo.create(createRequest);
+        return plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, result);
     }
 
     async updateOralDefenseAssessment(user: AuthorizedUser, id: number, 
-        updateRequest: OralDefenseAssessmentUpdateRequest) : Promise<OralDefenseAssessmentDto> {
+        updateRequest: OralDefenseAssessmentUpdateRequest) : Promise<OralDefenseAssessmentInfoDto> {
         const record = await this.ensureRecordExists(id);
         this.ensureValidModification(user, record);
 
         const result = await this.odaRepo.update(id, updateRequest);
-        return result!;
+        return plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, result);
     }
 
     async deleteOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<void> {
