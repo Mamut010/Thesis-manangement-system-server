@@ -112,8 +112,8 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
 
     private createPrismaQuery(queryRequest: AutoQueryCreatable) {
         const fieldMap = {
-            surname: 'student.user.surname',
-            forename: 'student.user.forename',
+            surname: 'student.surname',
+            forename: 'student.forename',
             thesisTitle: 'thesis.title',
             supervisor1Title: 'supervisor1.title',
             supervisor2Title: 'supervisor2.title',

@@ -104,8 +104,8 @@ export class BachelorThesisEvaluationRepo implements BachelorThesisEvaluationRep
 
     private createPrismaQuery(queryRequest: AutoQueryCreatable) {
         const fieldMap = {
-            surname: 'student.user.surname',
-            forename: 'student.user.forename',
+            surname: 'student.surname',
+            forename: 'student.forename',
             thesisTitle: 'thesis.title',
             supervisorTitle: 'supervisor.title',
         };

@@ -58,7 +58,7 @@ export type Supervisors = {
 };
 
 export type PlainStudentWithThesis = {
-    student: PlainStudent,
+    student: Student,
     thesis: Thesis,
 }
 

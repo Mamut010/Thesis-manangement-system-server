@@ -34,13 +34,8 @@ export class User {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    surname!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    forename!: string | null;
+    @IsDate()
+    lastActivityDate!: Date | null;
 
     @Expose()
     @IsDefined()

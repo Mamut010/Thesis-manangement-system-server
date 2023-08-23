@@ -1,5 +1,5 @@
-import { UserCreateRequest } from "../../contracts/requests/user-create-request.dto";
-import { UserUpdateRequest } from "../../contracts/requests/user-update-request.dto";
+import { UserCreateRequest } from "../../contracts/requests/user-create.request";
+import { UserUpdateRequest } from "../../contracts/requests/user-update.request";
 import { UsersQueryRequest } from "../../contracts/requests/users-query.request";
 import { UsersQueryResponse } from "../../contracts/responses/users-query.response";
 import { UserDto } from "../../shared/dtos";

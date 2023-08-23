@@ -132,12 +132,12 @@ export class TestController {
 
         const model = {
             userId: true,
+            surname: true,
+            forename: true,
             intake: true,
             ects: true,
             user: {
                 username: true,
-                surname: true,
-                forename: true,
                 email: true,
             }
         };

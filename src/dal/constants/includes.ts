@@ -15,22 +15,14 @@ export const userWithRoleInclude = {
 } as const;
 
 export const bachelorThesisAndOralDefenseInclude = {
-    student: {
-        include: {
-            user: true
-        }
-    },
+    student: true,
     thesis: true,
     supervisor1: true,
     supervisor2: true,
 } as const;
 
 export const bachelorThesisEvaluationInclude = {
-    student: {
-        include: {
-            user: true
-        }
-    },
+    student: true,
     supervisor: true,
     thesis: true,
 } as const;

@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UserDto {
     @Expose()
@@ -34,11 +34,6 @@ export class UserDto {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    surname!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    forename!: string | null;
+    @IsDate()
+    lastActivityDate!: Date | null;
 }

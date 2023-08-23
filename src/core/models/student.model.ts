@@ -15,6 +15,16 @@ export class Student {
     @Expose()
     @IsOptional()
     @IsString()
+    surname!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    forename!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     intake!: string | null;
 
     @Expose()

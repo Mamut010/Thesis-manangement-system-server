@@ -1,4 +1,4 @@
-import { IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 import { Expose } from "class-transformer";
 
 export class UserUpdateRequest {
@@ -29,11 +29,6 @@ export class UserUpdateRequest {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    surname?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    forename?: string;
+    @IsDate()
+    lastActivityDate?: Date;
 }

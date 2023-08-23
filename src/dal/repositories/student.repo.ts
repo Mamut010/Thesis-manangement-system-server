@@ -62,10 +62,10 @@ export class StudentRepo implements StudentRepoInterface {
                     intake: updateRequest.intake,
                     ects: updateRequest.ects,
                     signature: updateRequest.signature,
+                    surname: updateRequest.surname,
+                    forename: updateRequest.forename,
                     user: {
                         update: {
-                            surname: updateRequest.surname,
-                            forename: updateRequest.forename,
                             email: updateRequest.email,
                         }
                     }

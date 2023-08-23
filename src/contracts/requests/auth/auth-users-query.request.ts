@@ -1,5 +1,10 @@
-import { IsNullableStringFilterArray, IsNumberFilterArray, IsStringFilterArray } from "../../../decorators";
-import { NullableStringFilter, NumberFilter, StringFilter } from "../../../lib/query";
+import { 
+    IsNullableDateFilterArray, 
+    IsNullableStringFilterArray, 
+    IsNumberFilterArray, 
+    IsStringFilterArray 
+} from "../../../decorators";
+import { NullableDateFilter, NullableStringFilter, NumberFilter, StringFilter } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class AuthUsersQueryRequest extends BaseQueryRequest {
@@ -18,9 +23,6 @@ export class AuthUsersQueryRequest extends BaseQueryRequest {
     @IsNullableStringFilterArray()
     emailFilter?: NullableStringFilter[];
 
-    @IsNullableStringFilterArray()
-    surnameFilter?: NullableStringFilter[];
-
-    @IsNullableStringFilterArray()
-    forenameFilter?: NullableStringFilter[];
+    @IsNullableDateFilterArray()
+    lastActivityDateFilter?: NullableDateFilter[];
 }

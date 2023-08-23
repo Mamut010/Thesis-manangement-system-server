@@ -25,7 +25,7 @@ import { StringArrayResponse } from '../../contracts/responses/general/string-ar
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { env } from '../../env';
 import { RefreshTokenRepoInterface, RoleRepoInterface, UserRepoInterface } from '../../dal/interfaces';
-import { UserCreateRequest } from '../../contracts/requests/user-create-request.dto';
+import { UserCreateRequest } from '../../contracts/requests/user-create.request';
 import { UsersQueryRequest } from '../../contracts/requests/users-query.request';
 import { StringFilter } from '../../lib/query';
 import { makeArray, singleOrDefault } from '../../utils/array-helpers';

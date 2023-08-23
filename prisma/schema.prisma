@@ -15,8 +15,7 @@ model User {
     username                String          @unique
     password                String
     email                   String?
-    surname                 String?         @db.VarChar(255)
-    forename                String?         @db.VarChar(255)
+    lastActivityDate        DateTime?       @db.Timestamp(6)
     createdAt               DateTime        @default(now()) @db.Timestamp(6)
     updatedAt               DateTime        @updatedAt @db.Timestamp(6)
 
@@ -68,6 +67,7 @@ model Admin {
     userId                        String                        @unique
     contact                       String?                       @db.VarChar(255)
     title                         String?                       @db.VarChar(255)
+    signature                     String?                       @db.VarChar(255)
 
     user                          User                          @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)                        
     bachelorThesisRegistrations   BachelorThesisRegistration[]
@@ -96,9 +96,11 @@ model Lecturer {
 model Student {
     id                            Int                             @id @default(autoincrement())
     userId                        String                          @unique
+    surname                       String?                         @db.VarChar(255)
+    forename                      String?                         @db.VarChar(255)
     intake                        String?
     ects                          Int                             @default(0)
-    signature                     String?                         @db.TinyText
+    signature                     String?                         @db.VarChar(255)
 
     user                          User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     bachelorThesisRegistration    BachelorThesisRegistration?

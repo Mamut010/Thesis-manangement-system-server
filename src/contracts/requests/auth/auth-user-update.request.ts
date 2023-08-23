@@ -26,14 +26,4 @@ export class AuthUserUpdateRequest {
     @IsOptional()
     @IsEmail()
     email?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    surname?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    forename?: string;
 }
