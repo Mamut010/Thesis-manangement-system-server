@@ -1,7 +1,12 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsEmail, IsOptional, IsString } from "class-validator";
+import { IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class AdminDto {
+    @Expose()
+    @IsDefined()
+    @IsNumber()
+    id!: number;
+
     @Expose()
     @IsDefined()
     @IsString()

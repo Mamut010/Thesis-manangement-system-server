@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import { IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
-import { RoleValues } from "../../core/constants/roles";
+import { RoleValues } from "../../../core/constants/roles";
 
 export class RoleDto {
     @Expose()

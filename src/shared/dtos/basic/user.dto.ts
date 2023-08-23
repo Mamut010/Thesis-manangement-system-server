@@ -4,6 +4,11 @@ import { IsDate, IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "clas
 export class UserDto {
     @Expose()
     @IsDefined()
+    @IsNumber()
+    id!: number;
+
+    @Expose()
+    @IsDefined()
     @IsString()
     userId!: string;
 
