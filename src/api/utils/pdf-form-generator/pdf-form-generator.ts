@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { inject, injectable } from "inversify";
 import { BachelorThesisAssessmentDto, BachelorThesisEvaluationDto, BachelorThesisRegistrationDto, OralDefenseAssessmentDto, OralDefenseRegistrationDto } from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
@@ -16,7 +14,6 @@ import {
 import { ASSETS } from "../../constants/assets";
 import { TEMPLATE_FIELDS } from "../../constants/template-fields";
 import { PdfFormGeneratorInterface } from "./pdf-form-generator.interface";
-import { PrismaClient } from "@prisma/client";
 import { TITLES } from "../../../contracts/constants/title";
 import { DATETIME_FORMATS } from "../../constants/datetime";
 import { LOCALES } from "../../constants/locales";
@@ -25,8 +22,7 @@ import { getWeekday } from "../../../utils/date-helpers";
 @injectable()
 export class PdfFormGenerator implements PdfFormGeneratorInterface {
     constructor(
-        @inject(INJECTION_TOKENS.PdfFormFiller) private pdfFormFiller: FormFillerInterface,
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient) {
+        @inject(INJECTION_TOKENS.PdfFormFiller) private pdfFormFiller: FormFillerInterface) {
 
     }
 
@@ -58,22 +54,21 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         
         this.addThesisTitleToBachelorThesisRegistration(fields, data);
 
-        const signatures = await this.getSignatures('bachelorThesisRegistration', data.id);
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.BachelorThesisRegistration.Signature, 
-            signatures.studentSignature
+            data.studentSignature
             ));
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.BachelorThesisRegistration.AssessorSignature, 
-            signatures.supervisor1Signature
+            data.supervisor1Signature
             ));
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.BachelorThesisRegistration.CoAssessorSignature, 
-            signatures.supervisor2Signature
+            data.supervisor2Signature
             ));
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.BachelorThesisRegistration.AuthorSignature, 
-            signatures.studentSignature
+            data.studentSignature
             ));
 
         return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisRegistration.path, fields);
@@ -102,14 +97,13 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new NumberField(TEMPLATE_FIELDS.BachelorThesisAssessment.OverallGrade, data.overallGrade, numberOptions));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisAssessment.AssessmentOfTheBachelorThesis, data.assessmentDescription));
 
-        const signatures = await this.getSignatures('bachelorThesisAssessment', data.id);
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.BachelorThesisAssessment.Signature1stExaminer, 
-            signatures.supervisor1Signature
+            data.supervisor1Signature
             ));
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.BachelorThesisAssessment.Signature2ndExaminer, 
-            signatures.supervisor2Signature
+            data.supervisor2Signature
             ));
 
         return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisAssessment.path, fields);
@@ -133,9 +127,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
                 TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Options.Ms));
         }
         fields.push(new DateField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Date, data.date));
-
-        const signature = await this.getBachelorThesisEvaluationSupervisorSignature(data.id);
-        fields.push(new ImageButtonField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Signature1stExaminer, signature));
+        fields.push(new ImageButtonField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Signature1stExaminer, data.supervisorSignature));
 
         return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisEvaluation.path, fields);
     }
@@ -168,16 +160,14 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
                 ? TEMPLATE_FIELDS.OralDefenseRegistration.ConcernedAgreed.Options.Yes
                 : TEMPLATE_FIELDS.OralDefenseRegistration.ConcernedAgreed.Options.No
             ));
-
-        const signatures = await this.getSignatures('oralDefenseRegistration', data.id);
-
+            
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.OralDefenseRegistration.FirstExaminerSignature, 
-            signatures.supervisor1Signature
+            data.supervisor1Signature
             ));
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.OralDefenseRegistration.SecondExaminerSignature, 
-            signatures.supervisor2Signature
+            data.supervisor2Signature
             ));
 
         return this.pdfFormFiller.fill(ASSETS.Templates.OralDefenseRegistration.path, fields);
@@ -208,15 +198,13 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
                 : TEMPLATE_FIELDS.OralDefenseAssessment.SufficientStateOfHealth.Options.No
             ));
 
-        const signatures = await this.getSignatures('oralDefenseAssessment', data.id);
-
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.OralDefenseAssessment.Signature1stExaminer, 
-            signatures.supervisor1Signature
+            data.supervisor1Signature
             ));
         fields.push(new ImageButtonField(
             TEMPLATE_FIELDS.OralDefenseAssessment.Signature2ndExaminer, 
-            signatures.supervisor2Signature
+            data.supervisor2Signature
             ));
 
         return this.pdfFormFiller.fill(ASSETS.Templates.OralDefenseAssessment.path, fields);
@@ -224,38 +212,5 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
 
     private addThesisTitleToBachelorThesisRegistration(fields: FormField[], data: BachelorThesisRegistrationDto) {
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.TitleOfBachelorThesis[0], data.thesisTitle));
-    }
-
-    private async getSignatures(
-        model: 'bachelorThesisRegistration' 
-            | 'bachelorThesisAssessment' 
-            | 'oralDefenseRegistration' 
-            | 'oralDefenseAssessment', 
-        id: number) {
-        const signatures = await (this.prisma[model] as any).findUniqueOrThrow({
-            where: { id },
-            select: {
-                student: { select: { signature: true } },
-                supervisor1: { select: { signature: true } },
-                supervisor2: { select: { signature: true } } 
-            }
-        });
-
-        return {
-            studentSignature: signatures.student.signature as string | null,
-            supervisor1Signature: signatures.supervisor1?.signature as string | null | undefined,
-            supervisor2Signature: signatures.supervisor2?.signature as string | null | undefined,
-        }
-    }
-
-    private async getBachelorThesisEvaluationSupervisorSignature(id: number) {
-        const signatures = await this.prisma.bachelorThesisEvaluation.findUniqueOrThrow({
-            where: { id },
-            select: {
-                supervisor: { select: { signature: true } },
-            }
-        });
-
-        return signatures.supervisor.signature;
     }
 }
