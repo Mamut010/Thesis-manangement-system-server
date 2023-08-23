@@ -6,6 +6,7 @@ import {
     JwtAccessPayloadDto, 
     JwtRefreshContextDto, 
     JwtRefreshPayloadDto,
+    UserInfoDto,
 } from '../../shared/dtos';
 import { AuthServiceInterface } from '../interfaces';
 import { LoginRequest } from '../../contracts/requests/auth/login.request';
@@ -33,6 +34,8 @@ import { NotFoundError } from '../../contracts/errors/not-found.error';
 import { ROLES } from '../../core/constants/roles';
 import { ForbiddenError } from '../../contracts/errors/forbidden.error';
 import { RefreshTokenUpsertCreateRequest, RefreshTokenUpsertUpdateRequest } from '../../contracts/requests/auth/refresh-token-upsert.request';
+import { AuthorizedUser } from '../../core/auth-checkers';
+import { Credentials } from '../types/credentials';
 
 @injectable()
 export class AuthService implements AuthServiceInterface {
@@ -47,8 +50,8 @@ export class AuthService implements AuthServiceInterface {
 
     }
 
-    async signUp(signUpRequest: SignUpRequest): Promise<void> {
-        this.tryDecryptUsernameAndPassword(signUpRequest);
+    async signup(signUpRequest: SignUpRequest): Promise<UserInfoDto> {
+        this.tryDecryptCredentials(signUpRequest, true);
         if (await this.userRepo.findOneById(signUpRequest.userId)) {
             throw new AuthenticationError(ERROR_MESSAGES.Auth.UserIdAlreadyExists);
         }
@@ -71,11 +74,12 @@ export class AuthService implements AuthServiceInterface {
         userCreatingRequest.roleName = role.name;
         userCreatingRequest.email = signUpRequest.email;
 
-        await this.userRepo.create(userCreatingRequest);
+        const record = await this.userRepo.create(userCreatingRequest);
+        return plainToInstanceExactMatch(UserInfoDto, record);
     }
 
-    async login(loginRequest: LoginRequest, response: Response): Promise<StringResponse> {
-        this.tryDecryptUsernameAndPassword(loginRequest);
+    async login(response: Response, loginRequest: LoginRequest): Promise<StringResponse> {
+        this.tryDecryptCredentials(loginRequest, true);
         const user = await this.getUserByUsername(loginRequest.username);
         if (!user ||
             !(await this.cryptoService.verifyHash(loginRequest.password, user.password))) {
@@ -104,28 +108,13 @@ export class AuthService implements AuthServiceInterface {
         return new StringResponse(accessToken);
     }
 
-    async logout(request: Request, response: Response): Promise<void> {
-        const payload = await this.verifyJwtTokenInRequest(request);
-        if (!payload) {
-            throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidAccessToken);
-        }
-
-        const user = await this.userRepo.findOneById(payload.context.userId);
-        if (!user) {
-            throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidEmbeddedCredentials);
-        }
-
-        await this.refreshTokenRepo.deleteByUserId(payload.context.userId);
+    async logout(user: AuthorizedUser, response: Response): Promise<void> {
+        await this.refreshTokenRepo.deleteByUserId(user.userId);
         await this.jwtCookieHandler.detachRefreshTokenFromCookie(response);
     }
 
-    async getRoles(request: Request): Promise<StringArrayResponse> {
-        const payload = await this.verifyJwtTokenInRequest(request);
-        if (!payload) {
-            throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidAccessToken);
-        }
-
-        return new StringArrayResponse(payload.context.roles);
+    async getRoles(user: AuthorizedUser): Promise<StringArrayResponse> {
+        return new StringArrayResponse(user.roles);
     }
 
     async issueAccessToken(request: Request, response: Response): Promise<StringResponse> {
@@ -185,9 +174,9 @@ export class AuthService implements AuthServiceInterface {
         }
     }
 
-    private tryDecryptUsernameAndPassword(request: { username: string, password: string }) {
+    public tryDecryptCredentials(credentials: Credentials, inplace?: boolean): Credentials | undefined {
         try {
-            this.decryptUsernameAndPassword(request);
+            return this.decryptCredentials(credentials, inplace);
         }
         catch(err) {
             if (!env.isDevelopment) {
@@ -196,10 +185,26 @@ export class AuthService implements AuthServiceInterface {
         }
     }
 
-    private decryptUsernameAndPassword(request: { username: string, password: string }) {
+    public decryptCredentials(credentials: Credentials, inplace?: boolean): Credentials {
         try {
-            request.username = this.cryptoService.decryptAsString(request.username);
-            request.password = this.cryptoService.decryptAsString(request.password);
+            const decryptedUsername = credentials.username 
+                ? this.cryptoService.decryptAsString(credentials.username)
+                : undefined;
+            const decryptedPassword = credentials.password
+                ? this.cryptoService.decryptAsString(credentials.password)
+                : undefined;
+                
+            if (inplace) {
+                credentials.username = decryptedUsername;
+                credentials.password = decryptedPassword;
+                return credentials;
+            }
+            else {
+                return {
+                    username: decryptedUsername,
+                    password: decryptedPassword,
+                }
+            }
         }
         catch {
             throw new BadRequestError(ERROR_MESSAGES.Auth.InvalidCredentials);

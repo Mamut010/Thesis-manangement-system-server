@@ -13,15 +13,18 @@ import { AuthorizedUser } from "../../core/auth-checkers";
 import { ForbiddenError } from "../../contracts/errors/forbidden.error";
 import { ROLES } from "../../core/constants/roles";
 import { equalsOrUndefined } from "../../utils/object-helpers";
+import { AuthService } from "./auth.service";
 
 @injectable()
 export class UserService implements UserServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface) {
+        @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
+        @inject(INJECTION_TOKENS.AuthService) private authService: AuthService) {
 
     }
 
     async getUsers(currentUser: AuthorizedUser, queryRequest: UserInfosQueryRequest): Promise<UserInfosQueryResponse> {
+        this.decryptQueryRequestCredentials(queryRequest);
         const result = await this.userRepo.query(queryRequest);
         return {
             content: result.content.map(item => plainToInstanceExactMatch(UserInfoDto, item)),
@@ -45,6 +48,7 @@ export class UserService implements UserServiceInterface {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.UnpermittedAction);
         }
 
+        this.authService.tryDecryptCredentials(updateRequest, true);
         const result = await this.userRepo.update(userId, updateRequest);
         return plainToInstanceExactMatch(UserInfoDto, result);
     }
@@ -57,6 +61,17 @@ export class UserService implements UserServiceInterface {
         }
 
         await this.userRepo.delete(userId);
+    }
+
+    private decryptQueryRequestCredentials(queryRequest: UserInfosQueryRequest) {
+        if (!queryRequest.usernameFilter) {
+            return;
+        }
+
+        queryRequest.usernameFilter.forEach(filter => {
+            const decryptedCredentials = this.authService.tryDecryptCredentials({ username: filter.value });
+            filter.value = decryptedCredentials?.username ?? filter.value;
+        });
     }
 
     private async ensureRecordExists(userId: string) {

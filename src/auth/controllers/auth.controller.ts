@@ -3,6 +3,7 @@ import { inject, injectable } from "inversify";
 import { 
     Authorized,
     Body,
+    CurrentUser,
     Delete,
     Get,
     HttpCode, 
@@ -21,6 +22,8 @@ import { AuthServiceInterface } from "../interfaces";
 import { ROLES } from '../../core/constants/roles';
 import { StringResponse } from '../../contracts/responses/general/string.response';
 import { StringArrayResponse } from '../../contracts/responses/general/string-array.response';
+import { AuthorizedUser } from '../../core/auth-checkers';
+import { UserInfoDto } from '../../shared/dtos';
 
 @JsonController()
 @injectable()
@@ -36,22 +39,23 @@ export class AuthController {
     @Post('login')
     @ResponseSchema(StringResponse)
     public login(@Res() res: Response, @Body({ required: true }) loginRequest: LoginRequest) {
-        return this.authService.login(loginRequest, res);
+        return this.authService.login(res, loginRequest);
     }
 
     @Authorized(ROLES.Admin)
+    @HttpCode(HTTP_CODES.Ok)
     @Post('signup')
-    @OnUndefined(HTTP_CODES.Created)
+    @ResponseSchema(UserInfoDto)
     public signUp(@Body({ required: true }) signUpRequest: SignUpRequest) {
-        return this.authService.signUp(signUpRequest);
+        return this.authService.signup(signUpRequest);
     }
 
     @Authorized()
     @HttpCode(HTTP_CODES.Ok)
     @Get('roles')
     @ResponseSchema(StringArrayResponse)
-    public roles(@Req() req: Request) {
-        return this.authService.getRoles(req);
+    public roles(@CurrentUser() user: AuthorizedUser) {
+        return this.authService.getRoles(user);
     }
 
     @HttpCode(HTTP_CODES.Ok)
@@ -64,7 +68,7 @@ export class AuthController {
     @Authorized()
     @Delete('logout')
     @OnUndefined(HTTP_CODES.NoContent)
-    public logout(@Req() req: Request, @Res() res: Response) {
-        return this.authService.logout(req, res);
+    public logout(@CurrentUser() user: AuthorizedUser, @Res() res: Response) {
+        return this.authService.logout(user, res);
     }
 }
