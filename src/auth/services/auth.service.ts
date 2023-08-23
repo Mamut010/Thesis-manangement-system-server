@@ -32,7 +32,7 @@ import { makeArray } from '../../utils/array-helpers';
 import { NotFoundError } from '../../contracts/errors/not-found.error';
 import { ROLES } from '../../core/constants/roles';
 import { ForbiddenError } from '../../contracts/errors/forbidden.error';
-import { RefreshTokenCreateRequest } from '../../contracts/requests/auth/refresh-token-create.request';
+import { RefreshTokenUpsertCreateRequest, RefreshTokenUpsertUpdateRequest } from '../../contracts/requests/auth/refresh-token-upsert.request';
 
 @injectable()
 export class AuthService implements AuthServiceInterface {
@@ -88,13 +88,17 @@ export class AuthService implements AuthServiceInterface {
 
         const { accessToken, refreshToken } = this.jwtService.generateTokens(jwtAccessContext, jwtRefreshContext);
 
-        const refreshTokenCreateRequest = new RefreshTokenCreateRequest();
-        refreshTokenCreateRequest.userId = user.userId;
-        refreshTokenCreateRequest.token = await this.cryptoService.hash(refreshToken);
-        refreshTokenCreateRequest.exp = this.jwtService.getTokenExp(refreshToken);
+        const tokenRequest = {
+            userId: user.userId,
+            token: await this.cryptoService.hash(refreshToken),
+            exp: this.jwtService.getTokenExp(refreshToken),
+        };
 
-        await this.refreshTokenRepo.deleteAll(user.userId);
-        await this.refreshTokenRepo.create(refreshTokenCreateRequest);
+        await this.refreshTokenRepo.upsert({
+            userId: tokenRequest.userId,
+            create: plainToInstanceExactMatch(RefreshTokenUpsertCreateRequest, tokenRequest),
+            update: plainToInstanceExactMatch(RefreshTokenUpsertUpdateRequest, tokenRequest),
+        });
         await this.jwtCookieHandler.attachRefreshTokenToCookie(response, refreshToken);
 
         return new StringResponse(accessToken);
@@ -111,7 +115,7 @@ export class AuthService implements AuthServiceInterface {
             throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidEmbeddedCredentials);
         }
 
-        await this.refreshTokenRepo.deleteAll(payload.context.userId);
+        await this.refreshTokenRepo.deleteByUserId(payload.context.userId);
         await this.jwtCookieHandler.detachRefreshTokenFromCookie(response);
     }
 
@@ -155,7 +159,7 @@ export class AuthService implements AuthServiceInterface {
         catch (err) {
             // Revoke refresh token if it is expired
             if (this.jwtService.getTokenExp(refreshToken) <= new Date()) {
-                await this.refreshTokenRepo.deleteAll(this.jwtService.decodeRefreshToken(refreshToken).context.userId);
+                await this.refreshTokenRepo.deleteByUserId(this.jwtService.decodeRefreshToken(refreshToken).context.userId);
                 await this.jwtCookieHandler.detachRefreshTokenFromCookie(response);
             }
             throw err;

@@ -28,8 +28,8 @@ export const ERROR_MESSAGES = {
     },
     Unexpected: {
         DefaultMessage: 'Unexpected error has occurred',
-        RefreshTokenCreationFailed: 'Unable to create refresh token',
-        RefreshTokenDeleteAllFailed: 'Unable to delete all associated refresh tokens',
+        RefreshTokenCreationFailed: 'Unable to create a refresh token',
+        RefreshTokenDeletionFailed: 'Unable to delete a refresh tokens',
         UserCreationFailed: 'Unable to create new user',
     },
     UniqueConstraint: {
