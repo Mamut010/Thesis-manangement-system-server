@@ -14,7 +14,7 @@ export class StudentDetailResponse {
     @IsDefined()
     @ValidateNested()
     @Type(() => StudentInfoDto)
-    studentInfo!: StudentInfoDto
+    studentInfo!: StudentInfoDto;
 
     @Expose()
     @IsOptional()

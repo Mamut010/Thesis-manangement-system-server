@@ -1,18 +1,18 @@
 import { injectable } from "inversify";
 import { 
-    AdminInfoDto,
+    AdminDto,
     BachelorThesisAssessmentDto, 
     BachelorThesisEvaluationDto, 
     BachelorThesisRegistrationDto, 
     FieldDto, 
-    LecturerInfoDto, 
+    LecturerDto, 
     LocationDto, 
     NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
     RefreshTokenDto, 
     RoleDto, 
-    StudentInfoDto,
+    StudentDto,
     ThesisDto,
     TopicDto,
     UserDto
@@ -61,20 +61,20 @@ export class PlainTransformer implements PlainTransformerInterface {
         return dto;
     }
 
-    public toAdminInfo(plain: PlainAdmin): AdminInfoDto {
-        const dto = plainToInstanceExactMatch(AdminInfoDto, flattenObject(plain));
+    public toAdminInfo(plain: PlainAdmin): AdminDto {
+        const dto = plainToInstanceExactMatch(AdminDto, flattenObject(plain));
         dto.adminId = plain.userId;
         return dto;
     }
 
-    public toStudentInfo(plain: PlainStudent): StudentInfoDto {
-        const dto = plainToInstanceExactMatch(StudentInfoDto, flattenObject(plain));
+    public toStudentInfo(plain: PlainStudent): StudentDto {
+        const dto = plainToInstanceExactMatch(StudentDto, flattenObject(plain));
         dto.studentId = plain.userId;
         return dto;
     }
 
-    public toLecturerInfo(plain: PlainLecturer): LecturerInfoDto {
-        const dto = plainToInstanceExactMatch(LecturerInfoDto, flattenObject(plain, {
+    public toLecturerInfo(plain: PlainLecturer): LecturerDto {
+        const dto = plainToInstanceExactMatch(LecturerDto, flattenObject(plain, {
             transformedProps: ['role']
         }));
         dto.lecturerId = plain.userId;

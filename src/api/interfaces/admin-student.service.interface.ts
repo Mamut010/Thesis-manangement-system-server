@@ -1,7 +1,7 @@
-import { StudentUpdateRequest } from "../../contracts/requests/api/student-update.request";
-import { StudentsQueryRequest } from "../../contracts/requests/api/students-query.request";
-import { StudentDetailResponse } from "../../contracts/responses/api/student-info.response";
-import { StudentsQueryResponse } from "../../contracts/responses/api/students-query.response";
+import { StudentInfoUpdateRequest } from "../../contracts/requests/api/student-info-update.request";
+import { StudentInfosQueryRequest } from "../../contracts/requests/api/student-infos-query.request";
+import { StudentDetailResponse } from "../../contracts/responses/api/student-detail.response";
+import { StudentInfosQueryResponse } from "../../contracts/responses/api/student-infos-query.response";
 import { 
     BachelorThesisAssessmentDto, 
     BachelorThesisEvaluationDto, 
@@ -12,7 +12,7 @@ import {
 } from "../../shared/dtos";
 
 export interface AdminStudentServiceInterface {
-    getStudents(studentsQuery: StudentsQueryRequest): Promise<StudentsQueryResponse>;
+    getStudents(studentsQuery: StudentInfosQueryRequest): Promise<StudentInfosQueryResponse>;
     getStudentDetail(studentId: string): Promise<StudentDetailResponse>;
     getStudentInfo(studentId: string): Promise<StudentInfoDto>
     getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationDto>;
@@ -20,5 +20,5 @@ export interface AdminStudentServiceInterface {
     getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationDto>;
     getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto>;
     getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentDto>;
-    updateStudent(studentId: string, updateRequest: StudentUpdateRequest): Promise<StudentInfoDto>;
+    updateStudent(studentId: string, updateRequest: StudentInfoUpdateRequest): Promise<StudentInfoDto>;
 }

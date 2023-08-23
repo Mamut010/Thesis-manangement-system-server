@@ -5,7 +5,8 @@ import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { AdminInfoDto } from "../../shared/dtos";
 import { AdminRepoInterface } from "../../dal/interfaces";
-import { AdminUpdateRequest } from "../../contracts/requests/api/admin-update.request";
+import { AdminUpdateRequest } from "../../contracts/requests/admin-update.request";
+import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 
 @injectable()
 export class AdminService implements AdminServiceInterface {
@@ -20,7 +21,7 @@ export class AdminService implements AdminServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.AdminNotFound);
         }
 
-        return result;
+        return plainToInstanceExactMatch(AdminInfoDto, result);
     }
 
     async updateAdminInfo(adminId: string, updateRequest: AdminUpdateRequest): Promise<AdminInfoDto> {
@@ -29,6 +30,6 @@ export class AdminService implements AdminServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.AdminNotFound);
         }
 
-        return result;
+        return plainToInstanceExactMatch(AdminInfoDto, result);
     }
 }

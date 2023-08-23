@@ -4,9 +4,9 @@
 export * from './user.dto';
 export * from './refresh-token.dto';
 export * from './notification.dto';
-export * from './admin-info.dto';
-export * from './student-info.dto';
-export * from './lecturer-info.dto';
+export * from './admin.dto';
+export * from './student.dto';
+export * from './lecturer.dto';
 export * from './role.dto';
 export * from './thesis.dto';
 export * from './field.dto';
@@ -27,3 +27,8 @@ export * from './auth/jwt-context.dto';
 export * from './auth/jwt-refresh-payload.dto';
 export * from './auth/jwt-refresh-context.dto';
 export * from './auth/user-info.dto';
+
+// API
+export * from './api/admin-info.dto';
+export * from './api/lecturer-info.dto';
+export * from './api/student-info.dto';

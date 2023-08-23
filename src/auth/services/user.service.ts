@@ -22,10 +22,10 @@ export class UserService implements UserServiceInterface {
     }
 
     async getUsers(currentUser: AuthorizedUser, queryRequest: UserInfosQueryRequest): Promise<UserInfosQueryResponse> {
-        const users = await this.userRepo.query(queryRequest);
+        const result = await this.userRepo.query(queryRequest);
         return {
-            content: users.content.map(item => plainToInstanceExactMatch(UserInfoDto, item)),
-            count: users.count
+            content: result.content.map(item => plainToInstanceExactMatch(UserInfoDto, item)),
+            count: result.count
         }
     }
 

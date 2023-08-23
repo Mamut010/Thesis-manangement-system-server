@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { AdminStudentServiceInterface } from "../interfaces";
-import { StudentDetailResponse } from "../../contracts/responses/api/student-info.response";
+import { StudentDetailResponse } from "../../contracts/responses/api/student-detail.response";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { 
@@ -8,12 +8,10 @@ import {
     BachelorThesisEvaluationDto, 
     BachelorThesisRegistrationDto,
     OralDefenseAssessmentDto, 
-    OralDefenseRegistrationDto, 
+    OralDefenseRegistrationDto,
     StudentInfoDto
 } from "../../shared/dtos";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { StudentsQueryRequest } from "../../contracts/requests/api/students-query.request";
-import { StudentsQueryResponse } from "../../contracts/responses/api/students-query.response";
 import { 
     BachelorThesisAssessmentRepoInterface, 
     BachelorThesisEvaluationRepoInterface, 
@@ -22,7 +20,7 @@ import {
     OralDefenseRegistrationRepoInterface, 
     StudentRepoInterface 
 } from "../../dal/interfaces";
-import { StudentUpdateRequest } from "../../contracts/requests/api/student-update.request";
+import { StudentUpdateRequest } from "../../contracts/requests/student-update.request";
 import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
 import { StringFilter } from "../../lib/query";
 import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
@@ -31,6 +29,9 @@ import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/res
 import { ClassConstructor } from "../../utils/types";
 import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
 import { singleOrDefault } from "../../utils/array-helpers";
+import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
+import { StudentInfosQueryResponse } from "../../contracts/responses/api/student-infos-query.response";
+import { StudentInfosQueryRequest } from "../../contracts/requests/api/student-infos-query.request";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
@@ -44,8 +45,12 @@ export class AdminStudentService implements AdminStudentServiceInterface {
 
     }
 
-    async getStudents(studentsQuery: StudentsQueryRequest): Promise<StudentsQueryResponse> {
-        return await this.studentRepo.query(studentsQuery);
+    async getStudents(studentsQuery: StudentInfosQueryRequest): Promise<StudentInfosQueryResponse> {
+        const result = await this.studentRepo.query(studentsQuery);
+        return {
+            content: result.content.map(item => plainToInstanceExactMatch(StudentInfoDto, item)),
+            count: result.count
+        }
     }
 
     async getStudentInfo(studentId: string): Promise<StudentInfoDto> {
@@ -54,7 +59,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
         }
 
-        return result;
+        return plainToInstanceExactMatch(StudentInfoDto, result);
     }
 
     async getStudentDetail(studentId: string): Promise<StudentDetailResponse> {
@@ -127,7 +132,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
         }
 
-        return result;
+        return plainToInstanceExactMatch(StudentInfoDto, result);
     }
 
     private async queryStudentBachelorThesisRegistration(studentId: string) {

@@ -1,26 +1,21 @@
 import { Expose } from "class-transformer";
 import { IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class LecturerInfoDto {
+export class StudentDto {
     @Expose()
     @IsDefined()
     @IsString()
-    lecturerId!: string;
+    studentId!: string;
+    
+    @Expose()
+    @IsOptional()
+    @IsString()
+    surname!: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    title!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    bio!: string | null;
-
-    @Expose()
-    @IsDefined()
-    @IsString()
-    type!: string;
+    forename!: string | null;
 
     @Expose()
     @IsOptional()
@@ -28,12 +23,17 @@ export class LecturerInfoDto {
     email!: string | null;
 
     @Expose()
-    @IsDefined()
-    @IsNumber()
-    numberOfTheses!: number;
+    @IsOptional()
+    @IsString()
+    signature!: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    signature!: string | null;
+    intake!: string | null;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
+    ects!: number;
 }

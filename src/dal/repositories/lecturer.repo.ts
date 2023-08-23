@@ -1,15 +1,15 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { LecturerUpdateRequest } from "../../contracts/requests/api/lecturer-update.request";
-import { LecturerInfoDto } from "../../shared/dtos";
+import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
+import { LecturerDto } from "../../shared/dtos";
 import { userWithRoleInclude } from "../constants/includes";
 import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { LecturerRepoInterface } from "../interfaces";
-import { LecturersQueryRequest } from "../../contracts/requests/api/lecturers-query.request";
-import { LecturersQueryResponse } from "../../contracts/responses/api/lecturers-query.response";
+import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
+import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { Lecturer, User } from "../../core/models";
 
@@ -24,7 +24,7 @@ export class LecturerRepo implements LecturerRepoInterface {
 
     async query(queryRequest: LecturersQueryRequest): Promise<LecturersQueryResponse> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
-
+        
         const count = await this.prisma.lecturer.count({ where: prismaQuery.where });
         const lecturers = await this.prisma.lecturer.findMany({
             ...prismaQuery,
@@ -37,7 +37,7 @@ export class LecturerRepo implements LecturerRepoInterface {
         return response;
     }
 
-    async findOneById(id: string): Promise<LecturerInfoDto | null> {
+    async findOneById(id: string): Promise<LecturerDto | null> {
         const record = await this.findRecordById(id);
         if (!record) {
             return null;
@@ -46,7 +46,7 @@ export class LecturerRepo implements LecturerRepoInterface {
         return this.plainTransformer.toLecturerInfo(record);
     }
 
-    async update(id: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto | null> {
+    async update(id: string, updateRequest: LecturerUpdateRequest): Promise<LecturerDto | null> {
         let record = await this.findRecordById(id);
 
         if (!record) {
@@ -95,10 +95,14 @@ export class LecturerRepo implements LecturerRepoInterface {
             ...this.queryCreator.createQueryModel(Lecturer),
             user: this.queryCreator.createQueryModel(User)
         }
+        const fieldMap = {
+            type: 'user.role.name'
+        };
         return this.queryCreator.createQueryObject(model, queryRequest, { 
             fieldNameMap: { 
                 lecturerId: 'userId' 
-            } 
+            },
+            fieldMap 
         });
     }
 }

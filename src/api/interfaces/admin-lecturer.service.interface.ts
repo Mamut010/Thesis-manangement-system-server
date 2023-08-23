@@ -1,24 +1,24 @@
 import { LecturerAssetsQueryRequest } from "../../contracts/requests/api/lecturer-assets-query.request";
-import { LecturerUpdateRequest } from "../../contracts/requests/api/lecturer-update.request";
-import { LecturersQueryRequest } from "../../contracts/requests/api/lecturers-query.request";
+import { LecturerInfoUpdateRequest } from "../../contracts/requests/api/lecturer-info-update.request";
+import { LecturerInfosQueryRequest } from "../../contracts/requests/api/lecturer-infos-query.request";
 import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
 import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
 import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
 import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
 import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
-import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-info.response";
-import { LecturersQueryResponse } from "../../contracts/responses/api/lecturers-query.response";
+import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-detail.response";
+import { LecturerInfosQueryResponse } from "../../contracts/responses/api/lecturer-infos-query.response";
 import { 
     BachelorThesisAssessmentDto, 
     BachelorThesisEvaluationDto, 
-    BachelorThesisRegistrationDto, 
+    BachelorThesisRegistrationDto,
     LecturerInfoDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto
 } from "../../shared/dtos";
 
 export interface AdminLecturerServiceInterface {
-    getLecturers(lecturersQuery: LecturersQueryRequest): Promise<LecturersQueryResponse>;
+    getLecturers(lecturersQuery: LecturerInfosQueryRequest): Promise<LecturerInfosQueryResponse>;
 
     getLecturerInfo(lecturerId: string): Promise<LecturerInfoDto>;
 
@@ -40,5 +40,5 @@ export interface AdminLecturerServiceInterface {
     getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest: OralDefenseAssessmentsQueryRequest)
         : Promise<OralDefenseAssessmentDto[]>;
 
-    updateLecturerInfo(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto>;
+    updateLecturerInfo(lecturerId: string, updateRequest: LecturerInfoUpdateRequest): Promise<LecturerInfoDto>;
 }

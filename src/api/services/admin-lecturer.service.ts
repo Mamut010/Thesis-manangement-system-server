@@ -4,14 +4,12 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { 
     BachelorThesisAssessmentDto, 
     BachelorThesisEvaluationDto, 
-    BachelorThesisRegistrationDto, 
+    BachelorThesisRegistrationDto,
     LecturerInfoDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto
 } from "../../shared/dtos";
-import { LecturersQueryRequest } from "../../contracts/requests/api/lecturers-query.request";
-import { LecturersQueryResponse } from "../../contracts/responses/api/lecturers-query.response";
-import { LecturerUpdateRequest } from "../../contracts/requests/api/lecturer-update.request";
+import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 import { 
     BachelorThesisAssessmentRepoInterface, 
     BachelorThesisEvaluationRepoInterface, 
@@ -20,7 +18,7 @@ import {
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface
 } from "../../dal/interfaces";
-import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-info.response";
+import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-detail.response";
 import { LecturerRoles } from "../../core/constants/roles";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
@@ -33,6 +31,9 @@ import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/res
 import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
 import { StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
+import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
+import { LecturerInfosQueryResponse } from "../../contracts/responses/api/lecturer-infos-query.response";
+import { LecturerInfosQueryRequest } from "../../contracts/requests/api/lecturer-infos-query.request";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
@@ -46,8 +47,12 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
 
     }
 
-    async getLecturers(lecturersQuery: LecturersQueryRequest): Promise<LecturersQueryResponse> {
-        return await this.lecturerRepo.query(lecturersQuery);
+    async getLecturers(lecturersQuery: LecturerInfosQueryRequest): Promise<LecturerInfosQueryResponse> {
+        const result = await this.lecturerRepo.query(lecturersQuery);
+        return {
+            content: result.content.map(item => plainToInstanceExactMatch(LecturerInfoDto, item)),
+            count: result.count
+        }
     }
 
     async getLecturerInfo(lecturerId: string): Promise<LecturerInfoDto> {
@@ -56,7 +61,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.LecturerNotFound);
         }
 
-        return result;
+        return plainToInstanceExactMatch(LecturerInfoDto, result);
     }
 
     async getLecturerDetail(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
@@ -124,6 +129,6 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.LecturerNotFound);
         }
 
-        return result;
+        return plainToInstanceExactMatch(LecturerInfoDto, result);;
     }
 }

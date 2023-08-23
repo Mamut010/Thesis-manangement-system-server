@@ -1,13 +1,13 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { AdminInfoDto } from "../../shared/dtos";
+import { AdminDto } from "../../shared/dtos";
 import { userInclude } from "../constants/includes";
 import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AdminRepoInterface } from "../interfaces";
-import { AdminUpdateRequest } from "../../contracts/requests/api/admin-update.request";
+import { AdminUpdateRequest } from "../../contracts/requests/admin-update.request";
 
 @injectable()
 export class AdminRepo implements AdminRepoInterface {
@@ -17,7 +17,7 @@ export class AdminRepo implements AdminRepoInterface {
 
     }
 
-    async findOneById(id: string): Promise<AdminInfoDto | null> {
+    async findOneById(id: string): Promise<AdminDto | null> {
         const record = await this.findRecordById(id);
         if (!record) {
             return null;
@@ -26,7 +26,7 @@ export class AdminRepo implements AdminRepoInterface {
         return this.plainTransformer.toAdminInfo(record);
     }
 
-    async update(id: string, updateRequest: AdminUpdateRequest): Promise<AdminInfoDto | null> {
+    async update(id: string, updateRequest: AdminUpdateRequest): Promise<AdminDto | null> {
         let record = await this.findRecordById(id);
 
         if (!record) {

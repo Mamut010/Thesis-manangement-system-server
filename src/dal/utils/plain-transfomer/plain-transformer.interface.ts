@@ -1,17 +1,17 @@
 import { 
-    AdminInfoDto,
+    AdminDto,
     BachelorThesisAssessmentDto, 
     BachelorThesisEvaluationDto, 
     BachelorThesisRegistrationDto, 
     FieldDto, 
-    LecturerInfoDto, 
+    LecturerDto, 
     LocationDto, 
     NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
     RefreshTokenDto, 
     RoleDto, 
-    StudentInfoDto,
+    StudentDto,
     ThesisDto,
     TopicDto,
     UserDto
@@ -39,9 +39,9 @@ export interface PlainTransformerInterface {
     toUser(plain: PlainUser): UserDto;
     toRefreshToken(plain: PlainRefreshToken): RefreshTokenDto;
     toNotification(plain: PlainNotification): NotificationDto;
-    toAdminInfo(plain: PlainAdmin): AdminInfoDto;
-    toStudentInfo(plain: PlainStudent): StudentInfoDto;
-    toLecturerInfo(plain: PlainLecturer): LecturerInfoDto;
+    toAdminInfo(plain: PlainAdmin): AdminDto;
+    toStudentInfo(plain: PlainStudent): StudentDto;
+    toLecturerInfo(plain: PlainLecturer): LecturerDto;
     toRole(plain: PlainRole): RoleDto;
     toThesis(plain: PlainThesis): ThesisDto;
     toField(plain: PlainField): FieldDto;

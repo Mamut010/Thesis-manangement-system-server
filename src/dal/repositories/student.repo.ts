@@ -1,15 +1,15 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { StudentUpdateRequest } from "../../contracts/requests/api/student-update.request";
-import { StudentInfoDto } from "../../shared/dtos";
+import { StudentUpdateRequest } from "../../contracts/requests/student-update.request";
+import { StudentDto } from "../../shared/dtos";
 import { userInclude } from "../constants/includes";
 import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { StudentRepoInterface } from "../interfaces";
-import { StudentsQueryRequest } from "../../contracts/requests/api/students-query.request";
-import { StudentsQueryResponse } from "../../contracts/responses/api/students-query.response";
+import { StudentsQueryRequest } from "../../contracts/requests/students-query.request";
+import { StudentsQueryResponse } from "../../contracts/responses/students-query.response";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { Student, User } from "../../core/models";
 
@@ -37,7 +37,7 @@ export class StudentRepo implements StudentRepoInterface {
         return response;
     }
 
-    async findOneById(id: string): Promise<StudentInfoDto | null> {
+    async findOneById(id: string): Promise<StudentDto | null> {
         const record = await this.findRecordById(id);
         if (!record) {
             return null;
@@ -46,7 +46,7 @@ export class StudentRepo implements StudentRepoInterface {
         return this.plainTransformer.toStudentInfo(record);
     }
 
-    async update(id: string, updateRequest: StudentUpdateRequest): Promise<StudentInfoDto | null> {
+    async update(id: string, updateRequest: StudentUpdateRequest): Promise<StudentDto | null> {
         let record = await this.findRecordById(id);
 
         if (!record) {

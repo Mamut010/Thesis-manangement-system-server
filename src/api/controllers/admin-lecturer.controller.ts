@@ -22,16 +22,19 @@ import {
     LecturerInfoDto, 
     BachelorThesisEvaluationDto
 } from "../../shared/dtos";
-import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-info.response";
-import { LecturersQueryResponse } from "../../contracts/responses/api/lecturers-query.response";
-import { LecturersQueryRequest } from "../../contracts/requests/api/lecturers-query.request";
-import { LecturerUpdateRequest } from "../../contracts/requests/api/lecturer-update.request";
+import { LecturerDetailResponse } from "../../contracts/responses/api/lecturer-detail.response";
+import { LecturersQueryResponse } from "../../contracts/responses/lecturers-query.response";
+import { LecturersQueryRequest } from "../../contracts/requests/lecturers-query.request";
+import { LecturerUpdateRequest } from "../../contracts/requests/lecturer-update.request";
 import { LecturerAssetsQueryRequest } from "../../contracts/requests/api/lecturer-assets-query.request";
 import { BachelorThesisRegistrationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-registrations-query.request";
 import { BachelorThesisAssessmentsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-assessments-query.request";
 import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/resources/oral-defense-registrations-query.request";
 import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
 import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
+import { LecturerInfosQueryRequest } from "../../contracts/requests/api/lecturer-infos-query.request";
+import { LecturerInfosQueryResponse } from "../../contracts/responses/api/lecturer-infos-query.response";
+import { LecturerInfoUpdateRequest } from "../../contracts/requests/api/lecturer-info-update.request";
 
 @JsonController('admin/lecturers')
 //@Authorized(ROLES.Admin)
@@ -47,8 +50,8 @@ export class AdminLecturerController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get()
-    @ResponseSchema(LecturersQueryResponse)
-    getLecturers(@QueryParams() lecturersQuery: LecturersQueryRequest) {
+    @ResponseSchema(LecturerInfosQueryResponse)
+    getLecturers(@QueryParams() lecturersQuery: LecturerInfosQueryRequest) {
         return this.adminLecturerService.getLecturers(lecturersQuery);
     }
 
@@ -108,7 +111,7 @@ export class AdminLecturerController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Post('/:id/lecturer-info')
-    updateLecturerInfo(@Param('id') id: string, @Body({ required: true }) updateRequest: LecturerUpdateRequest) {
+    updateLecturerInfo(@Param('id') id: string, @Body({ required: true }) updateRequest: LecturerInfoUpdateRequest) {
         return this.adminLecturerService.updateLecturerInfo(id, updateRequest);
     }
 }

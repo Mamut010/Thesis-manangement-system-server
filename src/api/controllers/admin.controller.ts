@@ -15,7 +15,7 @@ import { AdminServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
 import { AdminInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
-import { AdminUpdateRequest } from "../../contracts/requests/api/admin-update.request";
+import { AdminInfoUpdateRequest } from "../../contracts/requests/api/admin-info-update.request";
 
 @JsonController('admin')
 @Authorized(ROLES.Admin)
@@ -39,7 +39,8 @@ export class AdminController {
     @HttpCode(HTTP_CODES.Ok)
     @Post('/info')
     @ResponseSchema(AdminInfoDto)
-    updateAdminInfo(@CurrentUser({ required: true }) user: AuthorizedUser, @Body({ required: true }) updateRequest: AdminUpdateRequest) {
+    updateAdminInfo(@CurrentUser({ required: true }) user: AuthorizedUser, 
+        @Body({ required: true }) updateRequest: AdminInfoUpdateRequest) {
         return this.adminService.updateAdminInfo(user.userId, updateRequest);
     }
 }
