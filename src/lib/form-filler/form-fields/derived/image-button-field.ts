@@ -1,7 +1,7 @@
-import { FormFieldHandler } from "../interfaces/form-field-handler";
-import { FormFieldHandleOptions } from "../types/form-field-handle-options";
-import { SupportedImageType } from "../types/utility-types";
-import { ButtonField } from "./button-field";
+import { FormFieldHandler } from "../../interfaces/form-field-handler";
+import { FormFieldHandleOptions } from "../../types/form-field-handle-options";
+import { SupportedImageType } from "../../types/utility-types";
+import { ButtonField } from "../basic/button-field";
 
 export class ImageButtonField extends ButtonField {
     constructor(

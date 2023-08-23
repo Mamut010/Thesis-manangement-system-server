@@ -1,7 +1,7 @@
-import { CheckBoxField } from "../form-fields/check-box-field";
-import { ImageButtonField } from "../form-fields/image-button-field";
-import { RadioButtonField } from "../form-fields/radio-button-field";
-import { TextField } from "../form-fields/text-field";
+import { CheckBoxField } from "../form-fields/basic/check-box-field";
+import { ImageButtonField } from "../form-fields/derived/image-button-field";
+import { RadioButtonField } from "../form-fields/basic/radio-button-field";
+import { TextField } from "../form-fields/basic/text-field";
 import { FormFieldHandleOptions } from "../types/form-field-handle-options";
 
 export interface FormFieldHandler {

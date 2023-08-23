@@ -1,6 +1,6 @@
-import { NumberFieldOptions } from "../types/utility-types";
-import { computeNumberLocale } from "../utils/locale-helpers";
-import { TextField } from "./text-field";
+import { NumberFieldOptions } from "../../types/utility-types";
+import { computeNumberLocale } from "../../utils/locale-helpers";
+import { TextField } from "../basic/text-field";
 
 export class NumberField extends TextField {
     private _number?: number | null;

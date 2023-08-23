@@ -1,9 +1,9 @@
 import { DateTime } from "luxon";
-import { TextField } from "./text-field";
-import { isDateObject } from "../../../utils/object-helpers";
-import { DEFAULTS } from "../constants/default";
-import { computeDateTimeLocale } from "../utils/locale-helpers";
-import { DateFieldOptions } from "../types/utility-types";
+import { TextField } from "../basic/text-field";
+import { isDateObject } from "../../../../utils/object-helpers";
+import { DEFAULTS } from "../../constants/default";
+import { computeDateTimeLocale } from "../../utils/locale-helpers";
+import { DateFieldOptions } from "../../types/utility-types";
 
 export class DateField extends TextField {
     private _date?: Date | null;
