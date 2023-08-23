@@ -5,7 +5,7 @@
 import 'reflect-metadata';
 import { Logger } from './lib/logger';
 import { banner } from './lib/banner';
-import { bootstrap } from "./lib/bootstrapper";
+import { BootstrapSettingInterface, bootstrap } from "./lib/bootstrapper";
 import { 
     bootstrapAuthServer, 
     bootstrapAuthHome, 
@@ -32,5 +32,5 @@ bootstrap({
         ['logger']: log
     }
 })
-    .then(() => banner(log, 'auth'))
+    .then((settings: BootstrapSettingInterface) => banner(log, 'auth', settings))
     .catch((error: Error) => log.error('Application is crashed: ' + (error.stack ?? error.message)));

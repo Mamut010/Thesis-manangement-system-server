@@ -6,8 +6,9 @@ import { env } from '../env';
 import { Logger } from '../lib/logger';
 import { ServerType } from '../shared/types/server-types';
 import { route } from '../utils/route-helpers';
+import { BootstrapSettingInterface } from './bootstrapper';
 
-export function banner(log: Logger, server: ServerType): void {
+export function banner(log: Logger, server: ServerType, settings?: BootstrapSettingInterface): void {
     if (env.app.banner) {
         log.info(``);
         log.info(`Your app is ready on ${route(server, true)}`);
@@ -19,7 +20,7 @@ export function banner(log: Logger, server: ServerType): void {
         log.info(``);
         if(env.swagger.enabled) 
             log.info(`API Info       : ${route(server)}${env.swagger.route}`);
-        if(env.socketAdminUI.enabled)
+        if(settings?.getData('socket-admin-ui'))
             log.info(`Socket Admin UI: ${env.socketAdminUI.url}`);
         log.info('-------------------------------------------------------');
         log.info('');
