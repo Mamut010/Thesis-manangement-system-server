@@ -28,7 +28,7 @@ import { RefreshTokenRepoInterface, RoleRepoInterface, UserRepoInterface } from 
 import { UserCreateRequest } from '../../contracts/requests/user-create-request.dto';
 import { UsersQueryRequest } from '../../contracts/requests/users-query.request';
 import { StringFilter } from '../../lib/query';
-import { makeArray } from '../../utils/array-helpers';
+import { makeArray, singleOrDefault } from '../../utils/array-helpers';
 import { NotFoundError } from '../../contracts/errors/not-found.error';
 import { ROLES } from '../../core/constants/roles';
 import { ForbiddenError } from '../../contracts/errors/forbidden.error';
@@ -214,6 +214,6 @@ export class AuthService implements AuthServiceInterface {
         queryRequest.usernameFilter = makeArray(usernameFilter);
         
         const user = await this.userRepo.query(queryRequest);
-        return user.count > 0 ? user.content[0] : null;
+        return singleOrDefault(user.content);
     }
 }

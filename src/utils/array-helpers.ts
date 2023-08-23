@@ -13,3 +13,25 @@ export function arrayUnion<T = unknown>(arr1: T[], arr2: T[]): T[] {
 export function makeArray<T = unknown>(value: SingleOrArray<T>): T[] {
     return Array.isArray(value) ? value : [value];
 }
+
+export function singleOrDefault<TValue>(arr: TValue[]): TValue | undefined;
+export function singleOrDefault<TValue, TDefault>(arr: TValue[], defaultValue: TDefault): TValue | TDefault;
+export function singleOrDefault<TValue, TDefault>(arr: TValue[], defaultValue?: TDefault) {
+    if (typeof defaultValue === 'undefined') {
+        return arr.length === 1 ? arr[0] : undefined;
+    }
+    else {
+        return arr.length === 1 ? arr[0] : defaultValue;
+    }
+}
+
+export function firstOrDefault<TValue>(arr: TValue[]): TValue | undefined;
+export function firstOrDefault<TValue, TDefault>(arr: TValue[], defaultValue: TDefault): TValue | TDefault;
+export function firstOrDefault<TValue, TDefault>(arr: TValue[], defaultValue?: TDefault) {
+    if (typeof defaultValue === 'undefined') {
+        return arr.length > 0 ? arr[0] : undefined;
+    }
+    else {
+        return arr.length > 0 ? arr[0] : defaultValue;
+    }
+}

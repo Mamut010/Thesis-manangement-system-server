@@ -30,6 +30,7 @@ import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests/r
 import { OralDefenseAssessmentsQueryRequest } from "../../contracts/requests/resources/oral-defense-assessments-query.request";
 import { ClassConstructor } from "../../utils/types";
 import { BachelorThesisEvaluationsQueryRequest } from "../../contracts/requests/resources/bachelor-thesis-evaluations-query.request";
+import { singleOrDefault } from "../../utils/array-helpers";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
@@ -66,11 +67,11 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         const studentOdr = await this.queryStudentOralDefenseRegistration(studentId);
         const studentOda = await this.queryStudentOralDefenseAssessment(studentId);
 
-        response.bachelorThesisRegistration = studentBtr.length > 0 ? studentBtr[0] : null;
-        response.bachelorThesisAssessment = studentBta.length > 0 ? studentBta[0] : null;
-        response.bachelorThesisEvaluation = studentBte.length > 0 ? studentBte[0] : null;
-        response.oralDefenseRegistration = studentOdr.length > 0 ? studentOdr[0] : null;
-        response.oralDefenseAssessment = studentOda.length > 0 ? studentOda[0] : null;
+        response.bachelorThesisRegistration = singleOrDefault(studentBtr, null);
+        response.bachelorThesisAssessment = singleOrDefault(studentBta, null);
+        response.bachelorThesisEvaluation = singleOrDefault(studentBte, null);
+        response.oralDefenseRegistration = singleOrDefault(studentOdr, null);
+        response.oralDefenseAssessment = singleOrDefault(studentOda, null);
 
         return response;
     }
