@@ -24,10 +24,10 @@ export interface PrismaQueryCreatorInterface {
     createQueryModel<T extends object>(cls: ClassConstructor<T>)
         : AutoQueryModel;
 
-    createQueryObject<T extends AutoQueryModel>(model: T, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
+    createQueryObject(model: AutoQueryModel, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
         : PrismaQueryObject;
 
-    createWhereObject<T extends AutoQueryModel>(model: T, query: AutoWhereQueryCreatable, creationOptions?: AutoQueryCreationOptions)
+    createWhereObject(model: AutoQueryModel, query: AutoWhereQueryCreatable, creationOptions?: AutoQueryCreationOptions)
         : WhereQueryObject | undefined;
         
     createFilteringObject<TValue, TOperator extends FilterOperator>(binaryFilter?: BinaryFilter<TValue, TOperator>)
