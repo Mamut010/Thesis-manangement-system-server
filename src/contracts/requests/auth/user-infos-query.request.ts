@@ -7,7 +7,7 @@ import {
 import { NullableDateFilter, NullableStringFilter, NumberFilter, StringFilter } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
-export class AuthUsersQueryRequest extends BaseQueryRequest {
+export class UserInfosQueryRequest extends BaseQueryRequest {
     @IsStringFilterArray()
     userIdFilter?: StringFilter[];
 

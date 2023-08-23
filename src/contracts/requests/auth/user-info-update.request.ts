@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import { IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class AuthUserUpdateRequest {
+export class UserInfoUpdateRequest {
     @Expose()
     @IsOptional()
     @IsString()

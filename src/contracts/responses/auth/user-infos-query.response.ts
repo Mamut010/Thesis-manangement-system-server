@@ -4,7 +4,7 @@ import { IsDefined, ValidateNested } from "class-validator";
 import { QueryResponse } from "../../interfaces";
 import { BaseQueryResponse } from "../../bases";
 
-export class AuthUsersQueryResponse extends BaseQueryResponse implements QueryResponse<UserInfoDto> {
+export class UserInfosQueryResponse extends BaseQueryResponse implements QueryResponse<UserInfoDto> {
     @Expose()
     @IsDefined()
     @ValidateNested({ each: true })

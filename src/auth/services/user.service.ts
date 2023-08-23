@@ -2,10 +2,10 @@ import { inject, injectable } from "inversify";
 import { UserServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { UserRepoInterface } from "../../dal/interfaces";
-import { AuthUserUpdateRequest } from "../../contracts/requests/auth/auth-user-update.request";
-import { AuthUsersQueryRequest } from "../../contracts/requests/auth/auth-users-query.request";
-import { AuthUsersQueryResponse } from "../../contracts/responses/auth/auth-users-query.response";
-import { UserDto, UserInfoDto } from "../../shared/dtos";
+import { UserInfoUpdateRequest } from "../../contracts/requests/auth/user-info-update.request";
+import { UserInfosQueryRequest } from "../../contracts/requests/auth/user-infos-query.request";
+import { UserInfosQueryResponse } from "../../contracts/responses/auth/user-infos-query.response";
+import { UserInfoDto } from "../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
@@ -21,7 +21,7 @@ export class UserService implements UserServiceInterface {
 
     }
 
-    async getUsers(currentUser: AuthorizedUser, queryRequest: AuthUsersQueryRequest): Promise<AuthUsersQueryResponse> {
+    async getUsers(currentUser: AuthorizedUser, queryRequest: UserInfosQueryRequest): Promise<UserInfosQueryResponse> {
         const users = await this.userRepo.query(queryRequest);
         return {
             content: users.content.map(item => plainToInstanceExactMatch(UserInfoDto, item)),
@@ -29,7 +29,7 @@ export class UserService implements UserServiceInterface {
         }
     }
 
-    async updateUser(currentUser: AuthorizedUser, userId: string, updateRequest: AuthUserUpdateRequest)
+    async updateUser(currentUser: AuthorizedUser, userId: string, updateRequest: UserInfoUpdateRequest)
         : Promise<UserInfoDto> {
         const record = await this.ensureRecordExists(userId);
 

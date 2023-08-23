@@ -21,4 +21,9 @@ export class AdminInfoDto {
     @IsOptional()
     @IsEmail()
     email!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    signature!: string | null;
 }
