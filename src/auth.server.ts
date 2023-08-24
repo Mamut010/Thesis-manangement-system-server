@@ -6,8 +6,9 @@ import 'reflect-metadata';
 /**
  * Set up tracing and register instrumentation before importing instrumented libraries
  */
-import { intializeTracer } from './core/instrumentation';
-const tracer = intializeTracer('auth-express-server');
+import { initializeTracer } from './core/instrumentation';
+import { SERVER_SETTINGS } from './core/constants/server-settings';
+const tracer = initializeTracer(SERVER_SETTINGS.Auth.ServiceName);
 
 import { Logger } from './lib/logger';
 import { banner } from './lib/banner';
@@ -18,6 +19,7 @@ import {
     bootstrapIoc, 
     bootstrapWinston, 
     bootstrapSwagger,
+    bootstrapMetrics,
 } from './core/bootstrappers';
 import { BOOTSTRAP_SETTINGS_KEY } from './core/constants/bootstrap-settings';
 
@@ -33,11 +35,13 @@ bootstrap({
         bootstrapIoc,
         bootstrapAuthServer,
         bootstrapSwagger,
+        bootstrapMetrics,
         bootstrapAuthHome,
     ],
     externalDeps: {
         [BOOTSTRAP_SETTINGS_KEY.Tracer]: tracer,
         [BOOTSTRAP_SETTINGS_KEY.Logger]: log,
+        [BOOTSTRAP_SETTINGS_KEY.ServerName]: SERVER_SETTINGS.Auth.ServerName,
     }
 })
     .then((settings: BootstrapSettingInterface) => banner(log, 'auth', settings))

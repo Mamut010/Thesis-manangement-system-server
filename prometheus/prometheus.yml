@@ -1,0 +1,22 @@
+# prometheus/prometheus.yml
+
+scrape_configs:
+  - job_name: 'prometheus-api'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['host.docker.internal:5000']
+        labels:
+          service: 'api-server-metrics'
+    basic_auth:
+      username: 'admin'
+      password: '1234'
+
+  - job_name: 'prometheus-auth'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['host.docker.internal:4000']
+        labels:
+          service: 'auth-server-metrics'
+    basic_auth:
+      username: 'admin'
+      password: '1234'

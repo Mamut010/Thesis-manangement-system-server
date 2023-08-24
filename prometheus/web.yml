@@ -1,0 +1,5 @@
+# Usernames and hashed passwords that have full access to the web
+# server via basic authentication. If empty, no basic authentication is
+# required. Passwords are hashed with bcrypt.
+basic_auth_users:
+  admin: $2b$10$j5uPvDlpCngaMBNzHE1I9eTfe1KJOhPqr2OV45XiaO6HUph.dcxWa

@@ -1,8 +1,6 @@
 import { Resource } from "@opentelemetry/resources";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
-import { 
-    SimpleSpanProcessor, 
-    BatchSpanProcessor, 
+import {
     TraceIdRatioBasedSampler,
     SpanExporter, 
     SpanProcessor,
@@ -15,8 +13,9 @@ import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { PrismaInstrumentation } from '@prisma/instrumentation';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { env } from "../env";
+import { TRACER_SETTINGS } from "./constants/tracer-settings";
 
-export const intializeTracer = (serviceName: string): Tracer | undefined => {
+export const initializeTracer = (serviceName: string): Tracer | undefined => {
     if (!env.tracer.enabled) {
         return undefined;
     }
@@ -44,10 +43,8 @@ export const intializeTracer = (serviceName: string): Tracer | undefined => {
 
     // gracefully shut down the SDK on process exit
     const exit = () => {
-        sdk.shutdown()
-            .then(() => console.log('Tracing terminated'))
-            .catch((error) => console.log('Error terminating tracing', error))
-            .finally(() => process.exit(0));
+        void sdk.shutdown()
+                .finally(() => process.exit(0));
     };
 
     process.on('SIGTERM', exit);
@@ -57,12 +54,28 @@ export const intializeTracer = (serviceName: string): Tracer | undefined => {
 }
 
 function createSpanProcessor(exporter: SpanExporter): SpanProcessor {
-    return env.isProduction 
-        ? new BatchSpanProcessor(exporter) 
-        : new SimpleSpanProcessor(exporter);
+    if (env.isProduction) {
+        return new TRACER_SETTINGS.Production.SpanProcessor(exporter);
+    } 
+    else if (env.isTest) {
+        return new TRACER_SETTINGS.Test.SpanProcessor(exporter);
+    }
+    else {
+        return new TRACER_SETTINGS.Development.SpanProcessor(exporter);
+    }
 }
 
 function createSampler(): Sampler {
-    const traceRatio = env.isProduction ? 0.1 : 1.0;
+    let traceRatio: number;
+    if (env.isProduction) {
+        traceRatio = TRACER_SETTINGS.Production.TraceRatio;
+    }
+    else if (env.isTest) {
+        traceRatio = TRACER_SETTINGS.Test.TraceRatio;
+    }
+    else {
+        traceRatio = TRACER_SETTINGS.Development.TraceRatio;
+    }
+
     return new TraceIdRatioBasedSampler(traceRatio);
 }
