@@ -19,9 +19,11 @@ export function banner(log: Logger, server: ServerType, settings?: BootstrapSett
         log.info(`Version      : ${env.app.version}`);
         log.info(``);
         if(env.swagger.enabled) 
-            log.info(`API Info       : ${route(server)}${env.swagger.route}`);
+            log.info(`API Info        : ${route(server)}${env.swagger.route}`);
         if(settings?.getData('socket-admin-ui'))
-            log.info(`Socket Admin UI: ${env.socketAdminUI.url}`);
+            log.info(`Socket Admin UI : ${env.socketAdminUI.url}`);
+        if(env.tracer.enabled)
+            log.info(`Tracer Dashboard: ${env.tracer.dashboardUrl}`);
         log.info('-------------------------------------------------------');
         log.info('');
     } else {
