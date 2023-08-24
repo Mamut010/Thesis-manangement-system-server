@@ -7,6 +7,7 @@ import * as path from 'path';
 import {
     getOsEnv, getOsEnvArray, getOsEnvOptional, getOsPaths, normalizePort, toBool, toNumber
 } from './lib/env';
+import { get } from 'http';
 
 /**
  * Load .env file or for tests the .env.test file.
@@ -100,5 +101,10 @@ export const env = {
         nsp: getOsEnv('SOCKET_ADMIN_NSP'),
         username: getOsEnv('SOCKET_ADMIN_USERNAME'),
         password: getOsEnv('SOCKET_ADMIN_PASSWORD'),
+    },
+    tracer: {
+        enabled: toBool(getOsEnv('TRACER_ENABLED')),
+        url: getOsEnvOptional('TRACER_EXPORTER_URL'),
+        dashboardUrl: getOsEnv('TRACER_DASHBOARD_URL'),
     }
 } as const;

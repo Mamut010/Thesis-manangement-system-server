@@ -3,15 +3,21 @@
  */
 
 import 'reflect-metadata';
+/**
+ * Set up tracing and register instrumentation before importing instrumented libraries
+ */
+import { intializeTracer } from './core/instrumentation';
+const tracer = intializeTracer('auth-express-server');
+
 import { Logger } from './lib/logger';
 import { banner } from './lib/banner';
-import { bootstrap } from "./lib/bootstrapper";
+import { BootstrapSettingInterface, bootstrap } from "./lib/bootstrapper";
 import { 
     bootstrapAuthServer, 
     bootstrapAuthHome, 
     bootstrapIoc, 
     bootstrapWinston, 
-    bootstrapSwagger 
+    bootstrapSwagger,
 } from './core/bootstrappers';
 
 const log = new Logger(__filename);
@@ -29,8 +35,9 @@ bootstrap({
         bootstrapAuthHome,
     ],
     externalDeps: {
-        ['logger']: log
+        ['tracer']: tracer,
+        ['logger']: log,
     }
 })
-    .then(() => banner(log, 'auth'))
+    .then((settings: BootstrapSettingInterface) => banner(log, 'auth', settings))
     .catch((error: Error) => log.error('Application is crashed: ' + (error.stack ?? error.message)));

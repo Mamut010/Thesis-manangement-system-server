@@ -3,9 +3,15 @@
  */
 
 import 'reflect-metadata';
+/**
+ * Set up tracing and register instrumentation before importing instrumented libraries
+ */
+import { intializeTracer } from './core/instrumentation';
+const tracer = intializeTracer('api-express-server');
+
 import { Logger } from './lib/logger';
 import { banner } from './lib/banner';
-import { bootstrap } from "./lib/bootstrapper";
+import { BootstrapSettingInterface, bootstrap } from "./lib/bootstrapper";
 import { 
     bootstrapApiServer, 
     bootstrapApiHome, 
@@ -13,7 +19,7 @@ import {
     bootstrapWinston, 
     bootstrapSwagger, 
     bootstrapIo,
-    bootstrapSocketAdminUI
+    bootstrapSocketAdminUI,
 } from './core/bootstrappers';
 
 const log = new Logger(__filename);
@@ -33,8 +39,9 @@ bootstrap({
         bootstrapApiHome,
     ],
     externalDeps: {
-        ['logger']: log
+        ['tracer']: tracer,
+        ['logger']: log,
     }
 })
-    .then(() => banner(log, 'api'))
+    .then((settings: BootstrapSettingInterface) => banner(log, 'api', settings))
     .catch((error: Error) => log.error('Application is crashed: ' + (error.stack ?? error.message)));
