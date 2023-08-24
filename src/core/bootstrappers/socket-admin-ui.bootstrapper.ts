@@ -3,9 +3,10 @@ import { env } from "../../env";
 import { BootstrapSettingInterface, Bootstrapper } from "../../lib/bootstrapper";
 import { hashSync } from "bcrypt";
 import { IOServer } from "../../contracts/types/io";
+import { BOOTSTRAP_SETTINGS_KEY } from "../constants/bootstrap-settings";
 
 export const bootstrapSocketAdminUI: Bootstrapper = (settings?: BootstrapSettingInterface) => {
-    const io = settings?.getData('io') as IOServer | undefined;
+    const io = settings?.getData<IOServer>(BOOTSTRAP_SETTINGS_KEY.IO);
     if (!env.socketAdminUI.enabled || !io) {
         return;
     }
@@ -19,4 +20,6 @@ export const bootstrapSocketAdminUI: Bootstrapper = (settings?: BootstrapSetting
             password: hashSync(env.socketAdminUI.password, 10)
         } : false
     });
+
+    settings?.setData(BOOTSTRAP_SETTINGS_KEY.SocketAdminUI, true);
 }

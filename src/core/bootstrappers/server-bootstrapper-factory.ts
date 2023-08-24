@@ -6,6 +6,7 @@ import { BootstrapSettingInterface, Bootstrapper } from '../../lib/bootstrapper'
 import { preconfigApp, postconfigApp } from '../../config';
 import { ServerType } from '../../shared/types/server-types';
 import { CORS_OPTIONS } from '../constants/cors-options';
+import { BOOTSTRAP_SETTINGS_KEY } from '../constants/bootstrap-settings';
 
 export const serverBootstrapperFactory = (serverType: ServerType): Bootstrapper => {
     return (settings?: BootstrapSettingInterface) => {
@@ -63,12 +64,13 @@ export const serverBootstrapperFactory = (serverType: ServerType): Bootstrapper 
         // Run application to listen on given port
         if (!env.isTest) {
             const server = expressApp.listen(env.app.servers[serverType].port, env.app.host);
-            settings.setData('express_server', server);
-            settings.setData('server_url', `${env.app.schema}://${env.app.host}:${env.app.servers[serverType].port}`);
+            settings.setData(BOOTSTRAP_SETTINGS_KEY.ExpressServer, server);
+            settings.setData(BOOTSTRAP_SETTINGS_KEY.ServerUrl, 
+                `${env.app.schema}://${env.app.host}:${env.app.servers[serverType].port}`);
         }
     
         // Here we can set the data for other bootstrappers
-        settings.setData('express_app', expressApp);
-        settings.setData('routing_controllers_options', routingControllersOptions);
+        settings.setData(BOOTSTRAP_SETTINGS_KEY.ExpressApp, expressApp);
+        settings.setData(BOOTSTRAP_SETTINGS_KEY.RoutingControllersOptions, routingControllersOptions);
     };
 }

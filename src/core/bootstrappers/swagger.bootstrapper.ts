@@ -13,16 +13,18 @@ import { Application, NextFunction, Request, Response } from 'express';
 import basicAuth from 'express-basic-auth';
 import { env } from '../../env';
 import { MetadataStorage } from 'class-transformer/types/MetadataStorage';
+import { BOOTSTRAP_SETTINGS_KEY } from '../constants/bootstrap-settings';
 
 export const bootstrapSwagger: Bootstrapper = (settings?: BootstrapSettingInterface) => {
-    const expressApp = settings?.getData('express_app') as Application;
-    const routingControllersOptions = settings?.getData('routing_controllers_options') as RoutingControllersOptions;
+    const expressApp = settings?.getData<Application>(BOOTSTRAP_SETTINGS_KEY.ExpressApp);
+    const routingControllersOptions = 
+        settings?.getData<RoutingControllersOptions>(BOOTSTRAP_SETTINGS_KEY.RoutingControllersOptions);
 
     if (!env.swagger.enabled || !expressApp) {
         return;
     }
 
-    const spec = generateSpec(routingControllersOptions, settings?.getData('server_url') as string);
+    const spec = generateSpec(routingControllersOptions, settings?.getData<string>(BOOTSTRAP_SETTINGS_KEY.ServerUrl));
 
     expressApp.use(
         env.swagger.route,

@@ -21,6 +21,7 @@ import {
     bootstrapIo,
     bootstrapSocketAdminUI,
 } from './core/bootstrappers';
+import { BOOTSTRAP_SETTINGS_KEY } from './core/constants/bootstrap-settings';
 
 const log = new Logger(__filename);
 
@@ -39,8 +40,8 @@ bootstrap({
         bootstrapApiHome,
     ],
     externalDeps: {
-        ['tracer']: tracer,
-        ['logger']: log,
+        [BOOTSTRAP_SETTINGS_KEY.Tracer]: tracer,
+        [BOOTSTRAP_SETTINGS_KEY.Logger]: log,
     }
 })
     .then((settings: BootstrapSettingInterface) => banner(log, 'api', settings))

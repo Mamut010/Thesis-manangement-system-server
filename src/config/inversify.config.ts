@@ -97,6 +97,8 @@ import { WsSetupService } from '../ws/services';
 import { PlainTransformer, PlainTransformerInterface } from '../dal/utils/plain-transfomer';
 import { IORoomTimerManager, IORoomTimerManagerInterface } from '../ws/utils/room-timer';
 import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-generator';
+import { BOOTSTRAP_SETTINGS_KEY } from '../core/constants/bootstrap-settings';
+import { Tracer } from '@opentelemetry/api';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -114,13 +116,20 @@ function configConstants(container: Container, settings?: BootstrapSettingInterf
     container
         .bind<Container>(INJECTION_TOKENS.DIContainer)
         .toConstantValue(container);
+
+    const tracer = settings?.getData<Tracer>(BOOTSTRAP_SETTINGS_KEY.Tracer);
+    if (tracer) {
+        container
+            .bind<Tracer>(INJECTION_TOKENS.Tracer)
+            .toConstantValue(tracer);
+    }
 }
 
 function configLogger(container: Container, settings?: BootstrapSettingInterface) {
+    const logger = settings?.getData<LoggerInterface>(BOOTSTRAP_SETTINGS_KEY.Logger) ?? new Logger();
     container
         .bind<LoggerInterface>(INJECTION_TOKENS.Logger)
-        .toDynamicValue((context: interfaces.Context) => (settings?.getData('logger') ?? new Logger()) as LoggerInterface)
-        .inSingletonScope();
+        .toConstantValue(logger);
 
     container
         .bind<LoggerFactory>(INJECTION_TOKENS.LoggerFactory)

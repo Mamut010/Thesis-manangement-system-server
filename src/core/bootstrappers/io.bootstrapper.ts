@@ -8,11 +8,12 @@ import { ClassTransformOptions } from 'class-transformer';
 import { Container } from "inversify";
 import { INJECTION_TOKENS } from "../constants/injection-tokens";
 import { IOServer } from "../../contracts/types/io";
+import { BOOTSTRAP_SETTINGS_KEY } from "../constants/bootstrap-settings";
 
 export const bootstrapIo: Bootstrapper = (settings?: BootstrapSettingInterface) => {
-    const container = settings?.getData('container') as Container | undefined;
-    const iocAdapter = settings?.getData('ioc-adapter') as IocAdapter | undefined
-    const expressServer = settings?.getData('express_server') as HttpServer | undefined;
+    const container = settings?.getData<Container>(BOOTSTRAP_SETTINGS_KEY.Container);
+    const iocAdapter = settings?.getData<IocAdapter>(BOOTSTRAP_SETTINGS_KEY.IocAdapter);
+    const expressServer = settings?.getData<HttpServer>(BOOTSTRAP_SETTINGS_KEY.ExpressServer);
 
     if (!settings || !container || !iocAdapter || !expressServer) {
         return;
@@ -53,6 +54,6 @@ export const bootstrapIo: Bootstrapper = (settings?: BootstrapSettingInterface) 
     container.bind<IOServer>(INJECTION_TOKENS.IOServer).toConstantValue(io);
 
     // Set socket/io data for other bootstrappers
-    settings.setData('io', io);
-    settings.setData('socket-controllers', socketControllers);
+    settings.setData(BOOTSTRAP_SETTINGS_KEY.IO, io);
+    settings.setData(BOOTSTRAP_SETTINGS_KEY.SocketControllers, socketControllers);
 }

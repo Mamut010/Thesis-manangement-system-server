@@ -2,6 +2,7 @@
  * @Cre: https://github.com/w3tecch/express-typescript-boilerplate
  */
 
+import { BOOTSTRAP_SETTINGS_KEY } from '../core/constants/bootstrap-settings';
 import { env } from '../env';
 import { Logger } from '../lib/logger';
 import { ServerType } from '../shared/types/server-types';
@@ -20,7 +21,7 @@ export function banner(log: Logger, server: ServerType, settings?: BootstrapSett
         log.info(``);
         if(env.swagger.enabled) 
             log.info(`API Info        : ${route(server)}${env.swagger.route}`);
-        if(settings?.getData('socket-admin-ui'))
+        if(settings?.getData(BOOTSTRAP_SETTINGS_KEY.SocketAdminUI))
             log.info(`Socket Admin UI : ${env.socketAdminUI.url}`);
         if(env.tracer.enabled)
             log.info(`Tracer Dashboard: ${env.tracer.dashboardUrl}`);

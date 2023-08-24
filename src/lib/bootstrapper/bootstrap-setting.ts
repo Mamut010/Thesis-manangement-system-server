@@ -15,9 +15,11 @@ export class BootstrapSetting implements BootstrapSettingInterface {
         return this;
     }
 
-    public getData(key: any, index: number = -1): unknown {
+    public getData<T = unknown>(key: any, index: number = -1): T | undefined {
         const values = this._storage.get(key);
-        return values ? values.at(index) : undefined;
+        return values 
+            ? values.at(index) as T | undefined 
+            : undefined;
     }
 
     public getAllData(key: any): unknown[] {
@@ -34,7 +36,7 @@ export class BootstrapSetting implements BootstrapSettingInterface {
         return this._storage.has(key);
     }
 
-    public deleteData(key: any, index: number = -1): unknown {
+    public deleteData<T = unknown>(key: any, index: number = -1): T | undefined {
         const values = this._storage.get(key);
         if (!values) {
             return undefined;
@@ -45,7 +47,7 @@ export class BootstrapSetting implements BootstrapSettingInterface {
             return undefined;
         }
         
-        const value = values.splice(index, 1)[0];
+        const value = values.splice(index, 1)[0] as T;
         if (values.length === 0) {
             this._storage.delete(key);
         }
