@@ -9,7 +9,7 @@ export const optionalNestedDecoratorFactory = (typeFunction?: (type?: TypeHelpOp
         IsOptional()(target, propertyKey);
         Expose()(target, propertyKey);
         if (isArray) {
-            Transform(({ value }) => makeArray(value))(target, propertyKey);
+            Transform(({ value }) => makeArray<unknown>(value))(target, propertyKey);
         }
     };
 }

@@ -86,8 +86,8 @@ export const env = {
     swagger: {
         enabled: toBool(getOsEnv('SWAGGER_ENABLED')),
         route: getOsEnv('SWAGGER_ROUTE'),
-        username: getOsEnv('SWAGGER_USERNAME'),
-        password: getOsEnv('SWAGGER_PASSWORD'),
+        username: getOsEnvOptional('SWAGGER_USERNAME'),
+        password: getOsEnvOptional('SWAGGER_PASSWORD'),
     },
     mail: {
         secured: toBool(getOsEnvOptional('MAIL_SECURED')),
@@ -105,6 +105,12 @@ export const env = {
     tracer: {
         enabled: toBool(getOsEnv('TRACER_ENABLED')),
         url: getOsEnvOptional('TRACER_EXPORTER_URL'),
-        dashboardUrl: getOsEnv('TRACER_DASHBOARD_URL'),
+        dashboardUrl: getOsEnvOptional('TRACER_DASHBOARD_URL'),
+    },
+    metrics: {
+        enabled: toBool(getOsEnv('METRICS_ENABLED')),
+        endpoint: getOsEnv('METRICS_ENDPOINT'),
+        username: getOsEnvOptional('METRICS_USERNAME'),
+        password: getOsEnvOptional('METRICS_PASSWORD'),
     }
 } as const;

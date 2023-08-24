@@ -10,4 +10,7 @@ export const BOOTSTRAP_SETTINGS_KEY = {
     IO: 'io',
     SocketControllers: 'socket-controllers',
     SocketAdminUI: 'socket-admin-ui',
+    Metrics: 'metrics',
+    ServerName: 'server-name',
+    Swagger: 'swagger',
 } as const;

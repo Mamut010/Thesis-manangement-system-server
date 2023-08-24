@@ -28,15 +28,17 @@ export const bootstrapSwagger: Bootstrapper = (settings?: BootstrapSettingInterf
 
     expressApp.use(
         env.swagger.route,
-        env.swagger.username ? basicAuth({
+        (env.swagger.username && env.swagger.password) ? basicAuth({
             users: {
                 [`${env.swagger.username}`]: env.swagger.password,
             },
             challenge: true,
-        }) : (req: Request, res: Response, next: NextFunction) => next(),
+        }) : (_req: Request, _res: Response, next: NextFunction) => next(),
         swaggerUi.serve,
         swaggerUi.setup(spec)
     );
+
+    settings?.setData(BOOTSTRAP_SETTINGS_KEY.Swagger, true);
 }
 
 function generateSpec(routingControllersOptions?: RoutingControllersOptions, serverUrl?: string): JsonObject {

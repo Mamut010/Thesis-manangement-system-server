@@ -7,6 +7,7 @@ import { preconfigApp, postconfigApp } from '../../config';
 import { ServerType } from '../../shared/types/server-types';
 import { CORS_OPTIONS } from '../constants/cors-options';
 import { BOOTSTRAP_SETTINGS_KEY } from '../constants/bootstrap-settings';
+import { route } from '../../utils/route-helpers';
 
 export const serverBootstrapperFactory = (serverType: ServerType): Bootstrapper => {
     return (settings?: BootstrapSettingInterface) => {
@@ -65,8 +66,7 @@ export const serverBootstrapperFactory = (serverType: ServerType): Bootstrapper 
         if (!env.isTest) {
             const server = expressApp.listen(env.app.servers[serverType].port, env.app.host);
             settings.setData(BOOTSTRAP_SETTINGS_KEY.ExpressServer, server);
-            settings.setData(BOOTSTRAP_SETTINGS_KEY.ServerUrl, 
-                `${env.app.schema}://${env.app.host}:${env.app.servers[serverType].port}`);
+            settings.setData(BOOTSTRAP_SETTINGS_KEY.ServerUrl, route(serverType));
         }
     
         // Here we can set the data for other bootstrappers

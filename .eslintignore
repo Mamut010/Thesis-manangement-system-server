@@ -2,5 +2,7 @@
 dist/*
 # Ignore prisma files
 prisma/*
+# Ignore helper scripts
+scripts/*
 
 src/decorators/*
