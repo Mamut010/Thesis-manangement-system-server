@@ -9,7 +9,7 @@
     "dev": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"nodemon -q dist/api.server.js\"",
     "auth": "cross-env NODE_ENV=development \"nodemon -q dist/auth.server.js\"",
     "prestart": "npm run build",
-    "start": "cross-env NODE_ENV=production node dist/auth.server.js",
+    "start": "cross-env NODE_ENV=production node dist/api.server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
