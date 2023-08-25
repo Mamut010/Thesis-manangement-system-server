@@ -35,7 +35,7 @@ bootstrap({
         bootstrapIoc,
         bootstrapAuthServer,
         bootstrapSwagger,
-        bootstrapMetrics,
+        //bootstrapMetrics,
         bootstrapAuthHome,
     ],
     externalDeps: {

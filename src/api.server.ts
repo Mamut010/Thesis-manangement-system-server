@@ -39,7 +39,7 @@ bootstrap({
         bootstrapIo,
         bootstrapSwagger,
         bootstrapSocketAdminUI,
-        bootstrapMetrics,
+        //bootstrapMetrics,
         bootstrapApiHome,
     ],
     externalDeps: {
