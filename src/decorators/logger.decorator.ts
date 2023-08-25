@@ -20,7 +20,7 @@ function getServiceIdentifier(scope?: string) {
 export const logger = (scope?: string) => {
     const serviceIdentifier = getServiceIdentifier(scope);
 
-    if (!container.isCurrentBound(serviceIdentifier)) {
+    if (!container.isBound(serviceIdentifier)) {
         container
             .bind<LoggerInterface>(serviceIdentifier)
             .toDynamicValue((context) => {
