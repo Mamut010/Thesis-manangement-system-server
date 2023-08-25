@@ -58,7 +58,7 @@ export interface PaginationQueryObject {
     take?: number 
 }
 
-export interface PrismaQueryObject {
+export interface PrismaQuery {
     where: WhereQueryObject | undefined;
     orderBy: OrderByQueryObject | OrderByQueryObject[] | undefined;
     skip: number | undefined

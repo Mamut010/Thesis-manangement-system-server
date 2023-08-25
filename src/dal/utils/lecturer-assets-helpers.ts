@@ -1,7 +1,7 @@
-import { PrismaQueryObject } from "../../lib/query";
+import { PrismaQuery } from "../../lib/query";
 import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
 
-export function getLecturerAssetsQuery(lecturerId: string, prismaQuery: PrismaQueryObject) {
+export function getLecturerAssetsQuery(lecturerId: string, prismaQuery: PrismaQuery) {
     return {
         where: {
             AND: [

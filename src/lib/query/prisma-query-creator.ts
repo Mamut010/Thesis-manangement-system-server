@@ -19,7 +19,7 @@ import {
     NullableFilteringObject,
     OrderByQueryObject, 
     PaginationQueryObject, 
-    PrismaQueryObject, 
+    PrismaQuery, 
     WhereBinaryFilterObject, 
     WhereListFilterObject, 
     WhereQueryObject 
@@ -39,7 +39,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
     }   
 
     createQueryObject(model: AutoQueryModel, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
-        : PrismaQueryObject {
+        : PrismaQuery {
         const { where, fieldMap } = this.createWhereWithFieldMap(model, query, creationOptions);
         const orderBy = this.createOrderByObject(query.orderBy, { fieldMap, ignoreUnmapped: true });
         const { skip, take } = this.createPaginationObject(query.pagination);

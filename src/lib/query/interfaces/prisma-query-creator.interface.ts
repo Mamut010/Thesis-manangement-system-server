@@ -6,7 +6,7 @@ import { FilterOperator } from "../types/filter-operator";
 import { 
     OrderByQueryObject, 
     PaginationQueryObject, 
-    PrismaQueryObject, 
+    PrismaQuery, 
     WhereBinaryFilterObject, 
     WhereListFilterObject, 
     WhereQueryObject
@@ -25,7 +25,7 @@ export interface PrismaQueryCreatorInterface {
         : AutoQueryModel;
 
     createQueryObject(model: AutoQueryModel, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
-        : PrismaQueryObject;
+        : PrismaQuery;
 
     createWhereObject(model: AutoQueryModel, query: AutoWhereQueryCreatable, creationOptions?: AutoQueryCreationOptions)
         : WhereQueryObject | undefined;
