@@ -1,5 +1,4 @@
-import { LecturerUpdateRequest } from "../../contracts/requests";
-import { LecturersQueryRequest } from "../../contracts/requests";
+import { LecturerUpdateRequest, LecturersQueryRequest } from "../../contracts/requests";
 import { LecturersQueryResponse } from "../../contracts/responses";
 import { LecturerDto } from "../../shared/dtos";
 

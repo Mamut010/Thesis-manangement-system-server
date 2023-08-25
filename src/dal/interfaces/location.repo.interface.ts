@@ -1,6 +1,4 @@
-import { LocationCreateRequest } from "../../contracts/requests";
-import { LocationUpdateRequest } from "../../contracts/requests";
-import { LocationsQueryRequest } from "../../contracts/requests";
+import { LocationCreateRequest, LocationUpdateRequest, LocationsQueryRequest } from "../../contracts/requests";
 import { LocationsQueryResponse } from "../../contracts/responses";
 import { LocationDto } from "../../shared/dtos";
 

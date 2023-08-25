@@ -1,6 +1,4 @@
-import { NotificationCreateRequest } from "../../contracts/requests";
-import { NotificationUpdateRequest } from "../../contracts/requests";
-import { NotificationsQueryRequest } from "../../contracts/requests";
+import { NotificationCreateRequest, NotificationUpdateRequest, NotificationsQueryRequest } from "../../contracts/requests";
 import { NotificationsQueryResponse } from "../../contracts/responses";
 import { NotificationDto } from "../../shared/dtos";
 import { NotificationUpdateManyFilter } from "../types/notification";

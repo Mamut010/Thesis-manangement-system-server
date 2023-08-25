@@ -1,6 +1,8 @@
-import { OralDefenseRegistrationCreateRequest } from "../../contracts/requests";
-import { OralDefenseRegistrationUpdateRequest } from "../../contracts/requests";
-import { OralDefenseRegistrationsQueryRequest } from "../../contracts/requests";
+import { 
+    OralDefenseRegistrationCreateRequest,
+    OralDefenseRegistrationUpdateRequest, 
+    OralDefenseRegistrationsQueryRequest
+} from "../../contracts/requests";
 import { OralDefenseRegistrationsQueryResponse } from "../../contracts/responses";
 import { OralDefenseRegistrationDto } from "../../shared/dtos";
 

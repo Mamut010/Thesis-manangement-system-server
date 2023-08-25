@@ -1,6 +1,4 @@
-import { FieldCreateRequest } from "../../contracts/requests";
-import { FieldUpdateRequest } from "../../contracts/requests";
-import { FieldsQueryRequest } from "../../contracts/requests";
+import { FieldCreateRequest, FieldUpdateRequest, FieldsQueryRequest } from "../../contracts/requests";
 import { FieldsQueryResponse } from "../../contracts/responses";
 import { FieldDto } from "../../shared/dtos";
 
