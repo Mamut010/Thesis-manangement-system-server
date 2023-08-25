@@ -9,11 +9,11 @@ import { routingControllersToSpec } from 'routing-controllers-openapi';
 import swaggerUi, { JsonObject } from 'swagger-ui-express';
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 import { Bootstrapper, BootstrapSettingInterface } from '../../lib/bootstrapper';
-import { Application, NextFunction, Request, Response } from 'express';
-import basicAuth from 'express-basic-auth';
+import { Application } from 'express';
 import { env } from '../../env';
 import { MetadataStorage } from 'class-transformer/types/MetadataStorage';
 import { BOOTSTRAP_SETTINGS_KEY } from '../../settings/bootstrap-settings';
+import { makeBasicAuthOrPassThrough } from '../../utils/bootstrapper-helpers';
 
 export const bootstrapSwagger: Bootstrapper = (settings?: BootstrapSettingInterface) => {
     const expressApp = settings?.getData<Application>(BOOTSTRAP_SETTINGS_KEY.ExpressApp);
@@ -28,12 +28,7 @@ export const bootstrapSwagger: Bootstrapper = (settings?: BootstrapSettingInterf
 
     expressApp.use(
         env.swagger.route,
-        (env.swagger.username && env.swagger.password) ? basicAuth({
-            users: {
-                [`${env.swagger.username}`]: env.swagger.password,
-            },
-            challenge: true,
-        }) : (_req: Request, _res: Response, next: NextFunction) => next(),
+        makeBasicAuthOrPassThrough(env.swagger.username, env.swagger.password),
         swaggerUi.serve,
         swaggerUi.setup(spec)
     );

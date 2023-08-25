@@ -18,8 +18,7 @@ import {
     bootstrapAuthHome, 
     bootstrapIoc, 
     bootstrapWinston, 
-    bootstrapSwagger,
-    bootstrapMetrics,
+    bootstrapSwagger
 } from './core/bootstrappers';
 import { BOOTSTRAP_SETTINGS_KEY } from './settings/bootstrap-settings';
 
@@ -35,7 +34,6 @@ bootstrap({
         bootstrapIoc,
         bootstrapAuthServer,
         bootstrapSwagger,
-        //bootstrapMetrics,
         bootstrapAuthHome,
     ],
     externalDeps: {
