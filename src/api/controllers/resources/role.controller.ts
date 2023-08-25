@@ -47,26 +47,11 @@ export class RoleController {
         return this.roleService.getRole(id);
     }
 
-    @HttpCode(HTTP_CODES.Created)
-    //@Authorized(ROLES.Admin)
-    @Post()
-    @ResponseSchema(RoleDto)
-    createRole(@Body({ required: true }) createRequest: RoleCreateRequest) {
-        return this.roleService.createRole(createRequest);
-    }
-
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized(ROLES.Admin)
     @Patch('/:id')
     @ResponseSchema(RoleDto)
     updateRole(@Param('id') id: number, @Body({ required: true }) updateRequest: RoleUpdateRequest) {
         return this.roleService.updateRole(id, updateRequest);
-    }
-
-    //@Authorized(ROLES.Admin)
-    @Delete('/:id')
-    @OnUndefined(HTTP_CODES.NoContent)
-    deleteRole(@Param('id') id: number) {
-        return this.roleService.deleteRole(id);
     }
 }
