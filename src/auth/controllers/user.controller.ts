@@ -42,16 +42,23 @@ export class UserController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
+    @Get('/:id')
+    @ResponseSchema(UserInfoDto)
+    getUser(@CurrentUser() currentUser: AuthorizedUser, @Param('id') id: string) {
+        return this.userService.getUser(currentUser, id);
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
     @Patch('/:id')
     @ResponseSchema(UserInfoDto)
-    public updateUser(@CurrentUser() currentUser: AuthorizedUser, @Param('id') userId: string, 
+    public updateUser(@CurrentUser() currentUser: AuthorizedUser, @Param('id') id: string, 
         @Body({ required: true }) updateRequest: UserInfoUpdateRequest) {
-        return this.userService.updateUser(currentUser, userId, updateRequest);
+        return this.userService.updateUser(currentUser, id, updateRequest);
     }
 
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
-    public deleteUser(@CurrentUser() currentUser: AuthorizedUser, @Param('id') userId: string) {
-        return this.userService.deleteUser(currentUser, userId);
+    public deleteUser(@CurrentUser() currentUser: AuthorizedUser, @Param('id') id: string) {
+        return this.userService.deleteUser(currentUser, id);
     }
 }

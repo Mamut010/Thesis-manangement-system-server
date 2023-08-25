@@ -27,7 +27,12 @@ export class UserService implements UserServiceInterface {
         return {
             content: result.content.map(item => plainToInstanceExactMatch(UserInfoDto, item)),
             count: result.count
-        }
+        };
+    }
+
+    async getUser(currentUser: AuthorizedUser, userId: string): Promise<UserInfoDto> {
+        const result = await this.ensureRecordExists(userId);
+        return plainToInstanceExactMatch(UserInfoDto, result);
     }
 
     async updateUser(currentUser: AuthorizedUser, userId: string, updateRequest: UserInfoUpdateRequest)
