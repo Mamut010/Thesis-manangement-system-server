@@ -48,6 +48,7 @@
     "helmet": "^7.0.0",
     "inversify": "^6.0.1",
     "jsonwebtoken": "^9.0.1",
+    "lazy-get-decorator": "^2.2.1",
     "luxon": "^3.4.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",

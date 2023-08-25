@@ -7,3 +7,4 @@ export * from './winston.bootstrapper';
 export * from './swagger.bootstrapper';
 export * from './io.bootstrapper';
 export * from './socket-admin-ui.bootstrapper';
+export * from './metrics.bootstrapper';

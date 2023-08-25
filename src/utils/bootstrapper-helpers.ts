@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import expressBasicAuth from "express-basic-auth";
 
-export const PassThrough: RequestHandler = (_req: Request, _res: Response, next: NextFunction) => next();
+export const PassThroughMiddleware: RequestHandler = (_req: Request, _res: Response, next: NextFunction) => next();
 
 export const makeBasicAuthOrPassThrough = (username: string | undefined, password: string | undefined): RequestHandler => {
     if (username && typeof password !== 'undefined') {
@@ -13,6 +13,6 @@ export const makeBasicAuthOrPassThrough = (username: string | undefined, passwor
         })
     }
     else {
-        return PassThrough;
+        return PassThroughMiddleware;
     }
 }

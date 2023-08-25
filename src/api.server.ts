@@ -20,7 +20,8 @@ import {
     bootstrapWinston, 
     bootstrapSwagger, 
     bootstrapIo,
-    bootstrapSocketAdminUI
+    bootstrapSocketAdminUI,
+    bootstrapMetrics
 } from './core/bootstrappers';
 import { BOOTSTRAP_SETTINGS_KEY } from './settings/bootstrap-settings';
 
@@ -38,6 +39,7 @@ bootstrap({
         bootstrapIo,
         bootstrapSwagger,
         bootstrapSocketAdminUI,
+        bootstrapMetrics,
         bootstrapApiHome,
     ],
     externalDeps: {
