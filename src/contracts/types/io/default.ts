@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { AuthorizedUser } from "../../../core/auth-checkers";
-import { WsAuthenticateRequest } from "../../requests/ws/ws-authenticate.request";
-import { WsAuthenticateResponse } from "../../responses/ws/ws-authenticate.response";
+import { WsAuthenticateRequest } from "../../requests";
+import { WsAuthenticateResponse } from "../../responses";
 import { CLIENT_TO_SERVER_EVENTS, SERVER_TO_CLIENT_EVENTS } from "../../constants/io";
 import { JwtAccessPayloadDto } from "../../../shared/dtos";
 

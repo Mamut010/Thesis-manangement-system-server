@@ -9,3 +9,7 @@ export * from './roles-query.response';
 export * from './theses-query.response';
 export * from './topics-query.response';
 export * from './programs-query.response';
+export * from './lecturers-query.response';
+export * from './notifications-query.response';
+export * from './students-query.response';
+export * from './users-query.response';

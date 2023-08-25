@@ -9,9 +9,7 @@ import {
     UserInfoDto,
 } from '../../shared/dtos';
 import { AuthServiceInterface } from '../interfaces';
-import { LoginRequest } from '../../contracts/requests/auth/login.request';
 import { UnauthorizedError } from '../../contracts/errors/unauthorized.error';
-import { SignUpRequest } from '../../contracts/requests/auth/sign-up.request';
 import { AuthenticationError } from '../../contracts/errors/authentication.error';
 import { plainToInstanceExactMatch } from '../../utils/class-transformer-helpers';
 import { JwtCookieHandlerInterface } from '../utils/jwt-cookie-handlers';
@@ -26,10 +24,12 @@ import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { env } from '../../env';
 import { RefreshTokenRepoInterface, RoleRepoInterface, UserRepoInterface } from '../../dal/interfaces';
 import { 
+    LoginRequest,
+    SignUpRequest,
     UserCreateRequest, 
     UsersQueryRequest,
     RefreshTokenUpsertCreateRequest, 
-    RefreshTokenUpsertUpdateRequest
+    RefreshTokenUpsertUpdateRequest,
 } from '../../contracts/requests';
 import { StringFilter } from '../../lib/query';
 import { makeArray, singleOrDefault } from '../../utils/array-helpers';

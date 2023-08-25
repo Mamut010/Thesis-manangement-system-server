@@ -1,10 +1,10 @@
-import { BooleanFilter, DateFilter, NullableStringFilter } from "../../lib/query";
+import { BooleanFilter, DateFilter, NullableStringFilter } from "../../../lib/query";
 import { 
     IsBooleanFilterArray,
     IsDateFilterArray,
     IsNullableStringFilterArray 
-} from "../../decorators";
-import { BaseQueryRequest } from "../bases";
+} from "../../../decorators";
+import { BaseQueryRequest } from "../../bases";
 
 export class NotificationsQueryRequest extends BaseQueryRequest {
     @IsNullableStringFilterArray()
