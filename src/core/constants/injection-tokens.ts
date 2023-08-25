@@ -30,6 +30,7 @@ const REPOSITORY_TOKENS = {
     LocationRepo: Symbol.for('LocationRepo'),
     RoleRepo: Symbol.for('RoleRepo'),
     NotificationRepo: Symbol.for('NotificationRepo'),
+    ProgramRepo: Symbol.for('ProgramRepo'),
 } as const;
 
 const AUTH_SERVICE_TOKENS = {
@@ -53,6 +54,7 @@ const API_SERVICE_TOKENS = {
     BachelorThesisEvaluationService: Symbol.for('BachelorThesisEvaluationService'),
     OralDefenseRegistrationService: Symbol.for('OralDefenseRegistrationService'),
     OralDefenseAssessmentService: Symbol.for('OralDefenseAssessmentService'),
+    ProgramService: Symbol.for('ProgramService'),
 } as const;
 
 const WS_SERVICE_TOKENS = {

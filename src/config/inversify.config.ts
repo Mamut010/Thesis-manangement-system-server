@@ -20,7 +20,8 @@ import {
     BachelorThesisAssessmentServiceInterface,
     OralDefenseRegistrationServiceInterface,
     OralDefenseAssessmentServiceInterface,
-    BachelorThesisEvaluationServiceInterface
+    BachelorThesisEvaluationServiceInterface,
+    ProgramServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -35,7 +36,8 @@ import {
     BachelorThesisAssessmentService,
     OralDefenseRegistrationService,
     OralDefenseAssessmentService,
-    BachelorThesisEvaluationService
+    BachelorThesisEvaluationService,
+    ProgramService
 } from '../api/services';
 import { 
     AdminRepoInterface,
@@ -48,6 +50,7 @@ import {
     NotificationRepoInterface, 
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface, 
+    ProgramRepoInterface, 
     RefreshTokenRepoInterface, 
     RoleRepoInterface, 
     StudentRepoInterface, 
@@ -71,7 +74,8 @@ import {
     RoleRepo,
     AdminRepo,
     StudentRepo,
-    NotificationRepo
+    NotificationRepo,
+    ProgramRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -148,7 +152,7 @@ function configLogger(container: Container, settings?: BootstrapSettingInterface
 
 function configPrisma(container: Container, settings?: BootstrapSettingInterface) {
     /**
-     * Prisma manages the connection pool automatically so it is better to let it live alongside the Express app
+     * Prisma manages the connection pool automatically so it's better to let it live as a singleton in the Express app
      * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/connection-management
      */
     container
@@ -237,6 +241,11 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
         .bind<NotificationRepoInterface>(INJECTION_TOKENS.NotificationRepo)
         .to(NotificationRepo)
         .inRequestScope();
+
+    container
+        .bind<ProgramRepoInterface>(INJECTION_TOKENS.ProgramRepo)
+        .to(ProgramRepo)
+        .inRequestScope();
 }
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {
@@ -316,6 +325,11 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<OralDefenseAssessmentServiceInterface>(INJECTION_TOKENS.OralDefenseAssessmentService)
         .to(OralDefenseAssessmentService)
+        .inRequestScope();
+
+    container
+        .bind<ProgramServiceInterface>(INJECTION_TOKENS.ProgramService)
+        .to(ProgramService)
         .inRequestScope();
 }
 

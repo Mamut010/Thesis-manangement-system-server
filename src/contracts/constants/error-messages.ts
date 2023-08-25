@@ -17,6 +17,7 @@ export const ERROR_MESSAGES = {
         StudentNotFound: 'Student not found',
         LecturerNotFound: 'Lecturer not found',
         ThesisNotFound: 'Thesis not found',
+        ProgramNotFound: 'Program not found',
         FieldNotFound: 'Field not found',
         TopicNotFound: 'Topic not found',
         LocationNotFound: 'Location not found',
@@ -35,6 +36,7 @@ export const ERROR_MESSAGES = {
     UniqueConstraint: {
         RoleAlreadyExists: 'The role already exists',
         UserAlreadyExists: 'The user already exists',
+        ProgramAlreadyExists: 'The program already exists',
         StudentAlreadyConnectedBachelorThesisRegistration: 'The student already associates with a bachelor thesis registration',
         StudentAlreadyConnectedBachelorThesisAssessment: 'The student already associates with a bachelor thesis assessment',
         StudentAlreadyConnectedBachelorThesisEvaluation: 'The student already associates with a bachelor thesis evaluation',

@@ -8,3 +8,4 @@ export * from './oral-defense-registrations-query.response';
 export * from './roles-query.response';
 export * from './theses-query.response';
 export * from './topics-query.response';
+export * from './programs-query.response';

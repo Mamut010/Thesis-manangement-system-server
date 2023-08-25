@@ -14,3 +14,4 @@ export * from './topic.repo.interface';
 export * from './location.repo.interface';
 export * from './role.repo.interface';
 export * from './notification.repo.interface';
+export * from './program.repo.interface';

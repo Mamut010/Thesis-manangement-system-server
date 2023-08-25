@@ -13,3 +13,4 @@ export * from './resources/bachelor-thesis-assessment.service';
 export * from './resources/bachelor-thesis-evaluation.service';
 export * from './resources/oral-defense-registration.service';
 export * from './resources/oral-defense-assessment.service';
+export * from './resources/program.service';

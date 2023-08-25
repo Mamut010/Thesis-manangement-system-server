@@ -28,3 +28,6 @@ export * from './thesis-update.request';
 export * from './topic-create.request';
 export * from './topic-update.request';
 export * from './topics-query.request';
+export * from './program-create.request';
+export * from './program-update.request';
+export * from './programs-query.request';
