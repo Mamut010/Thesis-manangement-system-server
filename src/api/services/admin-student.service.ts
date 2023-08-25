@@ -55,7 +55,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentInfo(studentId: string): Promise<StudentInfoDto> {
-        const result = await this.ensureStudentExists(studentId);
+        const result = await this.ensureRecordExists(studentId);
         return plainToInstanceExactMatch(StudentInfoDto, result);
     }
 
@@ -79,7 +79,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationInfoDto> {
-        await this.ensureStudentExists(studentId);
+        await this.ensureRecordExists(studentId);
         
         const result = await this.queryStudentBachelorThesisRegistration(studentId);
         if (result.length === 0) {
@@ -90,7 +90,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentInfoDto> {
-        await this.ensureStudentExists(studentId);
+        await this.ensureRecordExists(studentId);
 
         const result = await this.queryStudentBachelorThesisAssessment(studentId);
         if (result.length === 0) {
@@ -101,7 +101,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationInfoDto> {
-        await this.ensureStudentExists(studentId);
+        await this.ensureRecordExists(studentId);
 
         const result = await this.queryStudentBachelorThesisEvaluation(studentId);
         if (result.length === 0) {
@@ -112,7 +112,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationInfoDto> {
-        await this.ensureStudentExists(studentId);
+        await this.ensureRecordExists(studentId);
         
         const result = await this.queryStudentOralDefenseRegistration(studentId);
         if (result.length === 0) {
@@ -123,7 +123,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentInfoDto> {
-        await this.ensureStudentExists(studentId);
+        await this.ensureRecordExists(studentId);
         
         const result = await this.queryStudentOralDefenseAssessment(studentId);
         if (result.length === 0) {
@@ -142,8 +142,8 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         return plainToInstanceExactMatch(StudentInfoDto, result);
     }
 
-    private async ensureStudentExists(id: string) {
-        const result = await this.studentRepo.findOneById(id);
+    private async ensureRecordExists(studentId: string) {
+        const result = await this.studentRepo.findOneById(studentId);
         if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
         }
