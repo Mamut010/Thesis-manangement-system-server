@@ -105,7 +105,6 @@ export const env = {
     tracer: {
         enabled: toBool(getOsEnv('TRACER_ENABLED')),
         url: getOsEnvOptional('TRACER_EXPORTER_URL'),
-        dashboardUrl: getOsEnvOptional('TRACER_DASHBOARD_URL'),
     },
     metrics: {
         enabled: toBool(getOsEnv('METRICS_ENABLED')),

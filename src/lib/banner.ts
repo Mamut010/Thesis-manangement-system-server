@@ -20,13 +20,13 @@ export function banner(log: Logger, server: ServerType, settings?: BootstrapSett
         log.info(`Version      : ${env.app.version}`);
         log.info(``);
         if(settings?.getData(BOOTSTRAP_SETTINGS_KEY.Swagger)) 
-            log.info(`API Info        : ${route(server)}${env.swagger.route}`);
+            log.info(`API Info         : ${route(server)}${env.swagger.route}`);
         if(settings?.getData(BOOTSTRAP_SETTINGS_KEY.SocketAdminUI))
-            log.info(`Socket Admin UI : ${env.socketAdminUI.url}`);
-        if(env.tracer.enabled && env.tracer.dashboardUrl)
-            log.info(`Tracer Dashboard: ${env.tracer.dashboardUrl}`);
+            log.info(`Socket Admin UI  : ${env.socketAdminUI.url}`);
         if(settings?.getData(BOOTSTRAP_SETTINGS_KEY.Metrics))
-            log.info(`Metrics Endpoint: ${env.metrics.endpoint}`);
+            log.info(`Metrics Endpoint : ${env.metrics.endpoint}`);
+        if(settings?.getData(BOOTSTRAP_SETTINGS_KEY.Tracer))
+            log.info(`Tracer           : READY`);
         log.info('-------------------------------------------------------');
         log.info('');
     } else {
