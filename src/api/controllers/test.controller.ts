@@ -122,19 +122,12 @@ export class TestController {
         (studentsQuery as any).forenameFilter = [forenameFilter1];
         //(studentsQuery as any).forenameFilter = [forenameFilter1, forenameFilter2];
 
-        const intakeFilter = new StringFilter();
-        intakeFilter.value = '2019';
-        studentsQuery.intakeFilter = [intakeFilter];
-
         studentsQuery.pagination = new Pagination();
 
         const emailOrderBy = new OrderBy();
         emailOrderBy.field = 'email';
         emailOrderBy.dir = 'desc';
-        const intakeSorter = new OrderBy();
-        intakeSorter.field = 'intake';
-        intakeSorter.dir = 'desc';
-        studentsQuery.orderBy = [emailOrderBy, intakeSorter];
+        studentsQuery.orderBy = [emailOrderBy];
 
         const model = {
             userId: true,
@@ -153,7 +146,8 @@ export class TestController {
         const students = await this.prisma.student.findMany({ 
             ...queryObject, 
             include: { 
-                user: true
+                user: true,
+                program: true,
             } 
         });
 

@@ -10,6 +10,7 @@ import {
     NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
+    ProgramDto, 
     RefreshTokenDto, 
     RoleDto, 
     StudentDto,
@@ -30,6 +31,7 @@ import {
     PlainNotification, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
+    PlainProgram, 
     PlainRole, 
     PlainStudent,
     PlainThesis,
@@ -68,8 +70,11 @@ export class PlainTransformer implements PlainTransformerInterface {
     }
 
     public toStudentInfo(plain: PlainStudent): StudentDto {
-        const dto = plainToInstanceExactMatch(StudentDto, flattenObject(plain));
+        const dto = plainToInstanceExactMatch(StudentDto, flattenObject(plain,{
+            transformedProps: ['program']
+        }));
         dto.studentId = plain.userId;
+        
         return dto;
     }
 
@@ -93,6 +98,11 @@ export class PlainTransformer implements PlainTransformerInterface {
 
     public toRole(plain: PlainRole): RoleDto {
         const dto = plainToInstanceExactMatch(RoleDto, plain);
+        return dto;
+    }
+
+    public toProgram(plain: PlainProgram): ProgramDto {
+        const dto = plainToInstanceExactMatch(ProgramDto, plain);
         return dto;
     }
 

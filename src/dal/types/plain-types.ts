@@ -9,6 +9,7 @@ import {
     Notification, 
     OralDefenseAssessment, 
     OralDefenseRegistration, 
+    Program, 
     RefreshToken, 
     Role, 
     Student, 
@@ -31,6 +32,7 @@ export type PlainAdmin = Admin & {
 
 export type PlainStudent = Student & {
     user: User,
+    program: Program | null,
 };
 
 export type PlainLecturer = Lecturer & {
@@ -40,6 +42,8 @@ export type PlainLecturer = Lecturer & {
 };
 
 export type PlainRole = Role;
+
+export type PlainProgram = Program;
 
 export type PlainField = Field;
 

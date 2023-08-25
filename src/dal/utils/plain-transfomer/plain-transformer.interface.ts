@@ -9,6 +9,7 @@ import {
     NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
+    ProgramDto, 
     RefreshTokenDto, 
     RoleDto, 
     StudentDto,
@@ -27,6 +28,7 @@ import {
     PlainNotification, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
+    PlainProgram, 
     PlainRefreshToken, 
     PlainRole, 
     PlainStudent,
@@ -44,6 +46,7 @@ export interface PlainTransformerInterface {
     toLecturerInfo(plain: PlainLecturer): LecturerDto;
     toRole(plain: PlainRole): RoleDto;
     toThesis(plain: PlainThesis): ThesisDto;
+    toProgram(plain: PlainProgram): ProgramDto;
     toField(plain: PlainField): FieldDto;
     toTopic(plain: PlainTopic): TopicDto;
     toLocation(plain: PlainLocation): LocationDto;

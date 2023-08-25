@@ -14,6 +14,11 @@ export class Student {
 
     @Expose()
     @IsOptional()
+    @IsNumber()
+    programId!: number | null;
+
+    @Expose()
+    @IsOptional()
     @IsString()
     surname!: string | null;
 
@@ -24,8 +29,8 @@ export class Student {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    intake!: string | null;
+    @IsNumber()
+    intake!: number | null;
 
     @Expose()
     @IsDefined()

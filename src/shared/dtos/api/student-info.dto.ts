@@ -6,6 +6,16 @@ export class StudentInfoDto {
     @IsDefined()
     @IsString()
     studentId!: string;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    programId!: number | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    programTitle!: string | null;
     
     @Expose()
     @IsOptional()
@@ -24,8 +34,8 @@ export class StudentInfoDto {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    intake!: string | null;
+    @IsNumber()
+    intake!: number | null;
 
     @Expose()
     @IsDefined()

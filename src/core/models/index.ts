@@ -5,6 +5,7 @@ export * from './notification.model';
 export * from './student.model';
 export * from './admin.model';
 export * from './lecturer.model';
+export * from './program.model';
 export * from './thesis.model';
 export * from './topic.model';
 export * from './field.model';

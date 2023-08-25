@@ -26,7 +26,7 @@ model User {
     student                 Student?
 
     refreshToken            RefreshToken?   
-    role                    Role            @relation(fields: [roleId], references: [id])
+    role                    Role            @relation(fields: [roleId], references: [id], onUpdate: Cascade)
     sentNotifications       Notification[]
     receivedNotifications   Notification[]  @relation("usersReceivedNotifications")
 }
@@ -94,16 +94,28 @@ model Lecturer {
     sup2OralDefenseAssessments       OralDefenseAssessment[]         @relation("supervisor2OralDefenseAssessments")
 }
 
+model Program {
+    id              Int         @id @default(autoincrement())
+    title           String      @unique @db.VarChar(255)
+    description     String?     @db.Text
+    createdAt       DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
+
+    students        Student[]
+}
+
 model Student {
     id                            Int                             @id @default(autoincrement())
     userId                        String                          @unique
+    programId                     Int?
     surname                       String?                         @db.VarChar(255)
-    forename                      String?                         @db.VarChar(255)
-    intake                        String?
+    forename                      String?                         @db.VarChar(255)                            
+    intake                        Int?
     ects                          Int                             @default(0)
     signature                     String?                         @db.VarChar(255)
 
     user                          User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    program                       Program?                        @relation(fields: [programId], references: [id], onDelete: SetNull, onUpdate: Cascade)
     bachelorThesisRegistration    BachelorThesisRegistration?
     oralDefenseRegistration       OralDefenseRegistration?
     bachelorThesisAssessment      BachelorThesisAssessment?
@@ -118,7 +130,7 @@ model Topic {
     createdAt       DateTime    @default(now()) @db.Timestamp(6)
     updatedAt       DateTime    @updatedAt @db.Timestamp(6)
 
-    thesis          Thesis[]
+    theses          Thesis[]
 }
 
 model Field {
@@ -128,7 +140,7 @@ model Field {
     createdAt       DateTime    @default(now()) @db.Timestamp(6)
     updatedAt       DateTime    @updatedAt @db.Timestamp(6)
 
-    thesis          Thesis[]
+    theses          Thesis[]
 }
         
 model Thesis {

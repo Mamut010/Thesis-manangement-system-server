@@ -1,26 +1,26 @@
 import { NullableStringFilter, NumberFilter, StringFilter } from "../../lib/query";
-import { IsNullableStringFilter, IsNumberFilter, IsStringFilterArray } from "../../decorators";
+import { IsNullableStringFilterArray, IsNumberFilterArray, IsStringFilterArray } from "../../decorators";
 import { BaseQueryRequest } from "../bases";
 
 export class LecturersQueryRequest extends BaseQueryRequest {
     @IsStringFilterArray()
     lecturerIdFilter?: StringFilter[];
 
-    @IsNullableStringFilter()
+    @IsNullableStringFilterArray()
     titleFilter?: NullableStringFilter[];
 
-    @IsNullableStringFilter()
+    @IsNullableStringFilterArray()
     bioFilter?: NullableStringFilter[];
 
     @IsStringFilterArray()
     typeFilter?: StringFilter[];
 
-    @IsNullableStringFilter()
+    @IsNullableStringFilterArray()
     emailFilter?: NullableStringFilter[];
 
-    @IsNumberFilter()
+    @IsNumberFilterArray()
     numberOfThesesFilter?: NumberFilter[];
 
-    @IsNullableStringFilter()
+    @IsNullableStringFilterArray()
     signatureFilter?: NullableStringFilter[];
 }

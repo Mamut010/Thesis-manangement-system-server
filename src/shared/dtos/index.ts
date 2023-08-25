@@ -9,6 +9,7 @@ export * from './dao/student.dto';
 export * from './dao/lecturer.dto';
 export * from './dao/role.dto';
 export * from './dao/thesis.dto';
+export * from './dao/program.dto';
 export * from './dao/field.dto';
 export * from './dao/topic.dto';
 export * from './dao/location.dto';

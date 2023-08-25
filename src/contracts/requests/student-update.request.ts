@@ -4,6 +4,11 @@ import { IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
 export class StudentUpdateRequest {
     @Expose()
     @IsOptional()
+    @IsNumber()
+    programId?: number;
+
+    @Expose()
+    @IsOptional()
     @IsString()
     surname?: string;
 
@@ -24,8 +29,8 @@ export class StudentUpdateRequest {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    intake?: string;
+    @IsNumber()
+    intake?: number;
 
     @Expose()
     @IsOptional()

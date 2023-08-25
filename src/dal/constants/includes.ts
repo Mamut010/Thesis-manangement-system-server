@@ -2,6 +2,11 @@ export const userInclude = {
     user: true
 } as const;
 
+export const studentInclude = {
+    user: true,
+    program: true,
+} as const;
+
 export const roleInclude = {
     role: true
 } as const;

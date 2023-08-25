@@ -27,7 +27,7 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
                 },
                 { 
                     userId: '2', username: 'admin2', password: hash('1234'), 
-                    roleId: roleIds['Admin'], email: '1@example.com',
+                    roleId: roleIds['Admin'], email: '2@example.com',
                 },
                 { 
                     userId: '101', username: 'lecturer1.1', password: hash('lecturer1.1'), 
@@ -49,6 +49,10 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
                     userId: '10002', username: 'student2', password: hash('student2'), 
                     roleId: roleIds['Student'], email: '10002@example.com',
                 },
+                { 
+                    userId: '10003', username: 'student3', password: hash('student3'), 
+                    roleId: roleIds['Student'], email: '10003@example.com',
+                },
             ]
         }),
         prisma.admin.createMany({
@@ -64,10 +68,17 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
                 { userId: '701', title: 'Dr. A2', bio: 'Sample lecturer2' },
             ]
         }),
+        prisma.program.createMany({
+            data: [
+                { title: 'CSE', description: 'Computer Science Engineering' },
+                { title: 'MEN', description: 'Mechanical Engineering' },
+            ]
+        }),
         prisma.student.createMany({
             data: [
-                { userId: '10001', intake: 'CSE2019', surname: 'Doe', forename: 'John' },
-                { userId: '10002', intake: 'EEIT2019', surname: 'Doe', forename: 'Jane' },
+                { userId: '10001', programId: 1, intake: 2019, surname: 'Doe', forename: 'John' },
+                { userId: '10002', programId: 1, intake: 2019, surname: 'Doe', forename: 'Jane' },
+                { userId: '10003', programId: 2, intake: 2021, surname: 'Doe', forename: 'Mary' },
             ]
         }),
         prisma.topic.createMany({
@@ -88,7 +99,8 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
         }),
         prisma.location.createMany({
             data: [
-                { title: 'Admin Room', description: 'Sample location description' },
+                { title: 'Admin Room', description: 'Sample location description 1' },
+                { title: 'Academic Cluster', description: 'Sample location description 2' },
             ]
         }),
         prisma.bachelorThesisRegistration.createMany({

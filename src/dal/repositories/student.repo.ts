@@ -3,7 +3,7 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { StudentUpdateRequest, StudentsQueryRequest } from "../../contracts/requests";
 import { StudentDto } from "../../shared/dtos";
-import { userInclude } from "../constants/includes";
+import { studentInclude } from "../constants/includes";
 import { anyChanges } from "../utils/crud-helpers";
 import { flattenObject } from "../../utils/object-helpers";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
@@ -27,7 +27,7 @@ export class StudentRepo implements StudentRepoInterface {
         const count = await this.prisma.student.count({ where: prismaQuery.where });
         const students = await this.prisma.student.findMany({
             ...prismaQuery,
-            include: userInclude
+            include: studentInclude
         })
 
         const response = new StudentsQueryResponse();
@@ -63,13 +63,18 @@ export class StudentRepo implements StudentRepoInterface {
                     signature: updateRequest.signature,
                     surname: updateRequest.surname,
                     forename: updateRequest.forename,
-                    user: {
+                    user: updateRequest.email ? {
                         update: {
                             email: updateRequest.email,
                         }
-                    }
+                    } : undefined,
+                    program: updateRequest.programId ? {
+                        connect: {
+                            id: updateRequest.programId
+                        }
+                    } : undefined
                 },
-                include: userInclude
+                include: studentInclude
             });
         }
 
@@ -81,7 +86,7 @@ export class StudentRepo implements StudentRepoInterface {
             where: {
                 userId: id
             },
-            include: userInclude
+            include: studentInclude
         });
     }
 
@@ -90,6 +95,14 @@ export class StudentRepo implements StudentRepoInterface {
             ...this.queryCreator.createQueryModel(Student),
             user: this.queryCreator.createQueryModel(User),
         };
-        return this.queryCreator.createQueryObject(model, queryRequest, { fieldNameMap: { studentId: 'userId' } });
+        const fieldMap = {
+            programTitle: 'program.title'
+        };
+        return this.queryCreator.createQueryObject(model, queryRequest, { 
+            fieldNameMap: { 
+                studentId: 'userId' 
+            },
+            fieldMap,
+        });
     }
 }
