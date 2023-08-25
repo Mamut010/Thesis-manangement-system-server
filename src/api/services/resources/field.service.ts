@@ -37,7 +37,10 @@ export class FieldService implements FieldServiceInterface {
     }
 
     async deleteField(id: number): Promise<void> {
-        await this.fieldRepo.delete(id);
+        const deleted = await this.fieldRepo.delete(id);
+        if (!deleted) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.FieldNotFound);
+        }
     }
 
     private async ensureRecordExists(id: number) {

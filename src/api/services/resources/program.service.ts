@@ -37,7 +37,10 @@ export class ProgramService implements ProgramServiceInterface {
     }
 
     async deleteProgram(id: number): Promise<void> {
-        await this.programRepo.delete(id);
+        const deleted = await this.programRepo.delete(id);
+        if (!deleted) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.ProgramNotFound);
+        }
     }
 
     private async ensureRecordExists(id: number) {

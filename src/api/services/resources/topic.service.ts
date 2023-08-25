@@ -37,7 +37,10 @@ export class TopicService implements TopicServiceInterface {
     }
 
     async deleteTopic(id: number): Promise<void> {
-        await this.topicRepo.delete(id);
+        const deleted = await this.topicRepo.delete(id);
+        if (!deleted) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.TopicNotFound);
+        }
     }
 
     private async ensureRecordExists(id: number) {

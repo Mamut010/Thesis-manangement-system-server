@@ -37,7 +37,10 @@ export class LocationService implements LocationServiceInterface {
     }
 
     async deleteLocation(id: number): Promise<void> {
-        await this.locationRepo.delete(id);
+        const deleted = await this.locationRepo.delete(id);
+        if (!deleted) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.FieldNotFound);
+        }
     }
 
     private async ensureRecordExists(id: number) {

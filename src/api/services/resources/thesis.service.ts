@@ -37,7 +37,10 @@ export class ThesisService implements ThesisServiceInterface {
     }
 
     async deleteThesis(id: number): Promise<void> {
-        await this.thesisRepo.delete(id);
+        const deleted = await this.thesisRepo.delete(id);
+        if (!deleted) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);
+        }
     }
 
     private async ensureRecordExists(id: number) {

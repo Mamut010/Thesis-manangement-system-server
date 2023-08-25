@@ -40,7 +40,10 @@ export class RoleService implements RoleServiceInterface {
 
     async deleteRole(id: number): Promise<void> {
         this.ensureMethodAvailablity(ERROR_MESSAGES.MethodNotAllowed.RoleDeletionNotAllowed);
-        await this.roleRepo.delete(id);
+        const deleted = await this.roleRepo.delete(id);
+        if (!deleted) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.RoleNotFound);
+        }
     }
 
     private async ensureRecordExists(id: number) {
