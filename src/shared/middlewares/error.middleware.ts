@@ -11,6 +11,7 @@ import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';
 import { Logger } from '../../lib/logger';
 import { ErrorResponse } from '../../contracts/responses';
 import { isEnumerableObject } from '../../utils/object-helpers';
+import { trySetResponseStatus } from '../../utils/req-res-helpers';
 
 @Middleware({ type: 'after' })
 @injectable()
@@ -18,7 +19,7 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
   error(error: unknown, request: Request, response: Response, next: NextFunction) {
     const prismaError = this.handlePrismaError(error);
     if (prismaError) {
-      response.status(prismaError.status).json(prismaError);
+      trySetResponseStatus(response, prismaError.status).json(prismaError);
     }
     else if (isEnumerableObject(error)) {
       const status = this.getErrorStatus(error);
@@ -29,11 +30,11 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
         message
       };
   
-      response.status(status).json(errorResponse);
+      trySetResponseStatus(response, status).json(errorResponse);
       
     }
     else {
-      response.status(HTTP_CODES.InternalServerError);
+      trySetResponseStatus(response, HTTP_CODES.InternalServerError);
     }
   }
 
@@ -46,7 +47,7 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
       || error instanceof Prisma.PrismaClientUnknownRequestError
       || error instanceof Prisma.PrismaClientValidationError
     )) {
-      const logger: Logger = container.get(INJECTION_TOKENS.Logger);
+      const logger = container.get<Logger>(INJECTION_TOKENS.Logger);
       logger.error(error.message);
       return {
         status: HTTP_CODES.InternalServerError,
