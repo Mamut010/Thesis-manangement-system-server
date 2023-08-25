@@ -5,8 +5,8 @@ import { authorizationChecker, currentUserChecker } from '../auth-checkers';
 import { BootstrapSettingInterface, Bootstrapper } from '../../lib/bootstrapper';
 import { preconfigApp, postconfigApp } from '../../config';
 import { ServerType } from '../../shared/types/server-types';
-import { CORS_OPTIONS } from '../constants/cors-options';
-import { BOOTSTRAP_SETTINGS_KEY } from '../constants/bootstrap-settings';
+import { CORS_SETTINGS } from '../../settings/cors-settings';
+import { BOOTSTRAP_SETTINGS_KEY } from '../../settings/bootstrap-settings';
 import { route } from '../../utils/route-helpers';
 
 export const serverBootstrapperFactory = (serverType: ServerType): Bootstrapper => {
@@ -30,7 +30,7 @@ export const serverBootstrapperFactory = (serverType: ServerType): Bootstrapper 
          * Add routing-controllers options to express app
          */
         const routingControllersOptions: RoutingControllersOptions = {
-            cors: CORS_OPTIONS,
+            cors: CORS_SETTINGS,
             classTransformer: true,
             plainToClassTransformOptions: { 
                 excludeExtraneousValues: true, 

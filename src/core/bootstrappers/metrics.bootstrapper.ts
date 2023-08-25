@@ -3,7 +3,7 @@
  */
 import { Application, Request, Response, NextFunction, RequestHandler } from "express";
 import { BootstrapSettingInterface, Bootstrapper } from "../../lib/bootstrapper";
-import { BOOTSTRAP_SETTINGS_KEY } from "../constants/bootstrap-settings";
+import { BOOTSTRAP_SETTINGS_KEY } from "../../settings/bootstrap-settings";
 import { env } from "../../env";
 import { Container } from "inversify";
 import { INJECTION_TOKENS } from "../constants/injection-tokens";

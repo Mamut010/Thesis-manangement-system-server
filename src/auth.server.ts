@@ -7,7 +7,7 @@ import 'reflect-metadata';
  * Set up tracing and register instrumentation before importing instrumented libraries
  */
 import { initializeTracer } from './core/instrumentation';
-import { SERVER_SETTINGS } from './core/constants/server-settings';
+import { SERVER_SETTINGS } from './settings/server-settings';
 const tracer = initializeTracer(SERVER_SETTINGS.Auth.ServiceName);
 
 import { Logger } from './lib/logger';
@@ -21,7 +21,7 @@ import {
     bootstrapSwagger,
     bootstrapMetrics,
 } from './core/bootstrappers';
-import { BOOTSTRAP_SETTINGS_KEY } from './core/constants/bootstrap-settings';
+import { BOOTSTRAP_SETTINGS_KEY } from './settings/bootstrap-settings';
 
 const log = new Logger(__filename);
 

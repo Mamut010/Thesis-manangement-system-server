@@ -3,7 +3,7 @@ import { BootstrapSettingInterface, Bootstrapper } from '../../lib/bootstrapper'
 import { InversifyAdapter } from '../ioc-adapters';
 import { Container } from 'inversify';
 import { configInversify } from '../../config';
-import { BOOTSTRAP_SETTINGS_KEY } from '../constants/bootstrap-settings';
+import { BOOTSTRAP_SETTINGS_KEY } from '../../settings/bootstrap-settings';
 
 let container: Container;
 

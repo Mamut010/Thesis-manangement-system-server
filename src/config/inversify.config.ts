@@ -97,7 +97,7 @@ import { WsSetupService } from '../ws/services';
 import { PlainTransformer, PlainTransformerInterface } from '../dal/utils/plain-transfomer';
 import { IORoomTimerManager, IORoomTimerManagerInterface } from '../ws/utils/room-timer';
 import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-generator';
-import { BOOTSTRAP_SETTINGS_KEY } from '../core/constants/bootstrap-settings';
+import { BOOTSTRAP_SETTINGS_KEY } from '../settings/bootstrap-settings';
 import { Tracer } from '@opentelemetry/api';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {

@@ -6,7 +6,7 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import { injectable } from 'inversify';
 import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
-import { AUTH_SETTINGS } from '../../core/constants/auth-settings';
+import { AUTH_SETTINGS } from '../../settings/auth-settings';
 
 @Middleware({ type: 'before' })
 @injectable()

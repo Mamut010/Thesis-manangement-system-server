@@ -13,7 +13,7 @@ import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { PrismaInstrumentation } from '@prisma/instrumentation';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { env } from "../env";
-import { TRACER_SETTINGS } from "./constants/tracer-settings";
+import { TRACER_SETTINGS } from "../settings/tracer-settings";
 
 export const initializeTracer = (serviceName: string): Tracer | undefined => {
     if (!env.tracer.enabled) {

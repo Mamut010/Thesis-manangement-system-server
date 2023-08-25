@@ -2,7 +2,7 @@
  * @Cre: https://github.com/w3tecch/express-typescript-boilerplate
  */
 
-import { BOOTSTRAP_SETTINGS_KEY } from '../core/constants/bootstrap-settings';
+import { BOOTSTRAP_SETTINGS_KEY } from '../settings/bootstrap-settings';
 import { env } from '../env';
 import { Logger } from '../lib/logger';
 import { ServerType } from '../shared/types/server-types';

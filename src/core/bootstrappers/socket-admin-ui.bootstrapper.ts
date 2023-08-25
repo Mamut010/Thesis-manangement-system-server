@@ -3,7 +3,7 @@ import { env } from "../../env";
 import { BootstrapSettingInterface, Bootstrapper } from "../../lib/bootstrapper";
 import { hashSync } from "bcrypt";
 import { IOServer } from "../../contracts/types/io";
-import { BOOTSTRAP_SETTINGS_KEY } from "../constants/bootstrap-settings";
+import { BOOTSTRAP_SETTINGS_KEY } from "../../settings/bootstrap-settings";
 
 export const bootstrapSocketAdminUI: Bootstrapper = (settings?: BootstrapSettingInterface) => {
     const io = settings?.getData<IOServer>(BOOTSTRAP_SETTINGS_KEY.IO);

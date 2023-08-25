@@ -8,7 +8,7 @@ import { ClassTransformOptions } from 'class-transformer';
 import { Container } from "inversify";
 import { INJECTION_TOKENS } from "../constants/injection-tokens";
 import { IOServer } from "../../contracts/types/io";
-import { BOOTSTRAP_SETTINGS_KEY } from "../constants/bootstrap-settings";
+import { BOOTSTRAP_SETTINGS_KEY } from "../../settings/bootstrap-settings";
 
 export const bootstrapIo: Bootstrapper = (settings?: BootstrapSettingInterface) => {
     const container = settings?.getData<Container>(BOOTSTRAP_SETTINGS_KEY.Container);

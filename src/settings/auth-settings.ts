@@ -1,5 +1,5 @@
-import { env } from "../../env";
-import { route } from "../../utils/route-helpers";
+import { env } from "../env";
+import { route } from "../utils/route-helpers";
 
 export const AUTH_SETTINGS = {
     Jwt: {

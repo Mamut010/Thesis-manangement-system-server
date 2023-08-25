@@ -6,7 +6,7 @@
 import { injectable } from "inversify";
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { AUTH_SETTINGS } from "../../core/constants/auth-settings";
+import { AUTH_SETTINGS } from "../../settings/auth-settings";
 import { CryptoServiceInterface } from "../interfaces";
 
 @injectable()

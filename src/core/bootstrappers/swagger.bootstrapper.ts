@@ -13,7 +13,7 @@ import { Application, NextFunction, Request, Response } from 'express';
 import basicAuth from 'express-basic-auth';
 import { env } from '../../env';
 import { MetadataStorage } from 'class-transformer/types/MetadataStorage';
-import { BOOTSTRAP_SETTINGS_KEY } from '../constants/bootstrap-settings';
+import { BOOTSTRAP_SETTINGS_KEY } from '../../settings/bootstrap-settings';
 
 export const bootstrapSwagger: Bootstrapper = (settings?: BootstrapSettingInterface) => {
     const expressApp = settings?.getData<Application>(BOOTSTRAP_SETTINGS_KEY.ExpressApp);

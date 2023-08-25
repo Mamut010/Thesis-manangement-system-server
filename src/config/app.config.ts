@@ -1,7 +1,7 @@
 import { Application, Request, Response, NextFunction, RequestHandler } from "express";
 import { Configuration } from "./configuration";
 import { BootstrapSettingInterface } from "../lib/bootstrapper";
-import { BOOTSTRAP_SETTINGS_KEY } from "../core/constants/bootstrap-settings";
+import { BOOTSTRAP_SETTINGS_KEY } from "../settings/bootstrap-settings";
 import { env } from "../env";
 import { Container } from "inversify";
 import { PrismaClient } from "@prisma/client";
