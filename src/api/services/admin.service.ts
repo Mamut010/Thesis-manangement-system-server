@@ -16,11 +16,7 @@ export class AdminService implements AdminServiceInterface {
     }
 
     async getAdminInfo(adminId: string): Promise<AdminInfoDto> {
-        const result = await this.adminRepo.findOneById(adminId);
-        if (!result) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.AdminNotFound);
-        }
-
+        const result = await this.ensureAdminExists(adminId);
         return plainToInstanceExactMatch(AdminInfoDto, result);
     }
 
@@ -31,5 +27,13 @@ export class AdminService implements AdminServiceInterface {
         }
 
         return plainToInstanceExactMatch(AdminInfoDto, result);
+    }
+
+    private async ensureAdminExists(id: string) {
+        const result = await this.adminRepo.findOneById(id);
+        if (!result) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.AdminNotFound);
+        }
+        return result;
     }
 }

@@ -55,11 +55,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentInfo(studentId: string): Promise<StudentInfoDto> {
-        const result = await this.studentRepo.findOneById(studentId);
-        if (!result) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
-        }
-
+        const result = await this.ensureStudentExists(studentId);
         return plainToInstanceExactMatch(StudentInfoDto, result);
     }
 
@@ -83,6 +79,8 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationInfoDto> {
+        await this.ensureStudentExists(studentId);
+        
         const result = await this.queryStudentBachelorThesisRegistration(studentId);
         if (result.length === 0) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisRegistrationNotFound);
@@ -92,6 +90,8 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentInfoDto> {
+        await this.ensureStudentExists(studentId);
+
         const result = await this.queryStudentBachelorThesisAssessment(studentId);
         if (result.length === 0) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisAssessmentNotFound);
@@ -101,6 +101,8 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationInfoDto> {
+        await this.ensureStudentExists(studentId);
+
         const result = await this.queryStudentBachelorThesisEvaluation(studentId);
         if (result.length === 0) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisEvaluationNotFound);
@@ -110,6 +112,8 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationInfoDto> {
+        await this.ensureStudentExists(studentId);
+        
         const result = await this.queryStudentOralDefenseRegistration(studentId);
         if (result.length === 0) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseRegistrationNotFound);
@@ -119,6 +123,8 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     }
 
     async getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentInfoDto> {
+        await this.ensureStudentExists(studentId);
+        
         const result = await this.queryStudentOralDefenseAssessment(studentId);
         if (result.length === 0) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseAssessmentNotFound);
@@ -134,6 +140,14 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         }
 
         return plainToInstanceExactMatch(StudentInfoDto, result);
+    }
+
+    private async ensureStudentExists(id: string) {
+        const result = await this.studentRepo.findOneById(id);
+        if (!result) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
+        }
+        return result;
     }
 
     private async queryStudentBachelorThesisRegistration(studentId: string) {
