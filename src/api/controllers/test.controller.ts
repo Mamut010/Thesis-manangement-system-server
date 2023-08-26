@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { Container, inject, injectable } from "inversify";
-import { Controller, CurrentUser, Delete, Get, HttpCode, JsonController, OnUndefined, Param, Post, Req, Res } from "routing-controllers";
+import { ContentType, Controller, CurrentUser, Delete, Get, HttpCode, JsonController, OnUndefined, Param, Post, Req, Res } from "routing-controllers";
 import { OpenAPI } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
@@ -36,6 +36,7 @@ import { createReadStream, unlinkSync } from "fs";
 import { v4 as uuidv4 } from 'uuid';
 import { promisify } from "util";
 import * as stream from 'stream';
+import * as fs from 'fs';
 import { rimraf } from 'rimraf';
 import { PDFDocument, PDFRadioGroup } from "pdf-lib";
 import { createDir, deleteDir } from "../../utils/dir-helpers";
@@ -56,6 +57,8 @@ import {
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface 
 } from "../../dal/interfaces";
+
+const pdfMimeType = 'application/pdf';
 
 @JsonController('test')
 //@Authorized(ROLES.Admin)
@@ -301,6 +304,36 @@ export class TestController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
+    @Get('/pdf-readstream/:filename')
+    @OpenAPI({
+        description: 'Test downloading pdf file with readstream',
+        responses: {
+            [`${HTTP_CODES.Ok}`]: {
+                content: {
+                    ['*/*']: {}
+                }
+            },
+        },
+    })
+    @OnUndefined(HTTP_CODES.Ok)
+    async downloadPdfReadstream(@Req() req: Request, @Res() res: Response, @Param('filename') tempFileName: string) {
+        const filename = tempFileName + '.pdf';
+        const tempPath = temp(tempFileName);
+
+        res.set({
+            'Content-disposition': `attachment; filename=${Date.now().toString() + '_' + filename}`,
+            'Content-type': pdfMimeType
+        });
+
+        await promisify(() => { 
+            const readStream = fs.createReadStream(tempPath);
+            readStream.pipe(res);
+        })();
+
+        return res;
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
     @Get('/pdf-delete/:filename')
     @OpenAPI({
         description: 'Test downloading and deleting pdf file',
@@ -502,5 +535,37 @@ export class TestController {
         });
         
         return 'Success';
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Get('/download/image')
+    @OpenAPI({
+        description: 'Test downloading sample image',
+        responses: {
+            [`${HTTP_CODES.Ok}`]: {
+                content: {
+                    ['*/*']: {}
+                }
+            },
+        },
+    })
+    @ContentType('image/png')
+    @OnUndefined(HTTP_CODES.Ok)
+    async downloadSampleImage(@Req() req: Request, @Res() res: Response) {
+        const filename = 'nodejs.png';
+        const filepath = path.join(process.cwd(), filename);
+        const pngMimetype = 'image/png';
+
+        res.set({
+            'Content-disposition': `attachment; filename=${Date.now().toString() + '_' + filename}`,
+            'Content-type': pngMimetype
+        });
+        // const readStream = fs.createReadStream(filename);
+        // readStream.pipe(res);
+
+        //res.status(HTTP_CODES.Ok);
+        //res.sendFile(path.join(process.cwd(), filename));
+        await promisify<string, void>(res.download.bind(res))(filepath);
+        return res;
     }
 }

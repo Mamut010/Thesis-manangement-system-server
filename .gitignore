@@ -5,9 +5,10 @@ node_modules
 # Keep built files out of version control
 dist/*
 
-# Ignore test files, except test controller
+# Ignore test files
 **/*test.*
-!**/test.controller.ts
+# Except test controller
+#!**/test.controller.ts
 
 public/*
 !public/assets/
