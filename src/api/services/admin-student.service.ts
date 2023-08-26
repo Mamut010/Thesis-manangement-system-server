@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { AdminStudentServiceInterface } from "../interfaces";
+import { AdminStudentServiceInterface, AssetsServiceInterface } from "../interfaces";
 import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
@@ -12,37 +12,15 @@ import {
     StudentInfoDto
 } from "../../shared/dtos";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { 
-    BachelorThesisAssessmentRepoInterface, 
-    BachelorThesisEvaluationRepoInterface, 
-    BachelorThesisRegistrationRepoInterface, 
-    OralDefenseAssessmentRepoInterface, 
-    OralDefenseRegistrationRepoInterface, 
-    StudentRepoInterface 
-} from "../../dal/interfaces";
-import { 
-    StudentUpdateRequest,
-    BachelorThesisRegistrationsQueryRequest,
-    BachelorThesisAssessmentsQueryRequest,
-    OralDefenseRegistrationsQueryRequest,
-    OralDefenseAssessmentsQueryRequest,
-    BachelorThesisEvaluationsQueryRequest,
-    StudentInfosQueryRequest
-} from "../../contracts/requests";
-import { StringFilter } from "../../lib/query";
-import { ClassConstructor } from "../../utils/types";
-import { singleOrDefault } from "../../utils/array-helpers";
+import { StudentRepoInterface } from "../../dal/interfaces";
+import { StudentUpdateRequest, StudentInfosQueryRequest } from "../../contracts/requests";
 import { MapperServiceInterface } from "../../shared/interfaces";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.StudentRepo) private studentRepo: StudentRepoInterface,
-        @inject(INJECTION_TOKENS.BachelorThesisRegistrationRepo) private btrRepo: BachelorThesisRegistrationRepoInterface,
-        @inject(INJECTION_TOKENS.BachelorThesisAssessmentRepo) private btaRepo: BachelorThesisAssessmentRepoInterface,
-        @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface,
-        @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface,
-        @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface,
+        @inject(INJECTION_TOKENS.AssetsService) private assetsService: AssetsServiceInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
@@ -64,74 +42,71 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         const response = new StudentDetailResponse();
         response.studentInfo = await this.getStudentInfo(studentId);
 
-        const studentBtr = await this.queryStudentBachelorThesisRegistration(studentId);
-        const studentBta = await this.queryStudentBachelorThesisAssessment(studentId);
-        const studentBte = await this.queryStudentBachelorThesisEvaluation(studentId);
-        const studentOdr = await this.queryStudentOralDefenseRegistration(studentId);
-        const studentOda = await this.queryStudentOralDefenseAssessment(studentId);
+        const btrPromise = this.getStudentBachelorThesisRegistrationInner(studentId);
+        const btaPromise = this.getStudentBachelorThesisAssessmentInner(studentId);
+        const btePromise = this.getStudentBachelorThesisEvaluationInner(studentId);
+        const odrPromise = this.getStudentOralDefenseRegistrationInner(studentId);
+        const odaPromise = this.getStudentOralDefenseAssessmentInner(studentId);
 
-        response.bachelorThesisRegistration = singleOrDefault(studentBtr, null);
-        response.bachelorThesisAssessment = singleOrDefault(studentBta, null);
-        response.bachelorThesisEvaluation = singleOrDefault(studentBte, null);
-        response.oralDefenseRegistration = singleOrDefault(studentOdr, null);
-        response.oralDefenseAssessment = singleOrDefault(studentOda, null);
+        response.bachelorThesisRegistration = await btrPromise;
+        response.bachelorThesisAssessment = await btaPromise;
+        response.bachelorThesisEvaluation = await btePromise;
+        response.oralDefenseRegistration = await odrPromise;
+        response.oralDefenseAssessment = await odaPromise;
 
         return response;
     }
 
     async getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationInfoDto> {
         await this.ensureRecordExists(studentId);
-        
-        const result = await this.queryStudentBachelorThesisRegistration(studentId);
-        if (result.length === 0) {
+
+        const result = await this.getStudentBachelorThesisRegistrationInner(studentId);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisRegistrationNotFound);
         }
-
-        return result[0];
+        return result;
     }
 
     async getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentInfoDto> {
         await this.ensureRecordExists(studentId);
 
-        const result = await this.queryStudentBachelorThesisAssessment(studentId);
-        if (result.length === 0) {
+        const result = await this.getStudentBachelorThesisAssessmentInner(studentId);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisAssessmentNotFound);
         }
-
-        return result[0];
+        return result;
     }
 
     async getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationInfoDto> {
         await this.ensureRecordExists(studentId);
 
-        const result = await this.queryStudentBachelorThesisEvaluation(studentId);
-        if (result.length === 0) {
+        const result = await this.getStudentBachelorThesisEvaluationInner(studentId);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisEvaluationNotFound);
         }
-
-        return result[0];
+        return result;
     }
 
     async getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationInfoDto> {
         await this.ensureRecordExists(studentId);
         
-        const result = await this.queryStudentOralDefenseRegistration(studentId);
-        if (result.length === 0) {
+        const result = await this.getStudentOralDefenseRegistrationInner(studentId);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseRegistrationNotFound);
         }
 
-        return result[0];
+        return result;
     }
 
     async getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentInfoDto> {
         await this.ensureRecordExists(studentId);
         
-        const result = await this.queryStudentOralDefenseAssessment(studentId);
-        if (result.length === 0) {
+        const result = await this.getStudentOralDefenseAssessmentInner(studentId);
+        if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseAssessmentNotFound);
         }
 
-        return result[0];
+        return result;
     }
 
     async updateStudent(studentId: string, updateRequest: StudentUpdateRequest): Promise<StudentInfoDto> {
@@ -143,50 +118,41 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         return this.mapper.map(StudentInfoDto, result);
     }
 
+    private async getStudentBachelorThesisRegistrationInner(studentId: string)
+        : Promise<BachelorThesisRegistrationInfoDto | null> {
+        const result = await this.assetsService.getStudentBachelorThesisRegistration(studentId);
+        return result ? this.mapper.map(BachelorThesisRegistrationInfoDto, result) : null;
+    }
+
+    private async getStudentBachelorThesisAssessmentInner(studentId: string)
+        : Promise<BachelorThesisAssessmentInfoDto | null> {
+        const result = await this.assetsService.getStudentBachelorThesisAssessment(studentId);
+        return result ? this.mapper.map(BachelorThesisAssessmentInfoDto, result) : null;
+    }
+
+    private async getStudentBachelorThesisEvaluationInner(studentId: string)
+        : Promise<BachelorThesisEvaluationInfoDto | null> {
+        const result = await this.assetsService.getStudentBachelorThesisEvaluation(studentId);
+        return result ? this.mapper.map(BachelorThesisEvaluationInfoDto, result) : null;
+    }
+
+    private async getStudentOralDefenseRegistrationInner(studentId: string)
+        : Promise<OralDefenseRegistrationInfoDto | null> {
+        const result = await this.assetsService.getStudentOralDefenseRegistration(studentId);
+        return result ? this.mapper.map(OralDefenseRegistrationInfoDto, result) : null;
+    }
+
+    private async getStudentOralDefenseAssessmentInner(studentId: string)
+        : Promise<OralDefenseAssessmentInfoDto | null> {
+        const result = await this.assetsService.getStudentOralDefenseAssessment(studentId);
+        return result ? this.mapper.map(OralDefenseAssessmentInfoDto, result) : null;
+    }
+
     private async ensureRecordExists(studentId: string) {
         const result = await this.studentRepo.findOneById(studentId);
         if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
         }
         return result;
-    }
-
-    private async queryStudentBachelorThesisRegistration(studentId: string) {
-        const queryRequest = this.createQueryRequest(BachelorThesisRegistrationsQueryRequest, studentId);
-        const queryResponse = await this.btrRepo.query(queryRequest);
-        return this.mapper.map(BachelorThesisRegistrationInfoDto, queryResponse.content);
-    }
-
-    private async queryStudentBachelorThesisAssessment(studentId: string) {
-        const queryRequest = this.createQueryRequest(BachelorThesisAssessmentsQueryRequest, studentId);
-        const queryResponse = await this.btaRepo.query(queryRequest);
-        return this.mapper.map(BachelorThesisAssessmentInfoDto, queryResponse.content);
-    }
-
-    private async queryStudentBachelorThesisEvaluation(studentId: string) {
-        const queryRequest = this.createQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
-        const queryResponse = await this.bteRepo.query(queryRequest);
-        return this.mapper.map(BachelorThesisEvaluationInfoDto, queryResponse.content);
-    }
-
-    private async queryStudentOralDefenseRegistration(studentId: string) {
-        const queryRequest = this.createQueryRequest(OralDefenseRegistrationsQueryRequest, studentId);
-        const queryResponse = await this.odrRepo.query(queryRequest);
-        return this.mapper.map(OralDefenseRegistrationInfoDto, queryResponse.content);
-    }
-
-    private async queryStudentOralDefenseAssessment(studentId: string) {
-        const queryRequest = this.createQueryRequest(OralDefenseAssessmentsQueryRequest, studentId);
-        const queryResponse = await this.odaRepo.query(queryRequest);
-        return this.mapper.map(OralDefenseAssessmentInfoDto, queryResponse.content);
-    }
-
-    private createQueryRequest<T extends object>(cls: ClassConstructor<T>, studentId: string): T {
-        const studentIdFilter = new StringFilter();
-        studentIdFilter.value = studentId;
-        studentIdFilter.operator = 'equals';
-
-        const queryRequest = new cls();
-        return Object.assign(queryRequest, { studentIdFilter: [studentIdFilter] });
     }
 }

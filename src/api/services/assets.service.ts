@@ -22,8 +22,9 @@ import {
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface 
 } from "../../dal/interfaces";
-import { makeArray } from "../../utils/array-helpers";
+import { makeArray, singleOrDefault } from "../../utils/array-helpers";
 import { StringFilter } from "../../lib/query";
+import { ClassConstructor } from "../../utils/types";
 
 @injectable()
 export class AssetsService implements AssetsServiceInterface {
@@ -64,5 +65,40 @@ export class AssetsService implements AssetsServiceInterface {
     async getLecturerOralDefenseAssessments(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
         : Promise<OralDefenseAssessmentDto[]> {
         return await this.odaRepo.queryLecturerAssets(lecturerId, queryRequest);
+    }
+
+    async getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationDto | null> {
+        const queryRequest = this.createStudentQueryRequest(BachelorThesisRegistrationsQueryRequest, studentId);
+        const queryResponse = await this.btrRepo.query(queryRequest);
+        return singleOrDefault(queryResponse.content, null);
+    }
+    async getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentDto | null> {
+        const queryRequest = this.createStudentQueryRequest(BachelorThesisAssessmentsQueryRequest, studentId);
+        const queryResponse = await this.btaRepo.query(queryRequest);
+        return singleOrDefault(queryResponse.content, null);
+    }
+    async getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationDto | null> {
+        const queryRequest = this.createStudentQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
+        const queryResponse = await this.bteRepo.query(queryRequest);
+        return singleOrDefault(queryResponse.content, null);
+    }
+    async getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto | null> {
+        const queryRequest = this.createStudentQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
+        const queryResponse = await this.odrRepo.query(queryRequest);
+        return singleOrDefault(queryResponse.content, null);
+    }
+    async getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentDto | null> {
+        const queryRequest = this.createStudentQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
+        const queryResponse = await this.odaRepo.query(queryRequest);
+        return singleOrDefault(queryResponse.content, null);
+    }
+
+    private createStudentQueryRequest<T extends object>(cls: ClassConstructor<T>, studentId: string): T {
+        const studentIdFilter = new StringFilter();
+        studentIdFilter.value = studentId;
+        studentIdFilter.operator = 'equals';
+
+        const queryRequest = new cls();
+        return Object.assign(queryRequest, { studentIdFilter: [studentIdFilter] });
     }
 }

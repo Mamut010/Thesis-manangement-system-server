@@ -27,5 +27,15 @@ export interface AssetsServiceInterface {
         : Promise<OralDefenseRegistrationDto[]>;
 
     getLecturerOralDefenseAssessments(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentDto[]>
+        : Promise<OralDefenseAssessmentDto[]>;
+
+    getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationDto | null>;
+
+    getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentDto | null>;
+
+    getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationDto | null>;
+
+    getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto | null>;
+
+    getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentDto | null>;
 }

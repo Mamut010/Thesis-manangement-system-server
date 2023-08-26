@@ -54,55 +54,67 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         const response = new LecturerDetailResponse();
         response.lecturerInfo = await this.getLecturerInfo(lecturerId);
 
-        response.bachelorThesisRegistrations = await this.getLecturerBachelorThesisRegistrations(lecturerId, 
-            lecturerAssetsQueryRequest);
+        const btrPromise = this.getLecturerBachelorThesisRegistrations(lecturerId, lecturerAssetsQueryRequest, false);
+        const btaPromise = this.getLecturerBachelorThesisAssessments(lecturerId, lecturerAssetsQueryRequest, false);
+        const btePromise = this.getLecturerBachelorThesisEvaluations(lecturerId, lecturerAssetsQueryRequest, false);
+        const odrPromise = this.getLecturerOralDefenseRegistrations(lecturerId, lecturerAssetsQueryRequest, false);
+        const odaPromise = this.getLecturerOralDefenseAssessments(lecturerId, lecturerAssetsQueryRequest, false);
 
-        response.bachelorThesisAssessments = await this.getLecturerBachelorThesisAssessments(lecturerId, 
-            lecturerAssetsQueryRequest);
-
-        response.bachelorThesisEvaluations = await this.getLecturerBachelorThesisEvaluations(lecturerId, 
-            lecturerAssetsQueryRequest);
-
-        response.oralDefenseRegistrations = await this.getLecturerOralDefenseRegistrations(lecturerId, 
-            lecturerAssetsQueryRequest);
-            
-        response.oralDefenseAssessments = await this.getLecturerOralDefenseAssessments(lecturerId, 
-            lecturerAssetsQueryRequest);
+        response.bachelorThesisRegistrations = await btrPromise;
+        response.bachelorThesisAssessments = await btaPromise;
+        response.bachelorThesisEvaluations = await btePromise;
+        response.oralDefenseRegistrations = await odrPromise;
+        response.oralDefenseAssessments = await odaPromise;
 
         return response;
     }
 
-    async getLecturerBachelorThesisRegistrations(lecturerId: string, btrQueryRequest: BachelorThesisRegistrationsQueryRequest)
-        : Promise<BachelorThesisRegistrationInfoDto[]> {
-        await this.ensureRecordExists(lecturerId);
+    async getLecturerBachelorThesisRegistrations(lecturerId: string, btrQueryRequest: BachelorThesisRegistrationsQueryRequest,
+        checkLecturer: boolean = true): Promise<BachelorThesisRegistrationInfoDto[]> {
+        if (checkLecturer) {
+            await this.ensureRecordExists(lecturerId);
+        }
+        
         const result = await this.assetsService.getLecturerBachelorThesisRegistrations(lecturerId, btrQueryRequest);
         return this.mapper.map(BachelorThesisRegistrationInfoDto, result);
     }
 
-    async getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest: BachelorThesisAssessmentsQueryRequest)
-        : Promise<BachelorThesisAssessmentInfoDto[]> {
-        await this.ensureRecordExists(lecturerId);
+    async getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest: BachelorThesisAssessmentsQueryRequest,
+        checkLecturer: boolean = true): Promise<BachelorThesisAssessmentInfoDto[]> {
+        if (checkLecturer) {
+            await this.ensureRecordExists(lecturerId);
+        }
+
         const result = await this.assetsService.getLecturerBachelorThesisAssessments(lecturerId, btaQueryRequest);
         return this.mapper.map(BachelorThesisAssessmentInfoDto, result);
     }
 
-    async getLecturerBachelorThesisEvaluations(lecturerId: string, bteQueryRequest: BachelorThesisEvaluationsQueryRequest)
-        : Promise<BachelorThesisEvaluationInfoDto[]> {
-        await this.ensureRecordExists(lecturerId);
+    async getLecturerBachelorThesisEvaluations(lecturerId: string, bteQueryRequest: BachelorThesisEvaluationsQueryRequest,
+        checkLecturer: boolean = true): Promise<BachelorThesisEvaluationInfoDto[]> {
+        if (checkLecturer) {
+            await this.ensureRecordExists(lecturerId);
+        }
+
         const result = await this.assetsService.getLecturerBachelorThesisEvaluations(lecturerId, bteQueryRequest);
         return this.mapper.map(BachelorThesisEvaluationInfoDto, result);
     }
 
-    async getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest: OralDefenseRegistrationsQueryRequest)
-        : Promise<OralDefenseRegistrationInfoDto[]> {
-        await this.ensureRecordExists(lecturerId);
+    async getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest: OralDefenseRegistrationsQueryRequest,
+        checkLecturer: boolean = true): Promise<OralDefenseRegistrationInfoDto[]> {
+        if (checkLecturer) {
+            await this.ensureRecordExists(lecturerId);
+        }
+
         const result = await this.assetsService.getLecturerOralDefenseRegistrations(lecturerId, odrQueryRequest);
         return this.mapper.map(OralDefenseRegistrationInfoDto, result);
     }
 
-    async getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentInfoDto[]> {
-        await this.ensureRecordExists(lecturerId);
+    async getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest: OralDefenseAssessmentsQueryRequest,
+        checkLecturer: boolean = true): Promise<OralDefenseAssessmentInfoDto[]> {
+        if (checkLecturer) {
+            await this.ensureRecordExists(lecturerId);
+        }
+
         const result = await this.assetsService.getLecturerOralDefenseAssessments(lecturerId, odaQueryRequest);
         return this.mapper.map(OralDefenseAssessmentInfoDto, result);
     }
