@@ -17,12 +17,18 @@ export const bootstrapMetrics: Bootstrapper = (settings?: BootstrapSettingInterf
 
     const container = settings?.getData<Container>(BOOTSTRAP_SETTINGS_KEY.Container);
     const serverName = settings?.getData<string>(BOOTSTRAP_SETTINGS_KEY.ServerName);
-    const prisma = container?.get<PrismaClient>(INJECTION_TOKENS.Prisma);
     const customLabels = serverName ? { server: serverName } : undefined;
 
     // Custom metrics handler: produce prisma metrics along with app metrics
     const metricsHandler = async (_req: Request, res: Response) => {
-        const prismaMetrics = prisma ? (await prisma.$metrics.prometheus({ globalLabels: customLabels })) : '\n';
+        const prisma = container?.isBound(INJECTION_TOKENS.Prisma)
+            ? await container.getAsync<PrismaClient>(INJECTION_TOKENS.Prisma)
+            : undefined;
+
+        const prismaMetrics = prisma 
+            ? await prisma.$metrics.prometheus({ globalLabels: customLabels })
+            : '\n';
+            
         const appMetrics = await register.metrics();
         res.end(prismaMetrics + appMetrics);
     };
