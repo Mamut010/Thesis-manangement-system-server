@@ -103,6 +103,7 @@ import { IORoomTimerManager, IORoomTimerManagerInterface } from '../ws/utils/roo
 import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-generator';
 import { BOOTSTRAP_SETTINGS_KEY } from '../settings/bootstrap-settings';
 import { Tracer } from '@opentelemetry/api';
+import { InfoMapper, InfoMapperInterface } from '../shared/utils/info-mapper';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -407,4 +408,9 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
         .bind<IORoomTimerManagerInterface>(INJECTION_TOKENS.IORoomTimerManager)
         .to(IORoomTimerManager)
         .inSingletonScope();
+
+    container
+        .bind<InfoMapperInterface>(INJECTION_TOKENS.InfoMapper)
+        .to(InfoMapper)
+        .inSingletonScope();  
 }

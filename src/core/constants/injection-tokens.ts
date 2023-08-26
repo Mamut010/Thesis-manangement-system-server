@@ -79,6 +79,7 @@ const UTIL_TOKENS = {
     PdfFormGenerator: Symbol.for('PdfFormGenerator'),
     RoomIdGenerator: Symbol.for('RoomIdGenerator'),
     IORoomTimerManager: Symbol.for('IORoomTimerManager'),
+    InfoMapper: Symbol.for('InfoMapper'),
 } as const;
 
 export const INJECTION_TOKENS = {

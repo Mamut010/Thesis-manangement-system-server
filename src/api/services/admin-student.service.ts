@@ -32,7 +32,7 @@ import {
 import { StringFilter } from "../../lib/query";
 import { ClassConstructor } from "../../utils/types";
 import { singleOrDefault } from "../../utils/array-helpers";
-import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
+import { InfoMapperInterface } from "../../shared/utils/info-mapper";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
@@ -42,21 +42,22 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         @inject(INJECTION_TOKENS.BachelorThesisAssessmentRepo) private btaRepo: BachelorThesisAssessmentRepoInterface,
         @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface,
         @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface,
-        @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface) {
+        @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface,
+        @inject(INJECTION_TOKENS.InfoMapper) private infoMapper: InfoMapperInterface) {
 
     }
 
     async getStudents(studentsQuery: StudentInfosQueryRequest): Promise<StudentInfosQueryResponse> {
         const result = await this.studentRepo.query(studentsQuery);
         return {
-            content: result.content.map(item => plainToInstanceExactMatch(StudentInfoDto, item)),
+            content: this.infoMapper.mapStudent(result.content),
             count: result.count
         }
     }
 
     async getStudentInfo(studentId: string): Promise<StudentInfoDto> {
         const result = await this.ensureRecordExists(studentId);
-        return plainToInstanceExactMatch(StudentInfoDto, result);
+        return this.infoMapper.mapStudent(result);
     }
 
     async getStudentDetail(studentId: string): Promise<StudentDetailResponse> {
@@ -139,7 +140,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
         }
 
-        return plainToInstanceExactMatch(StudentInfoDto, result);
+        return this.infoMapper.mapStudent(result);
     }
 
     private async ensureRecordExists(studentId: string) {
@@ -153,31 +154,31 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     private async queryStudentBachelorThesisRegistration(studentId: string) {
         const queryRequest = this.createQueryRequest(BachelorThesisRegistrationsQueryRequest, studentId);
         const queryResponse = await this.btrRepo.query(queryRequest);
-        return queryResponse.content.map(item => plainToInstanceExactMatch(BachelorThesisRegistrationInfoDto, item));
+        return this.infoMapper.mapBachelorThesisRegistration(queryResponse.content);
     }
 
     private async queryStudentBachelorThesisAssessment(studentId: string) {
         const queryRequest = this.createQueryRequest(BachelorThesisAssessmentsQueryRequest, studentId);
         const queryResponse = await this.btaRepo.query(queryRequest);
-        return queryResponse.content.map(item => plainToInstanceExactMatch(BachelorThesisAssessmentInfoDto, item));
+        return this.infoMapper.mapBachelorThesisAssessment(queryResponse.content);
     }
 
     private async queryStudentBachelorThesisEvaluation(studentId: string) {
         const queryRequest = this.createQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
         const queryResponse = await this.bteRepo.query(queryRequest);
-        return queryResponse.content.map(item => plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, item));
+        return this.infoMapper.mapBachelorThesisEvaluation(queryResponse.content);
     }
 
     private async queryStudentOralDefenseRegistration(studentId: string) {
         const queryRequest = this.createQueryRequest(OralDefenseRegistrationsQueryRequest, studentId);
         const queryResponse = await this.odrRepo.query(queryRequest);
-        return queryResponse.content.map(item => plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, item));
+        return this.infoMapper.mapOralDefenseRegistration(queryResponse.content);
     }
 
     private async queryStudentOralDefenseAssessment(studentId: string) {
         const queryRequest = this.createQueryRequest(OralDefenseAssessmentsQueryRequest, studentId);
         const queryResponse = await this.odaRepo.query(queryRequest);
-        return queryResponse.content.map(item => plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, item));
+        return this.infoMapper.mapOralDefenseAssessment(queryResponse.content);
     }
 
     private createQueryRequest<T extends object>(cls: ClassConstructor<T>, studentId: string): T {

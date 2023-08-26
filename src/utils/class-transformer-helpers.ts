@@ -1,17 +1,16 @@
 import { ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
+import { SingleOrArray } from "./object-helpers";
 
-export function plainToInstanceExactMatch<T, V>(cls: ClassConstructor<T>, plain: V, exposeDefaultValues = true): T {
-    return plainToInstance<T, V>(cls, plain, { excludeExtraneousValues: true, exposeUnsetFields: false, exposeDefaultValues });
+export function plainToInstanceExactMatch<T, V>(cls: ClassConstructor<T>, plain: V, exposeDefaultValues?: boolean): T;
+export function plainToInstanceExactMatch<T, V>(cls: ClassConstructor<T>, plain: V[], exposeDefaultValues?: boolean): T[];
+export function plainToInstanceExactMatch<T, V>(cls: ClassConstructor<T>, plain: SingleOrArray<V>, 
+    exposeDefaultValues = true): SingleOrArray<T> {
+    return plainToInstance(cls, plain, { excludeExtraneousValues: true, exposeUnsetFields: false, exposeDefaultValues });
 }
 
-export function plainArrayToInstanceExactMatch<T, V>(cls: ClassConstructor<T>, plain: V[], exposeDefaultValues = true): T[] {
-    return plainToInstance<T, V>(cls, plain, { excludeExtraneousValues: true, exposeUnsetFields: false, exposeDefaultValues });
-}
-
-export function instanceToPlainSkipUnset<T>(object: T, exposeDefaultValues = true): Record<string, any> {
-    return instanceToPlain<T>(object, { exposeUnsetFields: false, exposeDefaultValues });
-}
-
-export function instanceArrayToPlainSkipUnset<T>(object: T[], exposeDefaultValues = true): Record<string, any>[] {
-    return instanceToPlain<T>(object, { exposeUnsetFields: false, exposeDefaultValues });
+export function instanceToPlainSkipUnset<T>(object: T, exposeDefaultValues?: boolean): Record<string, any>;
+export function instanceToPlainSkipUnset<T>(object: T[], exposeDefaultValues?: boolean): Record<string, any>[];
+export function instanceToPlainSkipUnset<T>(object: SingleOrArray<T>, exposeDefaultValues = true)
+    : SingleOrArray<Record<string, any>> {
+    return instanceToPlain(object, { exposeUnsetFields: false, exposeDefaultValues });
 }

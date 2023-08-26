@@ -4,7 +4,16 @@
 export * from './dao';
 
 /**
+ * Info Object: mapped from DAO DTOs
+ */
+export * from './info';
+
+/**
+ * 
+ */
+
+/**
  * Other DTOs
  */
 export * from './auth';
-export * from './api';
+//export * from './api';
