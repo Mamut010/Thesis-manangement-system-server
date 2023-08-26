@@ -103,13 +103,12 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         : Promise<BachelorThesisEvaluationInfoDto[]> {
         await this.ensureRecordExists(lecturerId);
 
-        const queryRequest = new BachelorThesisEvaluationsQueryRequest();
         const supervisorIdFilter = new StringFilter();
         supervisorIdFilter.value = lecturerId;
         supervisorIdFilter.operator = 'equals';
-        queryRequest.supervisorIdFilter = makeArray(supervisorIdFilter);
+        bteQueryRequest.supervisorIdFilter = makeArray(supervisorIdFilter);
 
-        const result = (await this.bteRepo.query(queryRequest)).content;
+        const result = (await this.bteRepo.query(bteQueryRequest)).content;
         return this.mapper.map(BachelorThesisEvaluationInfoDto, result);
     }
 

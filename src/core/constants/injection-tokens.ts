@@ -2,7 +2,7 @@ const CONSTANT_TOKENS = {
     DIContainer: Symbol.for('DIContainer'),
     IOServer: Symbol.for('IOServer'),
     Tracer: Symbol.for('Tracer'),
-    MetricsCustomLabels: Symbol.for('MetricsCustomLabels'),
+    AppMetricsHandler: Symbol.for('AppMetricsHandler'),
 } as const;
 
 const LOGGER_TOKENS = {
