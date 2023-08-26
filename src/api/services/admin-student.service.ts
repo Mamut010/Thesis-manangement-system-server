@@ -32,7 +32,7 @@ import {
 import { StringFilter } from "../../lib/query";
 import { ClassConstructor } from "../../utils/types";
 import { singleOrDefault } from "../../utils/array-helpers";
-import { InfoMapperInterface } from "../../shared/utils/info-mapper";
+import { MapperServiceInterface } from "../../shared/interfaces";
 
 @injectable()
 export class AdminStudentService implements AdminStudentServiceInterface {
@@ -43,21 +43,21 @@ export class AdminStudentService implements AdminStudentServiceInterface {
         @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface,
         @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface,
         @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface,
-        @inject(INJECTION_TOKENS.InfoMapper) private infoMapper: InfoMapperInterface) {
+        @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
 
     async getStudents(studentsQuery: StudentInfosQueryRequest): Promise<StudentInfosQueryResponse> {
         const result = await this.studentRepo.query(studentsQuery);
         return {
-            content: this.infoMapper.mapStudent(result.content),
+            content: this.mapper.map(StudentInfoDto, result.content),
             count: result.count
         }
     }
 
     async getStudentInfo(studentId: string): Promise<StudentInfoDto> {
         const result = await this.ensureRecordExists(studentId);
-        return this.infoMapper.mapStudent(result);
+        return this.mapper.map(StudentInfoDto, result);
     }
 
     async getStudentDetail(studentId: string): Promise<StudentDetailResponse> {
@@ -140,7 +140,7 @@ export class AdminStudentService implements AdminStudentServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
         }
 
-        return this.infoMapper.mapStudent(result);
+        return this.mapper.map(StudentInfoDto, result);
     }
 
     private async ensureRecordExists(studentId: string) {
@@ -154,31 +154,31 @@ export class AdminStudentService implements AdminStudentServiceInterface {
     private async queryStudentBachelorThesisRegistration(studentId: string) {
         const queryRequest = this.createQueryRequest(BachelorThesisRegistrationsQueryRequest, studentId);
         const queryResponse = await this.btrRepo.query(queryRequest);
-        return this.infoMapper.mapBachelorThesisRegistration(queryResponse.content);
+        return this.mapper.map(BachelorThesisRegistrationInfoDto, queryResponse.content);
     }
 
     private async queryStudentBachelorThesisAssessment(studentId: string) {
         const queryRequest = this.createQueryRequest(BachelorThesisAssessmentsQueryRequest, studentId);
         const queryResponse = await this.btaRepo.query(queryRequest);
-        return this.infoMapper.mapBachelorThesisAssessment(queryResponse.content);
+        return this.mapper.map(BachelorThesisAssessmentInfoDto, queryResponse.content);
     }
 
     private async queryStudentBachelorThesisEvaluation(studentId: string) {
         const queryRequest = this.createQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
         const queryResponse = await this.bteRepo.query(queryRequest);
-        return this.infoMapper.mapBachelorThesisEvaluation(queryResponse.content);
+        return this.mapper.map(BachelorThesisEvaluationInfoDto, queryResponse.content);
     }
 
     private async queryStudentOralDefenseRegistration(studentId: string) {
         const queryRequest = this.createQueryRequest(OralDefenseRegistrationsQueryRequest, studentId);
         const queryResponse = await this.odrRepo.query(queryRequest);
-        return this.infoMapper.mapOralDefenseRegistration(queryResponse.content);
+        return this.mapper.map(OralDefenseRegistrationInfoDto, queryResponse.content);
     }
 
     private async queryStudentOralDefenseAssessment(studentId: string) {
         const queryRequest = this.createQueryRequest(OralDefenseAssessmentsQueryRequest, studentId);
         const queryResponse = await this.odaRepo.query(queryRequest);
-        return this.infoMapper.mapOralDefenseAssessment(queryResponse.content);
+        return this.mapper.map(OralDefenseAssessmentInfoDto, queryResponse.content);
     }
 
     private createQueryRequest<T extends object>(cls: ClassConstructor<T>, studentId: string): T {

@@ -34,7 +34,7 @@ import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
-import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
+import { MapperServiceInterface } from "../../shared/interfaces";
 
 @injectable()
 export class AdminLecturerService implements AdminLecturerServiceInterface {
@@ -44,21 +44,22 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         @inject(INJECTION_TOKENS.BachelorThesisAssessmentRepo) private btaRepo: BachelorThesisAssessmentRepoInterface,
         @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface,
         @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface,
-        @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface) {
+        @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface,
+        @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
 
     async getLecturers(lecturersQuery: LecturerInfosQueryRequest): Promise<LecturerInfosQueryResponse> {
         const result = await this.lecturerRepo.query(lecturersQuery);
         return {
-            content: result.content.map(item => plainToInstanceExactMatch(LecturerInfoDto, item)),
-            count: result.count
+            content: this.mapper.map(LecturerInfoDto, result.content),
+            count: result.count,
         }
     }
 
     async getLecturerInfo(lecturerId: string): Promise<LecturerInfoDto> {
         const result = await this.ensureRecordExists(lecturerId);
-        return plainToInstanceExactMatch(LecturerInfoDto, result);
+        return this.mapper.map(LecturerInfoDto, result);
     }
 
     async getLecturerDetail(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
@@ -88,14 +89,14 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         : Promise<BachelorThesisRegistrationInfoDto[]> {
         await this.ensureRecordExists(lecturerId);
         const result = await this.btrRepo.queryLecturerAssets(lecturerId, btrQueryRequest);
-        return result.map(item => plainToInstanceExactMatch(BachelorThesisRegistrationInfoDto, item));
+        return this.mapper.map(BachelorThesisRegistrationInfoDto, result);
     }
 
     async getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest: BachelorThesisAssessmentsQueryRequest)
         : Promise<BachelorThesisAssessmentInfoDto[]> {
         await this.ensureRecordExists(lecturerId);
         const result = await this.btaRepo.queryLecturerAssets(lecturerId, btaQueryRequest);
-        return result.map(item => plainToInstanceExactMatch(BachelorThesisAssessmentInfoDto, item));
+        return this.mapper.map(BachelorThesisAssessmentInfoDto, result);
     }
 
     async getLecturerBachelorThesisEvaluations(lecturerId: string, bteQueryRequest: BachelorThesisEvaluationsQueryRequest)
@@ -109,21 +110,21 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
         queryRequest.supervisorIdFilter = makeArray(supervisorIdFilter);
 
         const result = (await this.bteRepo.query(queryRequest)).content;
-        return result.map(item => plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, item));
+        return this.mapper.map(BachelorThesisEvaluationInfoDto, result);
     }
 
     async getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest: OralDefenseRegistrationsQueryRequest)
         : Promise<OralDefenseRegistrationInfoDto[]> {
         await this.ensureRecordExists(lecturerId);
         const result = await this.odrRepo.queryLecturerAssets(lecturerId, odrQueryRequest);
-        return result.map(item => plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, item));
+        return this.mapper.map(OralDefenseRegistrationInfoDto, result);
     }
 
     async getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest: OralDefenseAssessmentsQueryRequest)
         : Promise<OralDefenseAssessmentInfoDto[]> {
         await this.ensureRecordExists(lecturerId);
         const result = await this.odaRepo.queryLecturerAssets(lecturerId, odaQueryRequest);
-        return result.map(item => plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, item));
+        return this.mapper.map(OralDefenseAssessmentInfoDto, result);
     }
 
     async updateLecturerInfo(lecturerId: string, updateRequest: LecturerUpdateRequest): Promise<LecturerInfoDto> {
@@ -138,7 +139,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.LecturerNotFound);
         }
 
-        return plainToInstanceExactMatch(LecturerInfoDto, result);
+        return this.mapper.map(LecturerInfoDto, result);;
     }
 
     private async ensureRecordExists(lecturerId: string) {

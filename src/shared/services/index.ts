@@ -4,3 +4,4 @@ export * from './crypto.service';
 export * from './bearer-jwt-extractor.service';
 export * from './notification.service';
 export * from './uuid.service';
+export * from './mapper.service';

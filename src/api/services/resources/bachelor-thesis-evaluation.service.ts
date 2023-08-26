@@ -13,12 +13,13 @@ import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { BachelorThesisEvaluationRepoInterface } from "../../../dal/interfaces";
 import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses";
-import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
+import { MapperServiceInterface } from "../../../shared/interfaces";
 
 @injectable()
 export class BachelorThesisEvaluationService implements BachelorThesisEvaluationServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface) {
+        @inject(INJECTION_TOKENS.BachelorThesisEvaluationRepo) private bteRepo: BachelorThesisEvaluationRepoInterface,
+        @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
 
@@ -26,20 +27,20 @@ export class BachelorThesisEvaluationService implements BachelorThesisEvaluation
         : Promise<BachelorThesisEvaluationInfosQueryResponse> {
         const result = await this.bteRepo.query(queryRequest);
         return {
-            content: result.content.map(item => plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, item)),
+            content: this.mapper.map(BachelorThesisEvaluationInfoDto, result.content),
             count: result.count
         }
     }
 
     async getBachelorThesisEvaluation(user: AuthorizedUser, id: number): Promise<BachelorThesisEvaluationInfoDto> {
         const result = await this.ensureRecordExists(id);
-        return plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, result);
+        return this.mapper.map(BachelorThesisEvaluationInfoDto, result);
     }
 
     async createBachelorThesisEvaluation(user: AuthorizedUser, createRequest: BachelorThesisEvaluationCreateRequest)
         : Promise<BachelorThesisEvaluationInfoDto> {
         const result = await this.bteRepo.create(createRequest);
-        return plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, result);
+        return this.mapper.map(BachelorThesisEvaluationInfoDto, result);
     }
 
     async updateBachelorThesisEvaluation(user: AuthorizedUser, id: number, 
@@ -48,7 +49,7 @@ export class BachelorThesisEvaluationService implements BachelorThesisEvaluation
         this.ensureValidModification(user, record);
 
         const result = await this.bteRepo.update(id, updateRequest);
-        return plainToInstanceExactMatch(BachelorThesisEvaluationInfoDto, result);
+        return this.mapper.map(BachelorThesisEvaluationInfoDto, result);
     }
 
     async deleteBachelorThesisEvaluation(user: AuthorizedUser, id: number): Promise<void> {

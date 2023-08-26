@@ -17,7 +17,8 @@ import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import {
     JwtServiceInterface,
     CryptoServiceInterface,
-    JwtExtractorServiceInterface
+    JwtExtractorServiceInterface,
+    MapperServiceInterface
 } from '../../shared/interfaces';
 import { StringResponse, StringArrayResponse } from '../../contracts/responses';
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
@@ -48,7 +49,8 @@ export class AuthService implements AuthServiceInterface {
         @inject(INJECTION_TOKENS.CryptoService) private cryptoService: CryptoServiceInterface,
         @inject(INJECTION_TOKENS.JwtService) private jwtService: JwtServiceInterface,
         @inject(INJECTION_TOKENS.JwtExtractor) private jwtExtractor: JwtExtractorServiceInterface,
-        @inject(INJECTION_TOKENS.JwtCookieHandler) private jwtCookieHandler: JwtCookieHandlerInterface) {
+        @inject(INJECTION_TOKENS.JwtCookieHandler) private jwtCookieHandler: JwtCookieHandlerInterface,
+        @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
 
@@ -77,7 +79,7 @@ export class AuthService implements AuthServiceInterface {
         userCreatingRequest.email = signUpRequest.email;
 
         const record = await this.userRepo.create(userCreatingRequest);
-        return plainToInstanceExactMatch(UserInfoDto, record);
+        return this.mapper.map(UserInfoDto, record);
     }
 
     async login(response: Response, loginRequest: LoginRequest): Promise<StringResponse> {

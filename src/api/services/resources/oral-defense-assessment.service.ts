@@ -13,12 +13,13 @@ import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { OralDefenseAssessmentRepoInterface } from "../../../dal/interfaces";
 import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses";
-import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
+import { MapperServiceInterface } from "../../../shared/interfaces";
 
 @injectable()
 export class OralDefenseAssessmentService implements OralDefenseAssessmentServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface) {
+        @inject(INJECTION_TOKENS.OralDefenseAssessmentRepo) private odaRepo: OralDefenseAssessmentRepoInterface,
+        @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
 
@@ -26,20 +27,20 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
         : Promise<OralDefenseAssessmentInfosQueryResponse> {
         const result = await this.odaRepo.query(queryRequest);
         return {
-            content: result.content.map(item => plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, item)),
+            content: this.mapper.map(OralDefenseAssessmentInfoDto, result.content),
             count: result.count
         }
     }
 
     async getOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<OralDefenseAssessmentInfoDto> {
         const result = await this.ensureRecordExists(id);
-        return plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, result);
+        return this.mapper.map(OralDefenseAssessmentInfoDto, result);
     }
 
     async createOralDefenseAssessment(user: AuthorizedUser, createRequest: OralDefenseAssessmentCreateRequest)
         : Promise<OralDefenseAssessmentInfoDto> {
         const result = await this.odaRepo.create(createRequest);
-        return plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, result);
+        return this.mapper.map(OralDefenseAssessmentInfoDto, result);
     }
 
     async updateOralDefenseAssessment(user: AuthorizedUser, id: number, 
@@ -48,7 +49,7 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
         this.ensureValidModification(user, record);
 
         const result = await this.odaRepo.update(id, updateRequest);
-        return plainToInstanceExactMatch(OralDefenseAssessmentInfoDto, result);
+        return this.mapper.map(OralDefenseAssessmentInfoDto, result);
     }
 
     async deleteOralDefenseAssessment(user: AuthorizedUser, id: number): Promise<void> {

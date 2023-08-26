@@ -69,6 +69,7 @@ const SHARED_SERVICE_TOKENS = {
     JwtExtractor: Symbol.for('JwtExtractor'),
     NotificationService: Symbol.for('NotificationService'),
     UuidService: Symbol.for('UuidService'),
+    MapperService: Symbol.for('MapperService'),
 } as const;
 
 const UTIL_TOKENS = {
@@ -79,7 +80,6 @@ const UTIL_TOKENS = {
     PdfFormGenerator: Symbol.for('PdfFormGenerator'),
     RoomIdGenerator: Symbol.for('RoomIdGenerator'),
     IORoomTimerManager: Symbol.for('IORoomTimerManager'),
-    InfoMapper: Symbol.for('InfoMapper'),
 } as const;
 
 export const INJECTION_TOKENS = {

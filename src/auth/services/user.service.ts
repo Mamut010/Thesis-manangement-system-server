@@ -5,19 +5,20 @@ import { UserRepoInterface } from "../../dal/interfaces";
 import { UserInfoUpdateRequest, UserInfosQueryRequest } from "../../contracts/requests";
 import { UserInfosQueryResponse } from "../../contracts/responses";
 import { UserInfoDto } from "../../shared/dtos";
-import { plainToInstanceExactMatch } from "../../utils/class-transformer-helpers";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { ForbiddenError } from "../../contracts/errors/forbidden.error";
 import { ROLES } from "../../core/constants/roles";
 import { equalsOrUndefined } from "../../utils/object-helpers";
+import { MapperServiceInterface } from "../../shared/interfaces";
 
 @injectable()
 export class UserService implements UserServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
-        @inject(INJECTION_TOKENS.AuthService) private authService: AuthServiceInterface) {
+        @inject(INJECTION_TOKENS.AuthService) private authService: AuthServiceInterface,
+        @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
 
@@ -25,14 +26,14 @@ export class UserService implements UserServiceInterface {
         this.decryptQueryRequestCredentials(queryRequest);
         const result = await this.userRepo.query(queryRequest);
         return {
-            content: result.content.map(item => plainToInstanceExactMatch(UserInfoDto, item)),
+            content: this.mapper.map(UserInfoDto, result.content),
             count: result.count
         };
     }
 
     async getUser(currentUser: AuthorizedUser, userId: string): Promise<UserInfoDto> {
         const result = await this.ensureRecordExists(userId);
-        return plainToInstanceExactMatch(UserInfoDto, result);
+        return this.mapper.map(UserInfoDto, result);
     }
 
     async updateUser(currentUser: AuthorizedUser, userId: string, updateRequest: UserInfoUpdateRequest)
@@ -53,7 +54,7 @@ export class UserService implements UserServiceInterface {
 
         this.authService.tryDecryptCredentials(updateRequest, true);
         const result = await this.userRepo.update(userId, updateRequest);
-        return plainToInstanceExactMatch(UserInfoDto, result);
+        return this.mapper.map(UserInfoDto, result);
     }
 
     async deleteUser(currentUser: AuthorizedUser, userId: string): Promise<void> {

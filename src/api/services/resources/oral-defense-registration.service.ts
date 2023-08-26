@@ -12,13 +12,14 @@ import { OralDefenseRegistrationServiceInterface } from "../../interfaces";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { OralDefenseRegistrationRepoInterface } from "../../../dal/interfaces";
-import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses";
+import { MapperServiceInterface } from "../../../shared/interfaces";
 
 @injectable()
 export class OralDefenseRegistrationService implements OralDefenseRegistrationServiceInterface {
     constructor(
-        @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface) {
+        @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface,
+        @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
 
@@ -26,20 +27,20 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
         : Promise<OralDefenseRegistrationInfosQueryResponse> {
         const result = await this.odrRepo.query(queryRequest);
         return {
-            content: result.content.map(item => plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, item)),
+            content: this.mapper.map(OralDefenseRegistrationInfoDto, result.content),
             count: result.count
         }
     }
 
     async getOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<OralDefenseRegistrationInfoDto> {
         const result = await this.ensureRecordExists(id);
-        return plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, result);
+        return this.mapper.map(OralDefenseRegistrationInfoDto, result);
     }
 
     async createOralDefenseRegistration(user: AuthorizedUser, createRequest: OralDefenseRegistrationCreateRequest)
         : Promise<OralDefenseRegistrationInfoDto> {
         const result = await this.odrRepo.create(createRequest);
-        return plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, result);
+        return this.mapper.map(OralDefenseRegistrationInfoDto, result);
     }
 
     async updateOralDefenseRegistration(user: AuthorizedUser, id: number, 
@@ -48,7 +49,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
         this.ensureValidModification(user, record);
 
         const result = await this.odrRepo.update(id, updateRequest);
-        return plainToInstanceExactMatch(OralDefenseRegistrationInfoDto, result);
+        return this.mapper.map(OralDefenseRegistrationInfoDto, result);
     }
 
     async deleteOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<void> {

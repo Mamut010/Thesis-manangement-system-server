@@ -4,3 +4,4 @@ export * from './crypto.service.interface';
 export * from './jwt-extractor.service.interface';
 export * from './notification.service.interface';
 export * from './uuid.service.interface';
+export * from './mapper.service.interface';
