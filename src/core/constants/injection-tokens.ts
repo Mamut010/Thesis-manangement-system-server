@@ -40,10 +40,6 @@ const AUTH_SERVICE_TOKENS = {
 } as const;
 
 const API_SERVICE_TOKENS = {
-    AdminService: Symbol.for('AdminService'),
-    AdminStudentService: Symbol.for('AdminStudentService'),
-    AdminLecturerService: Symbol.for('AdminLecturerService'),
-
     // Resources
     ThesisService: Symbol.for('ThesisService'),
     RoleService: Symbol.for('RoleService'),
@@ -56,6 +52,12 @@ const API_SERVICE_TOKENS = {
     OralDefenseRegistrationService: Symbol.for('OralDefenseRegistrationService'),
     OralDefenseAssessmentService: Symbol.for('OralDefenseAssessmentService'),
     ProgramService: Symbol.for('ProgramService'),
+
+    // Main
+    AdminService: Symbol.for('AdminService'),
+    AdminStudentService: Symbol.for('AdminStudentService'),
+    AdminLecturerService: Symbol.for('AdminLecturerService'),
+    AssetsService: Symbol.for('AssetsService'),
 } as const;
 
 const WS_SERVICE_TOKENS = {

@@ -1,7 +1,3 @@
-export * from './admin.service.interface';
-export * from './admin-student.service.interface';
-export * from './admin-lecturer.service.interface';
-
 // Resources
 export * from './resources/thesis.service.interface';
 export * from './resources/role.service.interface';
@@ -14,3 +10,9 @@ export * from './resources/bachelor-thesis-evaluation.service.interface';
 export * from './resources/oral-defense-registration.service.interface';
 export * from './resources/oral-defense-assessment.service.interface';
 export * from './resources/program.service.interface';
+
+// Main
+export * from './admin.service.interface';
+export * from './admin-student.service.interface';
+export * from './admin-lecturer.service.interface';
+export * from './assets.service.interface';

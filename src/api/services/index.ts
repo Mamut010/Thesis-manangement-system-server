@@ -1,7 +1,3 @@
-export * from './admin.service';
-export * from './admin-student.service';
-export * from './admin-lecturer.service';
-
 // Resources
 export * from './resources/thesis.service';
 export * from './resources/role.service';
@@ -14,3 +10,9 @@ export * from './resources/bachelor-thesis-evaluation.service';
 export * from './resources/oral-defense-registration.service';
 export * from './resources/oral-defense-assessment.service';
 export * from './resources/program.service';
+
+// Main
+export * from './admin.service';
+export * from './admin-student.service';
+export * from './admin-lecturer.service';
+export * from './assets.service';

@@ -21,7 +21,8 @@ import {
     OralDefenseRegistrationServiceInterface,
     OralDefenseAssessmentServiceInterface,
     BachelorThesisEvaluationServiceInterface,
-    ProgramServiceInterface
+    ProgramServiceInterface,
+    AssetsServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -37,7 +38,8 @@ import {
     OralDefenseRegistrationService,
     OralDefenseAssessmentService,
     BachelorThesisEvaluationService,
-    ProgramService
+    ProgramService,
+    AssetsService
 } from '../api/services';
 import { 
     AdminRepoInterface,
@@ -263,21 +265,6 @@ function configAuthServerServices(container: Container, settings?: BootstrapSett
 }
 
 function configApiServerServices(container: Container, settings?: BootstrapSettingInterface) {
-    container
-        .bind<AdminServiceInterface>(INJECTION_TOKENS.AdminService)
-        .to(AdminService)
-        .inRequestScope();
-
-    container
-        .bind<AdminStudentServiceInterface>(INJECTION_TOKENS.AdminStudentService)
-        .to(AdminStudentService)
-        .inRequestScope();
-
-    container
-        .bind<AdminLecturerServiceInterface>(INJECTION_TOKENS.AdminLecturerService)
-        .to(AdminLecturerService)
-        .inRequestScope();
-
     // Resources
     container
         .bind<ThesisServiceInterface>(INJECTION_TOKENS.ThesisService)
@@ -332,6 +319,27 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<ProgramServiceInterface>(INJECTION_TOKENS.ProgramService)
         .to(ProgramService)
+        .inRequestScope();
+
+    // Main
+    container
+        .bind<AdminServiceInterface>(INJECTION_TOKENS.AdminService)
+        .to(AdminService)
+        .inRequestScope();
+
+    container
+        .bind<AdminStudentServiceInterface>(INJECTION_TOKENS.AdminStudentService)
+        .to(AdminStudentService)
+        .inRequestScope();
+
+    container
+        .bind<AdminLecturerServiceInterface>(INJECTION_TOKENS.AdminLecturerService)
+        .to(AdminLecturerService)
+        .inRequestScope();
+
+    container
+        .bind<AssetsServiceInterface>(INJECTION_TOKENS.AssetsService)
+        .to(AssetsService)
         .inRequestScope();
 }
 
