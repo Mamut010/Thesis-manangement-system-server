@@ -44,7 +44,7 @@ import { RefreshToken } from "../../../core/models";
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
     private static readonly bachelorThesisAndOralDefenseRelations 
-        = ['thesis', 'supervisor', 'supervisor1', 'supervisor2'];
+        = ['thesis', 'admin', 'supervisor', 'supervisor1', 'supervisor2'];
 
     public toUser(plain: PlainUser): UserDto {
         const dto = plainToInstanceExactMatch(UserDto, flattenObject(plain, {

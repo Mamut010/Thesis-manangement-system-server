@@ -10,7 +10,7 @@ import {
 } from "../../contracts/requests";
 import { OralDefenseRegistrationsQueryResponse } from "../../contracts/responses";
 import { OralDefenseRegistration } from "../../core/models";
-import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
+import { bachelorThesisAndOralDefenseWithAdminInclude } from "../constants/includes";
 import { OralDefenseRegistrationDto } from "../../shared/dtos";
 import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
@@ -34,7 +34,7 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
         const count = await this.prisma.oralDefenseRegistration.count({ where: prismaQuery.where });
         const records = await this.prisma.oralDefenseRegistration.findMany({
             ...prismaQuery,
-            include:  bachelorThesisAndOralDefenseInclude,
+            include: bachelorThesisAndOralDefenseWithAdminInclude,
         });
 
         const response = new OralDefenseRegistrationsQueryResponse();
@@ -55,7 +55,7 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
         const impl = async () => {
             const record = await this.prisma.oralDefenseRegistration.create({
                 data: createRequest,
-                include:  bachelorThesisAndOralDefenseInclude
+                include: bachelorThesisAndOralDefenseWithAdminInclude
             });
             return this.plainTransformer.toOralDefenseRegistration(record);
         }
@@ -77,7 +77,7 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
                         id: id
                     },
                     data: updateRequest,
-                    include:  bachelorThesisAndOralDefenseInclude
+                    include: bachelorThesisAndOralDefenseWithAdminInclude
                 });
             }
     
@@ -108,7 +108,7 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
             where: {
                 id: id
             },
-            include:  bachelorThesisAndOralDefenseInclude
+            include: bachelorThesisAndOralDefenseWithAdminInclude
         });
     }
 

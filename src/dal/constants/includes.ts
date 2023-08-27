@@ -26,6 +26,14 @@ export const bachelorThesisAndOralDefenseInclude = {
     supervisor2: true,
 } as const;
 
+export const bachelorThesisAndOralDefenseWithAdminInclude = {
+    student: true,
+    thesis: true,
+    supervisor1: true,
+    supervisor2: true,
+    admin: true
+} as const;
+
 export const bachelorThesisEvaluationInclude = {
     student: true,
     supervisor: true,

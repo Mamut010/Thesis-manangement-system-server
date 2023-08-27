@@ -94,6 +94,16 @@ export class BachelorThesisRegistrationInfoDto {
 
     @Expose()
     @IsOptional()
+    @IsString()
+    adminTitle!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    adminAllowed!: boolean | null;
+
+    @Expose()
+    @IsOptional()
     @IsBoolean()
     adminConfirmed!: boolean | null;
 
