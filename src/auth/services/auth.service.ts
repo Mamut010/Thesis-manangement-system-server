@@ -21,8 +21,6 @@ import {
     MapperServiceInterface
 } from '../../shared/interfaces';
 import { StringResponse, StringArrayResponse } from '../../contracts/responses';
-import { BadRequestError } from '../../contracts/errors/bad-request.error';
-import { env } from '../../env';
 import { RefreshTokenRepoInterface, RoleRepoInterface, UserRepoInterface } from '../../dal/interfaces';
 import { 
     LoginRequest,
@@ -38,7 +36,6 @@ import { NotFoundError } from '../../contracts/errors/not-found.error';
 import { ROLES } from '../../core/constants/roles';
 import { ForbiddenError } from '../../contracts/errors/forbidden.error';
 import { AuthorizedUser } from '../../core/auth-checkers';
-import { Credentials } from '../types/credentials';
 
 @injectable()
 export class AuthService implements AuthServiceInterface {
@@ -55,7 +52,6 @@ export class AuthService implements AuthServiceInterface {
     }
 
     async signup(signUpRequest: SignUpRequest): Promise<UserInfoDto> {
-        this.tryDecryptCredentials(signUpRequest, true);
         if (await this.userRepo.findOneById(signUpRequest.userId)) {
             throw new AuthenticationError(ERROR_MESSAGES.Auth.UserIdAlreadyExists);
         }
@@ -83,7 +79,6 @@ export class AuthService implements AuthServiceInterface {
     }
 
     async login(response: Response, loginRequest: LoginRequest): Promise<StringResponse> {
-        this.tryDecryptCredentials(loginRequest, true);
         const user = await this.getUserByUsername(loginRequest.username);
         if (!user ||
             !(await this.cryptoService.verifyHash(loginRequest.password, user.password))) {
@@ -175,43 +170,6 @@ export class AuthService implements AuthServiceInterface {
         }
         catch {
             return undefined;
-        }
-    }
-
-    public tryDecryptCredentials(credentials: Credentials, inplace?: boolean): Credentials | undefined {
-        try {
-            return this.decryptCredentials(credentials, inplace);
-        }
-        catch(err) {
-            if (!env.isDevelopment) {
-                throw err;
-            }
-        }
-    }
-
-    public decryptCredentials(credentials: Credentials, inplace?: boolean): Credentials {
-        try {
-            const decryptedUsername = credentials.username 
-                ? this.cryptoService.decryptAsString(credentials.username)
-                : undefined;
-            const decryptedPassword = credentials.password
-                ? this.cryptoService.decryptAsString(credentials.password)
-                : undefined;
-                
-            if (inplace) {
-                credentials.username = decryptedUsername;
-                credentials.password = decryptedPassword;
-                return credentials;
-            }
-            else {
-                return {
-                    username: decryptedUsername,
-                    password: decryptedPassword,
-                }
-            }
-        }
-        catch {
-            throw new BadRequestError(ERROR_MESSAGES.Auth.InvalidCredentials);
         }
     }
 

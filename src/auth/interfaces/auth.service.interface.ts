@@ -3,7 +3,6 @@ import { JwtAccessPayloadDto, UserInfoDto } from '../../shared/dtos';
 import { LoginRequest, SignUpRequest } from '../../contracts/requests';
 import { StringResponse, StringArrayResponse } from '../../contracts/responses';
 import { AuthorizedUser } from '../../core/auth-checkers';
-import { Credentials } from '../types/credentials';
 
 export interface AuthServiceInterface {
     signup(signUpRequest: SignUpRequest): Promise<UserInfoDto>;
@@ -12,6 +11,4 @@ export interface AuthServiceInterface {
     getRoles(user: AuthorizedUser): StringArrayResponse;
     issueAccessToken(request: Request, response: Response): Promise<StringResponse>;
     verifyJwtTokenInRequest(request: Request): Promise<JwtAccessPayloadDto | undefined>;
-    tryDecryptCredentials(credentials: Credentials, inplace?: boolean): Credentials | undefined;
-    decryptCredentials(credentials: Credentials, inplace?: boolean): Credentials;
 }

@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { AuthServiceInterface, UserServiceInterface } from "../interfaces";
+import { UserServiceInterface } from "../interfaces";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { UserRepoInterface } from "../../dal/interfaces";
 import { UserInfoUpdateRequest, UserInfosQueryRequest } from "../../contracts/requests";
@@ -17,13 +17,11 @@ import { MapperServiceInterface } from "../../shared/interfaces";
 export class UserService implements UserServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
-        @inject(INJECTION_TOKENS.AuthService) private authService: AuthServiceInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
 
     async getUsers(currentUser: AuthorizedUser, queryRequest: UserInfosQueryRequest): Promise<UserInfosQueryResponse> {
-        this.decryptQueryRequestCredentials(queryRequest);
         const result = await this.userRepo.query(queryRequest);
         return {
             content: this.mapper.map(UserInfoDto, result.content),
@@ -52,7 +50,6 @@ export class UserService implements UserServiceInterface {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.UnpermittedAction);
         }
 
-        this.authService.tryDecryptCredentials(updateRequest, true);
         const result = await this.userRepo.update(userId, updateRequest);
         return this.mapper.map(UserInfoDto, result);
     }
@@ -65,17 +62,6 @@ export class UserService implements UserServiceInterface {
         }
 
         await this.userRepo.delete(userId);
-    }
-
-    private decryptQueryRequestCredentials(queryRequest: UserInfosQueryRequest) {
-        if (!queryRequest.usernameFilter) {
-            return;
-        }
-
-        queryRequest.usernameFilter.forEach(filter => {
-            const decryptedCredentials = this.authService.tryDecryptCredentials({ username: filter.value });
-            filter.value = decryptedCredentials?.username ?? filter.value;
-        });
     }
 
     private async ensureRecordExists(userId: string) {
