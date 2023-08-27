@@ -79,6 +79,11 @@ export class BachelorThesisRegistration {
 
     @Expose()
     @IsOptional()
+    @IsBoolean()
+    adminAllowed!: boolean | null;
+
+    @Expose()
+    @IsOptional()
     @IsDate()
     issued!: Date | null;
 
@@ -101,11 +106,6 @@ export class BachelorThesisRegistration {
     @IsOptional()
     @IsDate()
     dateOfIssue!: Date | null;
-
-    @Expose()
-    @IsOptional()
-    @IsNumber()
-    step!: number | null;
 
     @Expose()
     @IsDefined()

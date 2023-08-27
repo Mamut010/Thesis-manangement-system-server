@@ -63,11 +63,6 @@ export class Thesis {
     templateFiles!: string | null;
 
     @Expose()
-    @IsOptional()
-    @IsNumber()
-    step!: number | null;
-
-    @Expose()
     @IsDefined()
     @IsDate()
     createdAt!: Date;

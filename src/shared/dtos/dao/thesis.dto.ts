@@ -71,9 +71,4 @@ export class ThesisDto {
     @IsOptional()
     @IsString()
     templateFiles!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsNumber()
-    step!: number | null;
 }

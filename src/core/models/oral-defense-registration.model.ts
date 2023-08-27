@@ -30,6 +30,11 @@ export class OralDefenseRegistration {
     @Expose()
     @IsOptional()
     @IsString()
+    adminId!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     room!: string | null;
 
     @Expose()
@@ -64,8 +69,8 @@ export class OralDefenseRegistration {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    step!: number | null;
+    @IsBoolean()
+    adminAllowed!: boolean | null;
 
     @Expose()
     @IsDefined()

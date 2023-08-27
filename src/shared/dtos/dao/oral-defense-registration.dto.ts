@@ -16,6 +16,7 @@ export class OralDefenseRegistrationDto {
     @IsDefined()
     @IsNumber()
     thesisId!: number;
+    
 
     @Expose()
     @IsOptional()
@@ -101,4 +102,24 @@ export class OralDefenseRegistrationDto {
     @IsOptional()
     @IsDate()
     admissionDate!: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    adminId!: string | null;
+    
+    @Expose()
+    @IsOptional()
+    @IsString()
+    adminTitle!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    adminAllowed!: boolean | null;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    adminConfirmed!: boolean | null;
 }

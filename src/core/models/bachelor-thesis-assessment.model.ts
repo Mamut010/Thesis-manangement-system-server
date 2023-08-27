@@ -53,11 +53,6 @@ export class BachelorThesisAssessment {
     assessmentDate!: Date | null;
 
     @Expose()
-    @IsOptional()
-    @IsNumber()
-    step!: number | null;
-
-    @Expose()
     @IsDefined()
     @IsDate()
     createdAt!: Date;

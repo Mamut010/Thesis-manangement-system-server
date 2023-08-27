@@ -72,6 +72,7 @@ model Admin {
 
     user                          User                          @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)                        
     bachelorThesisRegistrations   BachelorThesisRegistration[]
+    oralDefenseRegistrations      OralDefenseRegistration[]
 }
 
 model Lecturer {
@@ -156,7 +157,6 @@ model Thesis {
     numberHardCopies              Int?                
     printRequirements             String?                             @db.VarChar(255)
     templateFiles                 String?                             @db.VarChar(255)
-    step                          Int?                                @default(0)
     createdAt                     DateTime                            @default(now()) @db.Timestamp(6)
     updatedAt                     DateTime                            @updatedAt @db.Timestamp(6)
 
@@ -192,13 +192,13 @@ model BachelorThesisRegistration {
     supervisor1Confirmed    Boolean?    
     supervisor2Date         DateTime?   @db.Date
     supervisor2Confirmed    Boolean?
-    adminConfirmed          Boolean?    
+    adminConfirmed          Boolean?
+    adminAllowed            Boolean?    
     issued                  DateTime?   @db.Date
     deadlineCopy            DateTime?   @db.Date
     extensionGranted        DateTime?   @db.Date
     chairmanOfExamination   String?     @db.VarChar(255)
     dateOfIssue             DateTime?   @db.Date
-    step                    Int?        @default(0)
     createdAt               DateTime    @default(now()) @db.Timestamp(6)
     updatedAt               DateTime    @updatedAt @db.Timestamp(6)
 
@@ -215,6 +215,7 @@ model OralDefenseRegistration {
     thesisId               Int
     supervisor1Id          String?
     supervisor2Id          String?
+    adminId                String?
     room                   String?     @db.Text
     areSpectatorsAllowed   Boolean?    
     proposedDate           DateTime?   @db.DateTime
@@ -222,14 +223,15 @@ model OralDefenseRegistration {
     concernedAgreed        Int?        @default(0)
     dateReceived           DateTime?   @db.DateTime
     admissionDate          DateTime?   @db.DateTime
-    step                   Int?        @default(0)
+    adminAllowed           Boolean?
     createdAt              DateTime    @default(now()) @db.Timestamp(6)
     updatedAt              DateTime    @updatedAt @db.Timestamp(6)
 
-    student                Student     @relation(fields: [studentId], references: [userId], onUpdate: Cascade)
-    thesis                 Thesis      @relation(fields: [thesisId], references: [id], onUpdate: Cascade)
-    supervisor1            Lecturer?   @relation("supervisor1OralDefenseRegistrations", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    supervisor2            Lecturer?   @relation("supervisor2OralDefenseRegistrations", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    supervisor1            Lecturer?   @relation("supervisor1OralDefenseRegistrations", fields: [supervisor1Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
+    supervisor2            Lecturer?   @relation("supervisor2OralDefenseRegistrations", fields: [supervisor2Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
+    admin                  Admin?      @relation(fields: [adminId], references: [userId], onDelete: SetNull, onUpdate: Cascade)
 }
 
 model BachelorThesisAssessment {
@@ -243,14 +245,13 @@ model BachelorThesisAssessment {
     supervisor2Grade       Float?      @db.Float
     assessmentDescription  String?     @db.VarChar(255)
     assessmentDate         DateTime?   @db.Date
-    step                   Int?        @default(0)
     createdAt              DateTime    @default(now()) @db.Timestamp(6)
     updatedAt              DateTime    @updatedAt @db.Timestamp(6)
 
     student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    supervisor1            Lecturer?   @relation("supervisor1BachelorThesisAssessments", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    supervisor2            Lecturer?   @relation("supervisor2BachelorThesisAssessments", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor1            Lecturer?   @relation("supervisor1BachelorThesisAssessments", fields: [supervisor1Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
+    supervisor2            Lecturer?   @relation("supervisor2BachelorThesisAssessments", fields: [supervisor2Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
 }
 
 model OralDefenseAssessment {
@@ -268,14 +269,13 @@ model OralDefenseAssessment {
     supervisor2Grade       Float?      @db.Float
     record                 String?     @db.Text
     assessmentDate         DateTime?   @db.Date
-    step                   Int?        @default(0)
     createdAt              DateTime    @default(now()) @db.Timestamp(6)
     updatedAt              DateTime    @updatedAt @db.Timestamp(6)
 
     student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    supervisor1            Lecturer?   @relation("supervisor1OralDefenseAssessments", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    supervisor2            Lecturer?   @relation("supervisor2OralDefenseAssessments", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    supervisor1            Lecturer?   @relation("supervisor1OralDefenseAssessments", fields: [supervisor1Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
+    supervisor2            Lecturer?   @relation("supervisor2OralDefenseAssessments", fields: [supervisor2Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
 }
 
 model BachelorThesisEvaluation {
