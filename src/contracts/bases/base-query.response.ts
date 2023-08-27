@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import { IsDefined, IsNumber } from "class-validator";
 
-export abstract class BaseQueryResponse {
+export class BaseQueryResponse {
     @Expose()
     @IsDefined()
     @IsNumber()
