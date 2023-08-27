@@ -131,7 +131,7 @@ export class AdminLecturerService implements AdminLecturerServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.LecturerNotFound);
         }
 
-        return this.mapper.map(LecturerInfoDto, result);;
+        return this.mapper.map(LecturerInfoDto, result);
     }
 
     private async ensureRecordExists(lecturerId: string) {
