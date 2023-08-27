@@ -15,12 +15,12 @@ export class LecturerDto {
     @Expose()
     @IsOptional()
     @IsString()
-    title!: string | null;
+    title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    bio!: string | null;
+    bio?: string | null;
 
     @Expose()
     @IsDefined()
@@ -30,7 +30,7 @@ export class LecturerDto {
     @Expose()
     @IsOptional()
     @IsEmail()
-    email!: string | null;
+    email?: string | null;
 
     @Expose()
     @IsDefined()
@@ -40,5 +40,5 @@ export class LecturerDto {
     @Expose()
     @IsOptional()
     @IsString()
-    signature!: string | null;
+    signature?: string | null;
 }

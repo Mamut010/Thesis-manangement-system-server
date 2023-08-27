@@ -15,5 +15,5 @@ export class FieldDto {
     @Expose()
     @IsOptional()
     @IsString()
-    description!: string | null;
+    description?: string | null;
 }

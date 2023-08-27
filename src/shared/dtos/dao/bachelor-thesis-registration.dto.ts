@@ -20,140 +20,140 @@ export class BachelorThesisRegistrationDto {
     @Expose()
     @IsOptional()
     @IsString()
-    surname!: string | null;
+    surname?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    forename!: string | null;
+    forename?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    studentSignature!: string | null;
+    studentSignature?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    dateOfBirth!: Date | null;
+    dateOfBirth?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    placeOfBirth!: string | null;
+    placeOfBirth?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    thesisTitle!: string | null;
+    thesisTitle?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    furtherParticipants!: string | null;
+    furtherParticipants?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    studentDate!: Date | null;
+    studentDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Id!: string | null;
+    supervisor1Id?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Title!: string | null;
+    supervisor1Title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    supervisor1Date!: Date | null;
+    supervisor1Date?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    supervisor1Confirmed!: boolean | null;
+    supervisor1Confirmed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Signature!: string | null;
+    supervisor1Signature?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Id!: string | null;
+    supervisor2Id?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Title!: string | null;
+    supervisor2Title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    supervisor2Date!: Date | null;
+    supervisor2Date?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    supervisor2Confirmed!: boolean | null;
+    supervisor2Confirmed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Signature!: string | null;
+    supervisor2Signature?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    adminId!: string | null;
+    adminId?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    adminTitle!: string | null;
+    adminTitle?: string | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    adminAllowed!: boolean | null;
+    adminAllowed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    adminConfirmed!: boolean | null;
+    adminConfirmed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    adminSignature!: string | null;
+    adminSignature?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    issued!: Date | null;
+    issued?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    deadlineCopy!: Date | null;
+    deadlineCopy?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    extensionGranted!: Date | null;
+    extensionGranted?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    chairmanOfExamination!: string | null;
+    chairmanOfExamination?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    dateOfIssue!: Date | null;
+    dateOfIssue?: Date | null;
 }

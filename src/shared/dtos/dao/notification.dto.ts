@@ -10,17 +10,17 @@ export class NotificationDto {
     @Expose()
     @IsOptional()
     @IsString()
-    senderId!: string | null;
+    senderId?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    title!: string | null;
+    title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    content!: string | null;
+    content?: string | null;
 
     @Expose()
     @IsDefined()

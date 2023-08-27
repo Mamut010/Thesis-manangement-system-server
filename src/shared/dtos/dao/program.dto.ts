@@ -15,5 +15,5 @@ export class ProgramDto {
     @Expose()
     @IsOptional()
     @IsString()
-    description!: string | null;
+    description?: string | null;
 }

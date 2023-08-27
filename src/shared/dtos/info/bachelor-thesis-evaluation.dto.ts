@@ -26,36 +26,36 @@ export class BachelorThesisEvaluationInfoDto {
     @Expose()
     @IsOptional()
     @IsString()
-    surname!: string | null;
+    surname?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    forename!: string | null;
+    forename?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    thesisTitle!: string | null;
+    thesisTitle?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisorTitle!: string | null;
+    supervisorTitle?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
     @IsIn(TitleValues)
-    title!: string | null;
+    title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    date!: Date | null;
+    date?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    supervisorConfirmed!: boolean | null;
+    supervisorConfirmed?: boolean | null;
 }

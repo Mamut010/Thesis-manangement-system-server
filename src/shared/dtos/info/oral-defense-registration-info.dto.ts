@@ -20,85 +20,85 @@ export class OralDefenseRegistrationInfoDto {
     @Expose()
     @IsOptional()
     @IsString()
-    surname!: string | null;
+    surname?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    forename!: string | null;
+    forename?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    thesisTitle!: string | null;
+    thesisTitle?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Id!: string | null;
+    supervisor1Id?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Title!: string | null;
+    supervisor1Title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Id!: string | null;
+    supervisor2Id?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Title!: string | null;
+    supervisor2Title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    areSpectatorsAllowed!: boolean | null;
+    areSpectatorsAllowed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    proposedDate!: Date | null;
+    proposedDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    actualDate!: Date | null;
+    actualDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    room!: string | null;
+    room?: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    concernedAgreed!: number | null;
+    concernedAgreed?: number | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    dateReceived!: Date | null;
+    dateReceived?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    admissionDate!: Date | null;
+    admissionDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    adminTitle!: string | null;
+    adminTitle?: string | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    adminAllowed!: boolean | null;
+    adminAllowed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    adminConfirmed!: boolean | null;
+    adminConfirmed?: boolean | null;
 }

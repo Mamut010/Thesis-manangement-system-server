@@ -15,37 +15,37 @@ export class StudentDto {
     @Expose()
     @IsOptional()
     @IsNumber()
-    programId!: number | null;
+    programId?: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    programTitle!: string | null;
+    programTitle?: string | null;
     
     @Expose()
     @IsOptional()
     @IsString()
-    surname!: string | null;
+    surname?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    forename!: string | null;
+    forename?: string | null;
 
     @Expose()
     @IsOptional()
     @IsEmail()
-    email!: string | null;
+    email?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    signature!: string | null;
+    signature?: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    intake!: number | null;
+    intake?: number | null;
 
     @Expose()
     @IsDefined()

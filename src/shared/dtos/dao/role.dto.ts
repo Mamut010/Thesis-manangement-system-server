@@ -17,5 +17,5 @@ export class RoleDto {
     @Expose()
     @IsOptional()
     @IsString()
-    description!: string | null;
+    description?: string | null;
 }

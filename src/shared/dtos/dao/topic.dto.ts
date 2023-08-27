@@ -15,5 +15,5 @@ export class TopicDto {
     @Expose()
     @IsOptional()
     @IsString()
-    description!: string | null;
+    description?: string | null;
 }

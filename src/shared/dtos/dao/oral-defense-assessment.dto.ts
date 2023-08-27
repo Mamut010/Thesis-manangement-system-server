@@ -20,100 +20,100 @@ export class OralDefenseAssessmentDto {
     @Expose()
     @IsOptional()
     @IsString()
-    surname!: string | null;
+    surname?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    forename!: string | null;
+    forename?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    studentSignature!: string | null;
+    studentSignature?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    thesisTitle!: string | null;
+    thesisTitle?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    dateDefense!: Date | null;
+    dateDefense?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    placeDefense!: string | null;
+    placeDefense?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    startDate!: Date | null;
+    startDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    finishDate!: Date | null;
+    finishDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    stateOfHealth!: boolean | null;
+    stateOfHealth?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Id!: string | null;
+    supervisor1Id?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Title!: string | null;
+    supervisor1Title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    supervisor1Grade!: number | null;
+    supervisor1Grade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Signature!: string | null;
+    supervisor1Signature?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Id!: string | null;
+    supervisor2Id?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Title!: string | null;
+    supervisor2Title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    supervisor2Grade!: number | null;
+    supervisor2Grade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Signature!: string | null;
+    supervisor2Signature?: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    overallGrade!: number | null;
+    overallGrade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    record!: string | null;
+    record?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    assessmentDate!: Date | null;
+    assessmentDate?: Date | null;
 }

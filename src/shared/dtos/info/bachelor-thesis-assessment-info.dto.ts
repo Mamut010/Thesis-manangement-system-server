@@ -20,65 +20,65 @@ export class BachelorThesisAssessmentInfoDto {
     @Expose()
     @IsOptional()
     @IsString()
-    surname!: string | null;
+    surname?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    forename!: string | null;
+    forename?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    thesisTitle!: string | null;
+    thesisTitle?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    furtherParticipants!: string | null;
+    furtherParticipants?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Id!: string | null;
+    supervisor1Id?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor1Title!: string | null;
+    supervisor1Title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    supervisor1Grade!: number | null;
+    supervisor1Grade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Id!: string | null;
+    supervisor2Id?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    supervisor2Title!: string | null;
+    supervisor2Title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    supervisor2Grade!: number | null;
+    supervisor2Grade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    overallGrade!: number | null;
+    overallGrade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    assessmentDescription!: string | null;
+    assessmentDescription?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    assessmentDate!: Date | null;
+    assessmentDate?: Date | null;
 }

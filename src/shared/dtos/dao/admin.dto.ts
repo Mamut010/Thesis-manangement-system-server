@@ -15,20 +15,20 @@ export class AdminDto {
     @Expose()
     @IsOptional()
     @IsString()
-    title!: string | null;
+    title?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    contact!: string | null;
+    contact?: string | null;
 
     @Expose()
     @IsOptional()
     @IsEmail()
-    email!: string | null;
+    email?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    signature!: string | null;
+    signature?: string | null;
 }

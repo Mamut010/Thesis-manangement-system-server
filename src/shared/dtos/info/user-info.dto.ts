@@ -25,10 +25,10 @@ export class UserInfoDto {
     @Expose()
     @IsOptional()
     @IsEmail()
-    email!: string | null;
+    email?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
-    lastActivityDate!: Date | null;
+    lastActivityDate?: Date | null;
 }

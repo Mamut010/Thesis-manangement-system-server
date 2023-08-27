@@ -15,5 +15,5 @@ export class LocationDto {
     @Expose()
     @IsOptional()
     @IsString()
-    description!: string | null;
+    description?: string | null;
 }
