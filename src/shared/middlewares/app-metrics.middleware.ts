@@ -3,7 +3,7 @@ import { inject, injectable, optional } from 'inversify';
 import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';
 
-@Middleware({ type: 'before' })
+@Middleware({ type: 'before', priority: Infinity })
 @injectable()
 export class AppMetricsMiddleware implements ExpressMiddlewareInterface {
     constructor(
