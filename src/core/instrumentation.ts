@@ -15,9 +15,11 @@ import { NodeSDK } from '@opentelemetry/sdk-node';
 import { env } from "../env";
 import { TRACER_SETTINGS } from "../settings/tracer-settings";
 
-export const initializeTracer = (serviceName: string): Tracer | undefined => {
+export const initializeTracer = (serviceName: string): { tracer: Tracer | null, specs?: string } => {
     if (!env.tracer.enabled) {
-        return undefined;
+        return {
+            tracer: null,
+        };
     }
 
     const traceExporter = new OTLPTraceExporter({
@@ -50,7 +52,10 @@ export const initializeTracer = (serviceName: string): Tracer | undefined => {
     process.on('SIGTERM', exit);
     process.on('SIGINT', exit);
 
-    return trace.getTracer(serviceName);
+    return {
+        tracer: trace.getTracer(serviceName),
+        specs: 'OTLP'
+    };
 }
 
 function createSpanProcessor(exporter: SpanExporter): SpanProcessor {

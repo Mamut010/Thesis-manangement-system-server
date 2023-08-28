@@ -1,6 +1,7 @@
 export const BOOTSTRAP_SETTINGS_KEY = {
     Logger: 'logger',
     Tracer: 'tracer',
+    TracerSpecs: 'tracer-specs',
     Container: 'container',
     IocAdapter: 'ioc-adapter',
     ExpressServer: 'express_server',

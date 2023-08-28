@@ -26,7 +26,7 @@ export function banner(log: Logger, server: ServerType, settings?: BootstrapSett
         if(settings?.getData(BOOTSTRAP_SETTINGS_KEY.Metrics))
             log.info(`Metrics Endpoint : ${env.metrics.endpoint}`);
         if(settings?.getData(BOOTSTRAP_SETTINGS_KEY.Tracer))
-            log.info(`Tracer           : READY`);
+            log.info(`Tracer           : ${settings?.getData<string>(BOOTSTRAP_SETTINGS_KEY.TracerSpecs) ?? 'READY'}`);
         log.info('-------------------------------------------------------');
         log.info('');
     } else {

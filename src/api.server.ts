@@ -8,7 +8,7 @@ import 'reflect-metadata';
  */
 import { initializeTracer } from './core/instrumentation';
 import { SERVER_SETTINGS } from './settings/server-settings';
-const tracer = initializeTracer(SERVER_SETTINGS.Api.ServiceName);
+const { tracer, specs } = initializeTracer(SERVER_SETTINGS.Api.ServiceName);
 
 import { Logger } from './lib/logger';
 import { banner } from './lib/banner';
@@ -44,6 +44,7 @@ bootstrap({
     ],
     externalDeps: {
         [BOOTSTRAP_SETTINGS_KEY.Tracer]: tracer,
+        [BOOTSTRAP_SETTINGS_KEY.TracerSpecs]: specs,
         [BOOTSTRAP_SETTINGS_KEY.Logger]: log,
         [BOOTSTRAP_SETTINGS_KEY.ServerName]: SERVER_SETTINGS.Api.ServerName,
     }
