@@ -2,7 +2,7 @@ import * as jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';
 import { plainToInstance } from 'class-transformer';
 import { AUTH_SETTINGS } from '../../settings/auth-settings';
-import { JWT_TOKEN_TYPES } from '../../core/constants/jwt-token-types';
+import { JWT_TOKEN_TYPES } from '../../core/constants/jwt';
 import { AuthTokens } from '../types/auth-tokens';
 import { JwtAccessContextDto, JwtAccessPayloadDto, JwtRefreshContextDto, JwtRefreshPayloadDto } from '../dtos';
 import { instanceToPlainSkipUnset } from '../../utils/class-transformer-helpers';
