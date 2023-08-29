@@ -1,5 +1,5 @@
 /**
- * Cre: https://github.com/w3tecch/express-typescript-boilerplate
+ * @cre https://github.com/w3tecch/express-typescript-boilerplate
  */
 
 export interface LoggerInterface {
