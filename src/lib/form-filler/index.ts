@@ -6,7 +6,6 @@ export * from './interfaces/form-filler.interface';
 // Constants
 export * from './constants/default';
 export * from './constants/datetime';
-export * from './constants/images';
 
 // Types
 export * from './types/form-field-handle-options';

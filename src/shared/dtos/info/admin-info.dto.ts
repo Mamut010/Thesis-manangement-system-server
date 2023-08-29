@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsEmail, IsOptional, IsString } from "class-validator";
+import { IsDefined, IsOptional, IsString } from "class-validator";
 
 export class AdminInfoDto {
     @Expose()
@@ -16,9 +16,4 @@ export class AdminInfoDto {
     @IsOptional()
     @IsString()
     contact?: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsEmail()
-    email?: string | null;
 }

@@ -10,7 +10,7 @@ datasource db {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model User {
-    id                      BigInt          @id @default(autoincrement())
+    id                      Int             @id @default(autoincrement())
     userId                  String          @unique
     roleId                  Int
     username                String          @unique
@@ -32,7 +32,7 @@ model User {
 }
 
 model RefreshToken {
-    id      BigInt      @id @default(autoincrement())
+    id      Int         @id @default(autoincrement())
     userId  String      @unique
     token   String      @db.VarChar(255)
     exp     DateTime    @db.Timestamp(6)
@@ -51,7 +51,7 @@ model Role {
 }
 
 model Notification {
-    id          BigInt      @id @default(autoincrement())
+    id          Int         @id @default(autoincrement())
     senderId    String?
     title       String?     @db.VarChar(255)
     content     String?     @db.Text
@@ -64,7 +64,7 @@ model Notification {
 }
 
 model Admin {
-    id                            BigInt                        @id @default(autoincrement())
+    id                            Int                           @id @default(autoincrement())
     userId                        String                        @unique
     contact                       String?                       @db.VarChar(255)
     title                         String?                       @db.VarChar(255)
@@ -76,7 +76,7 @@ model Admin {
 }
 
 model Lecturer {
-    id                               BigInt                          @id @default(autoincrement())
+    id                               Int                             @id @default(autoincrement())
     userId                           String                          @unique
     title                            String?                         @db.VarChar(255)
     numberOfTheses                   Int                             @default(0)
@@ -106,7 +106,7 @@ model Program {
 }
 
 model Student {
-    id                            BigInt                          @id @default(autoincrement())
+    id                            Int                             @id @default(autoincrement())
     userId                        String                          @unique
     programId                     Int?
     surname                       String?                         @db.VarChar(255)
@@ -145,7 +145,7 @@ model Field {
 }
         
 model Thesis {
-    id                            BigInt                              @id @default(autoincrement())
+    id                            Int                                 @id @default(autoincrement())
     topicId                       Int?
     fieldId                       Int?
     title                         String?                             @db.VarChar(255)       
@@ -178,8 +178,8 @@ model Location {
 }
 
 model BachelorThesisRegistration {
-    id                      BigInt      @id @default(autoincrement())
-    thesisId                BigInt
+    id                      Int         @id @default(autoincrement())
+    thesisId                Int
     studentId               String      @unique
     supervisor1Id           String?
     supervisor2Id           String?
@@ -210,9 +210,9 @@ model BachelorThesisRegistration {
 }
 
 model OralDefenseRegistration {
-    id                     BigInt         @id @default(autoincrement())
+    id                     Int         @id @default(autoincrement())
     studentId              String      @unique
-    thesisId               BigInt
+    thesisId               Int
     supervisor1Id          String?
     supervisor2Id          String?
     adminId                String?
@@ -235,9 +235,9 @@ model OralDefenseRegistration {
 }
 
 model BachelorThesisAssessment {
-    id                     BigInt      @id @default(autoincrement())
+    id                     Int         @id @default(autoincrement())
     studentId              String      @unique
-    thesisId               BigInt
+    thesisId               Int
     supervisor1Id          String?
     supervisor2Id          String?
     furtherParticipants    String?     @db.VarChar(255)
@@ -255,9 +255,9 @@ model BachelorThesisAssessment {
 }
 
 model OralDefenseAssessment {
-    id                     BigInt      @id @default(autoincrement())
+    id                     Int         @id @default(autoincrement())
     studentId              String      @unique
-    thesisId               BigInt
+    thesisId               Int
     supervisor1Id          String?
     supervisor2Id          String?
     dateDefense            DateTime?   @db.Date
@@ -279,8 +279,8 @@ model OralDefenseAssessment {
 }
 
 model BachelorThesisEvaluation {
-    id                      BigInt      @id @default(autoincrement())
-    thesisId                BigInt
+    id                      Int         @id @default(autoincrement())
+    thesisId                Int
     studentId               String      @unique
     supervisorId            String
     title                   String?     @db.VarChar(255)

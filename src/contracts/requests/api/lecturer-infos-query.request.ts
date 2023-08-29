@@ -15,9 +15,6 @@ export class LecturerInfosQueryRequest extends BaseQueryRequest {
     @IsStringFilterArray()
     typeFilter?: StringFilter[];
 
-    @IsNullableStringFilterArray()
-    emailFilter?: NullableStringFilter[];
-
     @IsNumberFilterArray()
     numberOfThesesFilter?: NumberFilter[];
 }
