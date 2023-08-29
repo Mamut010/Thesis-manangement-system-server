@@ -5,7 +5,7 @@ import { PDFForm } from "pdf-lib";
 import { FormFieldHandleOptions } from "../types/form-field-handle-options";
 import { CheckBoxField } from "../form-fields/basic/check-box-field";
 import { ImageButtonField } from "../form-fields/derived/image-button-field";
-import { SUPPORTED_IMAGE_TYPES } from "../constants/images";
+import { IMAGE_MIME_TYPES } from "../../../core/constants/mime-types";
 
 export class PdfFormFieldHandler implements FormFieldHandler {
     constructor(public form: PDFForm) {
@@ -63,11 +63,8 @@ export class PdfFormFieldHandler implements FormFieldHandler {
                 this.form.removeField(button);
                 return;
             }
-            if (!formField.imageType) {
-                throw new Error(`Please specify an image type for the image field '${formField.name}'`);
-            }
 
-            const image = formField.imageType === SUPPORTED_IMAGE_TYPES.Png
+            const image = formField.mimeType === IMAGE_MIME_TYPES.Png
                 ? await pdfDoc.embedPng(formField.image)
                 : await pdfDoc.embedJpg(formField.image); 
 

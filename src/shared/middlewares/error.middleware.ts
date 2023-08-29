@@ -1,21 +1,24 @@
 import { ValidationError } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Middleware, ExpressErrorMiddlewareInterface } from 'routing-controllers';
 import { HTTP_CODES } from '../../core/constants/http-codes';
 import { Prisma } from '@prisma/client';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import { env } from '../../env';
-import { container } from '../../core/bootstrappers';
-import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';
-import { Logger } from '../../lib/logger';
+import { LoggerInterface } from '../../lib/logger';
 import { ErrorResponse } from '../../contracts/responses';
 import { isEnumerableObject } from '../../utils/object-helpers';
 import { trySetResponseStatus } from '../../utils/req-res-helpers';
+import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';
 
 @Middleware({ type: 'after' })
 @injectable()
 export class ErrorHandler implements ExpressErrorMiddlewareInterface {
+  constructor(@inject(INJECTION_TOKENS.Logger) private logger: LoggerInterface) {
+
+  }
+
   error(error: unknown, request: Request, response: Response, next: NextFunction) {
     const prismaError = this.handlePrismaError(error);
     if (prismaError) {
@@ -47,8 +50,7 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
       || error instanceof Prisma.PrismaClientUnknownRequestError
       || error instanceof Prisma.PrismaClientValidationError
     )) {
-      const logger = container.get<Logger>(INJECTION_TOKENS.Logger);
-      logger.error(error.message);
+      this.logger.error(error.message);
       return {
         status: HTTP_CODES.InternalServerError,
         message: ERROR_MESSAGES.Unexpected.DefaultMessage
