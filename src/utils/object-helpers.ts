@@ -506,3 +506,28 @@ export function merge<T>(...objs: (SingleOrArray<T> | undefined)[]): SingleOrArr
 export function equalsOrUndefined<T>(undefinable: T | undefined, comparedTarget: T): boolean {
     return typeof undefinable !== 'undefined' ? undefinable === comparedTarget : true;
 }
+
+/**
+ * JSON stringify a value. Circular refenrences are discarded.
+ * @param value The value to stringify.
+ * @param space The space passed directly to JSON.stringify().
+ * @returns The stringified form of the value.
+ * 
+ * @note This may not work for array passed as value.
+ */
+export function jsonStringifyCircular(value: any, space?: string | number) {
+    const getCircularReplacer = () => {
+        const seen = new WeakSet();
+        return (key: string, value: any) => {
+          if (typeof value === "object" && value !== null) {
+            if (seen.has(value)) {
+              return;
+            }
+            seen.add(value);
+          }
+          return value;
+        };
+    };
+
+    return JSON.stringify(value, getCircularReplacer(), space);
+}

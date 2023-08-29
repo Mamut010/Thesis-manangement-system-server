@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import * as bcrypt from 'bcrypt';
 import { Seeder } from "./seeder";
 
-function hash(toHash: string) {
+function hash(toHash: string): string {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(toHash, salt);
 }
@@ -23,35 +23,35 @@ export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
             data: [
                 { 
                     userId: '1', username: 'admin1', password: hash('1234'), 
-                    roleId: roleIds['Admin'], email: '1@example.com',
+                    roleId: roleIds['Admin'],
                 },
                 { 
                     userId: '2', username: 'admin2', password: hash('1234'), 
-                    roleId: roleIds['Admin'], email: '2@example.com',
+                    roleId: roleIds['Admin'],
                 },
                 { 
                     userId: '101', username: 'lecturer1.1', password: hash('lecturer1.1'), 
-                    roleId: roleIds['Lecturer1.1'], email: '101@example.com',
+                    roleId: roleIds['Lecturer1.1'],
                 },
                 { 
                     userId: '401', username: 'lecturer1.2', password: hash('lecturer1.2'), 
-                    roleId: roleIds['Lecturer1.2'], email: '401@example.com',
+                    roleId: roleIds['Lecturer1.2'],
                 },
                 { 
                     userId: '701', username: 'lecturer2', password: hash('lecturer2'), 
-                    roleId: roleIds['Lecturer2'], email: '701@example.com', 
+                    roleId: roleIds['Lecturer2'],
                 },
                 { 
                     userId: '10001', username: 'student1', password: hash('student1'), 
-                    roleId: roleIds['Student'], email: '10001@example.com',
+                    roleId: roleIds['Student'],
                 },
                 { 
                     userId: '10002', username: 'student2', password: hash('student2'), 
-                    roleId: roleIds['Student'], email: '10002@example.com',
+                    roleId: roleIds['Student'],
                 },
                 { 
                     userId: '10003', username: 'student3', password: hash('student3'), 
-                    roleId: roleIds['Student'], email: '10003@example.com',
+                    roleId: roleIds['Student'],
                 },
             ]
         }),

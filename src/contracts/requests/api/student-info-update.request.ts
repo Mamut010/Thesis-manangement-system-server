@@ -19,11 +19,6 @@ export class StudentInfoUpdateRequest {
 
     @Expose()
     @IsOptional()
-    @IsEmail()
-    email?: string;
-
-    @Expose()
-    @IsOptional()
     @IsNumber()
     intake?: number;
 
