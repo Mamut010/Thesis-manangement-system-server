@@ -19,7 +19,7 @@ import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { FieldsQueryResponse } from "../../../contracts/responses";
 import { FieldsQueryRequest, FieldCreateRequest, FieldUpdateRequest } from "../../../contracts/requests";
 import { FieldDto } from "../../../shared/dtos";
-import { ROLES } from "../../../core/constants/roles";
+import { Role } from "../../../core/constants/roles";
 
 @JsonController('fields')
 //@Authorized()
@@ -48,7 +48,7 @@ export class FieldController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Post()
     @ResponseSchema(FieldDto)
     createField(@Body({ required: true }) createRequest: FieldCreateRequest) {
@@ -56,14 +56,14 @@ export class FieldController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(FieldDto)
     updateField(@Param('id') id: number, @Body({ required: true }) updateRequest: FieldUpdateRequest) {
         return this.fieldService.updateField(id, updateRequest);
     }
 
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteField(@Param('id') id: number) {

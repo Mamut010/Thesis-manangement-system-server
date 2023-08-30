@@ -19,7 +19,7 @@ import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { RolesQueryResponse } from "../../../contracts/responses";
 import { RolesQueryRequest, RoleCreateRequest, RoleUpdateRequest } from "../../../contracts/requests";
 import { RoleDto } from "../../../shared/dtos";
-import { ROLES } from "../../../core/constants/roles";
+import { Role } from "../../../core/constants/roles";
 
 @JsonController('roles')
 //@Authorized()
@@ -48,7 +48,7 @@ export class RoleController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(RoleDto)
     updateRole(@Param('id') id: number, @Body({ required: true }) updateRequest: RoleUpdateRequest) {

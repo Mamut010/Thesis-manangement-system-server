@@ -19,7 +19,7 @@ import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { TopicsQueryResponse } from "../../../contracts/responses";
 import { TopicsQueryRequest, TopicCreateRequest, TopicUpdateRequest } from "../../../contracts/requests";
 import { TopicDto } from "../../../shared/dtos";
-import { ROLES } from "../../../core/constants/roles";
+import { Role } from "../../../core/constants/roles";
 
 @JsonController('topics')
 //@Authorized()
@@ -48,7 +48,7 @@ export class TopicController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized([ROLES.Admin, ROLES.Lecturer1_1])
+    //@Authorized([Role.Admin, Role.Lecturer1_1])
     @Post()
     @ResponseSchema(TopicDto)
     createTopic(@Body({ required: true }) createRequest: TopicCreateRequest) {
@@ -56,14 +56,14 @@ export class TopicController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(TopicDto)
     updateTopic(@Param('id') id: number, @Body({ required: true }) updateRequest: TopicUpdateRequest) {
         return this.topicService.updateTopic(id, updateRequest);
     }
 
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteTopic(@Param('id') id: number) {

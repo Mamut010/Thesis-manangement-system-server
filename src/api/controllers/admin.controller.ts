@@ -7,7 +7,7 @@ import {
     JsonController, 
     Patch
 } from "routing-controllers";
-import { ROLES } from "../../core/constants/roles";
+import { Role } from "../../core/constants/roles";
 import { inject, injectable } from "inversify";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
@@ -18,7 +18,7 @@ import { AuthorizedUser } from "../../core/auth-checkers";
 import { AdminInfoUpdateRequest } from "../../contracts/requests";
 
 @JsonController('admin')
-@Authorized(ROLES.Admin)
+@Authorized(Role.Admin)
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]

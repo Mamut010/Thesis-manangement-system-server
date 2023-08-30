@@ -10,7 +10,7 @@ import {
     QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
-import { ROLES } from "../../core/constants/roles";
+import { Role } from "../../core/constants/roles";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AdminLecturerServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
@@ -35,7 +35,7 @@ import {
 } from "../../contracts/requests";
 
 @JsonController('admin/lecturers')
-//@Authorized(ROLES.Admin)
+//@Authorized(Role.Admin)
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]

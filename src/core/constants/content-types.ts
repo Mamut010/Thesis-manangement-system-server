@@ -1,4 +1,6 @@
-export const CONTENT_TYPES = {
+import { ValueOf } from "../../utils/types";
+
+export const ContentType = {
     Any: '*/*',
     ApplicationAny: 'application/*',
     ApplicationPdf: 'application/pdf',
@@ -8,3 +10,5 @@ export const CONTENT_TYPES = {
     TextHtml: 'text/html',
     MultipartFormData: 'multipart/form-data',
 } as const;
+
+export type ContentType = ValueOf<typeof ContentType>;

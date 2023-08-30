@@ -23,7 +23,7 @@ import {
     BachelorThesisEvaluationUpdateRequest
 } from "../../../contracts/requests";
 import { BachelorThesisEvaluationInfoDto } from "../../../shared/dtos";
-import { ROLES } from "../../../core/constants/roles";
+import { Role } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses";
 
@@ -56,7 +56,7 @@ export class BachelorThesisEvaluationController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized([ROLES.Admin, ROLES.Lecturer1_1, ROLES.Lecturer1_2])
+    //@Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
     @Post()
     @ResponseSchema(BachelorThesisEvaluationInfoDto)
     createBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser, 
@@ -65,7 +65,7 @@ export class BachelorThesisEvaluationController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized([ROLES.Admin, ROLES.Lecturer1_1, ROLES.Lecturer1_2])
+    //@Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
     @Patch('/:id')
     @ResponseSchema(BachelorThesisEvaluationInfoDto)
     updateBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
@@ -73,7 +73,7 @@ export class BachelorThesisEvaluationController {
         return this.bachelorThesisEvaluationService.updateBachelorThesisEvaluation(user, id, updateRequest);
     }
 
-    //@Authorized([ROLES.Admin, ROLES.Lecturer1_1, ROLES.Lecturer1_2])
+    //@Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {

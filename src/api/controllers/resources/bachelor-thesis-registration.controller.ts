@@ -23,7 +23,7 @@ import {
     BachelorThesisRegistrationUpdateRequest
 } from "../../../contracts/requests";
 import { BachelorThesisRegistrationInfoDto } from "../../../shared/dtos";
-import { ROLES } from "../../../core/constants/roles";
+import { Role } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses";
 
@@ -56,7 +56,7 @@ export class BachelorThesisRegistrationController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Post()
     @ResponseSchema(BachelorThesisRegistrationInfoDto)
     createBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser, 
@@ -65,7 +65,7 @@ export class BachelorThesisRegistrationController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(BachelorThesisRegistrationInfoDto)
     updateBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
@@ -73,7 +73,7 @@ export class BachelorThesisRegistrationController {
         return this.bachelorThesisRegistrationService.updateBachelorThesisRegistration(user, id, updateRequest);
     }
 
-    //@Authorized([ROLES.Admin, ROLES.Student])
+    //@Authorized([Role.Admin, Role.Student])
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {

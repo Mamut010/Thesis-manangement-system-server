@@ -9,7 +9,7 @@ import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { ForbiddenError } from "../../contracts/errors/forbidden.error";
-import { ROLES } from "../../core/constants/roles";
+import { Role } from "../../core/constants/roles";
 import { equalsOrUndefined } from "../../utils/object-helpers";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { UserInfoCreateRequest } from "../../contracts/requests/auth/user-info-create.request";
@@ -38,7 +38,7 @@ export class UserService implements UserServiceInterface {
     async createUser(currentUser: AuthorizedUser, createRequest: UserInfoCreateRequest)
     : Promise<UserInfoDto> {
         // If intending to create an admin account
-        if (createRequest.roleName === ROLES.Admin) 
+        if (createRequest.roleName === Role.Admin) 
         {
             // Admin account is not creatable on application level
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.UnpermittedAction);
@@ -53,7 +53,7 @@ export class UserService implements UserServiceInterface {
         const record = await this.ensureRecordExists(userId);
 
         // If intending to update an admin account
-        if (record.roleName === ROLES.Admin && (
+        if (record.roleName === Role.Admin && (
             // An admin account is not allowed to modify another admin account
             currentUser.userId !== record.userId 
             // An admin account's role cannot be changed
@@ -71,7 +71,7 @@ export class UserService implements UserServiceInterface {
     async deleteUser(currentUser: AuthorizedUser, userId: string): Promise<void> {
         const record = await this.ensureRecordExists(userId);
         // Admin accounts are not deletable on application level
-        if (record.roleName === ROLES.Admin) {
+        if (record.roleName === Role.Admin) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.UnpermittedAction);
         }
 

@@ -19,7 +19,7 @@ import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { LocationsQueryResponse } from "../../../contracts/responses";
 import { LocationsQueryRequest, LocationCreateRequest, LocationUpdateRequest } from "../../../contracts/requests";
 import { LocationDto } from "../../../shared/dtos";
-import { ROLES } from "../../../core/constants/roles";
+import { Role } from "../../../core/constants/roles";
 
 @JsonController('locations')
 //@Authorized()
@@ -48,7 +48,7 @@ export class LocationController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Post()
     @ResponseSchema(LocationDto)
     createLocation(@Body({ required: true }) createRequest: LocationCreateRequest) {
@@ -56,14 +56,14 @@ export class LocationController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(LocationDto)
     updateLocation(@Param('id') id: number, @Body({ required: true }) updateRequest: LocationUpdateRequest) {
         return this.locationService.updateLocation(id, updateRequest);
     }
 
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteLocation(@Param('id') id: number) {

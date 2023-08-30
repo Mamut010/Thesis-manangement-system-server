@@ -11,7 +11,7 @@ import {
     Post, 
     QueryParams
 } from "routing-controllers";
-import { ROLES } from "../../../core/constants/roles";
+import { Role } from "../../../core/constants/roles";
 import { inject, injectable } from "inversify";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
@@ -48,7 +48,7 @@ export class ThesisController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized([ROLES.Admin, ROLES.Lecturer1_1])
+    //@Authorized([Role.Admin, Role.Lecturer1_1])
     @Post()
     @ResponseSchema(ThesisDto)
     createThesis(@Body({ required: true }) createRequest: ThesisCreateRequest) {
@@ -56,14 +56,14 @@ export class ThesisController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized([ROLES.Admin, ROLES.Lecturer1_1, ROLES.Lecturer1_2, ROLES.Lecturer2])
+    //@Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2, Role.Lecturer2])
     @Patch('/:id')
     @ResponseSchema(ThesisDto)
     updateThesis(@Param('id') id: number, @Body({ required: true }) updateRequest: ThesisUpdateRequest) {
         return this.thesisService.updateThesis(id, updateRequest);
     }
 
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteThesis(@Param('id') id: number) {

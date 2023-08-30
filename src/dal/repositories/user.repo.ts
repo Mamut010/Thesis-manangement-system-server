@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { LecturerRoles, ROLES } from "../../core/constants/roles";
+import { LecturerRoles, Role } from "../../core/constants/roles";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { UserRepoInterface } from "../interfaces";
 import { User } from "../../core/models";
@@ -141,10 +141,10 @@ export class UserRepo implements UserRepoInterface {
     }
 
     private getAssociatedRepoByRole(roleName: string) {
-        if (roleName === ROLES.Admin) {
+        if (roleName === Role.Admin) {
             return 'admin';
         }
-        else if (roleName === ROLES.Student) {
+        else if (roleName === Role.Student) {
             return 'student';
         }
         else if (LecturerRoles.some(role => role === roleName)) {
