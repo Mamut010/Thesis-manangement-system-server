@@ -5,7 +5,7 @@ import { PDFForm } from "pdf-lib";
 import { FormFieldHandleOptions } from "../types/form-field-handle-options";
 import { CheckBoxField } from "../form-fields/basic/check-box-field";
 import { ImageButtonField } from "../form-fields/derived/image-button-field";
-import { IMAGE_MIME_TYPES } from "../../../core/constants/mime-types";
+import { ImageMimeType } from "../../../core/constants/mime-types";
 
 export class PdfFormFieldHandler implements FormFieldHandler {
     constructor(public form: PDFForm) {
@@ -64,7 +64,7 @@ export class PdfFormFieldHandler implements FormFieldHandler {
                 return;
             }
 
-            const image = formField.mimeType === IMAGE_MIME_TYPES.Png
+            const image = formField.mimeType === ImageMimeType.Png
                 ? await pdfDoc.embedPng(formField.image)
                 : await pdfDoc.embedJpg(formField.image); 
 

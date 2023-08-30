@@ -1,8 +1,8 @@
-import { IMAGE_MIME_TYPES } from "../../../core/constants/mime-types";
+import { ImageMimeType } from "../../../core/constants/mime-types";
 import { DATETIME_FORMATS } from "./datetime";
 
 export const DEFAULTS = {
-    ImageMimeType: IMAGE_MIME_TYPES.Jpeg,
-    DateFormat: DATETIME_FORMATS.DATE_LONG,
+    ImageMimeType: ImageMimeType.Jpeg,
+    DateFormat: DATETIME_FORMATS.DateLong,
     Locale: 'vi-VN',
 } as const;
