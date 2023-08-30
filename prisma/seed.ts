@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { parseArgs } from 'node:util';
-import { ENVIRONMENT } from './environment';
+import { ENVIRONMENT } from './code/environment';
 import { SeederFactory } from './seeders';
 
 const prisma = new PrismaClient();

@@ -1,57 +1,46 @@
 import { PrismaClient } from "@prisma/client";
-import * as bcrypt from 'bcrypt';
 import { Seeder } from "./seeder";
-
-function hash(toHash: string): string {
-    const salt = bcrypt.genSaltSync(10);
-    return bcrypt.hashSync(toHash, salt);
-}
+import { ROLES, ROLE_IDS } from "../roles";
+import { hash } from "../utils/crypto";
 
 export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
-    const roles = ['Admin', 'Student', 'Lecturer1.1', 'Lecturer1.2', 'Lecturer2'] as const;
-
-    const roleIds: { readonly [role in typeof roles[number]]: number } = roles.reduce((res, role, index) => { 
-        res[role] = index + 1; 
-        return res; 
-    }, {} as { [role in typeof roles[number]]: number });
-
     await prisma.$transaction([
         prisma.role.createMany({
-            data: roles.map(role => { return { name: role, description: `The ${role}` }; })
+            data: ROLES.map(role => { return { name: role, description: `The ${role}` }; })
         }),
         prisma.user.createMany({
             data: [
                 { 
                     userId: '1', username: 'admin1', password: hash('1234'), 
-                    roleId: roleIds['Admin'],
+                    roleId: ROLE_IDS['Admin'],
                 },
                 { 
                     userId: '2', username: 'admin2', password: hash('1234'), 
-                    roleId: roleIds['Admin'],
+                    roleId: ROLE_IDS['Admin'],
                 },
                 { 
                     userId: '101', username: 'lecturer1.1', password: hash('lecturer1.1'), 
-                    roleId: roleIds['Lecturer1.1'],
+                    roleId: ROLE_IDS['Lecturer1.1'],
                 },
                 { 
                     userId: '401', username: 'lecturer1.2', password: hash('lecturer1.2'), 
-                    roleId: roleIds['Lecturer1.2'],
+                    roleId: ROLE_IDS['Lecturer1.2'],
                 },
                 { 
                     userId: '701', username: 'lecturer2', password: hash('lecturer2'), 
-                    roleId: roleIds['Lecturer2'],
+                    roleId: ROLE_IDS['Lecturer2'],
                 },
                 { 
                     userId: '10001', username: 'student1', password: hash('student1'), 
-                    roleId: roleIds['Student'],
+                    roleId: ROLE_IDS['Student'],
                 },
                 { 
                     userId: '10002', username: 'student2', password: hash('student2'), 
-                    roleId: roleIds['Student'],
+                    roleId: ROLE_IDS['Student'],
                 },
                 { 
                     userId: '10003', username: 'student3', password: hash('student3'), 
-                    roleId: roleIds['Student'],
+                    roleId: ROLE_IDS['Student'],
                 },
             ]
         }),

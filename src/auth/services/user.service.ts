@@ -12,6 +12,7 @@ import { ForbiddenError } from "../../contracts/errors/forbidden.error";
 import { ROLES } from "../../core/constants/roles";
 import { equalsOrUndefined } from "../../utils/object-helpers";
 import { MapperServiceInterface } from "../../shared/interfaces";
+import { UserInfoCreateRequest } from "../../contracts/requests/auth/user-info-create.request";
 
 @injectable()
 export class UserService implements UserServiceInterface {
@@ -31,6 +32,19 @@ export class UserService implements UserServiceInterface {
 
     async getUser(currentUser: AuthorizedUser, userId: string): Promise<UserInfoDto> {
         const result = await this.ensureRecordExists(userId);
+        return this.mapper.map(UserInfoDto, result);
+    }
+
+    async createUser(currentUser: AuthorizedUser, createRequest: UserInfoCreateRequest)
+    : Promise<UserInfoDto> {
+        // If intending to create an admin account
+        if (createRequest.roleName === ROLES.Admin) 
+        {
+            // Admin account is not creatable on application level
+            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.UnpermittedAction);
+        }
+
+        const result = await this.userRepo.create(createRequest);
         return this.mapper.map(UserInfoDto, result);
     }
 

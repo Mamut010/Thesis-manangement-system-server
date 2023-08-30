@@ -1,7 +1,7 @@
-import { IsDate, IsDefined, IsOptional, IsString } from "class-validator";
+import { IsDefined, IsOptional, IsString } from "class-validator";
 import { Expose, } from "class-transformer";
 
-export class UserCreateRequest {
+export class UserInfoCreateRequest {
     @Expose()
     @IsDefined()
     @IsString()
@@ -26,9 +26,4 @@ export class UserCreateRequest {
     @IsOptional()
     @IsString()
     email?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    lastActivityDate?: Date;
 }
