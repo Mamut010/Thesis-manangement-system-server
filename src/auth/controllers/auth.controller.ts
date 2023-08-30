@@ -18,7 +18,7 @@ import { HTTP_CODES } from "../../core/constants/http-codes";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { LoginRequest, SignUpRequest } from "../../contracts/requests";
 import { AuthServiceInterface } from "../interfaces";
-import { ROLES } from '../../core/constants/roles';
+import { Role } from '../../core/constants/roles';
 import { StringResponse, StringArrayResponse } from '../../contracts/responses';
 import { AuthorizedUser } from '../../core/auth-checkers';
 import { UserInfoDto } from '../../shared/dtos';
@@ -40,7 +40,7 @@ export class AuthController {
         return this.authService.login(res, loginRequest);
     }
 
-    @Authorized(ROLES.Admin)
+    @Authorized(Role.Admin)
     @HttpCode(HTTP_CODES.Ok)
     @Post('signup')
     @ResponseSchema(UserInfoDto)

@@ -1,4 +1,4 @@
-import { IMAGE_MIME_TYPE } from "../../../../shared/types/mime-type";
+import { ImageMimeType } from "../../../../core/constants/mime-types";
 import { DEFAULTS } from "../../constants/default";
 import { FormFieldHandler } from "../../interfaces/form-field-handler";
 import { FormFieldHandleOptions } from "../../types/form-field-handle-options";
@@ -8,7 +8,7 @@ export class ImageButtonField extends ButtonField {
     constructor(
         name: string, 
         public image?: string | Uint8Array | ArrayBuffer | null, 
-        public mimeType: IMAGE_MIME_TYPE = DEFAULTS.ImageMimeType) {
+        public mimeType: ImageMimeType = DEFAULTS.ImageMimeType) {
         super(name);
     }
 

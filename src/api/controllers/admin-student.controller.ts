@@ -10,7 +10,7 @@ import {
     QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
-import { ROLES } from "../../core/constants/roles";
+import { Role } from "../../core/constants/roles";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { AdminStudentServiceInterface } from "../interfaces";
 import { HTTP_CODES } from "../../core/constants/http-codes";
@@ -26,7 +26,7 @@ import {
 import { StudentInfosQueryRequest, StudentInfoUpdateRequest } from "../../contracts/requests";
 
 @JsonController('admin/students')
-//@Authorized(ROLES.Admin)
+//@Authorized(Role.Admin)
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]

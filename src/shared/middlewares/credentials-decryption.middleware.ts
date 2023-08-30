@@ -24,15 +24,13 @@ export class CredentialsDecryptionMiddleware implements ExpressMiddlewareInterfa
         try {
             // Username, password and email should be encrypted
             const decrypted = this.decrypt(body, ['username', 'password', 'email']);
-            if (decrypted) {
-                const entries = Object.entries(decrypted) as [keyof typeof decrypted, string][];
-                entries.forEach(([field, decryptedValue]) => {
-                    // Ignore email as we want to store encrypted email in the database
-                    if (field !== 'email') {
-                        body[field] = decryptedValue;
-                    }
-                })
-            }
+            const entries = Object.entries(decrypted) as [keyof typeof decrypted, string][];
+            entries.forEach(([field, decryptedValue]) => {
+                // Ignore email as we want to store encrypted email in the database
+                if (field !== 'email') {
+                    body[field] = decryptedValue;
+                }
+            })
         }
         catch {
             if (!env.isDevelopment) {
@@ -43,19 +41,13 @@ export class CredentialsDecryptionMiddleware implements ExpressMiddlewareInterfa
         return next();
     }
 
-    private decrypt<K extends string>(input: Record<string, unknown>, fields: K[]): Partial<Record<K, string>> | undefined {
-        if (!fields.some(field => objectHasOwnProperty(input, field))) {
-            return undefined;
-        }
-
-        const decryptedFields = fields.reduce((result, field) => {
-            const rawValue = input[field];
-            if (typeof rawValue === 'string') {
-                result[field] = this.cryptoService.decryptAsString(rawValue);
-            }
-            return result;
-        }, {} as Record<string, string>);
-
-        return decryptedFields;
+    private decrypt<K extends string>(input: Record<string, unknown>, fields: K[]) {
+        return fields
+                    .filter(field => objectHasOwnProperty(input, field) && typeof input[field] === 'string')
+                    .map(field => [field, input[field]] as [K, string])
+                    .reduce((result, [field, rawValue]) => {
+                        result[field] = this.cryptoService.decryptAsString(rawValue);
+                        return result;
+                    }, {} as Partial<Record<K, string>>);
     }
 }

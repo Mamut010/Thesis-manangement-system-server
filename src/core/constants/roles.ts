@@ -1,4 +1,6 @@
-export const ROLES = {
+import { ValueOf } from "../../utils/types";
+
+export const Role = {
     Admin: 'Admin',
     Student: 'Student',
     Lecturer1_1: 'Lecturer1.1',
@@ -6,6 +8,8 @@ export const ROLES = {
     Lecturer2: 'Lecturer2',
 } as const;
 
-export const RoleValues = Object.values(ROLES);
+export type Role = ValueOf<typeof Role>;
 
-export const LecturerRoles = [ROLES.Lecturer1_1, ROLES.Lecturer1_2, ROLES.Lecturer2] as const;
+export const Roles = Object.values(Role);
+
+export const LecturerRoles = [Role.Lecturer1_1, Role.Lecturer1_2, Role.Lecturer2] as const;

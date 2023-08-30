@@ -23,7 +23,7 @@ import {
     OralDefenseRegistrationUpdateRequest
 } from "../../../contracts/requests";
 import { OralDefenseRegistrationInfoDto } from "../../../shared/dtos";
-import { ROLES } from "../../../core/constants/roles";
+import { Role } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses";
 
@@ -56,7 +56,7 @@ export class OralDefenseRegistrationController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Post()
     @ResponseSchema(OralDefenseRegistrationInfoDto)
     createOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, 
@@ -65,7 +65,7 @@ export class OralDefenseRegistrationController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(OralDefenseRegistrationInfoDto)
     updateOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
@@ -73,7 +73,7 @@ export class OralDefenseRegistrationController {
         return this.oralDefenseRegistrationService.updateOralDefenseRegistration(user, id, updateRequest);
     }
 
-    //@Authorized([ROLES.Admin, ROLES.Student])
+    //@Authorized([Role.Admin, Role.Student])
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {

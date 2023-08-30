@@ -17,7 +17,7 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { HTTP_CODES } from "../../core/constants/http-codes";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { UserServiceInterface } from "../interfaces";
-import { ROLES } from '../../core/constants/roles';
+import { Role } from '../../core/constants/roles';
 import { UserInfoUpdateRequest, UserInfosQueryRequest } from '../../contracts/requests';
 import { AuthorizedUser } from '../../core/auth-checkers';
 import { UserInfoDto } from '../../shared/dtos';
@@ -25,7 +25,7 @@ import { UserInfosQueryResponse } from "../../contracts/responses";
 import { UserInfoCreateRequest } from "../../contracts/requests/auth/user-info-create.request";
 
 @JsonController('users')
-@Authorized(ROLES.Admin)
+@Authorized(Role.Admin)
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]

@@ -33,7 +33,7 @@ import {
 import { StringFilter } from '../../lib/query';
 import { makeArray, singleOrDefault } from '../../utils/array-helpers';
 import { NotFoundError } from '../../contracts/errors/not-found.error';
-import { ROLES } from '../../core/constants/roles';
+import { Role } from '../../core/constants/roles';
 import { ForbiddenError } from '../../contracts/errors/forbidden.error';
 import { AuthorizedUser } from '../../core/auth-checkers';
 
@@ -63,7 +63,7 @@ export class AuthService implements AuthServiceInterface {
         if (!role) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.RoleNotFound);
         }
-        else if (role.name === ROLES.Admin) {
+        else if (role.name === Role.Admin) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.UnpermittedRole);
         }
 

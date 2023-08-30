@@ -23,7 +23,7 @@ import {
     OralDefenseAssessmentUpdateRequest 
 } from "../../../contracts/requests";
 import { OralDefenseAssessmentInfoDto } from "../../../shared/dtos";
-import { ROLES } from "../../../core/constants/roles";
+import { Role } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses";
 
@@ -56,7 +56,7 @@ export class OralDefenseAssessmentController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Post()
     @ResponseSchema(OralDefenseAssessmentInfoDto)
     createOralDefenseAssessment(@CurrentUser() user: AuthorizedUser, 
@@ -65,7 +65,7 @@ export class OralDefenseAssessmentController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(ROLES.Admin)
+    //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(OralDefenseAssessmentInfoDto)
     updateOralDefenseAssessment(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
@@ -73,7 +73,7 @@ export class OralDefenseAssessmentController {
         return this.oralDefenseAssessmentService.updateOralDefenseAssessment(user, id, updateRequest);
     }
 
-    //@Authorized([ROLES.Admin, ROLES.Student])
+    //@Authorized([Role.Admin, Role.Student])
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteOralDefenseAssessment(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {
