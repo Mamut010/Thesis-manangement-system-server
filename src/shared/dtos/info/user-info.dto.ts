@@ -24,6 +24,11 @@ export class UserInfoDto {
 
     @Expose()
     @IsOptional()
+    @IsEmail()
+    email?: string | null;
+
+    @Expose()
+    @IsOptional()
     @IsDate()
     lastActivityDate?: Date | null;
 }

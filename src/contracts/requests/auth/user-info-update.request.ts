@@ -16,4 +16,9 @@ export class UserInfoUpdateRequest {
     @IsOptional()
     @IsString()
     username?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    email?: string;
 }
