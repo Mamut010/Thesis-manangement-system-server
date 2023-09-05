@@ -107,6 +107,8 @@ import { IORoomTimerManager, IORoomTimerManagerInterface } from '../ws/utils/roo
 import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-generator';
 import { BOOTSTRAP_SETTINGS_KEY } from '../settings/bootstrap-settings';
 import { Tracer } from '@opentelemetry/api';
+import { WorkflowCommandFactory, WorkflowCommandFactoryInterface, WorkflowCommandInvokerInterface, WorkflowCoreFactory, WorkflowCoreFactoryInterface, WorkflowEngine, WorkflowEngineInterface } from '../api/others/workflow';
+import { WorkflowCommandInvoker } from '../api/others/workflow/command-invokers/invokers/workflow-command-invoker';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -118,6 +120,7 @@ export const configInversify: Configuration<Container> = (container: Container, 
     configWsServerServices(container, settings);
     configSharedServices(container, settings);
     configUtils(container, settings);
+    configOthers(container, settings);
 }
 
 function configConstants(container: Container, settings?: BootstrapSettingInterface) {
@@ -422,4 +425,26 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
         .bind<IORoomTimerManagerInterface>(INJECTION_TOKENS.IORoomTimerManager)
         .to(IORoomTimerManager)
         .inSingletonScope(); 
+}
+
+function configOthers(container: Container, settings?: BootstrapSettingInterface) {
+    container
+        .bind<WorkflowEngineInterface>(INJECTION_TOKENS.WorkflowEngine)
+        .to(WorkflowEngine)
+        .inRequestScope();
+
+    container
+        .bind<WorkflowCoreFactoryInterface>(INJECTION_TOKENS.WorkflowCoreFactory)
+        .to(WorkflowCoreFactory)
+        .inRequestScope();
+
+    container
+        .bind<WorkflowCommandFactoryInterface>(INJECTION_TOKENS.WorkflowCommandFactory)
+        .to(WorkflowCommandFactory)
+        .inRequestScope();
+
+    container
+        .bind<WorkflowCommandInvokerInterface>(INJECTION_TOKENS.WorkflowCommandInvoker)
+        .to(WorkflowCommandInvoker)
+        .inRequestScope();
 }

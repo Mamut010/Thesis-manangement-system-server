@@ -26,6 +26,8 @@ export const ERROR_MESSAGES = {
         BachelorThesisEvaluationNotFound: 'Bachelor thesis evaluation not found',
         OralDefenseRegistrationNotFound: 'Oral defense registration not found',
         OralDefenseAssessmentNotFound: 'Oral defense assessment not found',
+
+        GroupNotFound: 'Group not found',
     },
     Unexpected: {
         DefaultMessage: 'Unexpected error has occurred',
@@ -60,5 +62,8 @@ export const ERROR_MESSAGES = {
     },
     Invalid: {
         RoleInvalid: 'Invalid role',
+    },
+    BadRequest: {
+        MissingNecessaryRequestData: 'Missing necessary request data',
     }
 } as const;

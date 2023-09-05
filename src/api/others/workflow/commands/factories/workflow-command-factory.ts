@@ -1,0 +1,65 @@
+import { inject, injectable } from "inversify";
+import { ERROR_MESSAGES } from "../../../../../contracts/constants/error-messages";
+import { BadRequestError } from "../../../../../contracts/errors/bad-request.error";
+import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
+import { WorkflowEngineInterface } from "../../engines";
+import { ActionType } from "../../types/action-type";
+import { ApplyThesisCommand } from "../concrete-commands/apply-thesis-command";
+import { ApproveCommand } from "../concrete-commands/approve-command";
+import { CancelCommand } from "../concrete-commands/cancel-command";
+import { ConfirmCommand } from "../concrete-commands/confirm-command";
+import { DenyCommand } from "../concrete-commands/deny-command";
+import { InformAdminCommand } from "../concrete-commands/inform-admin-command";
+import { InformRequesterCommand } from "../concrete-commands/inform-requester-command";
+import { RequestAdminCommand } from "../concrete-commands/request-admin-command";
+import { RequestSupervisor1Command } from "../concrete-commands/request-supervisor1-command";
+import { RequestSupervisor2Command } from "../concrete-commands/request-supervisor2-command";
+import { RequestAdvanceCommandInterface } from "../interfaces/request-advance-command";
+import { WorkflowCommandFactoryInterface } from "../interfaces/workflow-command-factory.interface";
+import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
+import { RequestAdvanceCommandInput } from "../types";
+
+@injectable()
+export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
+    constructor(@inject(INJECTION_TOKENS.WorkflowEngine) public engine: WorkflowEngineInterface) {
+
+    }
+
+    createCommand(actionType: string, commandInput: RequestAdvanceCommandInput): RequestAdvanceCommandInterface | undefined {
+        switch(actionType) {
+            case ActionType.ApplyThesis:
+                return new ApplyThesisCommand(this.engine, commandInput.actionerId, commandInput.requestId,
+                    this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Thesis));
+            case ActionType.Approve:
+                return new ApproveCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+            case ActionType.Cancel:
+                return new CancelCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+            case ActionType.Confirm:
+                return new ConfirmCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+            case ActionType.Deny:
+                return new DenyCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+            case ActionType.InformAdmin:
+                return new InformAdminCommand(this.engine, commandInput.actionerId, commandInput.requestId,
+                    this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.AdminGroup));
+            case ActionType.InformRequester:
+                return new InformRequesterCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+            case ActionType.RequestAdmin:
+                return new RequestAdminCommand(this.engine, commandInput.actionerId, commandInput.requestId,
+                    this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.AdminGroup));
+            case ActionType.RequestSupervisor1:
+                return new RequestSupervisor1Command(this.engine, commandInput.actionerId, commandInput.requestId,
+                    this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor1));
+            case ActionType.RequestSupervisor2:
+                return new RequestSupervisor2Command(this.engine, commandInput.actionerId, commandInput.requestId,
+                    this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor2));
+        }
+    }
+
+    private getStringValueFromData(data: Record<string, unknown> | undefined, key: string) {
+        const value = data?.[key];
+        if (typeof value !== 'string') {
+            throw new BadRequestError(ERROR_MESSAGES.BadRequest.MissingNecessaryRequestData);
+        }
+        return value;
+    }
+}

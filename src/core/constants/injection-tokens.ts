@@ -84,6 +84,13 @@ const UTIL_TOKENS = {
     IORoomTimerManager: Symbol.for('IORoomTimerManager'),
 } as const;
 
+const OTHERS_TOKENS = {
+    WorkflowEngine: Symbol.for('WorkflowEngine'),
+    WorkflowCoreFactory: Symbol.for('WorkflowCoreFactory'),
+    WorkflowCommandFactory: Symbol.for('WorkflowCommandFactory'),
+    WorkflowCommandInvoker: Symbol.for('WorkflowCommandInvoker'),
+} as const;
+
 export const INJECTION_TOKENS = {
     ...CONSTANT_TOKENS,
     ...LOGGER_TOKENS,
@@ -94,4 +101,5 @@ export const INJECTION_TOKENS = {
     ...WS_SERVICE_TOKENS,
     ...SHARED_SERVICE_TOKENS,
     ...UTIL_TOKENS,
+    ...OTHERS_TOKENS,
 } as const;

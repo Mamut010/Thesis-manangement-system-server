@@ -25,10 +25,18 @@ model User {
     lecturer                Lecturer?
     student                 Student?
 
+    // Data
     refreshToken            RefreshToken?   
     role                    Role            @relation(fields: [roleId], references: [id], onUpdate: Cascade)
     sentNotifications       Notification[]
     receivedNotifications   Notification[]  @relation("usersReceivedNotifications")
+
+    // Workflow engine
+    createdRequests         Request[]
+    engagedRequests         Request[]       @relation("requestStakeholders")
+    requestNotes            RequestNote[]
+    requestFiles            RequestFile[]
+    groups                  Group[]
 }
 
 model RefreshToken {
@@ -54,7 +62,7 @@ model Notification {
     id          Int         @id @default(autoincrement())
     senderId    String?
     title       String?     @db.VarChar(255)
-    content     String?     @db.Text
+    content     String?     @db.VarChar(2000)
     isRead      Boolean     @default(false)
     createdAt   DateTime    @default(now()) @db.Timestamp(6)
     updatedAt   DateTime    @updatedAt @db.Timestamp(6)
@@ -80,7 +88,7 @@ model Lecturer {
     userId                           String                          @unique
     title                            String?                         @db.VarChar(255)
     numberOfTheses                   Int                             @default(0)
-    bio                              String?                         @db.MediumText
+    bio                              String?                         @db.Text
     signature                        String?                         @db.VarChar(255)
 
     user                             User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
@@ -98,7 +106,7 @@ model Lecturer {
 model Program {
     id              Int         @id @default(autoincrement())
     title           String      @unique @db.VarChar(255)
-    description     String?     @db.Text
+    description     String?     @db.VarChar(2000)
     createdAt       DateTime    @default(now()) @db.Timestamp(6)
     updatedAt       DateTime    @updatedAt @db.Timestamp(6)
 
@@ -187,7 +195,7 @@ model BachelorThesisRegistration {
     dateOfBirth             DateTime?   @db.Date
     placeOfBirth            String?     @db.VarChar(255)
     studentDate             DateTime?   @db.Date
-    furtherParticipants     String?     @db.Text
+    furtherParticipants     String?     @db.VarChar(255)
     supervisor1Date         DateTime?   @db.Date
     supervisor1Confirmed    Boolean?    
     supervisor2Date         DateTime?   @db.Date
@@ -216,7 +224,7 @@ model OralDefenseRegistration {
     supervisor1Id          String?
     supervisor2Id          String?
     adminId                String?
-    room                   String?     @db.Text
+    room                   String?     @db.VarChar(255)
     areSpectatorsAllowed   Boolean?    
     proposedDate           DateTime?   @db.DateTime
     actualDate             DateTime?   @db.DateTime
@@ -267,7 +275,7 @@ model OralDefenseAssessment {
     stateOfHealth          Boolean?
     supervisor1Grade       Float?      @db.Float
     supervisor2Grade       Float?      @db.Float
-    record                 String?     @db.Text
+    record                 String?     @db.VarChar(2000)
     assessmentDate         DateTime?   @db.Date
     createdAt              DateTime    @default(now()) @db.Timestamp(6)
     updatedAt              DateTime    @updatedAt @db.Timestamp(6)
@@ -292,4 +300,214 @@ model BachelorThesisEvaluation {
     student                 Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     thesis                  Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     supervisor              Lecturer    @relation("supervisorBachelorThesisEvaluations", fields: [supervisorId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+}
+
+///
+/// The following tables are to construct a workflow engine database
+/// See: https://exceptionnotfound.net/designing-a-workflow-engine-database-part-1-introduction-and-purpose/
+///
+/// Note: ProcessAdmin table is not adopted as the the system does not require this concept for now 
+///
+model Process {
+    id              String      @id @default(cuid())
+    name            String      @unique
+    description     String?     @db.VarChar(2000)
+
+    states          State[]
+    transitions     Transition[]
+    actions         Action[]
+    activities      Activity[]
+    groups          Group[]
+    requests        Request[]
+}
+
+model Request {
+    id                  String          @id @default(cuid())
+    processId           String
+    userId              String
+    stateId             String
+    title               String          @db.VarChar(255)
+    createdAt           DateTime        @default(now()) @db.Timestamp(6)
+    updatedAt           DateTime        @updatedAt @db.Timestamp(6)
+
+    data                RequestData[]
+    notes               RequestNote[]
+    files               RequestFile[]
+
+    process             Process         @relation(fields: [processId], references: [id], onUpdate: Cascade)
+    creator             User            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    stakeholders        User[]          @relation("requestStakeholders")
+    state               State           @relation(fields: [stateId], references: [id], onUpdate: Cascade)
+    requestActions      RequestAction[]
+}
+
+model RequestData {
+    id              String      @id @default(cuid())
+    requestId       String
+    name            String
+    value           String      @db.Text
+    createdAt       DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
+
+    request         Request     @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@unique([requestId, name])
+}
+
+model RequestNote {
+    id              String      @id @default(cuid())
+    requestId       String
+    userId          String
+    note            String      @db.Text
+    createdAt       DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
+
+    request         Request     @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    user            User        @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model RequestFile {
+    id              String      @id @default(cuid())
+    requestId       String
+    userId          String
+    name            String
+    path            String
+    mimeType        String
+    createdAt       DateTime    @default(now()) @db.Timestamp(6)
+    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
+
+    request         Request     @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    user            User        @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+
+    @@unique([requestId, name, path])
+}
+
+model StateType {
+    id          String      @id @default(cuid())
+    name        String      @unique
+
+    states      State[]
+}
+
+model State {
+    id              String          @id @default(cuid())
+    processId       String
+    stateTypeId     String
+    name            String
+    description     String?         @db.VarChar(2000)
+
+    process         Process         @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    stateType       StateType       @relation(fields: [stateTypeId], references: [id], onUpdate: Cascade)
+    outTransitions  Transition[]    @relation("currentStateTransitions")
+    inTransitions   Transition[]    @relation("nextStateTransitions")
+    activities      Activity[]
+    requests        Request[]
+}
+
+model Transition {
+    id              String      @id @default(cuid())
+    processId       String
+    currentStateId  String
+    nextStateId     String
+
+    process         Process     @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    currentState    State       @relation("currentStateTransitions", fields: [currentStateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    nextState       State       @relation("nextStateTransitions", fields: [nextStateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    actions         Action[]
+    activities      Activity[]
+    requestActions  RequestAction[]
+}
+
+model ActionType {
+    id          String      @id @default(cuid())
+    name        String      @unique
+
+    actions     Action[]
+}
+
+model Action {
+    id                  String          @id @default(cuid())
+    processId           String
+    actionTypeId        String
+    name                String
+    description         String?         @db.VarChar(2000)
+
+    process             Process         @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    actionType          ActionType      @relation(fields: [actionTypeId], references: [id], onUpdate: Cascade)
+    transitions         Transition[]
+    actionTargets       ActionTarget[]
+    requestActions      RequestAction[]
+}
+
+model ActivityType {
+    id              String      @id @default(cuid())
+    name            String      @unique
+
+    activities      Activity[]
+}
+
+model Activity {
+    id                  String          @id @default(cuid())
+    processId           String
+    activityTypeId      String
+    name                String
+    description         String?         @db.VarChar(2000)
+
+    process             Process         @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    activityType        ActivityType    @relation(fields: [activityTypeId], references: [id], onUpdate: Cascade)
+    states              State[]
+    transitions         Transition[]
+    activityTargets     ActivityTarget[]
+}
+
+model Group {
+    id                  String          @id @default(cuid())
+    processId           String
+    name                String
+    description         String?         @db.VarChar(2000)
+
+    process             Process         @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    users               User[]
+}
+
+model Target {
+    id                  String              @id @default(cuid())
+    name                String              @unique
+    description         String?             @db.VarChar(2000)
+
+    actionTargets       ActionTarget[]
+    activityTargets     ActivityTarget[]
+}
+
+model ActionTarget {
+    id              String      @id @default(cuid())
+    actionId        String
+    targetId        String
+
+    action          Action      @relation(fields: [actionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    target          Target      @relation(fields: [targetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model ActivityTarget {
+    id              String      @id @default(cuid())
+    activityId      String
+    targetId        String
+
+    activity        Activity    @relation(fields: [activityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    target          Target      @relation(fields: [targetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model RequestAction {
+    id              String          @id @default(cuid())
+    requestId       String
+    actionId        String
+    transitionId    String
+    isActive        Boolean         @default(true)
+    isCompleted     Boolean         @default(false)
+    createdAt       DateTime        @default(now()) @db.Timestamp(6)
+    updatedAt       DateTime        @updatedAt @db.Timestamp(6)
+
+    request         Request         @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    action          Action          @relation(fields: [actionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    transition      Transition      @relation(fields: [transitionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
