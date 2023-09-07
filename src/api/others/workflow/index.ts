@@ -12,5 +12,5 @@ export * from './types/action-type';
 export * from './types/activity-type';
 export * from './types/state-type';
 export * from './types/targets';
-export * from './types/infos';
+export * from './types/dtos';
 export * from './types/options';

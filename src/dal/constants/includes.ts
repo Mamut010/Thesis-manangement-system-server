@@ -44,3 +44,16 @@ export const thesisInclude = {
     topic: true,
     field: true,
 } as const;
+
+export const requestInclude = {
+    state: {
+        include: {
+            stateType: true
+        }
+    },
+    stakeholders: {
+        select: {
+            userId: true
+        }
+    }
+} as const;

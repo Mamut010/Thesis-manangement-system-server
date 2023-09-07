@@ -5,7 +5,7 @@ export class SimpleActionHandler implements ActionHandlerInterface {
     handle(requestId: string, actionInput: ActionHandlerInput): ActionHandlerOutput {
         // Simple actions are actions that don't need to do any thing
         return {
-            requestUsersInfo: actionInput.requestUsersInfo,
+            requestUsers: actionInput.requestUsers,
             resolvedUserIds: [actionInput.actionerId],
         };
     }

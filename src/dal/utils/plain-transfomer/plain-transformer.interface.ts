@@ -9,8 +9,10 @@ import {
     NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
+    ProcessDto, 
     ProgramDto, 
     RefreshTokenDto, 
+    RequestDto, 
     RoleDto, 
     StudentDto,
     ThesisDto,
@@ -28,8 +30,10 @@ import {
     PlainNotification, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
+    PlainProcess, 
     PlainProgram, 
     PlainRefreshToken, 
+    PlainRequest, 
     PlainRole, 
     PlainStudent,
     PlainThesis,
@@ -55,4 +59,7 @@ export interface PlainTransformerInterface {
     toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto;
     toOralDefenseAssessment(plain: PlainOralDefenseAssessment): OralDefenseAssessmentDto;
     toBachelorThesisEvaluation(plain: PlainBachelorThesisEvaluation): BachelorThesisEvaluationDto;
+
+    toProcess(plain: PlainProcess): ProcessDto;
+    toRequest(plain: PlainRequest): RequestDto;
 }

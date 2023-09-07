@@ -1,5 +1,5 @@
-import { RequestInfo } from "../../types/infos";
+import { RequestStateDto } from "../../types/dtos";
 
 export interface RequestAdvanceCommandInterface {
-    execute(): Promise<RequestInfo | null>;
+    execute(): Promise<RequestStateDto | null>;
 }

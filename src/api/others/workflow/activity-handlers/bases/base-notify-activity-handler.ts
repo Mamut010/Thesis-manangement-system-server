@@ -4,7 +4,7 @@ import { ActivityHandlerInterface } from "../interfaces/activity-handler.interfa
 import { ActivityHandlerInput, ActivityHandlerOutput } from "../types";
 import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { getRequestDataStringValueByKey } from "../../utils/request-data-helpers";
-import { RequestUsersInfo } from "../../types/infos";
+import { RequestUsersDto } from "../../types/dtos";
 import { makeArray, uniqueFrom } from "../../../../../utils/array-helpers";
 
 export abstract class BaseNotifyActivityHandler implements ActivityHandlerInterface {
@@ -13,20 +13,20 @@ export abstract class BaseNotifyActivityHandler implements ActivityHandlerInterf
     }
 
     public async handle(requestId: string, activityInput: ActivityHandlerInput): Promise<ActivityHandlerOutput> {
-        const orgReceiverIds = await this.getUserIdsFromTarget(requestId, activityInput.target, activityInput.requestUsersInfo);
+        const orgReceiverIds = await this.getUserIdsFromTarget(requestId, activityInput.target, activityInput.requestUsers);
         let receiverIds = activityInput.actionResolvedUserIds
             ? uniqueFrom(orgReceiverIds, activityInput.actionResolvedUserIds)
             : orgReceiverIds;
 
         if (receiverIds.length === 0) {
-            return { requestUsersInfo: activityInput.requestUsersInfo };
+            return { requestUsers: activityInput.requestUsers };
         }
 
         const executionResult = await this.execute(requestId, receiverIds, activityInput);
         receiverIds = executionResult ? makeArray(executionResult) : receiverIds;
 
         return {
-            requestUsersInfo: activityInput.requestUsersInfo,
+            requestUsers: activityInput.requestUsers,
             resolvedUserIds: receiverIds,
         }
     }
@@ -34,12 +34,12 @@ export abstract class BaseNotifyActivityHandler implements ActivityHandlerInterf
     protected abstract execute(requestId: string, receiverIds: string[], activityInput: ActivityHandlerInput)
         : Promise<void | string | string[]>;
 
-    private async getUserIdsFromTarget(requestId: string, target: Target, requestUsersInfo: RequestUsersInfo) {
+    private async getUserIdsFromTarget(requestId: string, target: Target, requestUsers: RequestUsersDto) {
         if (target === Target.Requester) {
-            return [requestUsersInfo.requesterId];
+            return [requestUsers.requesterId];
         }
         else if (target === Target.Stakeholders) {
-            return requestUsersInfo.stakeholderIds;
+            return requestUsers.stakeholderIds;
         }
         else if (target === Target.AdminGroup) {
             const adminGroupId = await getRequestDataStringValueByKey(this.prisma, requestId, STORED_REQUEST_DATA_KEYS.AdminGroup);

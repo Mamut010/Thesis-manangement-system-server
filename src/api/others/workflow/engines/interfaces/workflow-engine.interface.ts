@@ -1,7 +1,12 @@
-import { RequestInfo } from "../../types/infos";
+import { RequestStateDto } from "../../types/dtos";
 import { RequestAdvanceOptions, RequestCreateOptions } from "../../types/options";
 
 export interface WorkflowEngineInterface {
-    createRequest(createOptions: RequestCreateOptions): Promise<RequestInfo | null>;
-    advanceRequest(advanceOptions: RequestAdvanceOptions): Promise<RequestInfo | null>;
+    getRequestStates(actionerId: string, requestId: string[]): Promise<RequestStateDto[]>;
+
+    getRequestState(actionerId: string, requestId: string): Promise<RequestStateDto | null>;
+
+    createRequest(createOptions: RequestCreateOptions): Promise<RequestStateDto | null>;
+
+    advanceRequest(advanceOptions: RequestAdvanceOptions): Promise<RequestStateDto | null>;
 }

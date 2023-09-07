@@ -51,6 +51,20 @@ export function firstOrDefault<TValue, TDefault>(arr: TValue[], defaultValue?: T
     }
 }
 
+export function singleOrThrow<TValue>(arr: TValue[]): TValue {
+    if (arr.length !== 1) {
+        throw new Error('Array is not single');
+    }
+    return arr[0];
+}
+
+export function firstOrThrow<TValue>(arr: TValue[]): TValue {
+    if (arr.length === 0) {
+        throw new Error('Array is empty');
+    }
+    return arr[0];
+}
+
 /**
  * Group array by a key or an array of keys. May not work correctly on objects having circular-referenced values.
  * @param items The array.

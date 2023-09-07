@@ -10,8 +10,10 @@ import {
     NotificationDto, 
     OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto, 
+    ProcessDto, 
     ProgramDto, 
     RefreshTokenDto, 
+    RequestDto, 
     RoleDto, 
     StudentDto,
     ThesisDto,
@@ -31,7 +33,10 @@ import {
     PlainNotification, 
     PlainOralDefenseAssessment, 
     PlainOralDefenseRegistration, 
+    PlainProcess, 
     PlainProgram, 
+    PlainRefreshToken, 
+    PlainRequest, 
     PlainRole, 
     PlainStudent,
     PlainThesis,
@@ -39,7 +44,7 @@ import {
     PlainUser
 } from "../../types/plain-types";
 import { PlainTransformerInterface } from "./plain-transformer.interface";
-import { RefreshToken } from "../../../core/models";
+import { StateType } from "../../../api/others/workflow";
 
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
@@ -53,7 +58,7 @@ export class PlainTransformer implements PlainTransformerInterface {
         return dto;
     }
 
-    public toRefreshToken(plain: RefreshToken): RefreshTokenDto {
+    public toRefreshToken(plain: PlainRefreshToken): RefreshTokenDto {
         const dto = plainToInstanceExactMatch(RefreshTokenDto, plain);
         return dto;
     }
@@ -150,6 +155,21 @@ export class PlainTransformer implements PlainTransformerInterface {
 
     public toBachelorThesisEvaluation(plain: PlainBachelorThesisEvaluation): BachelorThesisEvaluationDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisEvaluationDto, plain);
+        return dto;
+    }
+
+    public toProcess(plain: PlainProcess): ProcessDto {
+        const dto = plainToInstanceExactMatch(ProcessDto, plain);
+        return dto;
+    }
+
+    public toRequest(plain: PlainRequest): RequestDto {
+        const dto = plainToInstanceExactMatch(RequestDto, plain);
+        dto.creatorId = plain.userId;
+        dto.stakeholderIds = plain.stakeholders.map(item => item.userId);
+        dto.state = plain.state.name;
+        dto.stateDescription = plain.state.description;
+        dto.stateType = plain.state.stateType.name as StateType;
         return dto;
     }
 

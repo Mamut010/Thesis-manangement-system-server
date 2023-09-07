@@ -1,8 +1,8 @@
 import { RequestAdvanceCommandInterface } from "../../commands";
-import { RequestInfo } from "../../types/infos";
+import { RequestStateDto } from "../../types/dtos";
 
 export interface WorkflowCommandInvokerInterface {
     setCommand(command: RequestAdvanceCommandInterface): void;
     getCommand(): RequestAdvanceCommandInterface | undefined;
-    runCommand(): Promise<RequestInfo | null>;
+    invoke(): Promise<RequestStateDto | null | undefined>;
 }

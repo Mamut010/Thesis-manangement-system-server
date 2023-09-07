@@ -42,3 +42,6 @@ export * from './students-query.request';
 export * from './user-create.request';
 export * from './user-update.request';
 export * from './users-query.request';
+
+export * from './processes-query.request';
+export * from './requests-query.request';

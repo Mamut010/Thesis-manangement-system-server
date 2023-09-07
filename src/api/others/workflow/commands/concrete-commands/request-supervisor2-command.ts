@@ -1,7 +1,7 @@
 import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { WorkflowEngineInterface } from "../../engines";
 import { ActionType } from "../../types/action-type";
-import { RequestInfo } from "../../types/infos";
+import { RequestStateDto } from "../../types/dtos";
 import { RequestAdvanceCommandInterface } from "../interfaces/request-advance-command";
 
 export class RequestSupervisor2Command implements RequestAdvanceCommandInterface {
@@ -13,7 +13,7 @@ export class RequestSupervisor2Command implements RequestAdvanceCommandInterface
         
     }
 
-    execute(): Promise<RequestInfo | null> {
+    execute(): Promise<RequestStateDto | null> {
         return this.engine.advanceRequest({
             requestId: this.requestId,
             actionerId: this.actionerId,

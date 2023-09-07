@@ -16,3 +16,6 @@ export * from './admin.service.interface';
 export * from './admin-student.service.interface';
 export * from './admin-lecturer.service.interface';
 export * from './assets.service.interface';
+export * from './student.service.interface';
+
+export * from './request.service.interface';

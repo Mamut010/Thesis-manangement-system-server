@@ -10,7 +10,7 @@ export class AddStakeholdersActivityHandler implements ActivityHandlerInterface 
 
     async handle(requestId: string, activityInput: ActivityHandlerInput): Promise<ActivityHandlerOutput> {
         if (!activityInput.actionerId) {
-            return { requestUsersInfo: activityInput.requestUsersInfo };
+            return { requestUsers: activityInput.requestUsers };
         }
 
         await this.prisma.request.update({
@@ -27,9 +27,9 @@ export class AddStakeholdersActivityHandler implements ActivityHandlerInterface 
         })
 
         return {
-            requestUsersInfo: {
-                requesterId: activityInput.requestUsersInfo.requesterId,
-                stakeholderIds: removeDuplicates(activityInput.requestUsersInfo.stakeholderIds.concat(activityInput.actionerId)),
+            requestUsers: {
+                requesterId: activityInput.requestUsers.requesterId,
+                stakeholderIds: removeDuplicates(activityInput.requestUsers.stakeholderIds.concat(activityInput.actionerId)),
             }
         }
     }

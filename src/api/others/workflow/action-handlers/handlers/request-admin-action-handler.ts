@@ -42,7 +42,7 @@ export class RequestAdminActionHandler extends BaseRequestActionHandler {
         }));
 
         return {
-            requestUsersInfo: actionInput.requestUsersInfo,
+            requestUsers: actionInput.requestUsers,
             resolvedUserIds: removeDuplicates(groupUserIds.concat(actionInput.actionerId))
         };
     }

@@ -1,14 +1,14 @@
-import { RequestUsersInfo } from "../types/infos";
+import { RequestUsersDto } from "../types/dtos";
 import { Target } from "../types/targets";
 
 export interface ActivityHandlerInput {
-    requestUsersInfo: RequestUsersInfo,
+    requestUsers: RequestUsersDto,
     actionerId?: string,
     target: Target,
     actionResolvedUserIds?: string[],
 }
 
 export interface ActivityHandlerOutput {
-    requestUsersInfo: RequestUsersInfo,
+    requestUsers: RequestUsersDto,
     resolvedUserIds?: string[],
 }

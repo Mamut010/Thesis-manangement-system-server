@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { RequestAdvanceCommandInterface } from "../../commands";
-import { RequestInfo } from "../../types/infos";
+import { RequestStateDto } from "../../types/dtos";
 import { WorkflowCommandInvokerInterface } from "../interfaces/workflow-command-invoker.interface";
 
 @injectable()
@@ -15,7 +15,7 @@ export class WorkflowCommandInvoker implements WorkflowCommandInvokerInterface {
         return this.command;
     }
 
-    async runCommand(): Promise<RequestInfo | null> {
-        return this.command?.execute() ?? null;
+    async invoke(): Promise<RequestStateDto | null | undefined> {
+        return this.command ? this.command.execute() : undefined;
     }
 }

@@ -21,36 +21,33 @@ import { RequestAdvanceCommandInput } from "../types";
 
 @injectable()
 export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
-    constructor(@inject(INJECTION_TOKENS.WorkflowEngine) public engine: WorkflowEngineInterface) {
-
-    }
-
-    createCommand(actionType: string, commandInput: RequestAdvanceCommandInput): RequestAdvanceCommandInterface | undefined {
+    createCommand(engine: WorkflowEngineInterface, actionType: ActionType, commandInput: RequestAdvanceCommandInput)
+        : RequestAdvanceCommandInterface | undefined {
         switch(actionType) {
             case ActionType.ApplyThesis:
-                return new ApplyThesisCommand(this.engine, commandInput.actionerId, commandInput.requestId,
+                return new ApplyThesisCommand(engine, commandInput.actionerId, commandInput.requestId,
                     this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Thesis));
             case ActionType.Approve:
-                return new ApproveCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+                return new ApproveCommand(engine, commandInput.actionerId, commandInput.requestId);
             case ActionType.Cancel:
-                return new CancelCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+                return new CancelCommand(engine, commandInput.actionerId, commandInput.requestId);
             case ActionType.Confirm:
-                return new ConfirmCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+                return new ConfirmCommand(engine, commandInput.actionerId, commandInput.requestId);
             case ActionType.Deny:
-                return new DenyCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+                return new DenyCommand(engine, commandInput.actionerId, commandInput.requestId);
             case ActionType.InformAdmin:
-                return new InformAdminCommand(this.engine, commandInput.actionerId, commandInput.requestId,
+                return new InformAdminCommand(engine, commandInput.actionerId, commandInput.requestId,
                     this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.AdminGroup));
             case ActionType.InformRequester:
-                return new InformRequesterCommand(this.engine, commandInput.actionerId, commandInput.requestId);
+                return new InformRequesterCommand(engine, commandInput.actionerId, commandInput.requestId);
             case ActionType.RequestAdmin:
-                return new RequestAdminCommand(this.engine, commandInput.actionerId, commandInput.requestId,
+                return new RequestAdminCommand(engine, commandInput.actionerId, commandInput.requestId,
                     this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.AdminGroup));
             case ActionType.RequestSupervisor1:
-                return new RequestSupervisor1Command(this.engine, commandInput.actionerId, commandInput.requestId,
+                return new RequestSupervisor1Command(engine, commandInput.actionerId, commandInput.requestId,
                     this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor1));
             case ActionType.RequestSupervisor2:
-                return new RequestSupervisor2Command(this.engine, commandInput.actionerId, commandInput.requestId,
+                return new RequestSupervisor2Command(engine, commandInput.actionerId, commandInput.requestId,
                     this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor2));
         }
     }

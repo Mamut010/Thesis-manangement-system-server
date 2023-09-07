@@ -17,7 +17,7 @@ export class SimpleBaseRequestActionHandler extends BaseRequestActionHandler {
         });
 
         return {
-            requestUsersInfo: actionInput.requestUsersInfo,
+            requestUsers: actionInput.requestUsers,
             resolvedUserIds: [actionInput.actionerId, dataValue]
         }
     }

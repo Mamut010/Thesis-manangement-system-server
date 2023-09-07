@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { ActionType } from "../../types/action-type";
-import { groupBy, singleOrDefault } from "../../../../../utils/array-helpers";
+import { groupBy, singleOrDefault, singleOrThrow } from "../../../../../utils/array-helpers";
 import { UnexpectedError } from "../../../../../contracts/errors/unexpected.error";
 import { ERROR_MESSAGES } from "../../../../../contracts/constants/error-messages";
 import { StateType } from "../../types/state-type";
@@ -16,7 +16,7 @@ import {
 } from "../../types/utility-types";
 import { ActionHandlerInput } from "../../action-handlers";
 import { ActivityHandlerInput } from "../../activity-handlers";
-import { RequestInfo, RequestUsersInfo } from "../../types/infos";
+import { RequestStateDto, RequestUsersDto } from "../../types/dtos";
 import { Target } from "../../types/targets";
 import { RequestAdvanceOptions, RequestCreateOptions } from "../../types/options";
 import { WorkflowEngineInterface } from "../interfaces/workflow-engine.interface";
@@ -50,7 +50,30 @@ export class WorkflowEngine implements WorkflowEngineInterface {
 
     }
 
-    async createRequest(createOptions: RequestCreateOptions): Promise<RequestInfo | null> {
+    async getRequestStates(actionerId: string, requestId: string[]): Promise<RequestStateDto[]> {
+        const requestsWithTarget = await this.getRequestsAndTarget(requestId, actionerId);
+        return requestsWithTarget
+            .map(({ request, target }) => {
+                return {
+                    id: request.id,
+                    processId: request.processId,
+                    creatorId: request.creator.userId,
+                    stakeholderIds: request.stakeholders.map(stakeholder => stakeholder.userId),
+                    stateType: request.state.stateType.name as StateType,
+                    state: request.state.name,
+                    stateDescription: request.state.description,
+                    actionTypes: request.requestActions
+                        .filter(item => item.action.actionTargets.some(actionTarget => actionTarget.target.name === target))
+                        .map(item => item.action.actionType.name as ActionType),
+            }
+        });
+    }
+
+    async getRequestState(actionerId: string, requestId: string): Promise<RequestStateDto | null> {
+        return singleOrDefault(await this.getRequestStates(actionerId, [requestId]), null);
+    }
+
+    async createRequest(createOptions: RequestCreateOptions): Promise<RequestStateDto | null> {
         const initialState = await this.getProcessInitialState(createOptions.processId);
         if (!initialState) {
             return null;
@@ -71,7 +94,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             });
     
             const stateEffect = await this.handleRequestEnteringState(tx, request.id, request.stateId, {
-                requestUsersInfo: {
+                requestUsers: {
                     requesterId: createOptions.userId,
                     stakeholderIds: [createOptions.userId]
                 },
@@ -83,12 +106,12 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         
         await this.handleActivityEffects(...activityEffects);
 
-        return this.getRequestInfo(request.id, createOptions.userId);
+        return await this.getRequestState(request.id, createOptions.userId);
     }
 
-    async advanceRequest(advanceOptions: RequestAdvanceOptions): Promise<RequestInfo | null> {
+    async advanceRequest(advanceOptions: RequestAdvanceOptions): Promise<RequestStateDto | null> {
         const { requestId, actionerId, actionType, data } = advanceOptions;
-        const { request, target } = await this.getRequestAndTarget(requestId, actionerId);
+        const { request, target } = singleOrThrow(await this.getRequestsAndTarget([requestId], actionerId));
         if (!request || !target) {
             return null;
         }
@@ -109,22 +132,22 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             return null;
         }
 
-        const requestUsersInfo: RequestUsersInfo = {
+        const requestUsers: RequestUsersDto = {
             requesterId: request.creator.userId,
             stakeholderIds: request.stakeholders.map(stakeholder => stakeholder.userId),
         };
-        const actionOutput = await this.handleAction(actionType, requestId, { requestUsersInfo, actionerId, target, data });
+        const actionOutput = await this.handleAction(actionType, requestId, { requestUsers, actionerId, target, data });
 
         const validRequestActionIds = validRequestActions.map(item => item.id);
         const activityEffects = await this.updateRequestActions(requestId, plainRequestActions, validRequestActionIds, {
-            requestUsersInfo,
+            requestUsers,
             actionerId,
             target,
             actionResolvedUserIds: actionOutput.resolvedUserIds,
         });
         await this.handleActivityEffects(...activityEffects);
 
-        return await this.getRequestInfo(requestId, actionerId);
+        return await this.getRequestState(requestId, actionerId);
     }
 
     private async getProcessInitialState(processId: string) {
@@ -141,13 +164,16 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         });
     }
 
-    private async getRequest(requestId: string) {
-        const request = await this.prisma.request.findUnique({
+    private async getRequests(requestIds: string[]) {
+        const request = await this.prisma.request.findMany({
             where: {
-                id: requestId
+                id: {
+                    in: requestIds
+                }
             },
             select: {
                 id: true,
+                processId: true,
                 data: {
                     select: {
                         name: true,
@@ -213,20 +239,22 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         return request;
     }
 
-    private async getRequestAndTarget(requestId: string, actionerId: string) {
-        const request = await this.getRequest(requestId) ?? undefined;
-        const targetIdentifier = this.coreFactory.createTargetIdentifier();
-        const target = request 
-            ? await targetIdentifier.identifyTarget(actionerId, { 
-                creatorId: request.creator.userId,
-                stakeholderIds: request.stakeholders.map(stakeholder => stakeholder.userId),
-                requestData: request.data,
-            }) 
-            : undefined;
-        return {
-            request,
-            target
-        }
+    private async getRequestsAndTarget(requestId: string[], actionerId: string) {
+        const requests = await this.getRequests(requestId);
+        return await Promise.all(requests.map(async (request) => {
+            const targetIdentifier = this.coreFactory.createTargetIdentifier();
+            const target = request 
+                ? await targetIdentifier.identifyTarget(actionerId, { 
+                    creatorId: request.creator.userId,
+                    stakeholderIds: request.stakeholders.map(stakeholder => stakeholder.userId),
+                    requestData: request.data,
+                }) 
+                : undefined;
+            return {
+                request,
+                target
+            }
+        }));
     }
 
     private async updateRequestActions(requestId: string, plainRequestActions: PlainRequestAction[],
@@ -298,23 +326,6 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             transitionIds: transitionIds,
             fulfilledTransition: singleOrDefault(fulfilledTransitions)
         };
-    }
-
-    private async getRequestInfo(requestId: string, actionerId: string): Promise<RequestInfo | null> {
-        const { request, target } = await this.getRequestAndTarget(requestId, actionerId);
-        if (!request || !target) {
-            return null;
-        }
-
-        return {
-            id: request.id,
-            stateType: request.state.stateType.name as StateType,
-            state: request.state.name,
-            stateDescription: request.state.description ?? undefined,
-            actionTypes: request.requestActions
-                .filter(item => item.action.actionTargets.some(actionTarget => actionTarget.target.name === target))
-                .map(item => item.action.actionType.name as ActionType),
-        }
     }
 
     private async handleRequestFulfillingTransition(prisma: PrismaClientLike, requestId: string, transitionIds: string[], 

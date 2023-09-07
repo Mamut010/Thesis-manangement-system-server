@@ -1,6 +1,6 @@
 import { WorkflowEngineInterface } from "../../engines";
 import { ActionType } from "../../types/action-type";
-import { RequestInfo } from "../../types/infos";
+import { RequestStateDto } from "../../types/dtos";
 import { RequestAdvanceCommandInterface } from "../interfaces/request-advance-command";
 
 export class SimpleRequestAdvanceCommand implements RequestAdvanceCommandInterface {
@@ -12,7 +12,7 @@ export class SimpleRequestAdvanceCommand implements RequestAdvanceCommandInterfa
         
     }
 
-    execute(): Promise<RequestInfo | null> {
+    execute(): Promise<RequestStateDto | null> {
         return this.engine.advanceRequest({
             requestId: this.requestId,
             actionerId: this.actionerId,

@@ -9,13 +9,17 @@ import {
     Notification, 
     OralDefenseAssessment, 
     OralDefenseRegistration, 
+    Process, 
     Program, 
     RefreshToken, 
+    Request, 
     Role, 
+    State, 
     Student, 
     Thesis, 
     Topic, 
-    User 
+    User, 
+    WorkflowStaticType
 } from "../../core/models"
 
 export type PlainUser = User & {
@@ -78,4 +82,13 @@ export type PlainOralDefenseAssessment = OralDefenseAssessment & PlainStudentWit
 
 export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & PlainStudentWithThesis & {
     supervisor: Lecturer
+};
+
+export type PlainProcess = Process;
+
+export type PlainRequest = Request & {
+    state: State & {
+        stateType: WorkflowStaticType
+    },
+    stakeholders: Pick<User, 'userId'>[]
 };

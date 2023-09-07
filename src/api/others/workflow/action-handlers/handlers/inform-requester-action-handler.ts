@@ -12,13 +12,13 @@ export class InformRequesterActionHandler extends BaseActionHandler {
     async handle(requestId: string, actionInput: ActionHandlerInput): Promise<ActionHandlerOutput> {
         await this.notificationService.sendNotification({
             senderId: actionInput.actionerId,
-            receiverId: actionInput.requestUsersInfo.requesterId,
+            receiverId: actionInput.requestUsers.requesterId,
             ...getTitleAndContentFromData(actionInput.data),
         });
 
         return {
-            requestUsersInfo: actionInput.requestUsersInfo,
-            resolvedUserIds: removeDuplicates([actionInput.actionerId, actionInput.requestUsersInfo.requesterId]),
+            requestUsers: actionInput.requestUsers,
+            resolvedUserIds: removeDuplicates([actionInput.actionerId, actionInput.requestUsers.requesterId]),
         }
     }
 }

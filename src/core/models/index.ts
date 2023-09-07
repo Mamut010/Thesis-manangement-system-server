@@ -15,3 +15,8 @@ export * from './bachelor-thesis-assessment.model';
 export * from './bachelor-thesis-evaluation.model';
 export * from './oral-defense-registration.model';
 export * from './oral-defense-assessment.model'
+
+export * from './process.model';
+export * from './state.model';
+export * from './request.model';
+export * from './workflow-static-type.model';

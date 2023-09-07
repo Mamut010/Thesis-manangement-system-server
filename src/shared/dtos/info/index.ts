@@ -7,3 +7,6 @@ export * from './bachelor-thesis-assessment-info.dto';
 export * from './bachelor-thesis-evaluation.dto';
 export * from './oral-defense-registration-info.dto';
 export * from './oral-defense-assessment-info.dto';
+
+export * from './request-info.dto';
+export * from './request-state-info-dto';

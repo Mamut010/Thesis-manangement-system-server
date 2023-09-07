@@ -3,6 +3,6 @@ import { ActivityHandlerInput, ActivityHandlerOutput } from "../types";
 
 export class SimpleActivityHandler implements ActivityHandlerInterface {
     handle(requestId: string, activityInput: ActivityHandlerInput): ActivityHandlerOutput {
-        return { requestUsersInfo: activityInput.requestUsersInfo };
+        return { requestUsers: activityInput.requestUsers };
     }
 }

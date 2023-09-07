@@ -22,7 +22,9 @@ import {
     OralDefenseAssessmentServiceInterface,
     BachelorThesisEvaluationServiceInterface,
     ProgramServiceInterface,
-    AssetsServiceInterface
+    AssetsServiceInterface,
+    RequestServiceInterface,
+    StudentServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -39,7 +41,9 @@ import {
     OralDefenseAssessmentService,
     BachelorThesisEvaluationService,
     ProgramService,
-    AssetsService
+    AssetsService,
+    RequestService,
+    StudentService
 } from '../api/services';
 import { 
     AdminRepoInterface,
@@ -52,8 +56,10 @@ import {
     NotificationRepoInterface, 
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface, 
+    ProcessRepoInterface, 
     ProgramRepoInterface, 
     RefreshTokenRepoInterface, 
+    RequestRepoInterface, 
     RoleRepoInterface, 
     StudentRepoInterface, 
     ThesisRepoInterface, 
@@ -77,7 +83,9 @@ import {
     AdminRepo,
     StudentRepo,
     NotificationRepo,
-    ProgramRepo
+    ProgramRepo,
+    RequestRepo,
+    ProcessRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -253,6 +261,16 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
         .bind<ProgramRepoInterface>(INJECTION_TOKENS.ProgramRepo)
         .to(ProgramRepo)
         .inRequestScope();
+
+    container
+        .bind<ProcessRepoInterface>(INJECTION_TOKENS.ProcessRepo)
+        .to(ProcessRepo)
+        .inRequestScope();
+
+    container
+        .bind<RequestRepoInterface>(INJECTION_TOKENS.RequestRepo)
+        .to(RequestRepo)
+        .inRequestScope();
 }
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {
@@ -343,6 +361,16 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<AssetsServiceInterface>(INJECTION_TOKENS.AssetsService)
         .to(AssetsService)
+        .inRequestScope();
+
+    container
+        .bind<StudentServiceInterface>(INJECTION_TOKENS.StudentService)
+        .to(StudentService)
+        .inRequestScope();
+
+    container
+        .bind<RequestServiceInterface>(INJECTION_TOKENS.RequestService)
+        .to(RequestService)
         .inRequestScope();
 }
 

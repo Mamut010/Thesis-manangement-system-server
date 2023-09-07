@@ -15,3 +15,6 @@ export * from './location.repo.interface';
 export * from './role.repo.interface';
 export * from './notification.repo.interface';
 export * from './program.repo.interface';
+
+export * from './process.repo.interface';
+export * from './request.repo.interface';

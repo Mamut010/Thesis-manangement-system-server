@@ -27,7 +27,7 @@ export class ApplyThesisActionHandler extends BaseActionHandler {
         });
 
         return {
-            requestUsersInfo: actionInput.requestUsersInfo,
+            requestUsers: actionInput.requestUsers,
             resolvedUserIds: [actionInput.actionerId]
         };
     }
