@@ -6,12 +6,15 @@ import { DEFAULTS } from "../../constants/defaults";
 import { DEFAULT_FORMATS } from "../constants/default-formats";
 import { stringFormat } from "../../../../../utils/string-helpers";
 import { UserRepoInterface } from "../../../../../dal/interfaces";
+import { inject, injectable } from "inversify";
+import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
+@injectable()
 export class SendEmailActivityHandler extends BaseNotifyActivityHandler {
     constructor(
-        prisma: PrismaClient, 
-        private userRepo: UserRepoInterface,
-        private emailService: MailServiceInterface) {
+        @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient, 
+        @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
+        @inject(INJECTION_TOKENS.MailService) private emailService: MailServiceInterface) {
         super(prisma);
     }
 

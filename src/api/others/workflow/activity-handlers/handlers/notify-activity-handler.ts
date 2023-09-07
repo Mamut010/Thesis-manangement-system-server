@@ -5,9 +5,14 @@ import { stringFormat } from "../../../../../utils/string-helpers";
 import { DEFAULT_FORMATS } from "../constants/default-formats";
 import { ActivityHandlerInput } from "../types";
 import { BaseNotifyActivityHandler } from "../bases/base-notify-activity-handler";
+import { inject, injectable } from "inversify";
+import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
+@injectable()
 export class NotifyActivityHandler extends BaseNotifyActivityHandler {
-    constructor(prisma: PrismaClient, private notificationService: NotificationServiceInterface) {
+    constructor(
+        @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient, 
+        @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface) {
         super(prisma);
     }
 

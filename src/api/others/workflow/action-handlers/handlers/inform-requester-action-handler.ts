@@ -3,9 +3,12 @@ import { getTitleAndContentFromData } from "../../utils/action-handler-helpers";
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { BaseActionHandler } from "../bases/base-action-handler";
 import { removeDuplicates } from "../../../../../utils/array-helpers";
+import { inject, injectable } from "inversify";
+import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
+@injectable()
 export class InformRequesterActionHandler extends BaseActionHandler {
-    constructor(private notificationService: NotificationServiceInterface) {
+    constructor(@inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface) {
         super();
     }
 

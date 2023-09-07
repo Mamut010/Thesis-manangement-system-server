@@ -7,9 +7,14 @@ import { NotFoundError } from "../../../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../../../contracts/constants/error-messages";
 import { getTitleAndContentFromData } from "../../utils/action-handler-helpers";
 import { removeDuplicates } from "../../../../../utils/array-helpers";
+import { inject, injectable } from "inversify";
+import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
+@injectable()
 export class RequestAdminActionHandler extends BaseRequestActionHandler {
-    constructor(prisma: PrismaClient, private notificationService: NotificationServiceInterface) {
+    constructor(
+        @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient, 
+        @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface) {
         super(prisma, STORED_REQUEST_DATA_KEYS.AdminGroup);
     }
 

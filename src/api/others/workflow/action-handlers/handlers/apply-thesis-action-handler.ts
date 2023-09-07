@@ -3,9 +3,12 @@ import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { BaseActionHandler } from "../bases/base-action-handler";
 import { makeStoredDataValue } from "../../utils/request-data-helpers";
+import { inject, injectable } from "inversify";
+import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
+@injectable()
 export class ApplyThesisActionHandler extends BaseActionHandler {
-    constructor(private prisma: PrismaClient) {
+    constructor(@inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient) {
         super();
     }
 

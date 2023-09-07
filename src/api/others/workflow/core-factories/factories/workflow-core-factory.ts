@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify";
+import { Container, inject, injectable } from "inversify";
 import { ActionHandlerInterface } from "../../action-handlers";
 import { ActivityHandlerInterface } from "../../activity-handlers";
 import { TargetIdentifierInterface } from "../../target-identifiers";
@@ -6,8 +6,6 @@ import { ActionType } from "../../types/action-type";
 import { ActivityType } from "../../types/activity-type";
 import { WorkflowCoreFactoryInterface } from "../interfaces/workflow-core-factory.interface";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
-import { CryptoServiceInterface, MailServiceInterface, NotificationServiceInterface } from "../../../../../shared/interfaces";
 import { TargetIdentifier } from "../../target-identifiers/identifiers/target-identifier";
 import { ApplyThesisActionHandler } from "../../action-handlers/handlers/apply-thesis-action-handler";
 import { ApproveActionHandler } from "../../action-handlers/handlers/approve-action-handler";
@@ -25,45 +23,40 @@ import { NotifyActivityHandler } from "../../activity-handlers/handlers/notify-a
 import { SendEmailActivityHandler } from "../../activity-handlers/handlers/send-email-activity-handler";
 import { AddStakeholdersActivityHandler } from "../../activity-handlers/handlers/add-stakeholders-activity-handler";
 import { SimpleActivityHandler } from "../../activity-handlers/handlers/simple-activity-handler";
-import { UserRepoInterface } from "../../../../../dal/interfaces";
 
 @injectable()
 export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
-    constructor(
-        @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
-        @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface,
-        @inject(INJECTION_TOKENS.MailService) private mailService: MailServiceInterface,
-        @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface) {
+    constructor(@inject(INJECTION_TOKENS.DIContainer) private container: Container) {
         
     }
 
     createTargetIdentifier(): TargetIdentifierInterface {
-        return new TargetIdentifier(this.prisma);
+        return this.container.get(TargetIdentifier);
     }
     
     createActionHandler(actionType: ActionType): ActionHandlerInterface {
         switch(actionType) {
-            case ActionType.ApplyThesis: return new ApplyThesisActionHandler(this.prisma);
-            case ActionType.Approve: return new ApproveActionHandler();
-            case ActionType.Cancel: return new CancelActionHandler();
-            case ActionType.Confirm: return new ConfirmActionHandler();
-            case ActionType.Deny: return new DenyActionHandler();
-            case ActionType.InformAdmin: return new InformAdminActionHandler(this.prisma, this.notificationService);
-            case ActionType.InformRequester: return new InformRequesterActionHandler(this.notificationService);
-            case ActionType.Reject: return new RejectActionHandler();
-            case ActionType.RequestAdmin: return new RequestAdminActionHandler(this.prisma, this.notificationService);
-            case ActionType.RequestSupervisor1: return new RequestSupervisor1ActionHandler(this.prisma, this.notificationService);
-            case ActionType.RequestSupervisor2: return new RequestSupervisor2ActionHandler(this.prisma, this.notificationService);
-            default: return new SimpleActionHandler();
+            case ActionType.ApplyThesis: return this.container.get(ApplyThesisActionHandler);
+            case ActionType.Approve: return this.container.get(ApproveActionHandler);
+            case ActionType.Cancel: return this.container.get(CancelActionHandler);
+            case ActionType.Confirm: return this.container.get(ConfirmActionHandler);
+            case ActionType.Deny: return this.container.get(DenyActionHandler);
+            case ActionType.InformAdmin: return this.container.get(InformAdminActionHandler);
+            case ActionType.InformRequester: return this.container.get(InformRequesterActionHandler);
+            case ActionType.Reject: return this.container.get(RejectActionHandler);
+            case ActionType.RequestAdmin: return this.container.get(RequestAdminActionHandler);
+            case ActionType.RequestSupervisor1: return this.container.get(RequestSupervisor1ActionHandler);
+            case ActionType.RequestSupervisor2: return this.container.get(RequestSupervisor2ActionHandler);
+            default: return this.container.get(SimpleActionHandler);
         }
     }
 
     createActivityHandler(activityType: ActivityType): ActivityHandlerInterface {
         switch(activityType) {
-            case ActivityType.Notify: return new NotifyActivityHandler(this.prisma, this.notificationService);
-            case ActivityType.SendEmail: return new SendEmailActivityHandler(this.prisma, this.userRepo, this.mailService);
-            case ActivityType.AddStakeholders: return new AddStakeholdersActivityHandler(this.prisma);
-            default: return new SimpleActivityHandler();
+            case ActivityType.Notify: return this.container.get(NotifyActivityHandler);
+            case ActivityType.SendEmail: return this.container.get(SendEmailActivityHandler);
+            case ActivityType.AddStakeholders: return this.container.get(AddStakeholdersActivityHandler);
+            default: return this.container.get(SimpleActivityHandler);
         }
     }
 }

@@ -117,8 +117,33 @@ import { IORoomTimerManager, IORoomTimerManagerInterface } from '../ws/utils/roo
 import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-generator';
 import { BOOTSTRAP_SETTINGS_KEY } from '../settings/bootstrap-settings';
 import { Tracer } from '@opentelemetry/api';
-import { WorkflowCommandFactory, WorkflowCommandFactoryInterface, WorkflowCommandInvokerInterface, WorkflowCoreFactory, WorkflowCoreFactoryInterface, WorkflowEngine, WorkflowEngineInterface } from '../api/others/workflow';
+import { 
+    ApplyThesisActionHandler, 
+    ApproveActionHandler, 
+    CancelActionHandler, 
+    ConfirmActionHandler, 
+    DenyActionHandler, 
+    InformAdminActionHandler, 
+    InformRequesterActionHandler, 
+    RejectActionHandler, 
+    RequestAdminActionHandler, 
+    RequestSupervisor1ActionHandler, 
+    RequestSupervisor2ActionHandler, 
+    SimpleActionHandler, 
+    TargetIdentifier, 
+    WorkflowCommandFactory, 
+    WorkflowCommandFactoryInterface, 
+    WorkflowCommandInvokerInterface, 
+    WorkflowCoreFactory, 
+    WorkflowCoreFactoryInterface, 
+    WorkflowEngine, 
+    WorkflowEngineInterface
+} from '../api/others/workflow';
 import { WorkflowCommandInvoker } from '../api/others/workflow/command-invokers/invokers/workflow-command-invoker';
+import { NotifyActivityHandler } from '../api/others/workflow/activity-handlers/handlers/notify-activity-handler';
+import { SendEmailActivityHandler } from '../api/others/workflow/activity-handlers/handlers/send-email-activity-handler';
+import { AddStakeholdersActivityHandler } from '../api/others/workflow/activity-handlers/handlers/add-stakeholders-activity-handler';
+import { SimpleActivityHandler } from '../api/others/workflow/activity-handlers/handlers/simple-activity-handler';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -130,7 +155,7 @@ export const configInversify: Configuration<Container> = (container: Container, 
     configWsServerServices(container, settings);
     configSharedServices(container, settings);
     configUtils(container, settings);
-    configOthers(container, settings);
+    configWorkflow(container, settings);
 }
 
 function configConstants(container: Container, settings?: BootstrapSettingInterface) {
@@ -462,7 +487,7 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
         .inSingletonScope(); 
 }
 
-function configOthers(container: Container, settings?: BootstrapSettingInterface) {
+function configWorkflow(container: Container, settings?: BootstrapSettingInterface) {
     container
         .bind<WorkflowEngineInterface>(INJECTION_TOKENS.WorkflowEngine)
         .to(WorkflowEngine)
@@ -482,4 +507,22 @@ function configOthers(container: Container, settings?: BootstrapSettingInterface
         .bind<WorkflowCommandInvokerInterface>(INJECTION_TOKENS.WorkflowCommandInvoker)
         .to(WorkflowCommandInvoker)
         .inRequestScope();
+
+    container.bind(TargetIdentifier).toSelf().inRequestScope();
+    container.bind(ApplyThesisActionHandler).toSelf().inRequestScope();
+    container.bind(ApproveActionHandler).toSelf().inRequestScope();
+    container.bind(CancelActionHandler).toSelf().inRequestScope();
+    container.bind(ConfirmActionHandler).toSelf().inRequestScope();
+    container.bind(DenyActionHandler).toSelf().inRequestScope();
+    container.bind(InformAdminActionHandler).toSelf().inRequestScope();
+    container.bind(InformRequesterActionHandler).toSelf().inRequestScope();
+    container.bind(RejectActionHandler).toSelf().inRequestScope();
+    container.bind(RequestAdminActionHandler).toSelf().inRequestScope();
+    container.bind(RequestSupervisor1ActionHandler).toSelf().inRequestScope();
+    container.bind(RequestSupervisor2ActionHandler).toSelf().inRequestScope();
+    container.bind(SimpleActionHandler).toSelf().inRequestScope();
+    container.bind(NotifyActivityHandler).toSelf().inRequestScope();
+    container.bind(SendEmailActivityHandler).toSelf().inRequestScope();
+    container.bind(AddStakeholdersActivityHandler).toSelf().inRequestScope();
+    container.bind(SimpleActivityHandler).toSelf().inRequestScope();
 }
