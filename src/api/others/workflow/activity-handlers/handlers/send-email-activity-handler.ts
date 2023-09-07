@@ -1,13 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 import { ActivityHandlerInput } from "../types";
 import { BaseNotifyActivityHandler } from "../bases/base-notify-activity-handler";
-import { MailServiceInterface } from "../../../../../shared/interfaces";
+import { CryptoServiceInterface, MailServiceInterface } from "../../../../../shared/interfaces";
 import { DEFAULTS } from "../../constants/defaults";
 import { DEFAULT_FORMATS } from "../constants/default-formats";
 import { stringFormat } from "../../../../../utils/string-helpers";
+import { env } from "../../../../../env";
 
 export class SendEmailActivityHandler extends BaseNotifyActivityHandler {
-    constructor(prisma: PrismaClient, private emailService: MailServiceInterface) {
+    constructor(
+        prisma: PrismaClient, 
+        private emailService: MailServiceInterface, 
+        private cryptoService: CryptoServiceInterface) {
         super(prisma);
     }
 
@@ -20,6 +24,19 @@ export class SendEmailActivityHandler extends BaseNotifyActivityHandler {
             },
             select: {
                 email: true,
+            }
+        });
+
+        users.forEach(user => {
+            if (user.email) {
+                try {
+                    user.email = this.cryptoService.decryptAsString(user.email);
+                }
+                catch(err) {
+                    if (env.isProduction) {
+                        throw err;
+                    }
+                }
             }
         });
 

@@ -1,11 +1,11 @@
 import { ENVIRONMENT } from "../environment";
 import { DefaultSeeder } from "./default.seeder";
 import { Seeder } from "./seeder";
-import { TestSeeder } from "./test.seeder";
+import { TestEnvSeeder } from "./test-env.seeder";
 
 export function SeederFactory(environment: string): Seeder {
     if (environment !== ENVIRONMENT.TEST) {
-        return TestSeeder; 
+        return TestEnvSeeder; 
     }
     else {
         return DefaultSeeder;

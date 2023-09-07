@@ -7,7 +7,7 @@ import { ActivityType } from "../../types/activity-type";
 import { WorkflowCoreFactoryInterface } from "../interfaces/workflow-core-factory.interface";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
-import { MailServiceInterface, NotificationServiceInterface } from "../../../../../shared/interfaces";
+import { CryptoServiceInterface, MailServiceInterface, NotificationServiceInterface } from "../../../../../shared/interfaces";
 import { TargetIdentifier } from "../../target-identifiers/identifiers/target-identifier";
 import { ApplyThesisActionHandler } from "../../action-handlers/handlers/apply-thesis-action-handler";
 import { ApproveActionHandler } from "../../action-handlers/handlers/approve-action-handler";
@@ -31,7 +31,8 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface,
-        @inject(INJECTION_TOKENS.MailService) private mailService: MailServiceInterface) {
+        @inject(INJECTION_TOKENS.MailService) private mailService: MailServiceInterface,
+        @inject(INJECTION_TOKENS.CryptoService) private cryptoService: CryptoServiceInterface) {
         
     }
 
@@ -59,7 +60,7 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
     createActivityHandler(activityType: ActivityType): ActivityHandlerInterface {
         switch(activityType) {
             case ActivityType.Notify: return new NotifyActivityHandler(this.prisma, this.notificationService);
-            case ActivityType.SendEmail: return new SendEmailActivityHandler(this.prisma, this.mailService);
+            case ActivityType.SendEmail: return new SendEmailActivityHandler(this.prisma, this.mailService, this.cryptoService);
             case ActivityType.AddStakeholders: return new AddStakeholdersActivityHandler(this.prisma);
             default: return new SimpleActivityHandler();
         }
