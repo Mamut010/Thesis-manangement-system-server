@@ -13,3 +13,6 @@ export * from './lecturers-query.response';
 export * from './notifications-query.response';
 export * from './students-query.response';
 export * from './users-query.response';
+
+export * from './processes-query.response';
+export * from './requests-query.response';

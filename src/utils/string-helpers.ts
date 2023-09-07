@@ -41,3 +41,22 @@ export function trimSuffix(str: string, suffix: string, sensitive: boolean = tru
 export function prettyJSON(toStringify: any): string {
     return JSON.stringify(toStringify, null, 2);
 }
+
+/**
+ * Format a string having {<#number>} placeholders. 
+ * 
+ * For e.g.: 'My name is {0}. I'm {1} years old.'
+ * @param format The format.
+ * @param args The arguments supplied.
+ * @returns The formatted string after the substitution of all {<number>} placeholders with the corresponding supplied arguments.
+ * 
+ * @see https://www.geeksforgeeks.org/what-are-the-equivalent-of-printf-string-format-in-javascript/
+ */
+export function stringFormat(format: string, ...args: unknown[]) {
+    return format.replace(/{(\d+)}/g, (match: string, number: number) => { 
+        return typeof args[number] !== 'undefined'
+            // This way, default string format (like in console.log() or alert()) is used
+            ? args[number] as string
+            : match;
+    });
+}

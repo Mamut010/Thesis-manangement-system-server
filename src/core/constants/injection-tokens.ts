@@ -32,6 +32,9 @@ const REPOSITORY_TOKENS = {
     RoleRepo: Symbol.for('RoleRepo'),
     NotificationRepo: Symbol.for('NotificationRepo'),
     ProgramRepo: Symbol.for('ProgramRepo'),
+
+    ProcessRepo: Symbol.for('ProcessRepo'),
+    RequestRepo: Symbol.for('RequestRepo'),
 } as const;
 
 const AUTH_SERVICE_TOKENS = {
@@ -58,6 +61,9 @@ const API_SERVICE_TOKENS = {
     AdminStudentService: Symbol.for('AdminStudentService'),
     AdminLecturerService: Symbol.for('AdminLecturerService'),
     AssetsService: Symbol.for('AssetsService'),
+    StudentService: Symbol.for('StudentService'),
+
+    RequestService: Symbol.for('RequestService'),
 } as const;
 
 const WS_SERVICE_TOKENS = {
@@ -84,6 +90,13 @@ const UTIL_TOKENS = {
     IORoomTimerManager: Symbol.for('IORoomTimerManager'),
 } as const;
 
+const OTHERS_TOKENS = {
+    WorkflowEngine: Symbol.for('WorkflowEngine'),
+    WorkflowCoreFactory: Symbol.for('WorkflowCoreFactory'),
+    WorkflowCommandFactory: Symbol.for('WorkflowCommandFactory'),
+    WorkflowCommandInvoker: Symbol.for('WorkflowCommandInvoker'),
+} as const;
+
 export const INJECTION_TOKENS = {
     ...CONSTANT_TOKENS,
     ...LOGGER_TOKENS,
@@ -94,4 +107,5 @@ export const INJECTION_TOKENS = {
     ...WS_SERVICE_TOKENS,
     ...SHARED_SERVICE_TOKENS,
     ...UTIL_TOKENS,
+    ...OTHERS_TOKENS,
 } as const;

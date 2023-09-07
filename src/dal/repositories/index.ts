@@ -15,3 +15,6 @@ export * from './location.repo';
 export * from './role.repo';
 export * from './notification.repo';
 export * from './program.repo';
+
+export * from './process.repo';
+export * from './request.repo';

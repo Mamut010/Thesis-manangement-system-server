@@ -1,17 +1,32 @@
 import { SingleOrArray, jsonStringifyCircular } from "./object-helpers";
 
-export function arrayIntersection<T = unknown>(arr1: T[], arr2: T[]): T[] {
+export function arrayIntersection<T = unknown>(arr1: T[], arr2: T[], discardDuplicates: boolean = true): T[] {
     const intersection = arr1.filter(value => arr2.includes(value));
     // Use Set to remove duplicates
-    return Array.from(new Set(intersection));
+    return discardDuplicates ? removeDuplicates(intersection) : intersection;
 }
 
-export function arrayUnion<T = unknown>(arr1: T[], arr2: T[]): T[] {
-    return Array.from(new Set([...arr1, ...arr2]));
+export function arrayUnion<T = unknown>(arr1: T[], arr2: T[], discardDuplicates: boolean = true): T[] {
+    const union = [...arr1, ...arr2];
+    return discardDuplicates ? removeDuplicates(union) : union;
 }
 
+export function uniqueFrom<T>(src: T[], toCheckAgainst: T[], discardDuplicates: boolean = true): T[] {
+    const result = src.filter(element => !toCheckAgainst.includes(element));
+    return discardDuplicates ? removeDuplicates(result) : result;
+}
+
+/**
+ * Make an array from a single value or an existing array.
+ * @param value The single value or array.
+ * @returns An array containing the single value or the original array.
+ */
 export function makeArray<T = unknown>(value: SingleOrArray<T>): T[] {
     return Array.isArray(value) ? value : [value];
+}
+
+export function removeDuplicates<T>(arr: T[]): T[] {
+    return [...new Set(arr)];
 }
 
 export function singleOrDefault<TValue>(arr: TValue[]): TValue | undefined;
@@ -36,6 +51,20 @@ export function firstOrDefault<TValue, TDefault>(arr: TValue[], defaultValue?: T
     }
 }
 
+export function singleOrThrow<TValue>(arr: TValue[]): TValue {
+    if (arr.length !== 1) {
+        throw new Error('Array is not single');
+    }
+    return arr[0];
+}
+
+export function firstOrThrow<TValue>(arr: TValue[]): TValue {
+    if (arr.length === 0) {
+        throw new Error('Array is empty');
+    }
+    return arr[0];
+}
+
 /**
  * Group array by a key or an array of keys. May not work correctly on objects having circular-referenced values.
  * @param items The array.
@@ -44,12 +73,12 @@ export function firstOrDefault<TValue, TDefault>(arr: TValue[], defaultValue?: T
  * 
  * @see https://stackoverflow.com/questions/65184643/groupby-that-is-typescript-safe/65184754#65184754
  */
-export function groupBy<K extends PropertyKey, TItem extends Record<K, unknown>>(items: TItem[], key: K)
-    : Map<unknown, TItem[]>;
-export function groupBy<K extends PropertyKey, TItem extends Record<K, unknown>>(items: TItem[], key: K[])
-    : Map<Record<K, unknown>, TItem[]>;
-export function groupBy<K extends PropertyKey, TItem extends Record<K, unknown>>(items: TItem[], key: SingleOrArray<K>)
-    : Map<unknown, TItem[]> | Map<Record<K, unknown>, TItem[]> {
+export function groupBy<TItem extends Record<PropertyKey, unknown>, K extends keyof TItem>(items: TItem[], key: K)
+    : Map<TItem[K], TItem[]>;
+export function groupBy<TItem extends Record<PropertyKey, unknown>, K extends keyof TItem>(items: TItem[], key: K[])
+    : Map<Record<K, TItem[K]>, TItem[]>;
+export function groupBy<TItem extends Record<PropertyKey, unknown>, K extends keyof TItem>(items: TItem[], key: SingleOrArray<K>)
+    : Map<TItem[K], TItem[]> | Map<Record<K, TItem[K]>, TItem[]> {
     if (Array.isArray(key)) {
         return groupByKeyArray(items, key);
     }
@@ -58,8 +87,8 @@ export function groupBy<K extends PropertyKey, TItem extends Record<K, unknown>>
     }
 }
 
-function groupBySingleKey<K extends PropertyKey, TItem extends Record<K, unknown>>(items: TItem[], key: K)
-    : Map<unknown, TItem[]> {
+function groupBySingleKey<TItem extends Record<PropertyKey, unknown>, K extends keyof TItem>(items: TItem[], key: K)
+    : Map<TItem[K], TItem[]> {
     return items.reduce(
         (result, item) => {
             const value = item[key];
@@ -73,12 +102,12 @@ function groupBySingleKey<K extends PropertyKey, TItem extends Record<K, unknown
 
             return result;
         },
-        new Map<unknown, TItem[]>()
+        new Map<TItem[K], TItem[]>()
     );
 }
 
-function groupByKeyArray<K extends PropertyKey, TItem extends Record<K, unknown>>(items: TItem[], keys: K[])
-    : Map<Record<K, unknown>, TItem[]> {
+function groupByKeyArray<TItem extends Record<PropertyKey, unknown>, K extends keyof TItem>(items: TItem[], keys: K[])
+    : Map<Record<K, TItem[K]>, TItem[]> {
     // As Record by itself is compared by reference, we must first use an intermediate representation of the Record+
     // which is the stringified form
     const intermediateMap = items.reduce(
@@ -86,7 +115,7 @@ function groupByKeyArray<K extends PropertyKey, TItem extends Record<K, unknown>
             const keyValues = keys.reduce((keyValues, key) => {
                 keyValues[key] = item[key];
                 return keyValues; 
-            }, {} as Record<K, unknown>);
+            }, {} as Record<K, TItem[K]>);
             
             // Sort keys to ensure consistent stringified forms
             const sortedKeyValues = Object.fromEntries(
@@ -108,10 +137,10 @@ function groupByKeyArray<K extends PropertyKey, TItem extends Record<K, unknown>
 
             return result;
         },
-        new Map<Symbol, {keyValues: Record<K, unknown>, records: TItem[]}>()
+        new Map<symbol, {keyValues: Record<K, TItem[K]>, records: TItem[]}>()
     );
 
-    const result = new Map<Record<K, unknown>, TItem[]>();
+    const result = new Map<Record<K, TItem[K]>, TItem[]>();
     for(const value of intermediateMap.values()) {
         result.set(value.keyValues, value.records);
     }

@@ -26,6 +26,9 @@ export const ERROR_MESSAGES = {
         BachelorThesisEvaluationNotFound: 'Bachelor thesis evaluation not found',
         OralDefenseRegistrationNotFound: 'Oral defense registration not found',
         OralDefenseAssessmentNotFound: 'Oral defense assessment not found',
+
+        GroupNotFound: 'Group not found',
+        RequestNotFound: 'Request not found',
     },
     Unexpected: {
         DefaultMessage: 'Unexpected error has occurred',
@@ -57,8 +60,14 @@ export const ERROR_MESSAGES = {
         BachelorThesisEvaluationDenied: 'Access to bachelor thesis evaluation is denied',
         OralDefenseRegistrationDenied: 'Access to oral defense registration is denied',
         OralDefenseAssessmentDenied: 'Access to oral defense assessment is denied',
+
+        RequestDenied: 'Access to request is denied',
     },
     Invalid: {
         RoleInvalid: 'Invalid role',
+        InputInvalid: 'Invalid input',
+    },
+    BadRequest: {
+        MissingNecessaryRequestData: 'Missing necessary request data',
     }
 } as const;

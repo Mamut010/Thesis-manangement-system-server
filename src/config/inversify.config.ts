@@ -22,7 +22,9 @@ import {
     OralDefenseAssessmentServiceInterface,
     BachelorThesisEvaluationServiceInterface,
     ProgramServiceInterface,
-    AssetsServiceInterface
+    AssetsServiceInterface,
+    RequestServiceInterface,
+    StudentServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -39,7 +41,9 @@ import {
     OralDefenseAssessmentService,
     BachelorThesisEvaluationService,
     ProgramService,
-    AssetsService
+    AssetsService,
+    RequestService,
+    StudentService
 } from '../api/services';
 import { 
     AdminRepoInterface,
@@ -52,8 +56,10 @@ import {
     NotificationRepoInterface, 
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface, 
+    ProcessRepoInterface, 
     ProgramRepoInterface, 
     RefreshTokenRepoInterface, 
+    RequestRepoInterface, 
     RoleRepoInterface, 
     StudentRepoInterface, 
     ThesisRepoInterface, 
@@ -77,7 +83,9 @@ import {
     AdminRepo,
     StudentRepo,
     NotificationRepo,
-    ProgramRepo
+    ProgramRepo,
+    RequestRepo,
+    ProcessRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -107,6 +115,8 @@ import { IORoomTimerManager, IORoomTimerManagerInterface } from '../ws/utils/roo
 import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-generator';
 import { BOOTSTRAP_SETTINGS_KEY } from '../settings/bootstrap-settings';
 import { Tracer } from '@opentelemetry/api';
+import { WorkflowCommandFactory, WorkflowCommandFactoryInterface, WorkflowCommandInvokerInterface, WorkflowCoreFactory, WorkflowCoreFactoryInterface, WorkflowEngine, WorkflowEngineInterface } from '../api/others/workflow';
+import { WorkflowCommandInvoker } from '../api/others/workflow/command-invokers/invokers/workflow-command-invoker';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -118,6 +128,7 @@ export const configInversify: Configuration<Container> = (container: Container, 
     configWsServerServices(container, settings);
     configSharedServices(container, settings);
     configUtils(container, settings);
+    configOthers(container, settings);
 }
 
 function configConstants(container: Container, settings?: BootstrapSettingInterface) {
@@ -250,6 +261,16 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
         .bind<ProgramRepoInterface>(INJECTION_TOKENS.ProgramRepo)
         .to(ProgramRepo)
         .inRequestScope();
+
+    container
+        .bind<ProcessRepoInterface>(INJECTION_TOKENS.ProcessRepo)
+        .to(ProcessRepo)
+        .inRequestScope();
+
+    container
+        .bind<RequestRepoInterface>(INJECTION_TOKENS.RequestRepo)
+        .to(RequestRepo)
+        .inRequestScope();
 }
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {
@@ -341,6 +362,16 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
         .bind<AssetsServiceInterface>(INJECTION_TOKENS.AssetsService)
         .to(AssetsService)
         .inRequestScope();
+
+    container
+        .bind<StudentServiceInterface>(INJECTION_TOKENS.StudentService)
+        .to(StudentService)
+        .inRequestScope();
+
+    container
+        .bind<RequestServiceInterface>(INJECTION_TOKENS.RequestService)
+        .to(RequestService)
+        .inRequestScope();
 }
 
 function configWsServerServices(container: Container, settings?: BootstrapSettingInterface) {
@@ -422,4 +453,26 @@ function configUtils(container: Container, settings?: BootstrapSettingInterface)
         .bind<IORoomTimerManagerInterface>(INJECTION_TOKENS.IORoomTimerManager)
         .to(IORoomTimerManager)
         .inSingletonScope(); 
+}
+
+function configOthers(container: Container, settings?: BootstrapSettingInterface) {
+    container
+        .bind<WorkflowEngineInterface>(INJECTION_TOKENS.WorkflowEngine)
+        .to(WorkflowEngine)
+        .inRequestScope();
+
+    container
+        .bind<WorkflowCoreFactoryInterface>(INJECTION_TOKENS.WorkflowCoreFactory)
+        .to(WorkflowCoreFactory)
+        .inRequestScope();
+
+    container
+        .bind<WorkflowCommandFactoryInterface>(INJECTION_TOKENS.WorkflowCommandFactory)
+        .to(WorkflowCommandFactory)
+        .inRequestScope();
+
+    container
+        .bind<WorkflowCommandInvokerInterface>(INJECTION_TOKENS.WorkflowCommandInvoker)
+        .to(WorkflowCommandInvoker)
+        .inRequestScope();
 }

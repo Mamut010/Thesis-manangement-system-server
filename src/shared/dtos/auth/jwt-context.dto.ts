@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { ArrayMaxSize, ArrayMinSize, IsDefined, IsEmail, IsIn, IsNumber, IsOptional, IsString } from "class-validator"
+import { ArrayMaxSize, ArrayMinSize, IsDefined, IsIn, IsNumber, IsString } from "class-validator"
 import { Role } from "../../../core/constants/roles";
 
 export class JwtAccessContextDto {
@@ -12,16 +12,6 @@ export class JwtAccessContextDto {
     @IsDefined()
     @IsString()
     userId!: string;
-
-    @Expose()
-    @IsDefined()
-    @IsString()
-    username!: string;
-
-    @Expose()
-    @IsOptional()
-    @IsEmail()
-    email?: string;
 
     // "each" tells class-validator to run the validation on each item of the array
     @Expose()

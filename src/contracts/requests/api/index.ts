@@ -19,3 +19,5 @@ export * from './oral-defense-registration-info-update.request';
 export * from './oral-defense-registration-infos-query.request';
 export * from './student-info-update.request';
 export * from './student-infos-query.request';
+
+export * from './request-infos-query.request';

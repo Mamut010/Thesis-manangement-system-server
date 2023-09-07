@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { parseArgs } from 'node:util';
 import { ENVIRONMENT } from './code/environment';
-import { SeederFactory } from './seeders';
+import { SeederFactory } from './code/seeders';
 
 const prisma = new PrismaClient();
 
@@ -16,7 +16,7 @@ async function main() {
     const { values: { environment } } = parseArgs({ options: options })
     const seeder = SeederFactory(environment as string);
 
-    console.log(`Start seeding ...`);
+    console.log(`Start seeding...`);
     await seeder(prisma);
     console.log(`Seeding finished.`);
 }
