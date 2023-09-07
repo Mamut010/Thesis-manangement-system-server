@@ -5,6 +5,11 @@ export class LecturerInfoUpdateRequest {
     @Expose()
     @IsOptional()
     @IsString()
+    email?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     title?: string;
 
     @Expose()

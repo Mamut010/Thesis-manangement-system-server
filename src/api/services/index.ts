@@ -17,5 +17,6 @@ export * from './admin-student.service';
 export * from './admin-lecturer.service';
 export * from './assets.service';
 export * from './student.service';
+export * from './lecturer.service';
 
 export * from './request.service';

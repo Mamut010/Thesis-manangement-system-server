@@ -97,6 +97,6 @@ export class AdminStudentController {
     @Patch('/:id/student-info')
     @ResponseSchema(StudentInfoDto)
     updateStudentInfo(@Param('id') id: string, @Body({ required: true }) updateRequest: StudentInfoUpdateRequest) {
-        return this.adminStudentService.updateStudent(id, updateRequest);
+        return this.adminStudentService.updateStudentInfo(id, updateRequest);
     }
 }

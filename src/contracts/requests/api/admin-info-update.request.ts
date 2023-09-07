@@ -11,4 +11,9 @@ export class AdminInfoUpdateRequest {
     @IsOptional()
     @IsString()
     contact?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    email?: string;
 }

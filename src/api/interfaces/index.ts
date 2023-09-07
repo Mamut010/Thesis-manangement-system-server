@@ -17,5 +17,10 @@ export * from './admin-student.service.interface';
 export * from './admin-lecturer.service.interface';
 export * from './assets.service.interface';
 export * from './student.service.interface';
+export * from './lecturer.service.interface';
 
 export * from './request.service.interface';
+
+// Utility
+export * from './student-maintainer.service.interface';
+export * from './lecturer-maintainer.service.interface';

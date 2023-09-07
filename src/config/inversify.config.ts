@@ -24,7 +24,8 @@ import {
     ProgramServiceInterface,
     AssetsServiceInterface,
     RequestServiceInterface,
-    StudentServiceInterface
+    StudentServiceInterface,
+    LecturerServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -43,7 +44,8 @@ import {
     ProgramService,
     AssetsService,
     RequestService,
-    StudentService
+    StudentService,
+    LecturerService
 } from '../api/services';
 import { 
     AdminRepoInterface,
@@ -366,6 +368,11 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<StudentServiceInterface>(INJECTION_TOKENS.StudentService)
         .to(StudentService)
+        .inRequestScope();
+
+    container
+        .bind<LecturerServiceInterface>(INJECTION_TOKENS.LecturerService)
+        .to(LecturerService)
         .inRequestScope();
 
     container
