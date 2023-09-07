@@ -25,6 +25,7 @@ import { NotifyActivityHandler } from "../../activity-handlers/handlers/notify-a
 import { SendEmailActivityHandler } from "../../activity-handlers/handlers/send-email-activity-handler";
 import { AddStakeholdersActivityHandler } from "../../activity-handlers/handlers/add-stakeholders-activity-handler";
 import { SimpleActivityHandler } from "../../activity-handlers/handlers/simple-activity-handler";
+import { UserRepoInterface } from "../../../../../dal/interfaces";
 
 @injectable()
 export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
@@ -32,7 +33,7 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
         @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface,
         @inject(INJECTION_TOKENS.MailService) private mailService: MailServiceInterface,
-        @inject(INJECTION_TOKENS.CryptoService) private cryptoService: CryptoServiceInterface) {
+        @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface) {
         
     }
 
@@ -60,7 +61,7 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
     createActivityHandler(activityType: ActivityType): ActivityHandlerInterface {
         switch(activityType) {
             case ActivityType.Notify: return new NotifyActivityHandler(this.prisma, this.notificationService);
-            case ActivityType.SendEmail: return new SendEmailActivityHandler(this.prisma, this.mailService, this.cryptoService);
+            case ActivityType.SendEmail: return new SendEmailActivityHandler(this.prisma, this.userRepo, this.mailService);
             case ActivityType.AddStakeholders: return new AddStakeholdersActivityHandler(this.prisma);
             default: return new SimpleActivityHandler();
         }
