@@ -18,6 +18,8 @@ import {
 } from "../others/workflow";
 import { RequestActionSubmitRequest } from "../../contracts/requests/api/request-action-submit.request";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
+import { StringFilter } from "../../lib/query";
+import { makeArray } from "../../utils/array-helpers";
 
 @injectable()
 export class RequestService implements RequestServiceInterface {
@@ -31,7 +33,15 @@ export class RequestService implements RequestServiceInterface {
     }
 
     async getRequests(user: AuthorizedUser, queryRequest: RequestInfosQueryRequest): Promise<RequestInfosQueryResponse> {
-        const result = await this.requestRepo.query(queryRequest);
+        // Only show relavant requests
+        const stakeholderIdFilter = new StringFilter();
+        stakeholderIdFilter.value = user.userId;
+        stakeholderIdFilter.operator = 'equals';
+
+        const result = await this.requestRepo.query({
+            ...queryRequest,
+            stakeholderIdFilter: makeArray(stakeholderIdFilter)
+        });
         return {
             content: this.mapper.map(RequestInfoDto, result.content),
             count: result.count,
@@ -76,7 +86,7 @@ export class RequestService implements RequestServiceInterface {
     }
 
     private ensureValidAction(user: AuthorizedUser, record: RequestDto) {
-        const isValid = isAdmin(user) || user.userId === record.creatorId;
+        const isValid = isAdmin(user) || record.stakeholderIds.includes(user.userId);
         if (!isValid) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
         }
