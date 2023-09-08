@@ -19,7 +19,7 @@ import { RequestInfosQueryResponse } from "../../contracts/responses";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { RequestInfosQueryRequest } from "../../contracts/requests";
 import { RequestServiceInterface } from "../interfaces";
-import { RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
+import { RequestStateInfoDto } from "../../shared/dtos";
 import { RequestActionSubmitRequest } from "../../contracts/requests/api/request-action-submit.request";
 
 @JsonController('requests')
@@ -42,9 +42,9 @@ export class RequestController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id')
-    @ResponseSchema(RequestInfoDto)
-    getRequest(@CurrentUser() user: AuthorizedUser, @Param('id') id: string) {
-        return this.requestService.getRequest(user, id);
+    @ResponseSchema(RequestStateInfoDto)
+    getRequestState(@CurrentUser() user: AuthorizedUser, @Param('id') id: string) {
+        return this.requestService.getRequestState(user, id);
     }
 
     @Delete('/:id')

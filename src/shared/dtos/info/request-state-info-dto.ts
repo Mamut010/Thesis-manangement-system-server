@@ -1,33 +1,9 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsIn, IsOptional, IsString } from "class-validator";
-import { ActionType, StateType } from "../../../api/others/workflow";
+import { IsDefined, IsIn } from "class-validator";
+import { ActionType } from "../../../api/others/workflow";
+import { RequestInfoDto } from "./request-info.dto";
 
-export class RequestStateInfoDto {
-    @Expose()
-    @IsDefined()
-    @IsString()
-    id!: string;
-
-    @Expose()
-    @IsDefined()
-    @IsString()
-    creatorId!: string;
-
-    @Expose()
-    @IsDefined()
-    @IsIn(Object.values(StateType))
-    stateType!: StateType;
-
-    @Expose()
-    @IsDefined()
-    @IsString()
-    state!: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    stateDescription!: string | null;
-
+export class RequestStateInfoDto extends RequestInfoDto {
     @Expose()
     @IsDefined()
     @IsIn(Object.values(ActionType), { each: true })

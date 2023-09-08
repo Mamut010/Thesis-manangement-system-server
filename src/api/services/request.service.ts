@@ -12,6 +12,7 @@ import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { ForbiddenError } from "routing-controllers";
 import { isAdmin } from "../../utils/role-predicates";
 import { 
+    RequestStateDto,
     WorkflowCommandFactoryInterface, 
     WorkflowCommandInvokerInterface, 
     WorkflowEngineInterface 
@@ -48,13 +49,14 @@ export class RequestService implements RequestServiceInterface {
         }
     }
 
-    async getRequest(user: AuthorizedUser, id: string): Promise<RequestInfoDto> {
+    async getRequestState(user: AuthorizedUser, id: string): Promise<RequestStateInfoDto> {
         const record = await this.ensureRecordExists(id);
         if (!isAdmin(user) && !record.stakeholderIds.includes(user.userId)) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
         }
-        
-        return this.mapper.map(RequestInfoDto, record);
+
+        const requestState = await this.workflowEngine.getRequestState(user.userId, id);
+        return this.makeRequestStateInfo(record, requestState);
     }
 
     async deleteRequest(user: AuthorizedUser, id: string): Promise<void> {
@@ -77,8 +79,11 @@ export class RequestService implements RequestServiceInterface {
         }
 
         this.workflowCommandInvoker.setCommand(command);
-        const result = await this.workflowCommandInvoker.invoke();
-        return result ? this.mapper.map(RequestStateInfoDto, result) : undefined;
+
+        const requestState = await this.workflowCommandInvoker.invoke();
+        const record = await this.ensureRecordExists(request.requestId);
+
+        return this.makeRequestStateInfo(record, requestState);
     }
 
     private async ensureRecordExists(id: string) {
@@ -86,6 +91,12 @@ export class RequestService implements RequestServiceInterface {
         if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.RequestNotFound);
         }
+        return result;
+    }
+
+    private makeRequestStateInfo(request: RequestInfoDto, requestState?: RequestStateDto | null) {
+        const result = this.mapper.map(RequestStateInfoDto, request);
+        result.actionTypes = requestState?.actionTypes ?? [];
         return result;
     }
 }
