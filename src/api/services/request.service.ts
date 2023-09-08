@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { RequestInfosQueryRequest } from "../../contracts/requests";
+import { RequestInfosQueryRequest, RequestsQueryRequest } from "../../contracts/requests";
 import { RequestInfosQueryResponse } from "../../contracts/responses";
 import { RequestServiceInterface } from "../interfaces/request.service.interface";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
@@ -39,13 +39,13 @@ export class RequestService implements RequestServiceInterface {
         stakeholderIdFilter.value = user.userId;
         stakeholderIdFilter.operator = 'equals';
 
-        const result = await this.requestRepo.query({
+        const response = await this.requestRepo.query({
             ...queryRequest,
             stakeholderIdFilter: makeArray(stakeholderIdFilter)
         });
         return {
-            content: this.mapper.map(RequestInfoDto, result.content),
-            count: result.count,
+            content: this.mapper.map(RequestInfoDto, response.content),
+            count: response.count,
         }
     }
 
@@ -66,6 +66,20 @@ export class RequestService implements RequestServiceInterface {
         }
 
         await this.requestRepo.delete(id);
+    }
+
+    async getCreatedRequestStates(creatorId: string): Promise<RequestStateInfoDto[]> {
+        const creatorIdFilter = new StringFilter();
+        creatorIdFilter.value = creatorId;
+        creatorIdFilter.operator = 'equals';
+
+        const query = new RequestsQueryRequest();
+        query.creatorIdFilter = makeArray(creatorIdFilter);
+
+        const { content } = await this.requestRepo.query(query);
+        const requestStates = await this.workflowEngine.getRequestStates(creatorId, content.map(item => item.id));
+
+        return content.map((request, index) => this.makeRequestStateInfo(request, requestStates[index]));
     }
 
     async submitAction(actionerId: string, request: RequestActionSubmitRequest): Promise<RequestStateInfoDto | undefined> {

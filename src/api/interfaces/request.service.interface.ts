@@ -9,5 +9,6 @@ export interface RequestServiceInterface {
     getRequestState(user: AuthorizedUser, id: string): Promise<RequestStateInfoDto>;
     deleteRequest(user: AuthorizedUser, id: string): Promise<void>;
 
+    getCreatedRequestStates(creatorId: string): Promise<RequestStateInfoDto[]>;
     submitAction(actionerId: string, request: RequestActionSubmitRequest): Promise<RequestStateInfoDto | undefined>;
 }

@@ -100,9 +100,15 @@ export class StudentController {
     @HttpCode(HTTP_CODES.Ok)
     @Post('/create-thesis-request')
     @ResponseSchema(RequestStateInfoDto)
-    @OnUndefined(HTTP_CODES.BadRequest)
     createThesisRequest(@CurrentUser() user: AuthorizedUser,
         @Body({ required: true }) createRequest: ThesisRequestCreateRequest) {
         return this.studentService.createThesisRequest(user.userId, createRequest);
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Get('/created-request')
+    @ResponseSchema(RequestStateInfoDto)
+    getCreatedRequestState(@CurrentUser() user: AuthorizedUser) {
+        return this.studentService.getCreatedRequestState(user.userId);
     }
 }
