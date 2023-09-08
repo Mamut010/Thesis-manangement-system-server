@@ -491,12 +491,12 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
     container
         .bind<WorkflowEngineInterface>(INJECTION_TOKENS.WorkflowEngine)
         .to(WorkflowEngine)
-        .inRequestScope();
+        .inSingletonScope();
 
     container
         .bind<WorkflowCommandInvokerInterface>(INJECTION_TOKENS.WorkflowCommandInvoker)
         .to(WorkflowCommandInvoker)
-        .inRequestScope();
+        .inSingletonScope();
 
     container.bind(TargetIdentifier).toSelf().inRequestScope();
     container.bind(ApplyThesisActionHandler).toSelf().inRequestScope();
