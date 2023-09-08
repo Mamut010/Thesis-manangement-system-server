@@ -494,16 +494,6 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
         .inRequestScope();
 
     container
-        .bind<WorkflowCoreFactoryInterface>(INJECTION_TOKENS.WorkflowCoreFactory)
-        .to(WorkflowCoreFactory)
-        .inRequestScope();
-
-    container
-        .bind<WorkflowCommandFactoryInterface>(INJECTION_TOKENS.WorkflowCommandFactory)
-        .to(WorkflowCommandFactory)
-        .inRequestScope();
-
-    container
         .bind<WorkflowCommandInvokerInterface>(INJECTION_TOKENS.WorkflowCommandInvoker)
         .to(WorkflowCommandInvoker)
         .inRequestScope();
@@ -525,4 +515,18 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
     container.bind(SendEmailActivityHandler).toSelf().inRequestScope();
     container.bind(AddStakeholdersActivityHandler).toSelf().inRequestScope();
     container.bind(SimpleActivityHandler).toSelf().inRequestScope();
+
+    container
+        .bind<WorkflowCoreFactoryInterface>(INJECTION_TOKENS.WorkflowCoreFactory)
+        .toDynamicValue(() => {
+            return new WorkflowCoreFactory(container);
+        })
+        .inSingletonScope();
+
+    container
+        .bind<WorkflowCommandFactoryInterface>(INJECTION_TOKENS.WorkflowCommandFactory)
+        .toDynamicValue(() => {
+            return new WorkflowCommandFactory();
+        })
+        .inSingletonScope();
 }
