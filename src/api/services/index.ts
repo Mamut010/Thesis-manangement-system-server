@@ -20,3 +20,4 @@ export * from './student.service';
 export * from './lecturer.service';
 
 export * from './request.service';
+export * from './group.service';

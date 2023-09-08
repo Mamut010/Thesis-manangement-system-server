@@ -57,3 +57,7 @@ export const requestInclude = {
         }
     }
 } as const;
+
+export const groupInclude = {
+    users: true
+} as const;

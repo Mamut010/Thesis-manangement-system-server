@@ -10,3 +10,4 @@ export * from './oral-defense-assessment-info.dto';
 
 export * from './request-info.dto';
 export * from './request-state-info-dto';
+export * from './group-info.dto';

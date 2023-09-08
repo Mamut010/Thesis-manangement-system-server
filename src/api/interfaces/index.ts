@@ -11,6 +11,10 @@ export * from './resources/oral-defense-registration.service.interface';
 export * from './resources/oral-defense-assessment.service.interface';
 export * from './resources/program.service.interface';
 
+// Utility
+export * from './student-maintainer.service.interface';
+export * from './lecturer-maintainer.service.interface';
+
 // Main
 export * from './admin.service.interface';
 export * from './admin-student.service.interface';
@@ -20,7 +24,4 @@ export * from './student.service.interface';
 export * from './lecturer.service.interface';
 
 export * from './request.service.interface';
-
-// Utility
-export * from './student-maintainer.service.interface';
-export * from './lecturer-maintainer.service.interface';
+export * from './group.service.interface';

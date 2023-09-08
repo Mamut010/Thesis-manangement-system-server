@@ -5,6 +5,7 @@ import {
     BachelorThesisEvaluationDto, 
     BachelorThesisRegistrationDto, 
     FieldDto, 
+    GroupDto, 
     LecturerDto, 
     LocationDto, 
     NotificationDto, 
@@ -28,6 +29,7 @@ import {
     PlainBachelorThesisEvaluation,
     PlainBachelorThesisRegistration, 
     PlainField, 
+    PlainGroup, 
     PlainLecturer, 
     PlainLocation, 
     PlainNotification, 
@@ -185,6 +187,12 @@ export class PlainTransformer implements PlainTransformerInterface {
         dto.state = plain.state.name;
         dto.stateDescription = plain.state.description;
         dto.stateType = plain.state.stateType.name as StateType;
+        return dto;
+    }
+
+    public toGroup(plain: PlainGroup): GroupDto {
+        const dto = plainToInstanceExactMatch(GroupDto, plain);
+        dto.memberIds = plain.users.map(item => item.userId);
         return dto;
     }
 

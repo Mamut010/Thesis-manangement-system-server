@@ -18,3 +18,4 @@ export * from './program.repo.interface';
 
 export * from './process.repo.interface';
 export * from './request.repo.interface';
+export * from './group.repo.interface';

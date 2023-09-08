@@ -4,6 +4,7 @@ import {
     BachelorThesisEvaluation, 
     BachelorThesisRegistration, 
     Field, 
+    Group, 
     Lecturer, 
     Location, 
     Notification, 
@@ -86,9 +87,15 @@ export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & PlainStud
 
 export type PlainProcess = Process;
 
+export type WithUserId = Pick<User, 'userId'>; 
+
 export type PlainRequest = Request & {
     state: State & {
         stateType: WorkflowStaticType
     },
-    stakeholders: Pick<User, 'userId'>[]
+    stakeholders: WithUserId[]
 };
+
+export type PlainGroup = Group & {
+    users: WithUserId[]
+}

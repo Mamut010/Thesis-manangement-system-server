@@ -18,3 +18,4 @@ export * from './program.repo';
 
 export * from './process.repo';
 export * from './request.repo';
+export * from './group.repo';

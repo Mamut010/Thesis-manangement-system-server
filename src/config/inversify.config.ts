@@ -25,7 +25,8 @@ import {
     AssetsServiceInterface,
     RequestServiceInterface,
     StudentServiceInterface,
-    LecturerServiceInterface
+    LecturerServiceInterface,
+    GroupServiceInterface
 } from '../api/interfaces';
 import { 
     AdminLecturerService,
@@ -45,7 +46,8 @@ import {
     AssetsService,
     RequestService,
     StudentService,
-    LecturerService
+    LecturerService,
+    GroupService
 } from '../api/services';
 import { 
     AdminRepoInterface,
@@ -53,6 +55,7 @@ import {
     BachelorThesisEvaluationRepoInterface,
     BachelorThesisRegistrationRepoInterface, 
     FieldRepoInterface, 
+    GroupRepoInterface, 
     LecturerRepoInterface, 
     LocationRepoInterface, 
     NotificationRepoInterface, 
@@ -87,7 +90,8 @@ import {
     NotificationRepo,
     ProgramRepo,
     RequestRepo,
-    ProcessRepo
+    ProcessRepo,
+    GroupRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -118,6 +122,7 @@ import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-g
 import { BOOTSTRAP_SETTINGS_KEY } from '../settings/bootstrap-settings';
 import { Tracer } from '@opentelemetry/api';
 import { 
+    AddStakeholdersActivityHandler,
     ApplyThesisActionHandler, 
     ApproveActionHandler, 
     CancelActionHandler, 
@@ -125,12 +130,15 @@ import {
     DenyActionHandler, 
     InformAdminGroupActionHandler, 
     InformRequesterActionHandler, 
+    NotifyActivityHandler, 
     RejectActionHandler, 
     RejectThesisActionHandler, 
     RequestAdminGroupActionHandler, 
     RequestSupervisor1ActionHandler, 
     RequestSupervisor2ActionHandler, 
+    SendEmailActivityHandler, 
     SimpleActionHandler, 
+    SimpleActivityHandler, 
     TargetIdentifier, 
     WorkflowCommandFactory, 
     WorkflowCommandFactoryInterface, 
@@ -141,10 +149,6 @@ import {
     WorkflowEngineInterface
 } from '../api/others/workflow';
 import { WorkflowCommandInvoker } from '../api/others/workflow/command-invokers/invokers/workflow-command-invoker';
-import { NotifyActivityHandler } from '../api/others/workflow/activity-handlers/handlers/notify-activity-handler';
-import { SendEmailActivityHandler } from '../api/others/workflow/activity-handlers/handlers/send-email-activity-handler';
-import { AddStakeholdersActivityHandler } from '../api/others/workflow/activity-handlers/handlers/add-stakeholders-activity-handler';
-import { SimpleActivityHandler } from '../api/others/workflow/activity-handlers/handlers/simple-activity-handler';
 
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
@@ -299,6 +303,11 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
         .bind<RequestRepoInterface>(INJECTION_TOKENS.RequestRepo)
         .to(RequestRepo)
         .inRequestScope();
+
+    container
+        .bind<GroupRepoInterface>(INJECTION_TOKENS.GroupRepo)
+        .to(GroupRepo)
+        .inRequestScope();
 }
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {
@@ -404,6 +413,11 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<RequestServiceInterface>(INJECTION_TOKENS.RequestService)
         .to(RequestService)
+        .inRequestScope();
+
+    container
+        .bind<GroupServiceInterface>(INJECTION_TOKENS.GroupService)
+        .to(GroupService)
         .inRequestScope();
 }
 

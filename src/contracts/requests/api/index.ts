@@ -21,3 +21,6 @@ export * from './student-info-update.request';
 export * from './student-infos-query.request';
 
 export * from './request-infos-query.request';
+export * from './group-info-create.request';
+export * from './group-info-update.request';
+export * from './group-infos-query.request';

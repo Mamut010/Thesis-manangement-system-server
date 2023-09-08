@@ -16,3 +16,4 @@ export * from './users-query.response';
 
 export * from './processes-query.response';
 export * from './requests-query.response';
+export * from './groups-query.response';

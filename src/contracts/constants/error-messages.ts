@@ -36,6 +36,7 @@ export const ERROR_MESSAGES = {
         RefreshTokenDeletionFailed: 'Unable to delete a refresh tokens',
         UserCreationFailed: 'Unable to create new user',
         RequestCreationFailed: 'Unable to create new request',
+        ThesisProcessRetrievalFailed: 'Unable to retrieve thesis process',
     },
     UniqueConstraint: {
         RoleAlreadyExists: 'The role already exists',

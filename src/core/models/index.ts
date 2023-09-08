@@ -20,3 +20,4 @@ export * from './process.model';
 export * from './state.model';
 export * from './request.model';
 export * from './workflow-static-type.model';
+export * from './group.model';

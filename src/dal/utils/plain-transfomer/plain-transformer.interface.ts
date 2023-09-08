@@ -4,6 +4,7 @@ import {
     BachelorThesisEvaluationDto, 
     BachelorThesisRegistrationDto, 
     FieldDto, 
+    GroupDto, 
     LecturerDto, 
     LocationDto, 
     NotificationDto, 
@@ -25,6 +26,7 @@ import {
     PlainBachelorThesisEvaluation,
     PlainBachelorThesisRegistration, 
     PlainField, 
+    PlainGroup, 
     PlainLecturer, 
     PlainLocation, 
     PlainNotification, 
@@ -62,4 +64,5 @@ export interface PlainTransformerInterface {
 
     toProcess(plain: PlainProcess): ProcessDto;
     toRequest(plain: PlainRequest): RequestDto;
+    toGroup(plain: PlainGroup): GroupDto;
 }

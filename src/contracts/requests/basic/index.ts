@@ -45,3 +45,6 @@ export * from './users-query.request';
 
 export * from './processes-query.request';
 export * from './requests-query.request';
+export * from './group-create.request';
+export * from './group-update.request';
+export * from './groups-query.request';
