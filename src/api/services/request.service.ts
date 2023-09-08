@@ -5,7 +5,7 @@ import { RequestServiceInterface } from "../interfaces/request.service.interface
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { RequestRepoInterface } from "../../dal/interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
-import { RequestDto, RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
+import { RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
@@ -49,15 +49,19 @@ export class RequestService implements RequestServiceInterface {
     }
 
     async getRequest(user: AuthorizedUser, id: string): Promise<RequestInfoDto> {
-        const result = await this.ensureRecordExists(id);
-        this.ensureValidAction(user, result);
+        const record = await this.ensureRecordExists(id);
+        if (!isAdmin(user) && !record.stakeholderIds.includes(user.userId)) {
+            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
+        }
         
-        return this.mapper.map(RequestInfoDto, result);
+        return this.mapper.map(RequestInfoDto, record);
     }
 
     async deleteRequest(user: AuthorizedUser, id: string): Promise<void> {
         const record = await this.ensureRecordExists(id);
-        this.ensureValidAction(user, record);
+        if (!isAdmin(user) && record.creatorId !== user.userId) {
+            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
+        }
 
         await this.requestRepo.delete(id);
     }
@@ -83,12 +87,5 @@ export class RequestService implements RequestServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.RequestNotFound);
         }
         return result;
-    }
-
-    private ensureValidAction(user: AuthorizedUser, record: RequestDto) {
-        const isValid = isAdmin(user) || record.stakeholderIds.includes(user.userId);
-        if (!isValid) {
-            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
-        }
     }
 }
