@@ -123,11 +123,11 @@ import {
     CancelActionHandler, 
     ConfirmActionHandler, 
     DenyActionHandler, 
-    InformAdminActionHandler, 
+    InformAdminGroupActionHandler, 
     InformRequesterActionHandler, 
     RejectActionHandler, 
     RejectThesisActionHandler, 
-    RequestAdminActionHandler, 
+    RequestAdminGroupActionHandler, 
     RequestSupervisor1ActionHandler, 
     RequestSupervisor2ActionHandler, 
     SimpleActionHandler, 
@@ -505,11 +505,11 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
     container.bind(CancelActionHandler).toSelf().inRequestScope();
     container.bind(ConfirmActionHandler).toSelf().inRequestScope();
     container.bind(DenyActionHandler).toSelf().inRequestScope();
-    container.bind(InformAdminActionHandler).toSelf().inRequestScope();
+    container.bind(InformAdminGroupActionHandler).toSelf().inRequestScope();
     container.bind(InformRequesterActionHandler).toSelf().inRequestScope();
     container.bind(RejectActionHandler).toSelf().inRequestScope();
     container.bind(RejectThesisActionHandler).toSelf().inRequestScope();
-    container.bind(RequestAdminActionHandler).toSelf().inRequestScope();
+    container.bind(RequestAdminGroupActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor1ActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor2ActionHandler).toSelf().inRequestScope();
     container.bind(SimpleActionHandler).toSelf().inRequestScope();

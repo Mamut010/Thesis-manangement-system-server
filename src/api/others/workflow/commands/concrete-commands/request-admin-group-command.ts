@@ -4,7 +4,7 @@ import { ActionType } from "../../types/action-type";
 import { RequestStateDto } from "../../types/dtos";
 import { RequestAdvanceCommandInterface } from "../interfaces/request-advance-command";
 
-export class RequestAdminCommand implements RequestAdvanceCommandInterface {
+export class RequestAdminGroupCommand implements RequestAdvanceCommandInterface {
     constructor(
         private engine: WorkflowEngineInterface, 
         private actionerId: string, 
@@ -17,7 +17,7 @@ export class RequestAdminCommand implements RequestAdvanceCommandInterface {
         return this.engine.advanceRequest({
             requestId: this.requestId,
             actionerId: this.actionerId,
-            actionType: ActionType.RequestAdmin,
+            actionType: ActionType.RequestAdminGroup,
             data: {
                 [STORED_REQUEST_DATA_KEYS.AdminGroup]: this.adminGroupId
             }

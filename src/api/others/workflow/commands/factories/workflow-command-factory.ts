@@ -9,9 +9,9 @@ import { ApproveCommand } from "../concrete-commands/approve-command";
 import { CancelCommand } from "../concrete-commands/cancel-command";
 import { ConfirmCommand } from "../concrete-commands/confirm-command";
 import { DenyCommand } from "../concrete-commands/deny-command";
-import { InformAdminCommand } from "../concrete-commands/inform-admin-command";
+import { InformAdminGroupCommand } from "../concrete-commands/inform-admin-group-command";
 import { InformRequesterCommand } from "../concrete-commands/inform-requester-command";
-import { RequestAdminCommand } from "../concrete-commands/request-admin-command";
+import { RequestAdminGroupCommand } from "../concrete-commands/request-admin-group-command";
 import { RequestSupervisor1Command } from "../concrete-commands/request-supervisor1-command";
 import { RequestSupervisor2Command } from "../concrete-commands/request-supervisor2-command";
 import { RequestAdvanceCommandInterface } from "../interfaces/request-advance-command";
@@ -39,15 +39,15 @@ export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
             case ActionType.Deny:
                 return new DenyCommand(engine, commandInput.actionerId, commandInput.requestId);
 
-            case ActionType.InformAdmin:
-                return new InformAdminCommand(engine, commandInput.actionerId, commandInput.requestId,
+            case ActionType.InformAdminGroup:
+                return new InformAdminGroupCommand(engine, commandInput.actionerId, commandInput.requestId,
                     this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.AdminGroup));
 
             case ActionType.InformRequester:
                 return new InformRequesterCommand(engine, commandInput.actionerId, commandInput.requestId);
 
-            case ActionType.RequestAdmin:
-                return new RequestAdminCommand(engine, commandInput.actionerId, commandInput.requestId,
+            case ActionType.RequestAdminGroup:
+                return new RequestAdminGroupCommand(engine, commandInput.actionerId, commandInput.requestId,
                     this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.AdminGroup));
 
             case ActionType.RequestSupervisor1:
