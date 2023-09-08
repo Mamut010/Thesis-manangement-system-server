@@ -106,7 +106,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         
         await this.handleActivityEffects(...activityEffects);
 
-        return await this.getRequestState(request.id, createOptions.userId);
+        return await this.getRequestState(createOptions.userId, request.id);
     }
 
     async advanceRequest(advanceOptions: RequestAdvanceOptions): Promise<RequestStateDto | null> {
@@ -147,7 +147,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         });
         await this.handleActivityEffects(...activityEffects);
 
-        return await this.getRequestState(requestId, actionerId);
+        return await this.getRequestState(actionerId, requestId);
     }
 
     private async getProcessInitialState(processId: string) {
