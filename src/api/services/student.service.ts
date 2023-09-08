@@ -35,10 +35,11 @@ export class StudentService extends StudentMaintainerService implements StudentS
             throw new UnexpectedError(ERROR_MESSAGES.Unexpected.DefaultMessage);
         }
 
-        return await this.workflowEngine.createRequest({
+        const requestState = await this.workflowEngine.createRequest({
             processId: process.id,
             userId: userId,
             title: request.title
-        }) ?? undefined;
+        });
+        return requestState ? this.mapper.map(RequestStateInfoDto, requestState) : undefined;
     }
 }
