@@ -10,6 +10,6 @@ export class MapperService implements MapperServiceInterface {
     map<T, V>(cls: ClassConstructor<T>, src: NotArray<V>): T;
     map<T, V>(cls: ClassConstructor<T>, src: IsArray<V>): T[];
     map<T, V>(cls: ClassConstructor<T>, src: SingleOrArray<V>): SingleOrArray<T> {
-        return plainToInstanceExactMatch(cls, src as never);
+        return plainToInstanceExactMatch(cls, src as unknown);
     }
 }
