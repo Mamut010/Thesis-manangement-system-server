@@ -7,6 +7,7 @@ import { env } from '../../env';
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import { objectHasOwnProperty } from '../../utils/object-helpers';
+import { wrapDecryptionError } from '../../utils/cipher-helpers';
 
 @Middleware({ type: 'before', priority: -1 })
 @injectable()
@@ -21,7 +22,7 @@ export class CredentialsDecryptionMiddleware implements ExpressMiddlewareInterfa
             return next();
         }
 
-        try {
+        return wrapDecryptionError(() => {
             // Username, password and email should be encrypted
             const decrypted = this.decrypt(body, ['username', 'password', 'email']);
             const entries = Object.entries(decrypted) as [keyof typeof decrypted, string][];
@@ -31,14 +32,10 @@ export class CredentialsDecryptionMiddleware implements ExpressMiddlewareInterfa
                     body[field] = decryptedValue;
                 }
             })
-        }
-        catch {
-            if (!env.isDevelopment) {
-                return next(new BadRequestError(ERROR_MESSAGES.Auth.InvalidCredentials));
-            }
-        }
 
-        return next();
+            return next();
+        }, 
+            () => next(new BadRequestError(ERROR_MESSAGES.Auth.InvalidCredentials)));
     }
 
     private decrypt<K extends string>(input: Record<string, unknown>, fields: K[]) {

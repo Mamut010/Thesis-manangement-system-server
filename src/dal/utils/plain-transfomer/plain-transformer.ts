@@ -50,6 +50,7 @@ import { StateType } from "../../../api/others/workflow";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { CryptoServiceInterface } from "../../../shared/interfaces";
 import { env } from "../../../env";
+import { wrapDecryptionError } from "../../../utils/cipher-helpers";
 
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
@@ -218,13 +219,6 @@ export class PlainTransformer implements PlainTransformerInterface {
             return email;
         }
 
-        try {
-            return this.cryptoService.decryptAsString(email);
-        }
-        catch(err) {
-            if (!env.isDevelopment) {
-                throw err;
-            }
-        }
+        return wrapDecryptionError(() => this.cryptoService.decryptAsString(email));
     }
 }
