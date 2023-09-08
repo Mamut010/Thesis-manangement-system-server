@@ -14,6 +14,7 @@ import { AssetsServiceInterface, RequestServiceInterface } from "../interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { StudentMaintainerService } from "./student-maintainer.service";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
+import { getThesisProcessOrThrow } from "../../utils/process-helpers";
 
 @injectable()
 export class StudentService extends StudentMaintainerService implements StudentServiceInterface {
@@ -28,14 +29,7 @@ export class StudentService extends StudentMaintainerService implements StudentS
     }
 
     async createThesisRequest(userId: string, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto> {
-        const processesQuery = new ProcessesQueryRequest();
-        const queryResponse = await this.processRepo.query(processesQuery);
-        
-        // For now, just assume that the very first process is the thesis management process
-        const process = firstOrDefault(queryResponse.content);
-        if (!process) {
-            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.DefaultMessage);
-        }
+        const process = await getThesisProcessOrThrow(this.processRepo);
 
         const requestState = await this.workflowEngine.createRequest({
             processId: process.id,
