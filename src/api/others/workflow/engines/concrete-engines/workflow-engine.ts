@@ -7,7 +7,7 @@ import { UnexpectedError } from "../../../../../contracts/errors/unexpected.erro
 import { ERROR_MESSAGES } from "../../../../../contracts/constants/error-messages";
 import { StateType } from "../../types/state-type";
 import { ActivityType } from "../../types/activity-type";
-import { PlainRequestAction } from "../../types/plains";
+import { PlainActivity, PlainRequestAction } from "../../types/plains";
 import { 
     ActivityEffect, 
     ActivityHandlerInputWithoutTarget, 
@@ -104,7 +104,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             return request;
         });
         
-        await this.handleActivityEffects(...activityEffects);
+        await this.handleActivityEffects(activityEffects);
 
         return await this.getRequestState(createOptions.userId, request.id);
     }
@@ -116,18 +116,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             return null;
         }
 
-        const plainRequestActions: PlainRequestAction[] = request.requestActions.map(item => {
-            return {
-                id: item.id,
-                transitionId: item.transitionId,
-                nextStateId: item.transition.nextStateId,
-                action: {
-                    actionType: item.action.actionType.name as ActionType,
-                    actionTargets: item.action.actionTargets.map(item => { return { target: item.target.name } }),
-                }
-            }
-        });
-        const validRequestActions = this.getValidRequestAction(plainRequestActions, actionType, target);
+        const validRequestActions = this.getValidRequestAction(request.requestActions, actionType, target);
         if (validRequestActions.length === 0) {
             return null;
         }
@@ -139,13 +128,13 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         const actionOutput = await this.handleAction(actionType, requestId, { requestUsers, actionerId, target, data });
 
         const validRequestActionIds = validRequestActions.map(item => item.id);
-        const activityEffects = await this.updateRequestActions(requestId, plainRequestActions, validRequestActionIds, {
+        const activityEffects = await this.updateRequestActions(requestId, request.requestActions, validRequestActionIds, {
             requestUsers,
             actionerId,
             target,
             actionResolvedUserIds: actionOutput.resolvedUserIds,
         });
-        await this.handleActivityEffects(...activityEffects);
+        await this.handleActivityEffects(activityEffects);
 
         return await this.getRequestState(actionerId, requestId);
     }
@@ -288,7 +277,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         return activityEffects;
     }
 
-    private async handleActivityEffects(...activityEffects: ActivityEffect[]) {
+    private async handleActivityEffects(activityEffects: ActivityEffect[]) {
         if (activityEffects.length > 0) {
             await Promise.all(activityEffects.map(activityEffect => activityEffect()));
         }
@@ -296,9 +285,9 @@ export class WorkflowEngine implements WorkflowEngineInterface {
 
     private getValidRequestAction(requestActions: PlainRequestAction[], actionType: ActionType, target: string) {
         return requestActions.filter(requestAction => {
-            return requestAction.action.actionType === actionType
+            return requestAction.action.actionType.name === actionType
                 // ActionTarget with multiple targets are treated as an OR operation
-                && requestAction.action.actionTargets.some(actionTarget => actionTarget.target === target)
+                && requestAction.action.actionTargets.some(actionTarget => actionTarget.target.name === target)
         });
     }
 
@@ -314,7 +303,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             .map(([transitionId, requestActions]) => {
                 return { 
                     transitionId, 
-                    nextStateId: requestActions[0].nextStateId 
+                    nextStateId: requestActions[0].transition.nextStateId
                 };
             });
 
@@ -422,10 +411,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         }));
     }
 
-    private constructActivityTypeWithTargetsFromActivities(activities: {
-        activityType: { name: string },
-        activityTargets: { target: { name: string } }[]
-    }[]): ActivityTypeWithTarget[] {
+    private constructActivityTypeWithTargetsFromActivities(activities: PlainActivity[]): ActivityTypeWithTarget[] {
         return activities.flatMap(activity => {
             return activity.activityTargets.map(activityTarget => {
                 return {

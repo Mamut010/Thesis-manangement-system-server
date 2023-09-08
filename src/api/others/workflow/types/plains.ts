@@ -1,13 +1,20 @@
-import { ActionType } from "./action-type"
+export type PlainAction = {
+    actionType: { name: string },
+    actionTargets: { target: { name: string } }[],
+};
+
+export type PlainActivity = {
+    activityType: { name: string },
+    activityTargets: { target: { name: string } }[]
+};
 
 export type PlainRequestAction = Record<string, unknown> & {
     id: string,
     transitionId: string,
-    nextStateId: string,
-    action: {
-        actionType: ActionType,
-        actionTargets: { target: string }[],
-    }
+    transition: {
+        nextStateId: string,
+    },
+    action: PlainAction,
 }
 
 export type PlainRequestData = {
