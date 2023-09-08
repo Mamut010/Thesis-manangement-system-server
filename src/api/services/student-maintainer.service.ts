@@ -13,7 +13,9 @@ import { StudentInfosQueryRequest, StudentInfoUpdateRequest } from "../../contra
 import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { NotFoundError } from "routing-controllers";
+import { injectable } from "inversify";
 
+@injectable()
 export class StudentMaintainerService implements StudentMaintainerServiceInterface {
     constructor(
         protected studentRepo: StudentRepoInterface,

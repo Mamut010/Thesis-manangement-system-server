@@ -23,7 +23,9 @@ import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { MapperServiceInterface } from "../../shared/interfaces";
+import { injectable } from "inversify";
 
+@injectable()
 export class LecturerMaintainerService implements LecturerMaintainerServiceInterface {
     constructor(
         protected lecturerRepo: LecturerRepoInterface,
