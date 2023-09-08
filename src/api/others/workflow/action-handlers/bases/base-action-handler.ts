@@ -1,7 +1,9 @@
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { ActionHandlerInterface } from "../interfaces/action-handler.interface";
 import { UnexpectedError } from "../../../../../contracts/errors/unexpected.error";
+import { injectable } from "inversify";
 
+@injectable()
 export abstract class BaseActionHandler implements ActionHandlerInterface {
     abstract handle(requestId: string, actionInput: ActionHandlerInput): ActionHandlerOutput | Promise<ActionHandlerOutput>;
 

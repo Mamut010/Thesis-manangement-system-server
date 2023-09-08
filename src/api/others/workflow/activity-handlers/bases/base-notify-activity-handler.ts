@@ -6,7 +6,9 @@ import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { getRequestDataStringValueByKey } from "../../utils/request-data-helpers";
 import { RequestUsersDto } from "../../types/dtos";
 import { makeArray, uniqueFrom } from "../../../../../utils/array-helpers";
+import { injectable } from "inversify";
 
+@injectable()
 export abstract class BaseNotifyActivityHandler implements ActivityHandlerInterface {
     constructor(protected prisma: PrismaClient) {
 

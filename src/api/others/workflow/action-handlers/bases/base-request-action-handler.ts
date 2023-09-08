@@ -2,7 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { BaseActionHandler } from "./base-action-handler";
 import { makeStoredDataValue } from "../../utils/request-data-helpers";
+import { injectable } from "inversify";
 
+@injectable()
 export abstract class BaseRequestActionHandler extends BaseActionHandler {
     constructor(protected prisma: PrismaClient, protected dataKey: string) {
         super();
