@@ -12,10 +12,10 @@ import { ApproveActionHandler } from "../../action-handlers/handlers/approve-act
 import { CancelActionHandler } from "../../action-handlers/handlers/cancel-action-handler";
 import { ConfirmActionHandler } from "../../action-handlers/handlers/confirm-action-handler";
 import { DenyActionHandler } from "../../action-handlers/handlers/deny-action-handler";
-import { InformAdminActionHandler } from "../../action-handlers/handlers/inform-admin-action-handler";
+import { InformAdminGroupActionHandler } from "../../action-handlers/handlers/inform-admin-group-action-handler";
 import { InformRequesterActionHandler } from "../../action-handlers/handlers/inform-requester-action-handler";
 import { RejectActionHandler } from "../../action-handlers/handlers/reject-action-handler";
-import { RequestAdminActionHandler } from "../../action-handlers/handlers/request-admin-action-handler";
+import { RequestAdminGroupActionHandler } from "../../action-handlers/handlers/request-admin-group-action-handler";
 import { RequestSupervisor1ActionHandler } from "../../action-handlers/handlers/request-supervisor1-action-type";
 import { RequestSupervisor2ActionHandler } from "../../action-handlers/handlers/request-supervisor2-action-handler";
 import { SimpleActionHandler } from "../../action-handlers/handlers/simple-action-handler";
@@ -42,11 +42,11 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
             case ActionType.Cancel: return this.container.get(CancelActionHandler);
             case ActionType.Confirm: return this.container.get(ConfirmActionHandler);
             case ActionType.Deny: return this.container.get(DenyActionHandler);
-            case ActionType.InformAdmin: return this.container.get(InformAdminActionHandler);
+            case ActionType.InformAdminGroup: return this.container.get(InformAdminGroupActionHandler);
             case ActionType.InformRequester: return this.container.get(InformRequesterActionHandler);
             case ActionType.Reject: return this.container.get(RejectActionHandler);
             case ActionType.RejectThesis: return this.container.get(RejectThesisActionHandler);
-            case ActionType.RequestAdmin: return this.container.get(RequestAdminActionHandler);
+            case ActionType.RequestAdminGroup: return this.container.get(RequestAdminGroupActionHandler);
             case ActionType.RequestSupervisor1: return this.container.get(RequestSupervisor1ActionHandler);
             case ActionType.RequestSupervisor2: return this.container.get(RequestSupervisor2ActionHandler);
             default: return this.container.get(SimpleActionHandler);

@@ -50,8 +50,8 @@ export class WorkflowEngine implements WorkflowEngineInterface {
 
     }
 
-    async getRequestStates(actionerId: string, requestId: string[]): Promise<RequestStateDto[]> {
-        const requestsWithTarget = await this.getRequestsAndTarget(requestId, actionerId);
+    async getRequestStates(actionerId: string, requestIds: string[]): Promise<RequestStateDto[]> {
+        const requestsWithTarget = await this.getRequestsAndTarget(requestIds, actionerId);
         return requestsWithTarget
             .map(({ request, target }) => {
                 return {
@@ -228,8 +228,8 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         return request;
     }
 
-    private async getRequestsAndTarget(requestId: string[], actionerId: string) {
-        const requests = await this.getRequests(requestId);
+    private async getRequestsAndTarget(requestIds: string[], actionerId: string) {
+        const requests = await this.getRequests(requestIds);
         return await Promise.all(requests.map(async (request) => {
             const targetIdentifier = this.coreFactory.createTargetIdentifier();
             const target = request 

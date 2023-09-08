@@ -6,11 +6,11 @@ export const ActionType = {
     Cancel: 'Cancel',
     Confirm: 'Confirm',
     Deny: 'Deny',
-    InformAdmin: 'Inform Admin',
+    InformAdminGroup: 'Inform Admin Group',
     InformRequester: 'Inform Requester',
     Reject: 'Reject',
     RejectThesis: 'Reject Thesis',
-    RequestAdmin: 'Request Admin',
+    RequestAdminGroup: 'Request Admin Group',
     RequestSupervisor1: 'Request Supervisor1',
     RequestSupervisor2: 'Request Supervisor2',
 } as const;

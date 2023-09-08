@@ -11,7 +11,7 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
 @injectable()
-export class RequestAdminActionHandler extends BaseRequestActionHandler {
+export class RequestAdminGroupActionHandler extends BaseRequestActionHandler {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient, 
         @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface) {
