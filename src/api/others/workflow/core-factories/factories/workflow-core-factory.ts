@@ -1,4 +1,4 @@
-import { Container, inject, injectable } from "inversify";
+import { inject, injectable, interfaces } from "inversify";
 import { ActionHandlerInterface } from "../../action-handlers";
 import { ActivityHandlerInterface } from "../../activity-handlers";
 import { TargetIdentifierInterface } from "../../target-identifiers";
@@ -23,10 +23,11 @@ import { NotifyActivityHandler } from "../../activity-handlers/handlers/notify-a
 import { SendEmailActivityHandler } from "../../activity-handlers/handlers/send-email-activity-handler";
 import { AddStakeholdersActivityHandler } from "../../activity-handlers/handlers/add-stakeholders-activity-handler";
 import { SimpleActivityHandler } from "../../activity-handlers/handlers/simple-activity-handler";
+import { RejectThesisActionHandler } from "../../action-handlers/handlers/reject-thesis-action-handler";
 
 @injectable()
 export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
-    constructor(@inject(INJECTION_TOKENS.DIContainer) private container: Container) {
+    constructor(@inject(INJECTION_TOKENS.DIContainer) private container: interfaces.Container) {
         
     }
 
@@ -44,6 +45,7 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
             case ActionType.InformAdmin: return this.container.get(InformAdminActionHandler);
             case ActionType.InformRequester: return this.container.get(InformRequesterActionHandler);
             case ActionType.Reject: return this.container.get(RejectActionHandler);
+            case ActionType.RejectThesis: return this.container.get(RejectThesisActionHandler);
             case ActionType.RequestAdmin: return this.container.get(RequestAdminActionHandler);
             case ActionType.RequestSupervisor1: return this.container.get(RequestSupervisor1ActionHandler);
             case ActionType.RequestSupervisor2: return this.container.get(RequestSupervisor2ActionHandler);

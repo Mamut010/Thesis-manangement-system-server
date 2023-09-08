@@ -126,6 +126,7 @@ import {
     InformAdminActionHandler, 
     InformRequesterActionHandler, 
     RejectActionHandler, 
+    RejectThesisActionHandler, 
     RequestAdminActionHandler, 
     RequestSupervisor1ActionHandler, 
     RequestSupervisor2ActionHandler, 
@@ -507,6 +508,7 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
     container.bind(InformAdminActionHandler).toSelf().inRequestScope();
     container.bind(InformRequesterActionHandler).toSelf().inRequestScope();
     container.bind(RejectActionHandler).toSelf().inRequestScope();
+    container.bind(RejectThesisActionHandler).toSelf().inRequestScope();
     container.bind(RequestAdminActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor1ActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor2ActionHandler).toSelf().inRequestScope();
@@ -518,8 +520,8 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
 
     container
         .bind<WorkflowCoreFactoryInterface>(INJECTION_TOKENS.WorkflowCoreFactory)
-        .toDynamicValue(() => {
-            return new WorkflowCoreFactory(container);
+        .toDynamicValue((context) => {
+            return new WorkflowCoreFactory(context.container);
         })
         .inSingletonScope();
 

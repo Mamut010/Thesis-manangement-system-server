@@ -249,6 +249,7 @@ const Id = {
         Approve: 'ActionType-Approve',
         ApplyThesis: 'ActionType-ApplyThesis',
         Reject: 'ActionType-Reject',
+        RejectThesis: 'ActionType-RejectThesis',
         Confirm: 'ActionType-Confirm',
         RequestAdminGroup: 'ActionType-RequestAdminGroup',
         RequestSupervisor1: 'ActionType-RequestSupervisor1',
@@ -261,6 +262,7 @@ const Id = {
     Action: {
         Requester_ApplyThesis: 'Action-Requester_ApplyThesis',
         Requester_Reject: 'Action-Requester_Reject',
+        Requester_RejectThesis: 'Action-Requester_RejectThesis',
         Requester_RequestAdminGroup: 'Action-Requester_RequestAdminGroup',
         Requester_RequestSupervisor1: 'Action-Requester_RequestSupervisor1',
         Requester_Confirm: 'Action-Requester_Confirm',
@@ -600,7 +602,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_Reject }
+                    connect: { id: Id.Action.Requester_RejectThesis }
                 }
             },
         }),

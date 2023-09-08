@@ -7,22 +7,20 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
 @injectable()
-export class ApplyThesisActionHandler extends BaseActionHandler {
+export class RejectThesisActionHandler extends BaseActionHandler {
     constructor(@inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient) {
         super();
     }
 
     async handle(requestId: string, actionInput: ActionHandlerInput): Promise<ActionHandlerOutput> {
-        const thesisId = this.getInputDataStringValue(actionInput, STORED_REQUEST_DATA_KEYS.Thesis);
         await this.prisma.request.update({
             where: {
                 id: requestId,
             },
             data: {
                 data: {
-                    create: {
+                    deleteMany: {
                         name: STORED_REQUEST_DATA_KEYS.Thesis,
-                        value: makeStoredDataValue(thesisId),
                     }
                 }
             }
@@ -30,7 +28,7 @@ export class ApplyThesisActionHandler extends BaseActionHandler {
 
         return {
             requestUsers: actionInput.requestUsers,
-            resolvedUserIds: [actionInput.actionerId]
+            resolvedUserIds: [actionInput.actionerId],
         };
     }
 }

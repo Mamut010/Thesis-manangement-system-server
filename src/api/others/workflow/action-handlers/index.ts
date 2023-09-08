@@ -9,6 +9,7 @@ export * from './handlers/deny-action-handler';
 export * from './handlers/inform-admin-action-handler';
 export * from './handlers/inform-requester-action-handler';
 export * from './handlers/reject-action-handler';
+export * from './handlers/reject-thesis-action-handler';
 export * from './handlers/request-admin-action-handler';
 export * from './handlers/request-supervisor1-action-type';
 export * from './handlers/request-supervisor2-action-handler';

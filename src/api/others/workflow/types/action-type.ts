@@ -9,6 +9,7 @@ export const ActionType = {
     InformAdmin: 'Inform Admin',
     InformRequester: 'Inform Requester',
     Reject: 'Reject',
+    RejectThesis: 'Reject Thesis',
     RequestAdmin: 'Request Admin',
     RequestSupervisor1: 'Request Supervisor1',
     RequestSupervisor2: 'Request Supervisor2',
