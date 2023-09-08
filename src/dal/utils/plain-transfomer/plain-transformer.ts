@@ -62,7 +62,7 @@ export class PlainTransformer implements PlainTransformerInterface {
         const dto = plainToInstanceExactMatch(UserDto, flattenObject(plain, {
             transformedProps: ['role']
         }));
-        this.tryDecryptingEmail(dto);
+        dto.email = this.tryDecryptingEmail(dto.email);
         return dto;
     }
 
@@ -79,7 +79,7 @@ export class PlainTransformer implements PlainTransformerInterface {
     public toAdminInfo(plain: PlainAdmin): AdminDto {
         const dto = plainToInstanceExactMatch(AdminDto, flattenObject(plain));
 
-        this.tryDecryptingEmail(dto);
+        dto.email = this.tryDecryptingEmail(dto.email);
         dto.adminId = plain.userId;
 
         return dto;
@@ -90,7 +90,7 @@ export class PlainTransformer implements PlainTransformerInterface {
             transformedProps: ['program']
         }));
 
-        this.tryDecryptingEmail(dto);
+        dto.email = this.tryDecryptingEmail(dto.email);
         dto.studentId = plain.userId;
         
         return dto;
@@ -101,7 +101,7 @@ export class PlainTransformer implements PlainTransformerInterface {
             transformedProps: ['role']
         }));
 
-        this.tryDecryptingEmail(dto);
+        dto.email = this.tryDecryptingEmail(dto.email);
         dto.lecturerId = plain.userId;
         dto.type = plain.user.role.name;
         
@@ -205,15 +205,17 @@ export class PlainTransformer implements PlainTransformerInterface {
         }
     }
 
-    private tryDecryptingEmail(obj: { email?: string | null }) {
-        if (obj.email) {
-            try {
-                obj.email = this.cryptoService.decryptAsString(obj.email);
-            }
-            catch(err) {
-                if (env.isProduction) {
-                    throw err;
-                }
+    private tryDecryptingEmail(email?: string | null) {
+        if (!email) {
+            return email;
+        }
+
+        try {
+            return this.cryptoService.decryptAsString(email);
+        }
+        catch(err) {
+            if (!env.isDevelopment) {
+                throw err;
             }
         }
     }
