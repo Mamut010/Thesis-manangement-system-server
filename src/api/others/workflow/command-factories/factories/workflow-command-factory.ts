@@ -4,19 +4,23 @@ import { BadRequestError } from "../../../../../contracts/errors/bad-request.err
 import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { WorkflowEngineInterface } from "../../engines";
 import { ActionType } from "../../types/action-type";
-import { ApplyThesisCommand } from "../concrete-commands/apply-thesis-command";
-import { ApproveCommand } from "../concrete-commands/approve-command";
-import { CancelCommand } from "../concrete-commands/cancel-command";
-import { ConfirmCommand } from "../concrete-commands/confirm-command";
-import { DenyCommand } from "../concrete-commands/deny-command";
-import { InformAdminGroupCommand } from "../concrete-commands/inform-admin-group-command";
-import { InformRequesterCommand } from "../concrete-commands/inform-requester-command";
-import { RequestAdminGroupCommand } from "../concrete-commands/request-admin-group-command";
-import { RequestSupervisor1Command } from "../concrete-commands/request-supervisor1-command";
-import { RequestSupervisor2Command } from "../concrete-commands/request-supervisor2-command";
-import { RequestAdvanceCommandInterface } from "../interfaces/request-advance-command";
 import { WorkflowCommandFactoryInterface } from "../interfaces/workflow-command-factory.interface";
-import { RequestAdvanceCommandInput } from "../types";
+import { 
+    ApplyThesisCommand,
+    ApproveCommand,
+    CancelCommand,
+    ConfirmCommand,
+    DenyCommand,
+    InformAdminGroupCommand,
+    InformRequesterCommand,
+    RejectCommand,
+    RejectThesisCommand,
+    RequestAdminGroupCommand,
+    RequestAdvanceCommandInput, 
+    RequestAdvanceCommandInterface,
+    RequestSupervisor1Command,
+    RequestSupervisor2Command
+} from "../../commands";
 
 @injectable()
 export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
@@ -45,6 +49,12 @@ export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
 
             case ActionType.InformRequester:
                 return new InformRequesterCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.Reject:
+                return new RejectCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.RejectThesis:
+                return new RejectThesisCommand(engine, commandInput.actionerId, commandInput.requestId);
 
             case ActionType.RequestAdminGroup:
                 return new RequestAdminGroupCommand(engine, commandInput.actionerId, commandInput.requestId,
