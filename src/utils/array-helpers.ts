@@ -146,3 +146,12 @@ function groupByKeyArray<TItem extends Record<PropertyKey, unknown>, K extends k
     }
     return result;
 }
+
+export function removeSharedElements<T>(arr1: T[] | undefined, arr2: T[] | undefined) {
+    const resultArr1 = arr1?.filter(userId => !arr2?.includes(userId));
+    const resultArr2 = arr2?.filter(userId => !arr1?.includes(userId));
+    return {
+        arr1: resultArr1,
+        arr2: resultArr2,
+    }
+}

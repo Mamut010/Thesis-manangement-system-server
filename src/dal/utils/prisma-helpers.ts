@@ -15,3 +15,7 @@ export const wrapUniqueConstraint = async <T>(fn: () => Promise<T>, errMsg?: str
         }
     }
 }
+
+export function createUserWhereUniqueInputs(userIds?: string[]): Prisma.UserWhereUniqueInput[] | undefined {
+    return userIds?.map(userId => { return { userId } });
+}

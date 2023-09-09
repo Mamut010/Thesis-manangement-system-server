@@ -11,6 +11,8 @@ import { GroupDto } from "../../shared/dtos";
 import { anyChanges } from "../utils/crud-helpers";
 import { groupInclude } from "../constants/includes";
 import { isObjectEmptyOrAllUndefined } from "../../utils/object-helpers";
+import { removeSharedElements } from "../../utils/array-helpers";
+import { createUserWhereUniqueInputs } from "../utils/prisma-helpers";
 
 @injectable()
 export class GroupRepo implements GroupRepoInterface {
@@ -90,8 +92,9 @@ export class GroupRepo implements GroupRepoInterface {
             return this.plainTransformer.toGroup(record);
         }
 
-        const addedUserIds = updateRequest.addedUserIds?.filter(userId => !updateRequest.removedUserIds?.includes(userId));
-        const removedUserIds = updateRequest.removedUserIds?.filter(userId => !updateRequest.addedUserIds?.includes(userId));
+        const { arr1, arr2 } = removeSharedElements(updateRequest.addedUserIds, updateRequest.removedUserIds);
+        const addedUserIds = arr1;
+        const removedUserIds = arr2;
 
         record = await this.prisma.group.update({
             where: {
@@ -99,8 +102,8 @@ export class GroupRepo implements GroupRepoInterface {
             },
             data: {
                 users: {
-                    connect: this.makeUserWhereUniqueInput(addedUserIds),
-                    disconnect: this.makeUserWhereUniqueInput(removedUserIds),
+                    connect: createUserWhereUniqueInputs(addedUserIds),
+                    disconnect: createUserWhereUniqueInputs(removedUserIds),
                 }
             },
             include: groupInclude
@@ -121,7 +124,7 @@ export class GroupRepo implements GroupRepoInterface {
             },
             data: {
                 users: {
-                    set: this.makeUserWhereUniqueInput(userIds)
+                    set: createUserWhereUniqueInputs(userIds)
                 }
             },
             include: groupInclude,
@@ -145,9 +148,5 @@ export class GroupRepo implements GroupRepoInterface {
 
         const model = this.queryCreator.createQueryModel(Group);
         return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
-    }
-
-    private makeUserWhereUniqueInput(userIds?: string[]) {
-        return userIds?.map(userId => { return { userId } });
     }
 }

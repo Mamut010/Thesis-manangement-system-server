@@ -6,7 +6,7 @@ import { BaseRequestActionHandler } from "../bases/base-request-action-handler";
 import { injectable } from "inversify";
 
 @injectable()
-export class SimpleBaseRequestActionHandler extends BaseRequestActionHandler {
+export class SimpleRequestActionHandler extends BaseRequestActionHandler {
     constructor(prisma: PrismaClient, dataKey: string, private notificationService: NotificationServiceInterface) {
         super(prisma, dataKey);
     }

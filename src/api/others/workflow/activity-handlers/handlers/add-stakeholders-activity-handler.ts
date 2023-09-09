@@ -1,13 +1,15 @@
-import { PrismaClient } from "@prisma/client";
 import { ActivityHandlerInterface } from "../interfaces/activity-handler.interface";
 import { ActivityHandlerInput, ActivityHandlerOutput } from "../types";
 import { removeDuplicates } from "../../../../../utils/array-helpers";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
+import { RequestRepoInterface } from "../../../../../dal/interfaces";
+import { ERROR_MESSAGES } from "../../../../../contracts/constants/error-messages";
+import { NotFoundError } from "../../../../../contracts/errors/not-found.error";
 
 @injectable()
 export class AddStakeholdersActivityHandler implements ActivityHandlerInterface {
-    constructor(@inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient) {
+    constructor(@inject(INJECTION_TOKENS.RequestRepo) private requestRepo: RequestRepoInterface) {
 
     }
 
@@ -16,23 +18,17 @@ export class AddStakeholdersActivityHandler implements ActivityHandlerInterface 
             return { requestUsers: activityInput.requestUsers };
         }
 
-        await this.prisma.request.update({
-            where: {
-                id: requestId
-            },
-            data: {
-                stakeholders: {
-                    connect: {
-                        userId: activityInput.actionerId
-                    }
-                }
-            }
-        })
+        const request = await this.requestRepo.updateMembers(requestId, {
+            addedUserIds: [activityInput.actionerId]
+        });
+        if (!request) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.RequestNotFound);
+        }
 
         return {
             requestUsers: {
                 requesterId: activityInput.requestUsers.requesterId,
-                stakeholderIds: removeDuplicates(activityInput.requestUsers.stakeholderIds.concat(activityInput.actionerId)),
+                stakeholderIds: request?.stakeholderIds,
             }
         }
     }

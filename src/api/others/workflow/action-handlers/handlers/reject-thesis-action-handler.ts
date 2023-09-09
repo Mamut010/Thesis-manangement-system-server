@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { BaseActionHandler } from "../bases/base-action-handler";
-import { makeStoredDataValue } from "../../utils/request-data-helpers";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
