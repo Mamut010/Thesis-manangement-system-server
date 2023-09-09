@@ -315,13 +315,11 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
                 where.OR = where1.OR;
             }
         }
-        else {
-            if (where2.AND) {
-                where.AND = where2.AND;
-            }
-            else if (where2.OR) {
-                where.OR = where2.OR;
-            }
+        else if (where2.AND) {
+            where.AND = where2.AND;
+        }
+        else if (where2.OR) {
+            where.OR = where2.OR;
         }
 
         return where;
