@@ -14,4 +14,7 @@ export class GroupsQueryRequest extends BaseQueryRequest {
 
     @IsNullableStringFilterArray()
     descriptionFilter?: NullableStringFilter[];
+
+    @IsStringFilterArray()
+    memberIdFilter?: StringFilter[];
 }

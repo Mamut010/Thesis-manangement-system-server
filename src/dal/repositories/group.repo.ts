@@ -139,8 +139,12 @@ export class GroupRepo implements GroupRepoInterface {
     }
 
     private createPrismaQuery(queryRequest: AutoQueryCreatable) {
+        const fieldMap = {
+            memberId: 'users.some.userId',
+        };
+
         const model = this.queryCreator.createQueryModel(Group);
-        return this.queryCreator.createQueryObject(model, queryRequest);
+        return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
     }
 
     private makeUserWhereUniqueInput(userIds?: string[]) {

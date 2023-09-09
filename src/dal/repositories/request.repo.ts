@@ -6,7 +6,7 @@ import { RequestsQueryRequest } from "../../contracts/requests";
 import { RequestRepoInterface } from "../interfaces/request.repo.interface";
 import { RequestsQueryResponse } from "../../contracts/responses";
 import { RequestDto } from "../../shared/dtos";
-import { AutoQueryCreatable, PrismaQuery, PrismaQueryCreatorInterface } from "../../lib/query";
+import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
 import { Request } from "../../core/models";
 import { requestInclude } from "../constants/includes";
 
@@ -62,34 +62,20 @@ export class RequestRepo implements RequestRepoInterface {
         });
     }
 
-    private createPrismaQuery(queryRequest: RequestsQueryRequest): PrismaQuery {
+    private createPrismaQuery(queryRequest: AutoQueryCreatable) {
         const fieldMap = {
             state: 'state.name',
             stateDescription: 'state.description',
             stateType: 'state.stateType.name',
+            stakeholderId: 'stakeholders.some.userId',
         };
 
         const model = this.queryCreator.createQueryModel(Request);
-        const queryObject = this.queryCreator.createQueryObject(model, queryRequest, { 
+        return this.queryCreator.createQueryObject(model, queryRequest, { 
             fieldNameMap: {
                 creatorId: 'userId'
             },
             fieldMap 
         });
-
-        if (queryRequest.stakeholderIdFilter) {
-            const stakeholderIdQuery: object = {
-                OR: queryRequest.stakeholderIdFilter.map(filter => {
-                    return { userId: this.queryCreator.createFilteringObject(filter)! }
-                })
-            };
-
-            queryObject.where = {
-                ...queryObject.where,
-                ...stakeholderIdQuery,
-            }
-        }
-
-        return queryObject
     }
 }

@@ -4,12 +4,15 @@ import { TargetIdentifierInput } from "../types";
 import { Target } from "../../types/targets";
 import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
-import { PrismaClient } from "@prisma/client";
 import { getOriginalDataValue } from "../../utils/request-data-helpers";
+import { GroupRepoInterface } from "../../../../../dal/interfaces";
+import { GroupsQueryRequest } from "../../../../../contracts/requests";
+import { StringFilter } from "../../../../../lib/query";
+import { makeArray } from "../../../../../utils/array-helpers";
 
 @injectable()
 export class TargetIdentifier implements TargetIdentifierInterface {
-    constructor(@inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient) {
+    constructor(@inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface) {
 
     }
     
@@ -42,17 +45,19 @@ export class TargetIdentifier implements TargetIdentifierInterface {
             return undefined;
         }
 
-        const user = await this.prisma.group.findFirst({
-            where: {
-                id: dataRecord[STORED_REQUEST_DATA_KEYS.AdminGroup],
-                users: {
-                    some: {
-                        userId: actionerId
-                    }
-                }
-            }
-        });
-        if (user) {
+        const idFilter = new StringFilter();
+        idFilter.value = dataRecord[STORED_REQUEST_DATA_KEYS.AdminGroup];
+        idFilter.operator = 'equals';
+        const memberIdFilter = new StringFilter();
+        memberIdFilter.value = actionerId;
+        memberIdFilter.operator = 'equals';
+
+        const queryRequest = new GroupsQueryRequest();
+        queryRequest.idFilter = makeArray(idFilter);
+        queryRequest.memberIdFilter = makeArray(memberIdFilter);
+
+        const queryResponse = await this.groupRepo.query(queryRequest);
+        if (queryResponse.count > 0) {
             return Target.AdminGroup;
         }
 
