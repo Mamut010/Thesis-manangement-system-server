@@ -4,12 +4,13 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { PlainTransformerInterface } from "../utils/plain-transfomer";
 import { AutoQueryCreatable, PrismaQueryCreatorInterface } from "../../lib/query";
-import { GroupsQueryRequest, GroupCreateRequest, GroupUpdateRequest } from "../../contracts/requests";
+import { GroupsQueryRequest, GroupCreateRequest, GroupUpdateRequest, GroupMembersUpdateRequest } from "../../contracts/requests";
 import { GroupsQueryResponse } from "../../contracts/responses";
 import { Group } from "../../core/models";
 import { GroupDto } from "../../shared/dtos";
 import { anyChanges } from "../utils/crud-helpers";
 import { groupInclude } from "../constants/includes";
+import { isObjectEmptyOrAllUndefined } from "../../utils/object-helpers";
 
 @injectable()
 export class GroupRepo implements GroupRepoInterface {
@@ -80,6 +81,54 @@ export class GroupRepo implements GroupRepoInterface {
         return count > 0;
     }
 
+    async updateMembers(id: string, updateRequest: GroupMembersUpdateRequest): Promise<GroupDto | null> {
+        let record = await this.findRecordById(id);
+        if (!record) {
+            return null;
+        }
+        else if (isObjectEmptyOrAllUndefined(updateRequest)) {
+            return this.plainTransformer.toGroup(record);
+        }
+
+        const addedUserIds = updateRequest.addedUserIds?.filter(userId => !updateRequest.removedUserIds?.includes(userId));
+        const removedUserIds = updateRequest.removedUserIds?.filter(userId => !updateRequest.addedUserIds?.includes(userId));
+
+        record = await this.prisma.group.update({
+            where: {
+                id: id
+            },
+            data: {
+                users: {
+                    connect: this.makeUserWhereUniqueInput(addedUserIds),
+                    disconnect: this.makeUserWhereUniqueInput(removedUserIds),
+                }
+            },
+            include: groupInclude
+        });
+
+        return this.plainTransformer.toGroup(record);
+    }
+
+    async setMembers(id: string, userIds: string[]): Promise<GroupDto | null> {
+        let record = await this.findRecordById(id);
+        if (!record) {
+            return null;
+        }
+
+        record = await this.prisma.group.update({
+            where: {
+                id: id
+            },
+            data: {
+                users: {
+                    set: this.makeUserWhereUniqueInput(userIds)
+                }
+            },
+            include: groupInclude,
+        });
+        return this.plainTransformer.toGroup(record);
+    }
+
     private async findRecordById(id: string) {
         return await this.prisma.group.findUnique({
             where: {
@@ -92,5 +141,9 @@ export class GroupRepo implements GroupRepoInterface {
     private createPrismaQuery(queryRequest: AutoQueryCreatable) {
         const model = this.queryCreator.createQueryModel(Group);
         return this.queryCreator.createQueryObject(model, queryRequest);
+    }
+
+    private makeUserWhereUniqueInput(userIds?: string[]) {
+        return userIds?.map(userId => { return { userId } });
     }
 }

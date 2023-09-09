@@ -48,3 +48,4 @@ export * from './requests-query.request';
 export * from './group-create.request';
 export * from './group-update.request';
 export * from './groups-query.request';
+export * from './group-membes-update.request';
