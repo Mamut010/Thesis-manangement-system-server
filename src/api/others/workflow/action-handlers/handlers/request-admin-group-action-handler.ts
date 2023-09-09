@@ -9,46 +9,34 @@ import { getTitleAndContentFromData } from "../../utils/action-handler-helpers";
 import { removeDuplicates } from "../../../../../utils/array-helpers";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
+import { GroupRepoInterface } from "../../../../../dal/interfaces";
 
 @injectable()
 export class RequestAdminGroupActionHandler extends BaseRequestActionHandler {
     constructor(
         @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient, 
+        @inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface,
         @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface) {
         super(prisma, STORED_REQUEST_DATA_KEYS.AdminGroup);
     }
 
     protected async sendRequest(dataValue: string, actionInput: ActionHandlerInput): Promise<ActionHandlerOutput> {
-        const group = await this.prisma.group.findUnique({
-            where: {
-                id: dataValue
-            },
-            select: {
-                users: {
-                    select: {
-                        userId: true
-                    }
-                }
-            }
-        });
-
+        const group = await this.groupRepo.findOneById(dataValue);
         if (!group) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.GroupNotFound);
         }
 
-        const groupUserIds: string[] = [];
-        await Promise.all(group.users.map(user => {
-            groupUserIds.push(user.userId);
+        await Promise.all(group.memberIds.map(userId => {
             return this.notificationService.sendNotification({
                 senderId: actionInput.actionerId,
-                receiverId: user.userId,
+                receiverId: userId,
                 ...getTitleAndContentFromData(actionInput.data),
             })
         }));
 
         return {
             requestUsers: actionInput.requestUsers,
-            resolvedUserIds: removeDuplicates(groupUserIds.concat(actionInput.actionerId))
+            resolvedUserIds: removeDuplicates(group.memberIds.concat(actionInput.actionerId))
         };
     }
 }

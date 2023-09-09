@@ -7,13 +7,15 @@ import { ActivityHandlerInput } from "../types";
 import { BaseNotifyActivityHandler } from "../bases/base-notify-activity-handler";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
+import { GroupRepoInterface } from "../../../../../dal/interfaces";
 
 @injectable()
 export class NotifyActivityHandler extends BaseNotifyActivityHandler {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient, 
+        @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient,
+        @inject(INJECTION_TOKENS.GroupRepo) groupRepo: GroupRepoInterface,
         @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface) {
-        super(prisma);
+        super(prisma, groupRepo);
     }
 
     protected async execute(requestId: string, receiverIds: string[], activityInput: ActivityHandlerInput): Promise<void> {

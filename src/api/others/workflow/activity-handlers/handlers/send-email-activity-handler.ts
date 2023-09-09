@@ -5,17 +5,18 @@ import { MailServiceInterface } from "../../../../../shared/interfaces";
 import { DEFAULTS } from "../../constants/defaults";
 import { DEFAULT_FORMATS } from "../constants/default-formats";
 import { stringFormat } from "../../../../../utils/string-helpers";
-import { UserRepoInterface } from "../../../../../dal/interfaces";
+import { GroupRepoInterface, UserRepoInterface } from "../../../../../dal/interfaces";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
 @injectable()
 export class SendEmailActivityHandler extends BaseNotifyActivityHandler {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient, 
+        @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient,
+        @inject(INJECTION_TOKENS.GroupRepo) groupRepo: GroupRepoInterface,
         @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
         @inject(INJECTION_TOKENS.MailService) private emailService: MailServiceInterface) {
-        super(prisma);
+        super(prisma, groupRepo);
     }
 
     protected async execute(requestId: string, receiverIds: string[], activityInput: ActivityHandlerInput): Promise<void> {

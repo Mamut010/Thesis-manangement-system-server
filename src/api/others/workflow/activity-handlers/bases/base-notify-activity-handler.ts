@@ -7,10 +7,13 @@ import { getRequestDataStringValueByKey } from "../../utils/request-data-helpers
 import { RequestUsersDto } from "../../types/dtos";
 import { makeArray, uniqueFrom } from "../../../../../utils/array-helpers";
 import { injectable } from "inversify";
+import { GroupRepoInterface } from "../../../../../dal/interfaces";
 
 @injectable()
 export abstract class BaseNotifyActivityHandler implements ActivityHandlerInterface {
-    constructor(protected prisma: PrismaClient) {
+    constructor(
+        protected prisma: PrismaClient,
+        protected groupRepo: GroupRepoInterface) {
 
     }
 
@@ -45,24 +48,12 @@ export abstract class BaseNotifyActivityHandler implements ActivityHandlerInterf
         }
         else if (target === Target.AdminGroup) {
             const adminGroupId = await getRequestDataStringValueByKey(this.prisma, requestId, STORED_REQUEST_DATA_KEYS.AdminGroup);
-            if (adminGroupId) {
+            if (!adminGroupId) {
                 return [];
             }
 
-            const group = await this.prisma.group.findUnique({
-                where: {
-                    id: adminGroupId
-                },
-                select: {
-                    users: {
-                        select: {
-                            userId: true
-                        }
-                    }
-                }
-            });
-
-            return group?.users.map(user => user.userId) ?? [];
+            const group = await this.groupRepo.findOneById(adminGroupId);
+            return group?.memberIds ?? [];
         }
         else {
             const key = target === Target.Supervisor1
