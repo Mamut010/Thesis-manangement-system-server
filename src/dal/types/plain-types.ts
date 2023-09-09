@@ -14,6 +14,7 @@ import {
     Program, 
     RefreshToken, 
     Request, 
+    RequestData, 
     Role, 
     State, 
     Student, 
@@ -99,3 +100,5 @@ export type PlainRequest = Request & {
 export type PlainGroup = Group & {
     users: WithUserId[]
 }
+
+export type PlainRequestData = RequestData;

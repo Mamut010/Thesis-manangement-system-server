@@ -21,3 +21,4 @@ export * from './state.model';
 export * from './request.model';
 export * from './workflow-static-type.model';
 export * from './group.model';
+export * from './request-data.model';

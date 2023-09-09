@@ -64,6 +64,7 @@ import {
     ProcessRepoInterface, 
     ProgramRepoInterface, 
     RefreshTokenRepoInterface, 
+    RequestDataRepoInterface, 
     RequestRepoInterface, 
     RoleRepoInterface, 
     StudentRepoInterface, 
@@ -91,7 +92,8 @@ import {
     ProgramRepo,
     RequestRepo,
     ProcessRepo,
-    GroupRepo
+    GroupRepo,
+    RequestDataRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -308,6 +310,11 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
         .bind<GroupRepoInterface>(INJECTION_TOKENS.GroupRepo)
         .to(GroupRepo)
         .inRequestScope();
+
+    container
+        .bind<RequestDataRepoInterface>(INJECTION_TOKENS.RequestDataRepo)
+        .to(RequestDataRepo)
+        .inRequestScope();       
 }
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {

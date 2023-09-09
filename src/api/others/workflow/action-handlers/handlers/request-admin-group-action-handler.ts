@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { BaseRequestActionHandler } from "../bases/base-request-action-handler";
 import { NotificationServiceInterface } from "../../../../../shared/interfaces";
@@ -9,15 +8,15 @@ import { getTitleAndContentFromData } from "../../utils/action-handler-helpers";
 import { removeDuplicates } from "../../../../../utils/array-helpers";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
-import { GroupRepoInterface } from "../../../../../dal/interfaces";
+import { GroupRepoInterface, RequestDataRepoInterface } from "../../../../../dal/interfaces";
 
 @injectable()
 export class RequestAdminGroupActionHandler extends BaseRequestActionHandler {
     constructor(
-        @inject(INJECTION_TOKENS.Prisma) prisma: PrismaClient, 
+        @inject(INJECTION_TOKENS.RequestDataRepo) requestDataRepo: RequestDataRepoInterface,
         @inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface,
         @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface) {
-        super(prisma, STORED_REQUEST_DATA_KEYS.AdminGroup);
+        super(requestDataRepo, STORED_REQUEST_DATA_KEYS.AdminGroup);
     }
 
     protected async sendRequest(dataValue: string, actionInput: ActionHandlerInput): Promise<ActionHandlerOutput> {

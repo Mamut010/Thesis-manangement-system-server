@@ -36,6 +36,7 @@ const REPOSITORY_TOKENS = {
     ProcessRepo: Symbol.for('ProcessRepo'),
     RequestRepo: Symbol.for('RequestRepo'),
     GroupRepo: Symbol.for('GroupRepo'),
+    RequestDataRepo: Symbol.for('RequestDataRepo'),
 } as const;
 
 const AUTH_SERVICE_TOKENS = {

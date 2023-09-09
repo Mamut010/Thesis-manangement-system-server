@@ -19,3 +19,4 @@ export * from './oral-defense-assessment.dto';
 export * from './process.dto';
 export * from './request.dto';
 export * from './group.dto';
+export * from './request-data.dto';

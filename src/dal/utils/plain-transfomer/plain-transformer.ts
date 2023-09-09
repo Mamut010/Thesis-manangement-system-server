@@ -14,6 +14,7 @@ import {
     ProcessDto, 
     ProgramDto, 
     RefreshTokenDto, 
+    RequestDataDto, 
     RequestDto, 
     RoleDto, 
     StudentDto,
@@ -51,6 +52,7 @@ import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { CryptoServiceInterface } from "../../../shared/interfaces";
 import { env } from "../../../env";
 import { wrapDecryptionError } from "../../../utils/cipher-helpers";
+import { RequestData } from "@prisma/client";
 
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
@@ -194,6 +196,11 @@ export class PlainTransformer implements PlainTransformerInterface {
     public toGroup(plain: PlainGroup): GroupDto {
         const dto = plainToInstanceExactMatch(GroupDto, plain);
         dto.memberIds = plain.users.map(item => item.userId);
+        return dto;
+    }
+
+    public toRequestData(plain: RequestData): RequestDataDto {
+        const dto = plainToInstanceExactMatch(RequestDataDto, plain);
         return dto;
     }
 

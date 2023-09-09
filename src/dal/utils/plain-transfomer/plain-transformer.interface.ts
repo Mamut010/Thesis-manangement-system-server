@@ -13,6 +13,7 @@ import {
     ProcessDto, 
     ProgramDto, 
     RefreshTokenDto, 
+    RequestDataDto, 
     RequestDto, 
     RoleDto, 
     StudentDto,
@@ -36,6 +37,7 @@ import {
     PlainProgram, 
     PlainRefreshToken, 
     PlainRequest, 
+    PlainRequestData, 
     PlainRole, 
     PlainStudent,
     PlainThesis,
@@ -65,4 +67,5 @@ export interface PlainTransformerInterface {
     toProcess(plain: PlainProcess): ProcessDto;
     toRequest(plain: PlainRequest): RequestDto;
     toGroup(plain: PlainGroup): GroupDto;
+    toRequestData(plain: PlainRequestData): RequestDataDto;
 }

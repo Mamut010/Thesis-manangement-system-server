@@ -1,12 +1,14 @@
-import { PrismaClient } from "@prisma/client";
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { BaseActionHandler } from "./base-action-handler";
 import { makeStoredDataValue } from "../../utils/request-data-helpers";
 import { injectable } from "inversify";
+import { RequestDataRepoInterface } from "../../../../../dal/interfaces";
 
 @injectable()
 export abstract class BaseRequestActionHandler extends BaseActionHandler {
-    constructor(protected prisma: PrismaClient, protected dataKey: string) {
+    constructor(
+        protected requestDataRepo: RequestDataRepoInterface,
+        protected dataKey: string) {
         super();
     }
 
@@ -20,31 +22,9 @@ export abstract class BaseRequestActionHandler extends BaseActionHandler {
     protected abstract sendRequest(dataValue: string, actionInput: ActionHandlerInput): Promise<ActionHandlerOutput>;
 
     private async updateRequestData(requestId: string, dataValue: string, actionInput: ActionHandlerInput) {
-        const storedData = {
+        await this.requestDataRepo.upsert(requestId, {
             name: this.dataKey,
-            value: makeStoredDataValue(dataValue),
-        };
-
-        await this.prisma.request.update({
-            where: {
-                id: requestId,
-            },
-            data: {
-                data: {
-                    upsert: {
-                        where: {
-                            requestId_name: {
-                                requestId: requestId,
-                                name: storedData.name,
-                            }
-                        },
-                        create: storedData,
-                        update: {
-                            value: storedData.value
-                        }
-                    }
-                }
-            }
-        });
+            value: makeStoredDataValue(dataValue)}
+        );
     }
 }

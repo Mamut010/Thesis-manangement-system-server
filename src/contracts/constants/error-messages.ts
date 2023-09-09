@@ -47,6 +47,7 @@ export const ERROR_MESSAGES = {
         StudentAlreadyConnectedBachelorThesisEvaluation: 'The student already associates with a bachelor thesis evaluation',
         StudentAlreadyConnectedOralDefenseRegistration: 'The student already associates with an oral defense registration',
         StudentAlreadyConnectedOralDefenseAssessment: 'The student already associates with a oral defense assessment',
+        RequestAlreadyConnectedDataWithName: 'The request already associates with a data with the given name',
     },
     MethodNotAllowed: {
         RoleCreationNotAllowed: 'Role creation is not allowed',
