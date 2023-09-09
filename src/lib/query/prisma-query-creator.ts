@@ -10,7 +10,14 @@ import { ListFilter } from "./interfaces/list-filter";
 import { FilterActualOperator, FilterOperator } from "./types/filter-operator";
 import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, AutoWhereQueryCreatable, OrderByOptions } from "./types/query-creator-utility";
 import { ConcreteBinaryFilter, ConcreteListFilter } from "./types/concrete-filter";
-import { assignObjectByDotNotation, createObjectByDotNotation, defaultOrGiven, flipMap, isEnumerableObject, singleOrArrayOrUndefined } from "../../utils/object-helpers";
+import { 
+    assignObjectByDotNotation, 
+    createObjectByDotNotation, 
+    defaultOrGiven, 
+    flipMap, 
+    isEnumerableObject, 
+    singleOrArrayOrUndefined 
+} from "../../utils/object-helpers";
 import { trimPrefix, trimSuffix } from "../../utils/string-helpers";
 import { isBinaryFilter, isBinaryFilterArray, isListFilter, isListFilterArray } from "./utils/filter-helpers";
 import { 
@@ -25,7 +32,6 @@ import {
     WhereQueryObject 
 } from "./types/query-object";
 import { ClassConstructor, plainToInstance } from "class-transformer";
-import { InternalServerError } from "../../contracts/errors/internal-server.error";
 import { mergeRecordsOfArray } from "./utils/record-helpers";
 
 @injectable()
@@ -190,7 +196,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
 
         const options = defaultOrGiven(defaultOptions, creationOptions, { skipNestedEnumeration: true });
         if (!options.filterSuffix && !options.filterPrefix) {
-            throw new InternalServerError('Either a filter suffix or prefix must be specified for auto query creation process');
+            throw new Error('Either a filter suffix or prefix must be specified for auto query creation process');
         }
         
         const binaryAndListFilters = this.getFilterFieldsFromQuery(query, options);
