@@ -7,7 +7,7 @@ import { env } from '../../env';
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import { objectHasOwnProperty } from '../../utils/object-helpers';
-import { wrapDecryptionError } from '../../utils/cipher-helpers';
+import { wrapDecryptionError } from '../../utils/wrap';
 
 @Middleware({ type: 'before', priority: -1 })
 @injectable()

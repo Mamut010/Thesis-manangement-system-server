@@ -50,7 +50,7 @@ import { PlainTransformerInterface } from "./plain-transformer.interface";
 import { StateType } from "../../../api/others/workflow";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { CryptoServiceInterface } from "../../../shared/interfaces";
-import { wrapDecryptionError } from "../../../utils/cipher-helpers";
+import { wrapDecryptionError } from "../../../utils/wrap";
 import { RequestData } from "@prisma/client";
 
 @injectable()
