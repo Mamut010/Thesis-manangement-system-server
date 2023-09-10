@@ -1,6 +1,7 @@
 import { isDate } from "util/types";
 import { capitalize, trimPrefix, uncapitalize } from "./string-helpers";
 import { arrayIntersection, arrayUnion } from "./array-helpers";
+import { ValueOf } from "./types";
 
 /**
  * Make an object become immutable. This operation is irreversible.
@@ -530,4 +531,8 @@ export function jsonStringifyCircular(value: any, space?: string | number) {
     };
 
     return JSON.stringify(value, getCircularReplacer(), space);
+}
+
+export function valuesOf<T extends object>(obj: T): ValueOf<T>[] {
+    return Object.values(obj) as ValueOf<T>[];
 }

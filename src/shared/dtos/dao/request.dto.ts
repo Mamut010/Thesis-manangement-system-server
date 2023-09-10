@@ -1,6 +1,7 @@
 import { Expose } from "class-transformer";
 import { IsDate, IsDefined, IsIn, IsOptional, IsString } from "class-validator";
 import { StateType } from "../../../api/others/workflow";
+import { valuesOf } from "../../../utils/object-helpers";
 
 export class RequestDto {
     @Expose()
@@ -30,7 +31,7 @@ export class RequestDto {
 
     @Expose()
     @IsDefined()
-    @IsIn(Object.values(StateType))
+    @IsIn(valuesOf(StateType))
     stateType!: StateType;
 
     @Expose()

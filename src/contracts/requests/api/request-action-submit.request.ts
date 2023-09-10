@@ -1,6 +1,7 @@
 import { Expose } from "class-transformer";
 import { ActionType } from "../../../api/others/workflow";
 import { IsDefined, IsIn, IsObject, IsOptional, IsString } from "class-validator";
+import { valuesOf } from "../../../utils/object-helpers";
 
 export class RequestActionSubmitRequest {
     @Expose()
@@ -10,7 +11,7 @@ export class RequestActionSubmitRequest {
 
     @Expose()
     @IsDefined()
-    @IsIn(Object.values(ActionType))
+    @IsIn(valuesOf(ActionType))
     actionType!: ActionType;
 
     @Expose()

@@ -1,3 +1,4 @@
+import { valuesOf } from "../../utils/object-helpers";
 import { ValueOf } from "../../utils/types";
 
 export const Role = {
@@ -10,6 +11,6 @@ export const Role = {
 
 export type Role = ValueOf<typeof Role>;
 
-export const Roles = Object.values(Role);
+export const Roles = valuesOf(Role);
 
 export const LecturerRoles = [Role.Lecturer1_1, Role.Lecturer1_2, Role.Lecturer2] as const;
