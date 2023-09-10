@@ -4,15 +4,17 @@ import { TargetIdentifierInput } from "../types";
 import { Target } from "../../types/targets";
 import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
-import { getOriginalDataValue } from "../../utils/request-data-helpers";
 import { GroupRepoInterface } from "../../../../../dal/interfaces";
 import { GroupsQueryRequest } from "../../../../../contracts/requests";
 import { StringFilter } from "../../../../../lib/query";
 import { makeArray } from "../../../../../utils/array-helpers";
+import { WorkflowRequestDataProcessorInterface } from "../../request-data-processor";
 
 @injectable()
 export class TargetIdentifier implements TargetIdentifierInterface {
-    constructor(@inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface) {
+    constructor(
+        @inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface,
+        @inject(INJECTION_TOKENS.WorkflowRequestDataProcessor) private requestDataProcessor: WorkflowRequestDataProcessorInterface) {
 
     }
     
@@ -26,7 +28,7 @@ export class TargetIdentifier implements TargetIdentifierInterface {
         // Traverse the request data and make a record while also check for associated key
         const dataRecord: Record<string, string> = {};
         for(const { name, value } of targetIdentifierInput.requestData) {
-            const orgValue = getOriginalDataValue(value);
+            const orgValue = this.requestDataProcessor.retrieveOriginalValue(value);
             if (typeof orgValue !== 'string') {
                 continue;
             }

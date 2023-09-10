@@ -148,10 +148,11 @@ import {
     WorkflowCoreFactory, 
     WorkflowCoreFactoryInterface, 
     WorkflowEngine, 
-    WorkflowEngineInterface
+    WorkflowEngineInterface,
+    WorkflowRequestDataProcessor,
+    WorkflowRequestDataProcessorInterface
 } from '../api/others/workflow';
 import { WorkflowCommandInvoker } from '../api/others/workflow/command-invokers/invokers/workflow-command-invoker';
-
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
     configLogger(container, settings);
@@ -518,6 +519,11 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
     container
         .bind<WorkflowCommandInvokerInterface>(INJECTION_TOKENS.WorkflowCommandInvoker)
         .to(WorkflowCommandInvoker)
+        .inSingletonScope();
+
+    container
+        .bind<WorkflowRequestDataProcessorInterface>(INJECTION_TOKENS.WorkflowRequestDataProcessor)
+        .to(WorkflowRequestDataProcessor)
         .inSingletonScope();
 
     container.bind(TargetIdentifier).toSelf().inRequestScope();

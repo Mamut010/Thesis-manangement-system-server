@@ -99,6 +99,7 @@ const OTHERS_TOKENS = {
     WorkflowCoreFactory: Symbol.for('WorkflowCoreFactory'),
     WorkflowCommandFactory: Symbol.for('WorkflowCommandFactory'),
     WorkflowCommandInvoker: Symbol.for('WorkflowCommandInvoker'),
+    WorkflowRequestDataProcessor: Symbol.for('WorkflowRequestDataProcessor'),
 } as const;
 
 export const INJECTION_TOKENS = {

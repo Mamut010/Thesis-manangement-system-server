@@ -1,13 +1,14 @@
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { BaseActionHandler } from "./base-action-handler";
-import { makeStoredDataValue } from "../../utils/request-data-helpers";
 import { injectable } from "inversify";
 import { RequestDataRepoInterface } from "../../../../../dal/interfaces";
+import { WorkflowRequestDataProcessorInterface } from "../../request-data-processor";
 
 @injectable()
 export abstract class BaseRequestActionHandler extends BaseActionHandler {
     constructor(
         protected requestDataRepo: RequestDataRepoInterface,
+        protected requestDataProcessor: WorkflowRequestDataProcessorInterface,
         protected dataKey: string) {
         super();
     }
@@ -24,7 +25,7 @@ export abstract class BaseRequestActionHandler extends BaseActionHandler {
     private async updateRequestData(requestId: string, dataValue: string, actionInput: ActionHandlerInput) {
         await this.requestDataRepo.upsert(requestId, {
             name: this.dataKey,
-            value: makeStoredDataValue(dataValue)}
+            value: this.requestDataProcessor.makeStoredValue(dataValue)}
         );
     }
 }

@@ -7,12 +7,14 @@ import { RequestUsersDto } from "../../types/dtos";
 import { makeArray, uniqueFrom } from "../../../../../utils/array-helpers";
 import { injectable } from "inversify";
 import { GroupRepoInterface, RequestDataRepoInterface } from "../../../../../dal/interfaces";
+import { WorkflowRequestDataProcessorInterface } from "../../request-data-processor";
 
 @injectable()
 export abstract class BaseNotifyActivityHandler implements ActivityHandlerInterface {
     constructor(
         protected requestDataRepo: RequestDataRepoInterface,
-        protected groupRepo: GroupRepoInterface) {
+        protected groupRepo: GroupRepoInterface,
+        protected requestDataProcessor: WorkflowRequestDataProcessorInterface) {
 
     }
 
@@ -39,7 +41,7 @@ export abstract class BaseNotifyActivityHandler implements ActivityHandlerInterf
         : Promise<void | string | string[]>;
 
     protected async getRequestDataStringValueByKey(requestId: string, key: string) {
-        const value = await getRequestDataValueByKey(this.requestDataRepo, requestId, key);
+        const value = await getRequestDataValueByKey(this.requestDataRepo, this.requestDataProcessor, requestId, key);
         return typeof value === 'string' ? value : undefined;
     }
 

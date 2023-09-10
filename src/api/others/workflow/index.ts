@@ -6,6 +6,7 @@ export * from './command-factories';
 export * from './engines';
 export * from './target-identifiers';
 export * from './core-factories';
+export * from './request-data-processor';
 
 export * from './constants/request-data-keys';
 
