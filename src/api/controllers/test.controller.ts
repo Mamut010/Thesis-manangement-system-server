@@ -154,7 +154,7 @@ export class TestController {
             } 
         });
 
-        return students.map(item => this.plainTransformer.toStudentInfo(item));
+        return students.map(item => this.plainTransformer.toStudent(item));
     }
 
     @HttpCode(HTTP_CODES.Ok)
