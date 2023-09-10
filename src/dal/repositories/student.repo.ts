@@ -31,7 +31,7 @@ export class StudentRepo implements StudentRepoInterface {
         })
 
         const response = new StudentsQueryResponse();
-        response.content = students.map(item => this.plainTransformer.toStudentInfo(item));
+        response.content = students.map(item => this.plainTransformer.toStudent(item));
         response.count = count;
         return response;
     }
@@ -42,7 +42,7 @@ export class StudentRepo implements StudentRepoInterface {
             return null;
         }
 
-        return this.plainTransformer.toStudentInfo(record);
+        return this.plainTransformer.toStudent(record);
     }
 
     async update(id: string, updateRequest: StudentUpdateRequest): Promise<StudentDto | null> {
@@ -78,7 +78,7 @@ export class StudentRepo implements StudentRepoInterface {
             });
         }
 
-        return this.plainTransformer.toStudentInfo(record);
+        return this.plainTransformer.toStudent(record);
     }
 
     private async findRecordById(id: string) {

@@ -49,9 +49,9 @@ export interface PlainTransformerInterface {
     toUser(plain: PlainUser): UserDto;
     toRefreshToken(plain: PlainRefreshToken): RefreshTokenDto;
     toNotification(plain: PlainNotification): NotificationDto;
-    toAdminInfo(plain: PlainAdmin): AdminDto;
-    toStudentInfo(plain: PlainStudent): StudentDto;
-    toLecturerInfo(plain: PlainLecturer): LecturerDto;
+    toAdmin(plain: PlainAdmin): AdminDto;
+    toStudent(plain: PlainStudent): StudentDto;
+    toLecturer(plain: PlainLecturer): LecturerDto;
     toRole(plain: PlainRole): RoleDto;
     toThesis(plain: PlainThesis): ThesisDto;
     toProgram(plain: PlainProgram): ProgramDto;

@@ -50,7 +50,6 @@ import { PlainTransformerInterface } from "./plain-transformer.interface";
 import { StateType } from "../../../api/others/workflow";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { CryptoServiceInterface } from "../../../shared/interfaces";
-import { env } from "../../../env";
 import { wrapDecryptionError } from "../../../utils/cipher-helpers";
 import { RequestData } from "@prisma/client";
 
@@ -67,7 +66,7 @@ export class PlainTransformer implements PlainTransformerInterface {
         const dto = plainToInstanceExactMatch(UserDto, flattenObject(plain, {
             transformedProps: ['role']
         }));
-        dto.email = this.tryDecryptingEmail(dto.email);
+        this.tryDecryptingEmail(dto);
         return dto;
     }
 
@@ -81,32 +80,32 @@ export class PlainTransformer implements PlainTransformerInterface {
         return dto;
     }
 
-    public toAdminInfo(plain: PlainAdmin): AdminDto {
+    public toAdmin(plain: PlainAdmin): AdminDto {
         const dto = plainToInstanceExactMatch(AdminDto, flattenObject(plain));
 
-        dto.email = this.tryDecryptingEmail(dto.email);
+        this.tryDecryptingEmail(dto);
         dto.adminId = plain.userId;
 
         return dto;
     }
 
-    public toStudentInfo(plain: PlainStudent): StudentDto {
+    public toStudent(plain: PlainStudent): StudentDto {
         const dto = plainToInstanceExactMatch(StudentDto, flattenObject(plain,{
             transformedProps: ['program']
         }));
 
-        dto.email = this.tryDecryptingEmail(dto.email);
+        this.tryDecryptingEmail(dto);
         dto.studentId = plain.userId;
         
         return dto;
     }
 
-    public toLecturerInfo(plain: PlainLecturer): LecturerDto {
+    public toLecturer(plain: PlainLecturer): LecturerDto {
         const dto = plainToInstanceExactMatch(LecturerDto, flattenObject(plain, {
             transformedProps: ['role']
         }));
 
-        dto.email = this.tryDecryptingEmail(dto.email);
+        this.tryDecryptingEmail(dto);
         dto.lecturerId = plain.userId;
         dto.type = plain.user.role.name;
         
@@ -221,11 +220,16 @@ export class PlainTransformer implements PlainTransformerInterface {
         }
     }
 
-    private tryDecryptingEmail(email?: string | null) {
-        if (!email) {
-            return email;
-        }
+    private tryDecryptingEmail(dto: { email?: string | null }) {
+        return wrapDecryptionError(() => {
+            if (!dto.email) {
+                return;
+            }
 
-        return wrapDecryptionError(() => this.cryptoService.decryptAsString(email));
+            const decryptedEmail = this.cryptoService.decryptAsString(dto.email);
+            if (decryptedEmail) {
+                dto.email = decryptedEmail;
+            }
+        });
     }
 }

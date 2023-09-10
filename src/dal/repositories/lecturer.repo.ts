@@ -31,7 +31,7 @@ export class LecturerRepo implements LecturerRepoInterface {
         })
 
         const response = new LecturersQueryResponse();
-        response.content = lecturers.map(item => this.plainTransformer.toLecturerInfo(item));
+        response.content = lecturers.map(item => this.plainTransformer.toLecturer(item));
         response.count = count;
         return response;
     }
@@ -42,7 +42,7 @@ export class LecturerRepo implements LecturerRepoInterface {
             return null;
         }
 
-        return this.plainTransformer.toLecturerInfo(record);
+        return this.plainTransformer.toLecturer(record);
     }
 
     async update(id: string, updateRequest: LecturerUpdateRequest): Promise<LecturerDto | null> {
@@ -77,7 +77,7 @@ export class LecturerRepo implements LecturerRepoInterface {
             });
         }
 
-        return this.plainTransformer.toLecturerInfo(record);
+        return this.plainTransformer.toLecturer(record);
     }
 
     private async findRecordById(id: string) {

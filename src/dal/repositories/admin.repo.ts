@@ -23,7 +23,7 @@ export class AdminRepo implements AdminRepoInterface {
             return null;
         }
 
-        return this.plainTransformer.toAdminInfo(record);
+        return this.plainTransformer.toAdmin(record);
     }
 
     async update(id: string, updateRequest: AdminUpdateRequest): Promise<AdminDto | null> {
@@ -50,7 +50,7 @@ export class AdminRepo implements AdminRepoInterface {
             });
         }
 
-        return this.plainTransformer.toAdminInfo(record);
+        return this.plainTransformer.toAdmin(record);
     }
 
     private async findRecordById(id: string) {
