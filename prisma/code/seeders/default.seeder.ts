@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Seeder } from "./seeder";
 import { ROLES, ROLE_IDS } from "../roles";
 import { hash } from "../utils/crypto";
+import { email } from "../utils/credentials";
 
 export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
     await prisma.$transaction([
@@ -18,35 +19,35 @@ function seedData(prisma: PrismaClient) {
         prisma.user.createMany({
             data: [
                 { 
-                    userId: '1', username: 'admin1', password: hash('1234'), 
+                    userId: '1', username: 'admin1', password: hash('1234'), email: email('1'),
                     roleId: ROLE_IDS['Admin'],
                 },
                 { 
-                    userId: '2', username: 'admin2', password: hash('1234'), 
+                    userId: '2', username: 'admin2', password: hash('1234'), email: email('2'),
                     roleId: ROLE_IDS['Admin'],
                 },
                 { 
-                    userId: '101', username: 'lecturer1.1', password: hash('lecturer1.1'), 
+                    userId: '101', username: 'lecturer1.1', password: hash('lecturer1.1'), email: email('101'),
                     roleId: ROLE_IDS['Lecturer1.1'],
                 },
                 { 
-                    userId: '401', username: 'lecturer1.2', password: hash('lecturer1.2'), 
+                    userId: '401', username: 'lecturer1.2', password: hash('lecturer1.2'), email: email('401'),
                     roleId: ROLE_IDS['Lecturer1.2'],
                 },
                 { 
-                    userId: '701', username: 'lecturer2', password: hash('lecturer2'), 
+                    userId: '701', username: 'lecturer2', password: hash('lecturer2'), email: email('701'),
                     roleId: ROLE_IDS['Lecturer2'],
                 },
                 { 
-                    userId: '10001', username: 'student1', password: hash('student1'), 
+                    userId: '10001', username: 'student1', password: hash('student1'), email: email('10001'),
                     roleId: ROLE_IDS['Student'],
                 },
                 { 
-                    userId: '10002', username: 'student2', password: hash('student2'), 
+                    userId: '10002', username: 'student2', password: hash('student2'), email: email('10002'),
                     roleId: ROLE_IDS['Student'],
                 },
                 { 
-                    userId: '10003', username: 'student3', password: hash('student3'), 
+                    userId: '10003', username: 'student3', password: hash('student3'), email: email('10003'),
                     roleId: ROLE_IDS['Student'],
                 },
             ]
