@@ -22,20 +22,24 @@ export class CredentialsDecryptionMiddleware implements ExpressMiddlewareInterfa
             return next();
         }
 
-        return wrapDecryptionError(() => {
-            // Username, password and email should be encrypted
-            const decrypted = this.decrypt(body, ['username', 'password', 'email']);
-            const entries = Object.entries(decrypted) as [keyof typeof decrypted, string][];
-            entries.forEach(([field, decryptedValue]) => {
-                // Ignore email as we want to store encrypted email in the database
-                if (field !== 'email') {
-                    body[field] = decryptedValue;
-                }
-            })
+        try {
+            wrapDecryptionError(() => {
+                // Username, password and email should be encrypted
+                const decrypted = this.decrypt(body, ['username', 'password', 'email']);
+                const entries = Object.entries(decrypted) as [keyof typeof decrypted, string][];
+                entries.forEach(([field, decryptedValue]) => {
+                    // Ignore email as we want to store encrypted email in the database
+                    if (field !== 'email') {
+                        body[field] = decryptedValue;
+                    }
+                });
+            });
+        }
+        catch {
+            return next(new BadRequestError(ERROR_MESSAGES.Auth.InvalidCredentials));
+        }
 
-            return next();
-        }, 
-            () => next(new BadRequestError(ERROR_MESSAGES.Auth.InvalidCredentials)));
+        return next();
     }
 
     private decrypt<K extends string>(input: Record<string, unknown>, fields: K[]) {
