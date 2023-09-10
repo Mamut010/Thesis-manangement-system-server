@@ -23,7 +23,7 @@ export class UserInfoCreateRequest {
     roleName!: string;
 
     @Expose()
-    @IsOptional()
+    @IsDefined()
     @IsString()
-    email?: string;
+    email!: string;
 }
