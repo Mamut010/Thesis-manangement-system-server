@@ -100,7 +100,13 @@ export class RequestService implements RequestServiceInterface {
 
         this.workflowCommandInvoker.setCommand(command);
 
-        const requestState = await this.workflowCommandInvoker.invoke();
+        let requestState = await this.workflowCommandInvoker.invoke();
+        // If failed to advance the request
+        if (requestState === null) {
+            // Fetch the current request's state to get the currently available action types
+            requestState = await this.workflowEngine.getRequestState(actionerId, request.requestId);
+        }
+
         const record = await this.ensureRecordExists(request.requestId);
 
         return this.makeRequestStateInfo(record, requestState);
