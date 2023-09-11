@@ -1,7 +1,7 @@
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { ActionHandlerInterface } from "../interfaces/action-handler.interface";
-import { UnexpectedError } from "../../../../../contracts/errors/unexpected.error";
 import { injectable } from "inversify";
+import { BadRequestError } from "../../../../../contracts/errors/bad-request.error";
 
 @injectable()
 export abstract class BaseActionHandler implements ActionHandlerInterface {
@@ -10,7 +10,7 @@ export abstract class BaseActionHandler implements ActionHandlerInterface {
     protected getInputDataStringValue(actionInput: ActionHandlerInput, key: string): string {
         const value = actionInput.data?.[key];
         if (typeof value !== 'string') {
-            throw new UnexpectedError(`Missing property ${key} of type string in actionInput's data`);
+            throw new BadRequestError(`Missing property ${key} of type string in actionInput's data`);
         }
         return value;
     }

@@ -12,7 +12,7 @@ export class SimpleRequestActionHandler extends BaseRequestActionHandler {
         requestDataRepo: RequestDataRepoInterface,
         requestDataProcessor: WorkflowRequestDataProcessorInterface,
         dataKey: string, 
-        private notificationService: NotificationServiceInterface) {
+        protected notificationService: NotificationServiceInterface) {
         super(requestDataRepo, requestDataProcessor, dataKey);
     }
 

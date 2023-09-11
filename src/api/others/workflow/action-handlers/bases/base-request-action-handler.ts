@@ -25,7 +25,7 @@ export abstract class BaseRequestActionHandler extends BaseActionHandler {
     private async updateRequestData(requestId: string, dataValue: string, actionInput: ActionHandlerInput) {
         await this.requestDataRepo.upsert(requestId, {
             name: this.dataKey,
-            value: this.requestDataProcessor.makeStoredValue(dataValue)}
-        );
+            value: this.requestDataProcessor.makeStoredValue(dataValue)
+        });
     }
 }
