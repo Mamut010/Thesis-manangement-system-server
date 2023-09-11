@@ -19,7 +19,7 @@ import {
 } from "../others/workflow";
 import { RequestActionSubmitRequest } from "../../contracts/requests/api/request-action-submit.request";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
-import { StringFilter } from "../../lib/query";
+import { OrderBy, StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
 
 @injectable()
@@ -73,8 +73,14 @@ export class RequestService implements RequestServiceInterface {
         creatorIdFilter.value = creatorId;
         creatorIdFilter.operator = 'equals';
 
+        // Sortest from latest to oldest
+        const orderByUpdatedAt = new OrderBy();
+        orderByUpdatedAt.field = 'updatedAt';
+        orderByUpdatedAt.dir = 'desc';
+
         const query = new RequestsQueryRequest();
         query.creatorIdFilter = makeArray(creatorIdFilter);
+        query.orderBy = makeArray(orderByUpdatedAt);
 
         const { content } = await this.requestRepo.query(query);
         const requestStates = await this.workflowEngine.getRequestStates(creatorId, content.map(item => item.id));
