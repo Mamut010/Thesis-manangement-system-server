@@ -48,6 +48,7 @@ export class NotificationService implements NotificationServiceInterface {
     }
 
     async sendNotification(notificationInfo: NotificationInfo): Promise<NotificationDto> {
+        notificationInfo.receiverId = makeArray(notificationInfo.receiverId);
         await this.ensureUsersExists(...notificationInfo.receiverId, notificationInfo.senderId);
 
         const createRequest = new NotificationCreateRequest();
