@@ -9,8 +9,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
-    Patch, 
-    Post,
+    Patch,
     QueryParams,
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -22,7 +21,6 @@ import { UserInfoUpdateRequest, UserInfosQueryRequest } from '../../contracts/re
 import { AuthorizedUser } from '../../core/auth-checkers';
 import { UserInfoDto } from '../../shared/dtos';
 import { UserInfosQueryResponse } from "../../contracts/responses";
-import { UserInfoCreateRequest } from "../../contracts/requests/auth/user-info-create.request";
 
 @JsonController('users')
 @Authorized(Role.Admin)
@@ -47,14 +45,6 @@ export class UserController {
     @ResponseSchema(UserInfoDto)
     getUser(@CurrentUser() currentUser: AuthorizedUser, @Param('id') id: string) {
         return this.userService.getUser(currentUser, id);
-    }
-
-    @HttpCode(HTTP_CODES.Created)
-    @Post()
-    @ResponseSchema(UserInfoDto)
-    public createUser(@CurrentUser() currentUser: AuthorizedUser, 
-        @Body({ required: true }) createRequest: UserInfoCreateRequest) {
-        return this.userService.createUser(currentUser, createRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
