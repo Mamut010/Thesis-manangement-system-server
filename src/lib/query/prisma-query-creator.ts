@@ -8,8 +8,13 @@ import { getActualOperatorFromNotOperator, isFilterActualOperator, isNullableOpe
 import { Pagination } from "./pagination";
 import { ListFilter } from "./interfaces/list-filter";
 import { FilterActualOperator, FilterOperator } from "./types/filter-operator";
-import { AutoQueryCreatable, AutoQueryCreationOptions, AutoQueryModel, AutoWhereQueryCreatable, OrderByOptions } from "./types/query-creator-utility";
-import { ConcreteBinaryFilter, ConcreteListFilter } from "./types/concrete-filter";
+import { 
+    AutoQueryCreatable, 
+    AutoQueryCreationOptions, 
+    AutoQueryModel, 
+    AutoWhereQueryCreatable, 
+    OrderByOptions
+} from "./types/query-creator-utility";
 import { 
     assignObjectByDotNotation, 
     createObjectByDotNotation, 
@@ -33,6 +38,7 @@ import {
 } from "./types/query-object";
 import { ClassConstructor, plainToInstance } from "class-transformer";
 import { mergeRecordsOfArray } from "./utils/record-helpers";
+import { BinaryAndListFilters, WhereObjectCreationConfig, WhereWithFieldMap } from "./types/utility-types";
 
 @injectable()
 export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
@@ -47,7 +53,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
     createQueryObject(model: AutoQueryModel, query: AutoQueryCreatable, creationOptions?: AutoQueryCreationOptions)
         : PrismaQuery {
         const { where, fieldMap } = this.createWhereWithFieldMap(model, query, creationOptions);
-        const orderBy = this.createOrderByObject(query.orderBy, { fieldMap, ignoreUnmapped: true });
+        const orderBy = this.createOrderByObject(query.orderBy, { fieldMap, skipUnmapped: true });
         const { skip, take } = this.createPaginationObject(query.pagination);
 
         return {
@@ -104,7 +110,8 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
         const defaultOptions: OrderByOptions = {
             fieldMap: undefined,
-            ignoreUnmapped: false,
+            skippedFields: undefined,
+            skipUnmapped: false,
         }
         const options = defaultOrGiven(defaultOptions, orderByOptions, { skipNestedEnumeration: true });
 
@@ -388,16 +395,19 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
     }
 
     private constructOrderBySingle(orderBy: OrderBy, orderByOptions: OrderByOptions): OrderByQueryObject | undefined {
+        if (orderByOptions.skippedFields?.includes(orderBy.field)) {
+            return undefined;
+        }
+        
         const actualLocation = orderByOptions.fieldMap?.[orderBy.field];
-        if (!orderByOptions.ignoreUnmapped) {
+        if (!actualLocation) {
             const simpleOrderBy = {
                 [orderBy.field]: orderBy.dir
             };
-            return actualLocation ? createObjectByDotNotation(actualLocation, orderBy.dir) : simpleOrderBy;
+            return !orderByOptions.skipUnmapped ? simpleOrderBy : undefined;
         }
-        else {
-            return actualLocation ? createObjectByDotNotation(actualLocation, orderBy.dir) : undefined;
-        }
+
+        return createObjectByDotNotation(actualLocation, orderBy.dir);
     }
 
     private handleNullableOperator<T>(filter: (T extends { operator: unknown } ? T : never))
@@ -408,20 +418,4 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             };
         }
     }
-}
-
-// Utility interfaces
-interface BinaryAndListFilters {
-    binaryFilters: Record<string, ConcreteBinaryFilter[]>,
-    listFilters: Record<string, ConcreteListFilter[]>
-}
-
-interface WhereWithFieldMap {
-    where: WhereQueryObject,
-    fieldMap: Record<string, string>,
-}
-
-interface WhereObjectCreationConfig {
-    fieldNamePrefix: string,
-    reversedFieldNameMap?: Record<string, string>,
 }

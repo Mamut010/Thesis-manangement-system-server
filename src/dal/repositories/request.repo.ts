@@ -126,7 +126,8 @@ export class RequestRepo implements RequestRepoInterface {
             fieldNameMap: {
                 creatorId: 'userId'
             },
-            fieldMap 
+            fieldMap,
+            orderBySkippedFields: ['stakeholderId'],
         });
     }
 }

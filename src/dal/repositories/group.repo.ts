@@ -147,6 +147,9 @@ export class GroupRepo implements GroupRepoInterface {
         };
 
         const model = this.queryCreator.createQueryModel(Group);
-        return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
+        return this.queryCreator.createQueryObject(model, queryRequest, { 
+            fieldMap,
+            orderBySkippedFields: ['memberId']
+        });
     }
 }

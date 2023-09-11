@@ -39,8 +39,20 @@ export interface AutoQueryCreationOptions {
 
     /**
      * User supplied field map to override the auto generated field map while analyzing the structure of the model.
+     * 
+     * Takes the form of: 
+     *
+     *      <#Field name>: <Dot notation of actual value>
+     * 
+     * @Note This may cause run time error if the dot notations are supplied incorrectly as the QueryCreator does not check
+     * for usage correctness.
      */
-    fieldMap?: Record<string, string>
+    fieldMap?: Record<string, string>,
+
+    /**
+     * Fields that are passed directly as the <skippedFields> option used when creating OrderByQueryObject
+     */
+    orderBySkippedFields?: string[],
 }
 
 export type AutoQueryModel = {
@@ -49,5 +61,6 @@ export type AutoQueryModel = {
 
 export interface OrderByOptions {
     fieldMap?: Record<string, string>,
-    ignoreUnmapped?: boolean,
+    skippedFields?: string[],
+    skipUnmapped?: boolean,
 }
