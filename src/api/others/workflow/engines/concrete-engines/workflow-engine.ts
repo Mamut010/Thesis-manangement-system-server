@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 import { PrismaClient } from "@prisma/client";
 import { ActionType } from "../../types/action-type";
-import { groupBy, singleOrDefault, singleOrThrow } from "../../../../../utils/array-helpers";
+import { groupBy, singleOrDefault, singleOrThrow, sortByKeyArray } from "../../../../../utils/array-helpers";
 import { UnexpectedError } from "../../../../../contracts/errors/unexpected.error";
 import { ERROR_MESSAGES } from "../../../../../contracts/constants/error-messages";
 import { StateType } from "../../types/state-type";
@@ -65,8 +65,6 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                     actionTypes: request.requestActions
                         .filter(item => item.action.actionTargets.some(actionTarget => actionTarget.target.name === target))
                         .map(item => item.action.actionType.name as ActionType),
-                    createdAt: request.createdAt,
-                    updatedAt: request.updatedAt,
             }
         });
     }
@@ -156,7 +154,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
     }
 
     private async getRequests(requestIds: string[]) {
-        const request = await this.prisma.request.findMany({
+        const requests = await this.prisma.request.findMany({
             where: {
                 id: {
                     in: requestIds
@@ -165,8 +163,6 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             select: {
                 id: true,
                 processId: true,
-                createdAt: true,
-                updatedAt: true,
                 data: {
                     select: {
                         name: true,
@@ -229,7 +225,8 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                 }
             }
         });
-        return request;
+
+        return sortByKeyArray(requests, requestIds, (request) => request.id);
     }
 
     private async getRequestsAndTarget(requestIds: string[], actionerId: string) {

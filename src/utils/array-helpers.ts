@@ -155,3 +155,31 @@ export function removeSharedElements<T>(arr1: T[] | undefined, arr2: T[] | undef
         arr2: resultArr2,
     }
 }
+
+export function sortByKeyArray<T, U>(src: T[], keyArray: U[], keySelector: (item: T) => U, inplace: boolean = true): T[] {
+    const positionDict = keyArray.reduce((dict, item, index) => {
+        dict.set(item, index);
+        return dict;
+    }, new Map<U, number>());
+
+    const arr = inplace ? src : [...src];
+    
+    return arr.sort((a, b) => {
+        const aPos = positionDict.get(keySelector(a)); 
+        const bPos = positionDict.get(keySelector(b));
+        const hasAPos = typeof aPos !== 'undefined';
+        const hasBPos = typeof bPos !== 'undefined';
+
+        if (!hasAPos && !hasBPos) {
+            return 0;
+        }
+        else if (!hasAPos) {
+            return 1
+        }
+        else if (!hasBPos) {
+            return -1
+        }
+
+        return aPos - bPos;
+    });
+}

@@ -22,25 +22,18 @@ export class StudentService extends StudentMaintainerService implements StudentS
         @inject(INJECTION_TOKENS.StudentRepo) studentRepo: StudentRepoInterface,
         @inject(INJECTION_TOKENS.AssetsService) assetsService: AssetsServiceInterface,
         @inject(INJECTION_TOKENS.MapperService) mapper: MapperServiceInterface,
-        @inject(INJECTION_TOKENS.ProcessRepo) private processRepo: ProcessRepo,
         @inject(INJECTION_TOKENS.WorkflowEngine) private workflowEngine: WorkflowEngineInterface,
         @inject(INJECTION_TOKENS.RequestService) private requestService: RequestServiceInterface) {
         super(studentRepo, assetsService, mapper);
     }
 
     async createThesisRequest(userId: string, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto> {
-        const process = await getThesisProcessOrThrow(this.processRepo);
-
-        const requestState = await this.workflowEngine.createRequest({
-            processId: process.id,
-            userId: userId,
-            title: request.title
-        });
-        if (!requestState) {
+        const createdRequest = await this.requestService.createThesisRequest(userId, request.title);
+        if (!createdRequest) {
             throw new UnexpectedError(ERROR_MESSAGES.Unexpected.RequestCreationFailed);
         }
 
-        return this.mapper.map(RequestStateInfoDto, requestState);
+        return createdRequest;
     }
 
     async getCreatedRequestState(userId: string): Promise<RequestStateInfoDto> {

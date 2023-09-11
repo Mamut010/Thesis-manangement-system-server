@@ -3,7 +3,7 @@ import { RequestInfosQueryRequest, RequestsQueryRequest } from "../../contracts/
 import { RequestInfosQueryResponse } from "../../contracts/responses";
 import { RequestServiceInterface } from "../interfaces/request.service.interface";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { RequestRepoInterface } from "../../dal/interfaces";
+import { ProcessRepoInterface, RequestRepoInterface } from "../../dal/interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
@@ -21,11 +21,13 @@ import { RequestActionSubmitRequest } from "../../contracts/requests/api/request
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { OrderBy, StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
+import { getThesisProcessOrThrow } from "../../utils/process-helpers";
 
 @injectable()
 export class RequestService implements RequestServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.RequestRepo) private requestRepo: RequestRepoInterface,
+        @inject(INJECTION_TOKENS.ProcessRepo) private processRepo: ProcessRepoInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface,
         @inject(INJECTION_TOKENS.WorkflowEngine) private workflowEngine: WorkflowEngineInterface,
         @inject(INJECTION_TOKENS.WorkflowCommandFactory) private workflowCommandFactory: WorkflowCommandFactoryInterface,
@@ -68,26 +70,6 @@ export class RequestService implements RequestServiceInterface {
         await this.requestRepo.delete(id);
     }
 
-    async getCreatedRequestStates(creatorId: string): Promise<RequestStateInfoDto[]> {
-        const creatorIdFilter = new StringFilter();
-        creatorIdFilter.value = creatorId;
-        creatorIdFilter.operator = 'equals';
-
-        // Sortest from latest to oldest
-        const orderByUpdatedAt = new OrderBy();
-        orderByUpdatedAt.field = 'updatedAt';
-        orderByUpdatedAt.dir = 'desc';
-
-        const query = new RequestsQueryRequest();
-        query.creatorIdFilter = makeArray(creatorIdFilter);
-        query.orderBy = makeArray(orderByUpdatedAt);
-
-        const { content } = await this.requestRepo.query(query);
-        const requestStates = await this.workflowEngine.getRequestStates(creatorId, content.map(item => item.id));
-
-        return content.map((request, index) => this.makeRequestStateInfo(request, requestStates[index]));
-    }
-
     async submitAction(actionerId: string, request: RequestActionSubmitRequest): Promise<RequestStateInfoDto | undefined> {
         const command = this.workflowCommandFactory.createCommand(this.workflowEngine, request.actionType, {
             actionerId: actionerId,
@@ -110,6 +92,43 @@ export class RequestService implements RequestServiceInterface {
         const record = await this.ensureRecordExists(request.requestId);
 
         return this.makeRequestStateInfo(record, requestState);
+    }
+
+    async createThesisRequest(userId: string, requestTitle: string): Promise<RequestStateInfoDto | undefined> {
+        const process = await getThesisProcessOrThrow(this.processRepo);
+
+        const requestState = await this.workflowEngine.createRequest({
+            processId: process.id,
+            userId: userId,
+            title: requestTitle
+        });
+        if (!requestState) {
+            return undefined;
+        }
+
+        const record = await this.ensureRecordExists(requestState.id);
+
+        return this.makeRequestStateInfo(record, requestState);
+    }
+
+    async getCreatedRequestStates(creatorId: string): Promise<RequestStateInfoDto[]> {
+        const creatorIdFilter = new StringFilter();
+        creatorIdFilter.value = creatorId;
+        creatorIdFilter.operator = 'equals';
+
+        // Sortest from latest to oldest
+        const orderByUpdatedAt = new OrderBy();
+        orderByUpdatedAt.field = 'updatedAt';
+        orderByUpdatedAt.dir = 'desc';
+
+        const query = new RequestsQueryRequest();
+        query.creatorIdFilter = makeArray(creatorIdFilter);
+        query.orderBy = makeArray(orderByUpdatedAt);
+
+        const { content } = await this.requestRepo.query(query);
+        const requestStates = await this.workflowEngine.getRequestStates(creatorId, content.map(item => item.id));
+
+        return content.map((request, index) => this.makeRequestStateInfo(request, requestStates[index]));
     }
 
     private async ensureRecordExists(id: string) {
