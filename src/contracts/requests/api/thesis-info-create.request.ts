@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class ThesisUpdateRequest {
+export class ThesisInfoCreateRequest {
     @Expose()
     @IsOptional()
     @IsNumber()
@@ -11,11 +11,6 @@ export class ThesisUpdateRequest {
     @IsOptional()
     @IsNumber()
     fieldId?: number;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    creatorId?: string;
 
     @Expose()
     @IsOptional()

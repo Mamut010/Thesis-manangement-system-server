@@ -1,3 +1,4 @@
+export * from './thesis-infos-query.response';
 export * from './bachelor-thesis-assessment-infos-query.response';
 export * from './bachelor-thesis-evaluation-infos-query.response';
 export * from './bachelor-thesis-registration-infos-query.response';

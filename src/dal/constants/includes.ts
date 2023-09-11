@@ -41,6 +41,7 @@ export const bachelorThesisEvaluationInclude = {
 } as const;
 
 export const thesisInclude = {
+    creator: true,
     topic: true,
     field: true,
 } as const;

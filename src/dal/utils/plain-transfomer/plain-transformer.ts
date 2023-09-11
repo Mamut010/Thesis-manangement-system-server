@@ -117,6 +117,9 @@ export class PlainTransformer implements PlainTransformerInterface {
             transformedProps: ['topic', 'field'],
         }));
 
+        dto.creatorId = plain.creator.userId;
+        dto.creatorTitle = plain.creator.title;
+
         return dto;
     }
 

@@ -90,8 +90,8 @@ function seedData(prisma: PrismaClient) {
         }),
         prisma.thesis.createMany({
             data: [
-                { topicId: 1, fieldId: 1, title: 'Thesis Management System: BE' },
-                { topicId: 1, fieldId: 1, title: 'Thesis Management System: FE' },
+                { topicId: 1, fieldId: 1, creatorId: '101', title: 'Thesis Management System: BE' },
+                { topicId: 1, fieldId: 1, creatorId: '401', title: 'Thesis Management System: FE' },
             ]
         }),
         prisma.location.createMany({

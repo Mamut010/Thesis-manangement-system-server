@@ -16,7 +16,7 @@ import {
 } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
-export class ThesesQueryRequest extends BaseQueryRequest {
+export class ThesisInfosQueryRequest extends BaseQueryRequest {
     @IsNumberFilterArray()
     thesisIdFilter?: NumberFilter[];
 

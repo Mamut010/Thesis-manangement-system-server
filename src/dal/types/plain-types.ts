@@ -58,6 +58,7 @@ export type PlainTopic = Topic;
 export type PlainLocation = Location;
 
 export type PlainThesis = Thesis & {
+    creator: Lecturer,
     topic: Topic | null,
     field: Field | null,
 }

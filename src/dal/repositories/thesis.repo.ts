@@ -93,6 +93,7 @@ export class ThesisRepo implements ThesisRepoInterface {
         const fieldMap = {
             topicTitle: 'topic.title',
             fieldTitle: 'field.title',
+            creatorTitle: 'creator.title',
         };
         const model = this.queryCreator.createQueryModel(Thesis);
         return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap, fieldNameMap: {

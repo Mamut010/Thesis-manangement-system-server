@@ -1,6 +1,7 @@
 import { 
     Authorized, 
     Body, 
+    CurrentUser, 
     Delete, 
     Get, 
     HttpCode, 
@@ -17,12 +18,13 @@ import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { ThesisServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
-import { ThesisDto } from "../../../shared/dtos";
-import { ThesesQueryResponse } from "../../../contracts/responses";
-import { ThesesQueryRequest, ThesisCreateRequest, ThesisUpdateRequest } from "../../../contracts/requests";
+import { ThesisInfoDto } from "../../../shared/dtos";
+import { ThesisInfosQueryResponse } from "../../../contracts/responses";
+import { ThesisInfosQueryRequest, ThesisInfoCreateRequest, ThesisInfoUpdateRequest } from "../../../contracts/requests";
+import { AuthorizedUser } from "../../../core/auth-checkers";
 
 @JsonController('theses')
-//@Authorized()
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
@@ -35,35 +37,35 @@ export class ThesisController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get()
-    @ResponseSchema(ThesesQueryResponse)
-    getTheses(@QueryParams() queryRequest: ThesesQueryRequest) {
+    @ResponseSchema(ThesisInfosQueryResponse)
+    getTheses(@QueryParams() queryRequest: ThesisInfosQueryRequest) {
         return this.thesisService.getTheses(queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/:id')
-    @ResponseSchema(ThesisDto)
+    @ResponseSchema(ThesisInfoDto)
     getThesis(@Param('id') id: number) {
         return this.thesisService.getThesis(id);
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized([Role.Admin, Role.Lecturer1_1])
+    @Authorized([Role.Lecturer1_1, Role.Lecturer1_2])
     @Post()
-    @ResponseSchema(ThesisDto)
-    createThesis(@Body({ required: true }) createRequest: ThesisCreateRequest) {
-        return this.thesisService.createThesis(createRequest);
+    @ResponseSchema(ThesisInfoDto)
+    createThesis(@CurrentUser() user: AuthorizedUser, @Body({ required: true }) createRequest: ThesisInfoCreateRequest) {
+        return this.thesisService.createThesis(user.userId, createRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2, Role.Lecturer2])
+    @Authorized([Role.Lecturer1_1, Role.Lecturer1_2])
     @Patch('/:id')
-    @ResponseSchema(ThesisDto)
-    updateThesis(@Param('id') id: number, @Body({ required: true }) updateRequest: ThesisUpdateRequest) {
+    @ResponseSchema(ThesisInfoDto)
+    updateThesis(@Param('id') id: number, @Body({ required: true }) updateRequest: ThesisInfoUpdateRequest) {
         return this.thesisService.updateThesis(id, updateRequest);
     }
 
-    //@Authorized(Role.Admin)
+    @Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteThesis(@Param('id') id: number) {

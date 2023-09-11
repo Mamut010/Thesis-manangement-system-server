@@ -1,11 +1,11 @@
-import { ThesisCreateRequest, ThesesQueryRequest, ThesisUpdateRequest } from "../../../contracts/requests";
-import { ThesesQueryResponse } from "../../../contracts/responses";
-import { ThesisDto } from "../../../shared/dtos";
+import { ThesisInfosQueryRequest, ThesisInfoUpdateRequest, ThesisInfoCreateRequest } from "../../../contracts/requests";
+import { ThesisInfosQueryResponse } from "../../../contracts/responses";
+import { ThesisInfoDto } from "../../../shared/dtos";
 
 export interface ThesisServiceInterface {
-    getTheses(queryRequest: ThesesQueryRequest): Promise<ThesesQueryResponse>;
-    getThesis(id: number): Promise<ThesisDto>;
-    createThesis(createRequest: ThesisCreateRequest): Promise<ThesisDto>;
-    updateThesis(id: number, updateRequest: ThesisUpdateRequest): Promise<ThesisDto>;
+    getTheses(queryRequest: ThesisInfosQueryRequest): Promise<ThesisInfosQueryResponse>;
+    getThesis(id: number): Promise<ThesisInfoDto>;
+    createThesis(userId: string, createRequest: ThesisInfoCreateRequest): Promise<ThesisInfoDto>;
+    updateThesis(id: number, updateRequest: ThesisInfoUpdateRequest): Promise<ThesisInfoDto>;
     deleteThesis(id: number): Promise<void>;
 }

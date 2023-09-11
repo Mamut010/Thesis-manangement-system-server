@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class ThesisDto {
+export class ThesisInfoDto {
     @Expose()
     @IsDefined()
     @IsNumber()
@@ -81,14 +81,4 @@ export class ThesisDto {
     @IsOptional()
     @IsString()
     templateFiles!: string | null;
-
-    @Expose()
-    @IsDefined()
-    @IsDate()
-    createdAt!: Date;
-
-    @Expose()
-    @IsDefined()
-    @IsDate()
-    updatedAt!: Date;
 }

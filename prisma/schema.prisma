@@ -92,6 +92,7 @@ model Lecturer {
     signature                        String?                         @db.VarChar(255)
 
     user                             User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    createdTheses                    Thesis[]
     sup1BachelorThesisRegistrations  BachelorThesisRegistration[]    @relation("supervisor1BachelorThesisRegistrations")
     sup2BachelorThesisRegistrations  BachelorThesisRegistration[]    @relation("supervisor2BachelorThesisRegistrations")
     supBachelorThesisEvaluations     BachelorThesisEvaluation[]      @relation("supervisorBachelorThesisEvaluations")
@@ -156,6 +157,7 @@ model Thesis {
     id                            Int                                 @id @default(autoincrement())
     topicId                       Int?
     fieldId                       Int?
+    creatorId                     String
     title                         String?                             @db.VarChar(255)       
     slot                          Int                                 @default(0)
     slotLimit                     Int?                                @default(2)
@@ -170,6 +172,7 @@ model Thesis {
 
     topic                         Topic?                              @relation(fields: [topicId], references: [id])
     field                         Field?                              @relation(fields: [fieldId], references: [id])
+    creator                       Lecturer                            @relation(fields: [creatorId], references: [userId])
     bachelorThesisRegistrations   BachelorThesisRegistration[]
     oralDefenseRegistrations      OralDefenseRegistration[]
     bachelorThesisAssessments     BachelorThesisAssessment[]
