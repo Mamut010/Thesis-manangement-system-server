@@ -71,6 +71,7 @@ export const ERROR_MESSAGES = {
         InputInvalid: 'Invalid input',
     },
     BadRequest: {
+        DataMustBeNumber: 'Passed data must be number',
         MissingNecessaryRequestData: 'Missing necessary request data',
     }
 } as const;

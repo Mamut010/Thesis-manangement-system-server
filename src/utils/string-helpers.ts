@@ -60,3 +60,15 @@ export function stringFormat(format: string, ...args: unknown[]) {
             : match;
     });
 }
+
+/**
+ * Check if a string is a numeric string.
+ * @param maybeNumber The string to check.
+ * @returns True if it is a numeric string. False otherwise.
+ * 
+ * @author C Snover
+ * @see https://stackoverflow.com/questions/23437476/in-typescript-how-to-check-if-a-string-is-numeric
+ */
+export function isNumericString(maybeNumber: string) {
+    return !isNaN(+maybeNumber);
+}
