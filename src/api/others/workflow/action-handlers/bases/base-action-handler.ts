@@ -1,9 +1,7 @@
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { ActionHandlerInterface } from "../interfaces/action-handler.interface";
-import { injectable } from "inversify";
 import { BadRequestError } from "../../../../../contracts/errors/bad-request.error";
 
-@injectable()
 export abstract class BaseActionHandler implements ActionHandlerInterface {
     abstract handle(requestId: string, actionInput: ActionHandlerInput): ActionHandlerOutput | Promise<ActionHandlerOutput>;
 

@@ -1,10 +1,8 @@
 import { ActionHandlerInput, ActionHandlerOutput } from "../types";
 import { BaseActionHandler } from "./base-action-handler";
-import { injectable } from "inversify";
 import { RequestDataRepoInterface } from "../../../../../dal/interfaces";
 import { WorkflowRequestDataProcessorInterface } from "../../request-data-processor";
 
-@injectable()
 export abstract class BaseRequestActionHandler extends BaseActionHandler {
     constructor(
         protected requestDataRepo: RequestDataRepoInterface,

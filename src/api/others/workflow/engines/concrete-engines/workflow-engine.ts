@@ -334,7 +334,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         });
 
         return async () => {
-            const transition = await prisma.transition.findUniqueOrThrow({
+            const transition = await this.prisma.transition.findUniqueOrThrow({
                 where: {
                     id: fulfilledTransitionId,
                 },

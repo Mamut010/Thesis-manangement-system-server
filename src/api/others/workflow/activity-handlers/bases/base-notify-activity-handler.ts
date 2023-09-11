@@ -5,11 +5,9 @@ import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { getRequestDataValueByKey } from "../../utils/request-data-helpers";
 import { RequestUsersDto } from "../../types/dtos";
 import { makeArray, uniqueFrom } from "../../../../../utils/array-helpers";
-import { injectable } from "inversify";
 import { GroupRepoInterface, RequestDataRepoInterface } from "../../../../../dal/interfaces";
 import { WorkflowRequestDataProcessorInterface } from "../../request-data-processor";
 
-@injectable()
 export abstract class BaseNotifyActivityHandler implements ActivityHandlerInterface {
     constructor(
         protected requestDataRepo: RequestDataRepoInterface,

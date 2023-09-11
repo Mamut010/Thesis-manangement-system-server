@@ -16,7 +16,7 @@ import { InformAdminGroupActionHandler } from "../../action-handlers/handlers/in
 import { InformRequesterActionHandler } from "../../action-handlers/handlers/inform-requester-action-handler";
 import { RejectActionHandler } from "../../action-handlers/handlers/reject-action-handler";
 import { RequestAdminGroupActionHandler } from "../../action-handlers/handlers/request-admin-group-action-handler";
-import { RequestSupervisor1ActionHandler } from "../../action-handlers/handlers/request-supervisor1-action-type";
+import { RequestSupervisor1ActionHandler } from "../../action-handlers/handlers/request-supervisor1-action-handler";
 import { RequestSupervisor2ActionHandler } from "../../action-handlers/handlers/request-supervisor2-action-handler";
 import { SimpleActionHandler } from "../../action-handlers/handlers/simple-action-handler";
 import { NotifyActivityHandler } from "../../activity-handlers/handlers/notify-activity-handler";
