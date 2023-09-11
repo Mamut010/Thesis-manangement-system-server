@@ -15,4 +15,6 @@ export interface RequestStateDto {
     state: string,
     stateDescription: string | null,
     actionTypes: ActionType[],
+    createdAt: Date,
+    updatedAt: Date,
 }

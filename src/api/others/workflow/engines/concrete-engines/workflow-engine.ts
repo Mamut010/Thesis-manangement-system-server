@@ -65,6 +65,8 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                     actionTypes: request.requestActions
                         .filter(item => item.action.actionTargets.some(actionTarget => actionTarget.target.name === target))
                         .map(item => item.action.actionType.name as ActionType),
+                    createdAt: request.createdAt,
+                    updatedAt: request.updatedAt,
             }
         });
     }
@@ -163,6 +165,8 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             select: {
                 id: true,
                 processId: true,
+                createdAt: true,
+                updatedAt: true,
                 data: {
                     select: {
                         name: true,
