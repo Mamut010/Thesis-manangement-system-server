@@ -1,4 +1,4 @@
-import { IsDefined, IsOptional, IsString } from "class-validator";
+import { IsDefined, IsString } from "class-validator";
 import { Expose, } from "class-transformer";
 
 export class UserInfoCreateRequest {

@@ -220,12 +220,8 @@ export class PlainTransformer implements PlainTransformerInterface {
         }
     }
 
-    private tryDecryptingEmail(dto: { email?: string | null }) {
+    private tryDecryptingEmail(dto: { email: string }) {
         return wrapDecryptionError(() => {
-            if (!dto.email) {
-                return;
-            }
-
             const decryptedEmail = this.cryptoService.decryptAsString(dto.email);
             if (decryptedEmail) {
                 dto.email = decryptedEmail;

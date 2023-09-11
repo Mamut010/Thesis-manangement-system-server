@@ -23,9 +23,9 @@ export class UserCreateRequest {
     roleName!: string;
 
     @Expose()
-    @IsOptional()
+    @IsDefined()
     @IsString()
-    email?: string;
+    email!: string;
 
     @Expose()
     @IsOptional()

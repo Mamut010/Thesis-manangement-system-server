@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class LecturerInfoDto {
     @Expose()
@@ -23,9 +23,9 @@ export class LecturerInfoDto {
     type!: string;
 
     @Expose()
-    @IsOptional()
-    @IsEmail()
-    email?: string | null;
+    @IsDefined()
+    @IsString()
+    email!: string;
 
     @Expose()
     @IsDefined()

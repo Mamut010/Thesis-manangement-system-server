@@ -28,9 +28,9 @@ export class LecturerDto {
     type!: string;
 
     @Expose()
-    @IsOptional()
-    @IsEmail()
-    email?: string | null;
+    @IsDefined()
+    @IsString()
+    email!: string;
 
     @Expose()
     @IsDefined()

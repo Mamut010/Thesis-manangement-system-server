@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsEmail, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class LecturerUpdateRequest {
     @Expose()
@@ -19,7 +19,7 @@ export class LecturerUpdateRequest {
 
     @Expose()
     @IsOptional()
-    @IsEmail()
+    @IsString()
     email?: string;
 
     @Expose()
