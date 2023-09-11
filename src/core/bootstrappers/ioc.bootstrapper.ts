@@ -8,7 +8,12 @@ import { BOOTSTRAP_SETTINGS_KEY } from '../../settings/bootstrap-settings';
 let container: Container;
 
 export const bootstrapIoc: Bootstrapper = (settings?: BootstrapSettingInterface) => {
-    container = new Container();
+    container = new Container({
+        /**
+         * @see https://github.com/inversify/InversifyJS/issues/522
+         */
+        skipBaseClassChecks: true 
+    });
     const inversifyAdapter = new InversifyAdapter(container);
     useContainer(inversifyAdapter);
 
