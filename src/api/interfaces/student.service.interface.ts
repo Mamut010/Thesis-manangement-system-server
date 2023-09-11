@@ -4,5 +4,5 @@ import { StudentMaintainerServiceInterface } from "./student-maintainer.service.
 
 export interface StudentServiceInterface extends StudentMaintainerServiceInterface {
     createThesisRequest(userId: string, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto>;
-    getCreatedRequestState(userId: string): Promise<RequestStateInfoDto>;
+    getLatestCreatedRequestState(userId: string): Promise<RequestStateInfoDto>;
 }

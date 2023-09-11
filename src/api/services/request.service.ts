@@ -36,14 +36,18 @@ export class RequestService implements RequestServiceInterface {
     }
 
     async getRequests(user: AuthorizedUser, queryRequest: RequestInfosQueryRequest): Promise<RequestInfosQueryResponse> {
-        // Only show relavant requests
-        const stakeholderIdFilter = new StringFilter();
-        stakeholderIdFilter.value = user.userId;
-        stakeholderIdFilter.operator = 'equals';
+        // Only show relavant requests if user is not Admin
+        let stakeholderIdFilter: StringFilter[] | undefined = undefined;
+        if (!isAdmin(user)) {
+            const filter = new StringFilter();
+            filter.value = user.userId;
+            filter.operator = 'equals';
+            stakeholderIdFilter = makeArray(filter);
+        }
 
         const response = await this.requestRepo.query({
             ...queryRequest,
-            stakeholderIdFilter: makeArray(stakeholderIdFilter)
+            stakeholderIdFilter
         });
         return {
             content: this.mapper.map(RequestInfoDto, response.content),
@@ -111,7 +115,7 @@ export class RequestService implements RequestServiceInterface {
         return this.makeRequestStateInfo(record, requestState);
     }
 
-    async getCreatedRequestStates(creatorId: string): Promise<RequestStateInfoDto[]> {
+    async getCreatedRequestStatesLatestToOldest(creatorId: string): Promise<RequestStateInfoDto[]> {
         const creatorIdFilter = new StringFilter();
         creatorIdFilter.value = creatorId;
         creatorIdFilter.operator = 'equals';

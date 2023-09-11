@@ -12,5 +12,5 @@ export interface RequestServiceInterface {
     submitAction(actionerId: string, request: RequestActionSubmitRequest): Promise<RequestStateInfoDto | undefined>;
 
     createThesisRequest(userId: string, requestTitle: string): Promise<RequestStateInfoDto | undefined>;
-    getCreatedRequestStates(creatorId: string): Promise<RequestStateInfoDto[]>;
+    getCreatedRequestStatesLatestToOldest(creatorId: string): Promise<RequestStateInfoDto[]>;
 }

@@ -105,9 +105,9 @@ export class StudentController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/created-request')
+    @Get('/latest-created-request')
     @ResponseSchema(RequestStateInfoDto)
-    getCreatedRequestState(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getCreatedRequestState(user.userId);
+    getLatestCreatedRequestState(@CurrentUser() user: AuthorizedUser) {
+        return this.studentService.getLatestCreatedRequestState(user.userId);
     }
 }

@@ -36,8 +36,8 @@ export class StudentService extends StudentMaintainerService implements StudentS
         return createdRequest;
     }
 
-    async getCreatedRequestState(userId: string): Promise<RequestStateInfoDto> {
-        const createdRequests = await this.requestService.getCreatedRequestStates(userId);
+    async getLatestCreatedRequestState(userId: string): Promise<RequestStateInfoDto> {
+        const createdRequests = await this.requestService.getCreatedRequestStatesLatestToOldest(userId);
         const createdRequest = firstOrDefault(createdRequests);
         if (!createdRequest) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.RequestNotFound);
