@@ -334,16 +334,16 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             }
         });
 
-        return async () => {
-            const transition = await this.prisma.transition.findUniqueOrThrow({
-                where: {
-                    id: fulfilledTransitionId,
-                },
-                select: {
-                    activities: WorkflowEngine.ACTIVITIES_SELECT,
-                }
-            });
+        const transition = await prisma.transition.findUniqueOrThrow({
+            where: {
+                id: fulfilledTransitionId,
+            },
+            select: {
+                activities: WorkflowEngine.ACTIVITIES_SELECT,
+            }
+        });
 
+        return async () => {
             const activityTypeWithTargets = this.constructActivityTypeWithTargetsFromActivities(transition.activities);
             await this.handleActivity(activityTypeWithTargets, requestId, activityInput);
         };
