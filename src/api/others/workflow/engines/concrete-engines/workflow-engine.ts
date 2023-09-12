@@ -126,13 +126,16 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             stakeholderIds: request.stakeholders.map(stakeholder => stakeholder.userId),
         };
         const actionOutput = await this.handleAction(actionType, requestId, { requestUsers, actionerId, target, data });
+        if (!actionOutput) {
+            return null;
+        }
 
         const validRequestActionIds = validRequestActions.map(item => item.id);
         const activityEffects = await this.updateRequestActions(requestId, request.requestActions, validRequestActionIds, {
             requestUsers,
             actionerId,
             target,
-            actionResolvedUserIds: actionOutput?.resolvedUserIds,
+            actionResolvedUserIds: actionOutput.resolvedUserIds,
         });
         await this.handleActivityEffects(activityEffects);
 
