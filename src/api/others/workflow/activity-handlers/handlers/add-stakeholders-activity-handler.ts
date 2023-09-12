@@ -1,6 +1,5 @@
 import { ActivityHandlerInterface } from "../interfaces/activity-handler.interface";
 import { ActivityHandlerInput, ActivityHandlerOutput } from "../types";
-import { removeDuplicates } from "../../../../../utils/array-helpers";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 import { RequestRepoInterface } from "../../../../../dal/interfaces";

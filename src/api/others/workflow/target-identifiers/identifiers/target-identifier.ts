@@ -24,26 +24,26 @@ export class TargetIdentifier implements TargetIdentifierInterface {
             return Target.Requester;
         }
 
-        let associatedKey: string | undefined = undefined;
-        // Traverse the request data and make a record while also check for associated key
+        // Traverse the request data and make a record while also check if actionerId is stored in the request data
         const dataRecord: Record<string, string> = {};
         for(const { name, value } of targetIdentifierInput.requestData) {
             const orgValue = this.requestDataProcessor.retrieveOriginalValue(value);
+
+            // As all user Ids and group Id are strings, any non-string stored value is skipped
             if (typeof orgValue !== 'string') {
                 continue;
             }
+            // If the actionerId is stored as a request data's value 
             else if (orgValue === actionerId) {
-                associatedKey = name;
-                break;
+                // Identify the Target based on the request data's key
+                return this.getTargetFromDataKey(name);
             }
 
+            // Store the record for later use
             dataRecord[name] = orgValue;
         }
 
-        if (associatedKey) {
-            return this.getTargetFromAssociatedKey(associatedKey);
-        }
-        else if (!(STORED_REQUEST_DATA_KEYS.AdminGroup in dataRecord)) {
+        if (!(STORED_REQUEST_DATA_KEYS.AdminGroup in dataRecord)) {
             return undefined;
         }
 
@@ -66,8 +66,8 @@ export class TargetIdentifier implements TargetIdentifierInterface {
         return undefined;
     }
 
-    private getTargetFromAssociatedKey(associatedKey: string) {
-        switch(associatedKey) {
+    private getTargetFromDataKey(dataKey: string) {
+        switch(dataKey) {
             case STORED_REQUEST_DATA_KEYS.Supervisor1: return Target.Supervisor1;
             case STORED_REQUEST_DATA_KEYS.Supervisor2: return Target.Supervisor2;
             default: return undefined;

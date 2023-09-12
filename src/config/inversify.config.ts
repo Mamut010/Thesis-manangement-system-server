@@ -138,9 +138,7 @@ import {
     RequestAdminGroupActionHandler, 
     RequestSupervisor1ActionHandler, 
     RequestSupervisor2ActionHandler, 
-    SendEmailActivityHandler, 
-    SimpleActionHandler, 
-    SimpleActivityHandler, 
+    SendEmailActivityHandler,
     TargetIdentifier, 
     WorkflowCommandFactory, 
     WorkflowCommandFactoryInterface, 
@@ -539,11 +537,9 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
     container.bind(RequestAdminGroupActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor1ActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor2ActionHandler).toSelf().inRequestScope();
-    container.bind(SimpleActionHandler).toSelf().inRequestScope();
     container.bind(NotifyActivityHandler).toSelf().inRequestScope();
     container.bind(SendEmailActivityHandler).toSelf().inRequestScope();
     container.bind(AddStakeholdersActivityHandler).toSelf().inRequestScope();
-    container.bind(SimpleActivityHandler).toSelf().inRequestScope();
 
     container
         .bind<WorkflowCoreFactoryInterface>(INJECTION_TOKENS.WorkflowCoreFactory)

@@ -1,7 +1,10 @@
-import { PlainRequestData } from "../types/plains";
+export type NameValuePair = {
+    name: string,
+    value: string,
+}
 
 export type TargetIdentifierInput = {
     creatorId: string,
     stakeholderIds: string[],
-    requestData: PlainRequestData[],
+    requestData: NameValuePair[],
 }

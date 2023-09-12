@@ -15,9 +15,4 @@ export type PlainRequestAction = Record<string, unknown> & {
         nextStateId: string,
     },
     action: PlainAction,
-}
-
-export type PlainRequestData = {
-    name: string,
-    value: string,
 };

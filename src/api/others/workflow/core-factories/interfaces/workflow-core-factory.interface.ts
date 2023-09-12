@@ -6,6 +6,6 @@ import { ActivityType } from "../../types/activity-type";
 
 export interface WorkflowCoreFactoryInterface {
     createTargetIdentifier(): TargetIdentifierInterface;
-    createActionHandler(actionType: ActionType): ActionHandlerInterface;
-    createActivityHandler(activityType: ActivityType): ActivityHandlerInterface;
+    createActionHandler(actionType: ActionType): ActionHandlerInterface | undefined;
+    createActivityHandler(activityType: ActivityType): ActivityHandlerInterface | undefined;
 }

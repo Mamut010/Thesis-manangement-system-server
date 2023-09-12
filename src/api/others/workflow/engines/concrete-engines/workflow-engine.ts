@@ -132,7 +132,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             requestUsers,
             actionerId,
             target,
-            actionResolvedUserIds: actionOutput.resolvedUserIds,
+            actionResolvedUserIds: actionOutput?.resolvedUserIds,
         });
         await this.handleActivityEffects(activityEffects);
 
@@ -401,14 +401,14 @@ export class WorkflowEngine implements WorkflowEngineInterface {
 
     private async handleAction(actionType: ActionType, requestId: string, actionInput: ActionHandlerInput) {
         const handler = this.coreFactory.createActionHandler(actionType);
-        return await handler.handle(requestId, actionInput);
+        return await handler?.handle(requestId, actionInput);
     }
 
     private async handleActivity(activityTypeWithTargets: ActivityTypeWithTarget[], requestId: string, 
         activityInput: ActivityHandlerInputWithoutTarget) {
         return await Promise.all(activityTypeWithTargets.map(async (item) => {
             const handler = this.coreFactory.createActivityHandler(item.activityType);
-            return await handler.handle(requestId, { ...activityInput, target: item.target });
+            return await handler?.handle(requestId, { ...activityInput, target: item.target });
         }));
     }
 

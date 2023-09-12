@@ -18,11 +18,9 @@ import { RejectActionHandler } from "../../action-handlers/handlers/reject-actio
 import { RequestAdminGroupActionHandler } from "../../action-handlers/handlers/request-admin-group-action-handler";
 import { RequestSupervisor1ActionHandler } from "../../action-handlers/handlers/request-supervisor1-action-handler";
 import { RequestSupervisor2ActionHandler } from "../../action-handlers/handlers/request-supervisor2-action-handler";
-import { SimpleActionHandler } from "../../action-handlers/handlers/simple-action-handler";
 import { NotifyActivityHandler } from "../../activity-handlers/handlers/notify-activity-handler";
 import { SendEmailActivityHandler } from "../../activity-handlers/handlers/send-email-activity-handler";
 import { AddStakeholdersActivityHandler } from "../../activity-handlers/handlers/add-stakeholders-activity-handler";
-import { SimpleActivityHandler } from "../../activity-handlers/handlers/simple-activity-handler";
 import { RejectThesisActionHandler } from "../../action-handlers/handlers/reject-thesis-action-handler";
 
 @injectable()
@@ -35,7 +33,7 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
         return this.container.get(TargetIdentifier);
     }
     
-    createActionHandler(actionType: ActionType): ActionHandlerInterface {
+    createActionHandler(actionType: ActionType): ActionHandlerInterface | undefined {
         switch(actionType) {
             case ActionType.ApplyThesis: return this.container.get(ApplyThesisActionHandler);
             case ActionType.Approve: return this.container.get(ApproveActionHandler);
@@ -49,16 +47,14 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
             case ActionType.RequestAdminGroup: return this.container.get(RequestAdminGroupActionHandler);
             case ActionType.RequestSupervisor1: return this.container.get(RequestSupervisor1ActionHandler);
             case ActionType.RequestSupervisor2: return this.container.get(RequestSupervisor2ActionHandler);
-            default: return this.container.get(SimpleActionHandler);
         }
     }
 
-    createActivityHandler(activityType: ActivityType): ActivityHandlerInterface {
+    createActivityHandler(activityType: ActivityType): ActivityHandlerInterface | undefined {
         switch(activityType) {
             case ActivityType.Notify: return this.container.get(NotifyActivityHandler);
             case ActivityType.SendEmail: return this.container.get(SendEmailActivityHandler);
             case ActivityType.AddStakeholders: return this.container.get(AddStakeholdersActivityHandler);
-            default: return this.container.get(SimpleActivityHandler);
         }
     }
 }
