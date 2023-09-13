@@ -1,4 +1,5 @@
 import { ActionType } from "./action-type";
+import { WorkflowInputData } from "./utility-types";
 
 export interface RequestCreateOptions {
     processId: string,
@@ -10,5 +11,5 @@ export interface RequestAdvanceOptions {
     actionerId: string,
     requestId: string,
     actionType: ActionType,
-    data?: Record<string, unknown>,
+    data?: WorkflowInputData,
 }

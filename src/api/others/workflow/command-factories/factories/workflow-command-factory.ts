@@ -67,23 +67,28 @@ export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
 
             case ActionType.RequestAdminGroup:
                 return new RequestAdminGroupCommand(engine, commandInput.actionerId, commandInput.requestId,
-                    this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.AdminGroup));
+                    this.getOptionalStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.AdminGroup));
 
             case ActionType.RequestSupervisor1:
                 return new RequestSupervisor1Command(engine, commandInput.actionerId, commandInput.requestId,
-                    this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor1));
+                    this.getOptionalStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor1));
 
             case ActionType.RequestSupervisor2:
                 return new RequestSupervisor2Command(engine, commandInput.actionerId, commandInput.requestId,
-                    this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor2));
+                    this.getOptionalStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor2));
         }
     }
 
     private getStringValueFromData(data: Record<string, unknown> | undefined, key: string) {
-        const value = data?.[key];
+        const value = this.getOptionalStringValueFromData(data, key);
         if (typeof value !== 'string') {
-            throw new BadRequestError(ERROR_MESSAGES.BadRequest.MissingNecessaryRequestData);
+            throw new BadRequestError(ERROR_MESSAGES.BadRequest.MissingRequiredRequestData + `: ${key}`);
         }
         return value;
+    }
+
+    private getOptionalStringValueFromData(data: Record<string, unknown> | undefined, key: string) {
+        const value = data?.[key];
+        return typeof value === 'string' ? value : undefined;
     }
 }

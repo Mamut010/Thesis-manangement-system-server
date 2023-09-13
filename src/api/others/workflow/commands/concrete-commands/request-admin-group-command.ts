@@ -9,7 +9,7 @@ export class RequestAdminGroupCommand implements RequestAdvanceCommandInterface 
         private engine: WorkflowEngineInterface, 
         private actionerId: string, 
         private requestId: string,
-        private adminGroupId: string) {
+        private adminGroupId?: string) {
         
     }
 

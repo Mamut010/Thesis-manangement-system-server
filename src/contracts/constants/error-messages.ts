@@ -72,6 +72,6 @@ export const ERROR_MESSAGES = {
     },
     BadRequest: {
         DataMustBeNumber: 'Passed data must be number',
-        MissingNecessaryRequestData: 'Missing necessary request data',
+        MissingRequiredRequestData: 'Missing required request data',
     }
 } as const;

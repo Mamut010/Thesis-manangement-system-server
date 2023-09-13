@@ -28,8 +28,7 @@ export class CredentialsDecryptionMiddleware implements ExpressMiddlewareInterfa
         try {
             wrapDecryptionError(() => {
                 const decrypted = this.decrypt(body, this.encryptedProps);
-                const entries = Object.entries(decrypted);
-                entries.forEach(([field, decryptedValue]) => {
+                Object.entries(decrypted).forEach(([field, decryptedValue]) => {
                     if (!this.ignoreDecryptionProps.has(field)) {
                         body[field] = decryptedValue;
                     }

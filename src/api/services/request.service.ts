@@ -58,19 +58,7 @@ export class RequestService implements RequestServiceInterface {
 
     async getRequestState(user: AuthorizedUser, id: string): Promise<RequestStateInfoDto> {
         const record = await this.ensureRecordExists(id);
-        /**
-         * Only those who are:
-         *      - Admins
-         *      - Direct user stakeholders
-         *      - members of a group stakeholder (indirect stakeholders)
-         * 
-         * Are allowed to see a specific request's state. 
-         */
-        if (!isAdmin(user) 
-            && !this.isUserDirectStakeholder(user.userId, record.userStakeholderIds)
-            && !await this.isUserGroupStakeholder(user.userId, record.groupStakeholderIds)) {
-            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
-        }
+        await this.ensureValidRequestAccess(user, record.userStakeholderIds, record.groupStakeholderIds);
 
         const requestState = await this.workflowEngine.getRequestState(user.userId, id);
         return this.makeRequestStateInfo(record, requestState);
@@ -86,9 +74,12 @@ export class RequestService implements RequestServiceInterface {
         await this.requestRepo.delete(id);
     }
 
-    async submitAction(actionerId: string, request: RequestActionSubmitRequest): Promise<RequestStateInfoDto | undefined> {
+    async submitAction(user: AuthorizedUser, request: RequestActionSubmitRequest): Promise<RequestStateInfoDto | undefined> {
+        let record = await this.ensureRecordExists(request.requestId);
+        await this.ensureValidRequestAccess(user, record.userStakeholderIds, record.groupStakeholderIds);
+
         const command = this.workflowCommandFactory.createCommand(this.workflowEngine, request.actionType, {
-            actionerId: actionerId,
+            actionerId: user.userId,
             requestId: request.requestId,
             data: request.data,
         });
@@ -97,15 +88,12 @@ export class RequestService implements RequestServiceInterface {
         }
 
         this.workflowCommandInvoker.setCommand(command);
-
-        let requestState = await this.workflowCommandInvoker.invoke();
-        // If failed to advance the request
-        if (requestState === null) {
-            // Fetch the current request's state to get the currently available action types
-            requestState = await this.workflowEngine.getRequestState(actionerId, request.requestId);
+        const requestState = await this.workflowCommandInvoker.invoke();
+        if (!requestState) {
+            throw new BadRequestError(ERROR_MESSAGES.Invalid.InputInvalid);
         }
 
-        const record = await this.ensureRecordExists(request.requestId);
+        record = await this.ensureRecordExists(request.requestId);
 
         return this.makeRequestStateInfo(record, requestState);
     }
@@ -155,6 +143,22 @@ export class RequestService implements RequestServiceInterface {
         return result;
     }
 
+    private async ensureValidRequestAccess(user: AuthorizedUser, userStakeholderIds: string[], groupStakeholderIds: string[]) {
+        /**
+         * Only those who are:
+         *      - Admins
+         *      - Direct user stakeholders
+         *      - members of a group stakeholder (indirect stakeholders)
+         * 
+         * Are allowed to see a specific request's state. 
+         */
+        if (!isAdmin(user) 
+            && !this.isUserDirectStakeholder(user.userId, userStakeholderIds)
+            && !await this.isUserGroupStakeholder(user.userId, groupStakeholderIds)) {
+            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
+        }
+    }
+
     private isUserDirectStakeholder(userId: string, userStakeholderIds: string[]) {
         return userStakeholderIds.includes(userId);
     }
@@ -171,7 +175,7 @@ export class RequestService implements RequestServiceInterface {
         return content.find(item => item.memberIds.includes(userId)) !== undefined;
     }
 
-    private makeRequestStateInfo(request: RequestInfoDto, requestState?: RequestStateDto | null) {
+    private makeRequestStateInfo(request: RequestInfoDto, requestState: RequestStateDto | null) {
         const result = this.mapper.map(RequestStateInfoDto, request);
         result.actionTypes = requestState?.actionTypes ?? [];
         return result;

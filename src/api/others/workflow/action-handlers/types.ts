@@ -1,11 +1,12 @@
 import { RequestUsersDto } from "../types/dtos"
 import { Target } from "../types/targets"
+import { WorkflowInputData } from "../types/utility-types"
 
 export interface ActionHandlerInput {
     requestUsers: RequestUsersDto,
     actionerId: string,
     target: Target,
-    data?: Record<string, unknown>,
+    data?: WorkflowInputData,
 }
 
 export interface ActionHandlerOutput {

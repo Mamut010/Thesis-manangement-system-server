@@ -9,7 +9,7 @@ export class RequestSupervisor2Command implements RequestAdvanceCommandInterface
         private engine: WorkflowEngineInterface, 
         private actionerId: string, 
         private requestId: string,
-        private supervisor2Id: string) {
+        private supervisor2Id?: string) {
         
     }
 

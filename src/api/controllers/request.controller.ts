@@ -59,6 +59,6 @@ export class RequestController {
     @OnUndefined(HTTP_CODES.NotFound)
     submitAction(@CurrentUser() user: AuthorizedUser, 
         @Body({ required: true }) actionSubmitRequest: RequestActionSubmitRequest) {
-        return this.requestService.submitAction(user.userId, actionSubmitRequest);
+        return this.requestService.submitAction(user, actionSubmitRequest);
     }
 }

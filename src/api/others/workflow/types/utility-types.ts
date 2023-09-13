@@ -5,6 +5,8 @@ import { XOR } from "../../../../utils/types";
 import { RequestDataRepoInterface } from "../../../../dal/interfaces";
 import { WorkflowRequestDataProcessorInterface } from "../request-data-processor";
 
+export type WorkflowInputData = Record<string, unknown>;
+
 export type ActivityEffect = () => Promise<void>;
 
 export interface ActivityTypeWithTarget {

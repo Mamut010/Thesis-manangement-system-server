@@ -397,18 +397,6 @@ function seedThesisWorkflow(prisma: PrismaClient) {
                     stateTypeId: Id.StateType.Normal,
                     name: 'Thesis applied',
                 },
-                // {
-                //     id: Id.State.FindingSup1,
-                //     processId: Id.Process.Thesis,
-                //     stateTypeId: Id.StateType.Normal,
-                //     name: 'Finding supervisor 1 for thesis application',
-                // },
-                // {
-                //     id: Id.State.SentFindingSup1ToAdmin,
-                //     processId: Id.Process.Thesis,
-                //     stateTypeId: Id.StateType.Completed,
-                //     name: 'Request supervisor 1 sent to admin',
-                // },
                 {
                     id: Id.State.RequestApplyThesisSentToSup1,
                     processId: Id.Process.Thesis,
@@ -566,7 +554,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_RequestAdminGroup }
+                    connect: { id: Id.Action.Requester_InformAdminGroup }
                 }
             },
         }),
@@ -620,51 +608,6 @@ function configThesisWorkflow(prisma: PrismaClient) {
                 }
             },
         }),
-        // prisma.transition.update({
-        //     where: {
-        //         id: Id.Transition.ThesisApplied_FindingSup1,
-        //     },
-        //     data: {
-        //         actions: {
-        //             connect: { id: Id.Action.Requester_Confirm }
-        //         }
-        //     },
-        // }),
-        // prisma.transition.update({
-        //     where: {
-        //         id: Id.Transition.FindingSup1_SentFindingSup1ToAdmin,
-        //     },
-        //     data: {
-        //         actions: {
-        //             connect: { id: Id.Action.Requester_InformAdminGroup }
-        //         }
-        //     },
-        // }),
-        // prisma.transition.update({
-        //     where: {
-        //         id: Id.Transition.FindingSup1_RequestApplyThesisSentToSup1,
-        //     },
-        //     data: {
-        //         actions: {
-        //             connect: { id: Id.Action.Requester_RequestSupervisor1 }
-        //         }
-        //     },
-        // }),
-        // prisma.transition.update({
-        //     where: {
-        //         id: Id.Transition.RequestApplyThesisSentToSup1_FindingSup1
-        //     },
-        //     data: {
-        //         actions: {
-        //             connect: { id: Id.Action.Supervisor1_Reject }
-        //         },
-        //         activities: {
-        //             connect: [
-        //                 { id: Id.Activity.Notify_Stakeholders }
-        //             ]
-        //         }
-        //     },
-        // }),
         prisma.transition.update({
             where: {
                 id: Id.Transition.ThesisApplied_RequestApplyThesisSentToSup1,
@@ -781,7 +724,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_RequestAdminGroup }
+                    connect: { id: Id.Action.Requester_InformAdminGroup }
                 },
             },
         }),
@@ -806,7 +749,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_RequestAdminGroup}
+                    connect: { id: Id.Action.Requester_InformAdminGroup }
                 },
             },
         }),

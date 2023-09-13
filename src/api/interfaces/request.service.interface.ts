@@ -9,7 +9,7 @@ export interface RequestServiceInterface {
     getRequestState(user: AuthorizedUser, id: string): Promise<RequestStateInfoDto>;
     deleteRequest(user: AuthorizedUser, id: string): Promise<void>;
 
-    submitAction(actionerId: string, request: RequestActionSubmitRequest): Promise<RequestStateInfoDto | undefined>;
+    submitAction(user: AuthorizedUser, request: RequestActionSubmitRequest): Promise<RequestStateInfoDto | undefined>;
 
     createThesisRequest(userId: string, requestTitle: string): Promise<RequestStateInfoDto | undefined>;
     getCreatedRequestStatesLatestToOldest(creatorId: string): Promise<RequestStateInfoDto[]>;
