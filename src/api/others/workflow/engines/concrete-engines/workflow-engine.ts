@@ -7,12 +7,12 @@ import { UnexpectedError } from "../../../../../contracts/errors/unexpected.erro
 import { ERROR_MESSAGES } from "../../../../../contracts/constants/error-messages";
 import { StateType } from "../../types/state-type";
 import { ActivityType } from "../../types/activity-type";
-import { PlainActivity, PlainRequestAction } from "../../types/plains";
+import { PlainActivity, PlainRequestAction, PlainRequestStakeholder } from "../../types/plains";
 import { 
     ActivityEffect, 
     ActivityHandlerInputWithoutTarget, 
-    ActivityTypeWithTarget, 
-    PrismaClientLike 
+    ActivityTypeWithTarget,
+    Stakeholder
 } from "../../types/utility-types";
 import { ActionHandlerInput } from "../../action-handlers";
 import { ActivityHandlerInput } from "../../activity-handlers";
@@ -21,6 +21,7 @@ import { Target } from "../../types/targets";
 import { RequestAdvanceOptions, RequestCreateOptions } from "../../types/options";
 import { WorkflowEngineInterface } from "../interfaces/workflow-engine.interface";
 import { WorkflowCoreFactoryInterface } from "../../core-factories";
+import { PrismaClientLike } from "../../../../../utils/types";
 
 @injectable()
 export class WorkflowEngine implements WorkflowEngineInterface {
@@ -57,8 +58,6 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                 return {
                     id: request.id,
                     processId: request.processId,
-                    creatorId: request.creator.userId,
-                    stakeholderIds: request.stakeholders.map(stakeholder => stakeholder.userId),
                     stateType: request.state.stateType.name as StateType,
                     state: request.state.name,
                     stateDescription: request.state.description,
@@ -85,9 +84,10 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                 data: {
                     ...createOptions,
                     stateId: initialState.id,
-                    stakeholders: {
-                        connect: {
-                            userId: createOptions.userId
+                    requestStakeholders: {
+                        create: {
+                            userId: createOptions.userId,
+                            isAccepted: true,
                         }
                     }
                 }
@@ -96,7 +96,10 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             const stateEffect = await this.handleRequestEnteringState(tx, request.id, request.stateId, {
                 requestUsers: {
                     requesterId: createOptions.userId,
-                    stakeholderIds: [createOptions.userId]
+                    requestStakeholders: [{
+                        userId: createOptions.userId,
+                        isAccepted: true
+                    }]
                 },
             });
             activityEffects.push(stateEffect);
@@ -122,8 +125,8 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         }
 
         const requestUsers: RequestUsersDto = {
-            requesterId: request.creator.userId,
-            stakeholderIds: request.stakeholders.map(stakeholder => stakeholder.userId),
+            requesterId: request.userId,
+            requestStakeholders: this.constructStakeholdersFromPlains(request.requestStakeholders)
         };
         const actionOutput = await this.handleAction(actionType, requestId, { requestUsers, actionerId, target, data });
         if (!actionOutput) {
@@ -165,6 +168,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             },
             select: {
                 id: true,
+                userId: true,
                 processId: true,
                 data: {
                     select: {
@@ -216,14 +220,21 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                         }
                     }
                 },
-                creator: {
-                    select: { 
-                        userId: true 
-                    }
-                },
-                stakeholders: {
+                requestStakeholders: {
                     select: {
-                        userId: true
+                        userId: true,
+                        group: {
+                            select: {
+                                id: true,
+                                name: true,
+                                users: {
+                                    select: {
+                                        userId: true
+                                    }
+                                }
+                            }
+                        },
+                        isAccepted: true,
                     }
                 }
             }
@@ -236,16 +247,16 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         const requests = await this.getRequests(requestIds);
         return await Promise.all(requests.map(async (request) => {
             const targetIdentifier = this.coreFactory.createTargetIdentifier();
-            const target = request 
+            const targetOutput = request 
                 ? await targetIdentifier.identifyTarget(actionerId, { 
-                    creatorId: request.creator.userId,
-                    stakeholderIds: request.stakeholders.map(stakeholder => stakeholder.userId),
+                    creatorId: request.userId,
+                    requestStakeholders: this.constructStakeholdersFromPlains(request.requestStakeholders),
                     requestData: request.data,
                 }) 
                 : undefined;
             return {
                 request,
-                target
+                target: targetOutput?.target
             }
         }));
     }
@@ -424,5 +435,24 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                 }
             })
         });
+    }
+
+    private constructStakeholdersFromPlains(plains: PlainRequestStakeholder[]): Stakeholder[] {
+        return plains
+            .filter(item => item.userId !== null || item.group !== null)
+            .map<Stakeholder>(({ userId, group, isAccepted }) => {
+                if (group !== null) {
+                    return { 
+                        groupId: group.id,
+                        memberIds: group.users.map(user => user.userId),
+                        isAccepted,
+                    };
+                }
+
+                return {
+                    userId: userId!,
+                    isAccepted,
+                };
+            });
     }
 }

@@ -20,3 +20,4 @@ export * from './process.repo.interface';
 export * from './request.repo.interface';
 export * from './group.repo.interface';
 export * from './request-data.repo.interface';
+export * from './request-stakeholder.repo.interface';

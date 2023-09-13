@@ -15,6 +15,7 @@ import {
     RefreshTokenDto, 
     RequestDataDto, 
     RequestDto, 
+    RequestStakeholderDto, 
     RoleDto, 
     StudentDto,
     ThesisDto,
@@ -38,6 +39,7 @@ import {
     PlainRefreshToken, 
     PlainRequest, 
     PlainRequestData, 
+    PlainRequestStakeholder, 
     PlainRole, 
     PlainStudent,
     PlainThesis,
@@ -68,4 +70,5 @@ export interface PlainTransformerInterface {
     toRequest(plain: PlainRequest): RequestDto;
     toGroup(plain: PlainGroup): GroupDto;
     toRequestData(plain: PlainRequestData): RequestDataDto;
+    toRequestStakeholder(requestId: string, plains: PlainRequestStakeholder[]): RequestStakeholderDto;
 }

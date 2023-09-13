@@ -1,9 +1,28 @@
 import { SingleOrArray, jsonStringifyCircular } from "./object-helpers";
 
+function getAllAndSharedElements<T = unknown>(arr1: T[], arr2: T[]) {
+    const elementSet = new Set(arr1);
+    const sharedElements = new Set<T>();
+    for(const element of arr2) {
+        if (elementSet.has(element)) {
+            sharedElements.add(element);
+        }
+        else {
+            elementSet.add(element);
+        }
+    }
+    return {
+        elements: elementSet,
+        sharedElements: sharedElements,
+    }
+}
+
 export function arrayIntersection<T = unknown>(arr1: T[], arr2: T[], discardDuplicates: boolean = true): T[] {
-    const intersection = arr1.filter(value => arr2.includes(value));
-    // Use Set to remove duplicates
-    return discardDuplicates ? removeDuplicates(intersection) : intersection;
+    const { sharedElements } = getAllAndSharedElements(arr1, arr2);
+
+    return discardDuplicates 
+        ? Array.from(sharedElements) 
+        : arr1.filter(value => sharedElements.has(value));
 }
 
 export function arrayUnion<T = unknown>(arr1: T[], arr2: T[], discardDuplicates: boolean = true): T[] {
@@ -12,7 +31,8 @@ export function arrayUnion<T = unknown>(arr1: T[], arr2: T[], discardDuplicates:
 }
 
 export function uniqueFrom<T>(src: T[], toCheckAgainst: T[], discardDuplicates: boolean = true): T[] {
-    const result = src.filter(element => !toCheckAgainst.includes(element));
+    const { sharedElements } = getAllAndSharedElements(src, toCheckAgainst);
+    const result = src.filter(element => !sharedElements.has(element));
     return discardDuplicates ? removeDuplicates(result) : result;
 }
 
@@ -148,8 +168,14 @@ function groupByKeyArray<TItem extends Record<PropertyKey, unknown>, K extends k
 }
 
 export function removeSharedElements<T>(arr1: T[] | undefined, arr2: T[] | undefined) {
-    const resultArr1 = arr1?.filter(userId => !arr2?.includes(userId));
-    const resultArr2 = arr2?.filter(userId => !arr1?.includes(userId));
+    if (!arr1 || !arr2) {
+        return { arr1, arr2 };
+    }
+
+    const { sharedElements } = getAllAndSharedElements(arr1, arr2);
+
+    const resultArr1 = arr1.filter(element => !sharedElements.has(element));
+    const resultArr2 = arr2.filter(element => !sharedElements.has(element));
     return {
         arr1: resultArr1,
         arr2: resultArr2,
@@ -182,4 +208,10 @@ export function sortByKeyArray<T, U>(src: T[], keyArray: U[], keySelector: (item
 
         return aPos - bPos;
     });
+}
+
+export function getNonNullableKeys<T, V>(src: T[], keySelector: (item: T) => V | null | undefined): V[] {
+    return src
+        .map(item => keySelector(item))
+        .filter((key): key is NonNullable<typeof key> => typeof key !== 'undefined' && key !== null);
 }

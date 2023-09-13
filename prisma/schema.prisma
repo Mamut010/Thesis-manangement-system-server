@@ -33,7 +33,7 @@ model User {
 
     // Workflow engine
     createdRequests         Request[]
-    engagedRequests         Request[]       @relation("requestStakeholders")
+    requestStakeholders     RequestStakeholder[]       
     requestNotes            RequestNote[]
     requestFiles            RequestFile[]
     groups                  Group[]
@@ -325,22 +325,22 @@ model Process {
 }
 
 model Request {
-    id                  String          @id @default(cuid())
+    id                  String                  @id @default(cuid())
     processId           String
     userId              String
     stateId             String
-    title               String          @db.VarChar(255)
-    createdAt           DateTime        @default(now()) @db.Timestamp(6)
-    updatedAt           DateTime        @updatedAt @db.Timestamp(6)
+    title               String                  @db.VarChar(255)
+    createdAt           DateTime                @default(now()) @db.Timestamp(6)
+    updatedAt           DateTime                @updatedAt @db.Timestamp(6)
 
     data                RequestData[]
     notes               RequestNote[]
     files               RequestFile[]
 
-    process             Process         @relation(fields: [processId], references: [id], onUpdate: Cascade)
-    creator             User            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    stakeholders        User[]          @relation("requestStakeholders")
-    state               State           @relation(fields: [stateId], references: [id], onUpdate: Cascade)
+    process             Process                 @relation(fields: [processId], references: [id], onUpdate: Cascade)
+    creator             User                    @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    requestStakeholders RequestStakeholder[]          
+    state               State                   @relation(fields: [stateId], references: [id], onUpdate: Cascade)
     requestActions      RequestAction[]
 }
 
@@ -464,13 +464,14 @@ model Activity {
 }
 
 model Group {
-    id                  String          @id @default(cuid())
+    id                  String                  @id @default(cuid())
     processId           String
     name                String
-    description         String?         @db.VarChar(2000)
+    description         String?                 @db.VarChar(2000)
 
-    process             Process         @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    process             Process                 @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     users               User[]
+    requestStakeholders RequestStakeholder[]
 }
 
 model Target {
@@ -513,4 +514,16 @@ model RequestAction {
     request         Request         @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     action          Action          @relation(fields: [actionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     transition      Transition      @relation(fields: [transitionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model RequestStakeholder {
+    id              String          @id @default(cuid())
+    requestId       String
+    userId          String?
+    groupId         String?
+    isAccepted      Boolean         @default(false)
+
+    request         Request         @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    user            User?           @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    group           Group?          @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

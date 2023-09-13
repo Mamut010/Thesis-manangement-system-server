@@ -16,3 +16,15 @@ export type PlainRequestAction = Record<string, unknown> & {
     },
     action: PlainAction,
 };
+
+export type PlainRequestStakeholder = {
+    userId: string | null,
+    group: {
+        id: string,
+        name: string,
+        users: {
+            userId: string
+        }[]
+    } | null,
+    isAccepted: boolean,
+}

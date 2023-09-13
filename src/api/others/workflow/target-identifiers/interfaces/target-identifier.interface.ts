@@ -1,7 +1,6 @@
-import { TargetIdentifierInput } from "../types";
-import { Target } from "../../types/targets";
+import { TargetIdentifierInput, TargetIdentifierOutput } from "../types";
 
 export interface TargetIdentifierInterface {
     identifyTarget(actionerId: string, targetIdentifierInput: TargetIdentifierInput)
-        : Promise<Target | undefined> | Target | undefined;
+        : Promise<TargetIdentifierOutput> | TargetIdentifierOutput;
 }

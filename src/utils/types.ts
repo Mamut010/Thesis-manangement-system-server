@@ -1,3 +1,6 @@
+import { PrismaClient } from "@prisma/client";
+import * as runtime from '@prisma/client/runtime/library';
+
 /**
  * @author KPD
  * @see https://stackoverflow.com/questions/40510611/typescript-interface-require-one-of-two-properties-to-exist
@@ -47,11 +50,13 @@ export type KeysOfType<T, K> = { [P in keyof T]: T[P] extends K ? P : never }[ke
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export type ClassConstructor<T> = new(...args: any[]) => T;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export type NotArray<T> = T extends Array<unknown> ? never : T;
-export type IsArray<T> = T extends Array<unknown> ? T : never;
+export type NotArray<T> = T extends ReadonlyArray<unknown> ? never : T;
+export type IsArray<T> = T extends ReadonlyArray<unknown> ? T : never;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export type KeyOf<T> = keyof T;
-export type ValueOf<T> = T[keyof T];
+export type ValueOf<T> = T extends ReadonlyArray<unknown> ? T[number] : T[keyof T];
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export type NotPromise<T> = T extends Promise<unknown> ? never : T;
 export type IsPromise<T> = T extends Promise<unknown> ? T : never;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export type PrismaClientLike = Omit<PrismaClient, runtime.ITXClientDenyList>;

@@ -1,14 +1,19 @@
 import { Expose } from "class-transformer";
 import { IsOptional, IsString } from "class-validator";
 
-export class RequesstStakeholdersUpdateRequest {
+export class RequestGroupStakeholdersUpdateRequest {
     @Expose()
     @IsOptional()
     @IsString({ each: true })
-    addedUserIds?: string[];
+    addedGroupIds?: string[];
 
     @Expose()
     @IsOptional()
     @IsString({ each: true })
-    removedUserIds?: string[];
+    removedGroupIds?: string[];
+
+    @Expose()
+    @IsOptional()
+    @IsString({ each: true })
+    acceptedIds?: string[];
 }

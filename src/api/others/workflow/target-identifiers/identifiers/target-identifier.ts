@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TargetIdentifierInterface } from "../interfaces/target-identifier.interface";
-import { TargetIdentifierInput } from "../types";
+import { TargetIdentifierInput, TargetIdentifierOutput } from "../types";
 import { Target } from "../../types/targets";
 import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
@@ -18,10 +18,10 @@ export class TargetIdentifier implements TargetIdentifierInterface {
 
     }
     
-    async identifyTarget(actionerId: string, targetIdentifierInput: TargetIdentifierInput): Promise<Target | undefined> {
+    async identifyTarget(actionerId: string, targetIdentifierInput: TargetIdentifierInput): Promise<TargetIdentifierOutput> {
         // Simple case
         if (actionerId === targetIdentifierInput.creatorId) {
-            return Target.Requester;
+            return { target: Target.Requester };
         }
 
         // Traverse the request data and make a record while also check if actionerId is stored in the request data
@@ -36,7 +36,7 @@ export class TargetIdentifier implements TargetIdentifierInterface {
             // If the actionerId is stored as a request data's value 
             else if (orgValue === actionerId) {
                 // Identify the Target based on the request data's key
-                return this.getTargetFromDataKey(name);
+                return { target: this.getTargetFromDataKey(name) };
             }
 
             // Store the record for later use
@@ -44,7 +44,7 @@ export class TargetIdentifier implements TargetIdentifierInterface {
         }
 
         if (!(STORED_REQUEST_DATA_KEYS.AdminGroup in dataRecord)) {
-            return undefined;
+            return { target: undefined };
         }
 
         const idFilter = new StringFilter();
@@ -60,10 +60,10 @@ export class TargetIdentifier implements TargetIdentifierInterface {
 
         const queryResponse = await this.groupRepo.query(queryRequest);
         if (queryResponse.count > 0) {
-            return Target.AdminGroup;
+            return { target: Target.AdminGroup };
         }
 
-        return undefined;
+        return { target: undefined };
     }
 
     private getTargetFromDataKey(dataKey: string) {

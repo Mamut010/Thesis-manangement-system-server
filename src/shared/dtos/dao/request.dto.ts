@@ -22,7 +22,12 @@ export class RequestDto {
     @Expose()
     @IsDefined()
     @IsString({ each: true })
-    stakeholderIds!: string[];
+    userStakeholderIds!: string[];
+
+    @Expose()
+    @IsDefined()
+    @IsString({ each: true })
+    groupStakeholderIds!: string[];
 
     @Expose()
     @IsDefined()

@@ -7,7 +7,7 @@ import { BaseUserStakeholdersActivityHandler } from "../bases/base-user-stakehol
 import { RequestStakeholderDto } from "../../../../../shared/dtos";
 
 @injectable()
-export class AddStakeholdersActivityHandler extends BaseUserStakeholdersActivityHandler {
+export class AcceptStakeholdersActivityHandler extends BaseUserStakeholdersActivityHandler {
     constructor(
         @inject(INJECTION_TOKENS.RequestStakeholderRepo) requestStakeholderRepo: RequestStakeholderRepoInterface,
         @inject(INJECTION_TOKENS.RequestDataRepo) requestDataRepo: RequestDataRepoInterface,
@@ -17,8 +17,6 @@ export class AddStakeholdersActivityHandler extends BaseUserStakeholdersActivity
 
     protected execute(requestId: string, userId: string, activityInput: ActivityHandlerInput)
         : Promise<ActivityHandlerOutput | RequestStakeholderDto | null> {
-        return this.requestStakeholderRepo.updateUserStakeholders(requestId, {
-            addedUserIds: [userId]
-        });
+        return this.requestStakeholderRepo.setUserStakeholderAccepted(requestId, userId, true);
     }
 }

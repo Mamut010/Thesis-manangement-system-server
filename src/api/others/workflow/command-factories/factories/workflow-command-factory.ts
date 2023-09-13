@@ -10,9 +10,11 @@ import {
     ApproveCommand,
     CancelCommand,
     ConfirmCommand,
+    ConfirmThesisCommand,
     DenyCommand,
     InformAdminGroupCommand,
     InformRequesterCommand,
+    InviteSupervisor2Command,
     RejectCommand,
     RejectThesisCommand,
     RequestAdminGroupCommand,
@@ -40,6 +42,9 @@ export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
             case ActionType.Confirm:
                 return new ConfirmCommand(engine, commandInput.actionerId, commandInput.requestId);
 
+            case ActionType.ConfirmThesis:
+                return new ConfirmThesisCommand(engine, commandInput.actionerId, commandInput.requestId);
+
             case ActionType.Deny:
                 return new DenyCommand(engine, commandInput.actionerId, commandInput.requestId);
 
@@ -49,6 +54,10 @@ export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
 
             case ActionType.InformRequester:
                 return new InformRequesterCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.InviteSupervisor2:
+                return new InviteSupervisor2Command(engine, commandInput.actionerId, commandInput.requestId,
+                    this.getStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor2));
 
             case ActionType.Reject:
                 return new RejectCommand(engine, commandInput.actionerId, commandInput.requestId);
