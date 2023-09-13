@@ -197,12 +197,21 @@ export class PlainTransformer implements PlainTransformerInterface {
         dto.stateDescription = plain.state.description;
         dto.stateType = plain.state.stateType.name as StateType;
 
-        dto.userStakeholderIds = plain.requestStakeholders
-            .filter(item => item.userId !== null)
-            .map(item => item.userId!);
-        dto.groupStakeholderIds = plain.requestStakeholders
-            .filter(item => item.groupId !== null)
-            .map(item => item.groupId!);
+        const stakeholderIds = plain.requestStakeholders
+            .reduce((result, item) => {
+                if (item.groupId !== null) {
+                    result.groupIds.push(item.groupId);
+                }
+                else if (item.userId !== null) {
+                    result.userIds.push(item.userId);
+                }
+                return result;
+            }, {
+                userIds: new Array<string>(),
+                groupIds: new Array<string>(),
+            });
+        dto.userStakeholderIds = stakeholderIds.userIds;
+        dto.groupStakeholderIds = stakeholderIds.groupIds;
 
         return dto;
     }

@@ -3,6 +3,8 @@ const CONSTANT_TOKENS = {
     IOServer: Symbol.for('IOServer'),
     Tracer: Symbol.for('Tracer'),
     AppMetricsHandler: Symbol.for('AppMetricsHandler'),
+    EncryptedProps: Symbol.for('EncryptedProps'),
+    IgnoreDecryptionProps: Symbol.for('IgnoreDecryptionProps'),
 } as const;
 
 const LOGGER_TOKENS = {

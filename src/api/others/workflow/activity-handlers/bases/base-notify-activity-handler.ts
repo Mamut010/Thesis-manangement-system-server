@@ -60,8 +60,7 @@ export abstract class BaseNotifyActivityHandler extends BaseActivityHandler {
 
     private getAllAcceptedStakeholderIds(stakeholders: Stakeholder[]) {
         return stakeholders
-            .filter(item => item.isAccepted)
-            .flatMap(item => item.userId ?? item.memberIds);
+            .flatMap(item => item.isAccepted ? (item.userId ?? item.memberIds) : []);
     }
 
     private async getAdminGroupUserIds(requestId: string) {

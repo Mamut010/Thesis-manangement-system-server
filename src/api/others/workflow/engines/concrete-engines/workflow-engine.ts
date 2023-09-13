@@ -62,8 +62,11 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                     state: request.state.name,
                     stateDescription: request.state.description,
                     actionTypes: request.requestActions
-                        .filter(item => item.action.actionTargets.some(actionTarget => actionTarget.target.name === target))
-                        .map(item => item.action.actionType.name as ActionType),
+                        .flatMap(item => 
+                            item.action.actionTargets.some(actionTarget => actionTarget.target.name === target)
+                                ? item.action.actionType.name as ActionType
+                                : []
+                        ),
             }
         });
     }

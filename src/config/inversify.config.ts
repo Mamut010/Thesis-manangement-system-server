@@ -181,6 +181,16 @@ function configConstants(container: Container, settings?: BootstrapSettingInterf
             .bind<Tracer>(INJECTION_TOKENS.Tracer)
             .toConstantValue(tracer);
     }
+
+    container
+        .bind<Set<string>>(INJECTION_TOKENS.EncryptedProps)
+        // Username, password and email should be encrypted
+        .toConstantValue(new Set(['username', 'password', 'email']));
+
+    container
+        .bind<Set<string>>(INJECTION_TOKENS.IgnoreDecryptionProps)
+        // Ignore email as we want to store encrypted email in the database
+        .toConstantValue(new Set(['email']));
 }
 
 function configLogger(container: Container, settings?: BootstrapSettingInterface) {
