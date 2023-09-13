@@ -336,9 +336,11 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         };
     }
 
-    private async handleRequestFulfillingTransition(prisma: PrismaClientLike, requestId: string, 
-        fulfilledTransitionId: string, activityInput: ActivityHandlerInputWithoutTarget): Promise<ActivityEffect> {
-        await this.renewRequestAction(prisma, requestId);
+    private async handleRequestFulfillingTransition(prisma: PrismaClientLike, requestId: string, fulfilledTransitionId: string,
+        activityInput: ActivityHandlerInputWithoutTarget, updateRequestAction: boolean = true): Promise<ActivityEffect> {
+        if (updateRequestAction) {
+            await this.renewRequestAction(prisma, requestId);
+        }
 
         const transition = await prisma.transition.findUniqueOrThrow({
             where: {
@@ -441,7 +443,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         const immediatelyFulfilledActivityInput: ActivityHandlerInputWithoutTarget = { requestUsers };
 
         const transitionEffect = await this.handleRequestFulfillingTransition(prisma, requestId, 
-            transitionId, immediatelyFulfilledActivityInput);
+            transitionId, immediatelyFulfilledActivityInput, false);
         const nextStateEffect = await this.handleRequestEnteringState(prisma, requestId,
             nextStateId, immediatelyFulfilledActivityInput);
 
