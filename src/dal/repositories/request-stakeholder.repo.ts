@@ -56,14 +56,14 @@ export class RequestStakeholderRepo implements RequestStakeholderRepoInterface {
     }
 
     private async updateStakeholders(key: RequestStakeholderKey, requestId: string, 
-        addedIds?: string[], removedIds?: string[], acceptedIds?: string[]): Promise<RequestStakeholderDto | null> {
+        added?: string[], removed?: string[], acceptedIds?: string[]): Promise<RequestStakeholderDto | null> {
         if(!await this.doesRequestExists(requestId)) {
             return null;
         }
 
-        const { arr1, arr2 } =  removeSharedElements(addedIds, removedIds);
-        addedIds = arr1 ?? [];
-        removedIds = arr2 ?? [];
+        const { arr1, arr2 } =  removeSharedElements(added, removed);
+        let addedIds = arr1 ?? [];
+        let removedIds = arr2 ?? [];
 
         let records = await this.findAlreadyAddedOrReadyToRemoveRecords(key, requestId, addedIds, removedIds);
         const keys = getNonNullableKeys(records, item => item[key]);
@@ -77,25 +77,30 @@ export class RequestStakeholderRepo implements RequestStakeholderRepoInterface {
 
         const acceptedIdSet = new Set(acceptedIds);
 
-        [,,records] = await this.prisma.$transaction([
-            this.prisma.requestStakeholder.createMany({
-                data: addedIds.map(item => {
-                    return {
-                        requestId,
-                        [key]: item,
-                        isAccepted: acceptedIdSet.has(item)
+        records = await this.prisma.$transaction(async (tx) => {
+            if (addedIds.length > 0) {
+                await tx.requestStakeholder.createMany({
+                    data: addedIds.map(item => {
+                        return {
+                            requestId,
+                            [key]: item,
+                            isAccepted: acceptedIdSet.has(item)
+                        }
+                    }),
+                });
+            }
+            if (removedIds.length > 0) {
+                await tx.requestStakeholder.deleteMany({
+                    where: {
+                        [key]: {
+                            in: removedIds
+                        }
                     }
-                }),
-            }),
-            this.prisma.requestStakeholder.deleteMany({
-                where: {
-                    [key]: {
-                        in: removedIds
-                    }
-                }
-            }),
-            this.findRecordsByRequestId(requestId),
-        ]);
+                });
+            }
+
+            return this.findRecordsByRequestId(requestId, tx);
+        });
 
         return this.plainTransformer.toRequestStakeholder(requestId, records);
     }
