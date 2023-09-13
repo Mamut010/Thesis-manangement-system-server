@@ -337,7 +337,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
 
     private async handleRequestFulfillingTransition(prisma: PrismaClientLike, requestId: string, transitionIds: string[], 
         fulfilledTransitionId: string, activityInput: ActivityHandlerInputWithoutTarget): Promise<ActivityEffect> {
-        await this.deleteUnfulfilledTransition(prisma, requestId, transitionIds.filter(id => id !== fulfilledTransitionId));
+        await this.deleteUnfulfilledTransitions(prisma, requestId, transitionIds.filter(id => id !== fulfilledTransitionId));
 
         const transition = await prisma.transition.findUniqueOrThrow({
             where: {
@@ -417,7 +417,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         }));
     }
 
-    private async deleteUnfulfilledTransition(prisma: PrismaClientLike, requestId: string, unfulfilledTransitionIds: string[]) {
+    private async deleteUnfulfilledTransitions(prisma: PrismaClientLike, requestId: string, unfulfilledTransitionIds: string[]) {
         await prisma.requestAction.deleteMany({
             where: {
                 requestId: requestId,
