@@ -190,8 +190,6 @@ const Id = {
         AdminApprovedCreateThesisRequest: 'State-AdminApprovedCreateThesisRequest',
         AdminDeniedCreateThesisRequest: 'State-AdminDeniedCreateThesisRequest',
         ThesisApplied: 'State-ThesisApplied',
-        // FindingSup1: 'State-FindingSup1',
-        // SentFindingSup1ToAdmin: 'State-SentFindingSup1ToAdmin',
         RequestApplyThesisSentToSup1: 'State-RequestApplyThesisSentToSup1',
         Sup1ApprovedThesisApplication: 'State-Sup1ApprovedThesisApplication',
         FindingSup2: 'State-FindingSup2',
