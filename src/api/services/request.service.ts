@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
-import { RequestInfosQueryRequest, RequestsQueryRequest } from "../../contracts/requests";
+import { GroupsQueryRequest, RequestInfosQueryRequest, RequestsQueryRequest } from "../../contracts/requests";
 import { RequestInfosQueryResponse } from "../../contracts/responses";
 import { RequestServiceInterface } from "../interfaces/request.service.interface";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { ProcessRepoInterface, RequestRepoInterface } from "../../dal/interfaces";
+import { GroupRepoInterface, ProcessRepoInterface, RequestRepoInterface } from "../../dal/interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
@@ -28,6 +28,7 @@ export class RequestService implements RequestServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.RequestRepo) private requestRepo: RequestRepoInterface,
         @inject(INJECTION_TOKENS.ProcessRepo) private processRepo: ProcessRepoInterface,
+        @inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface,
         @inject(INJECTION_TOKENS.WorkflowEngine) private workflowEngine: WorkflowEngineInterface,
         @inject(INJECTION_TOKENS.WorkflowCommandFactory) private workflowCommandFactory: WorkflowCommandFactoryInterface,
@@ -57,7 +58,17 @@ export class RequestService implements RequestServiceInterface {
 
     async getRequestState(user: AuthorizedUser, id: string): Promise<RequestStateInfoDto> {
         const record = await this.ensureRecordExists(id);
-        if (!isAdmin(user) && !record.stakeholderIds.includes(user.userId)) {
+        /**
+         * Only those who are:
+         *      - Admins
+         *      - Direct user stakeholders
+         *      - members of a group stakeholder (indirect stakeholders)
+         * 
+         * Are allowed to see a specific request's state. 
+         */
+        if (!isAdmin(user) 
+            && !this.isUserDirectStakeholder(user.userId, record.userStakeholderIds)
+            && !await this.isUserGroupStakeholder(user.userId, record.groupStakeholderIds)) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
         }
 
@@ -142,6 +153,22 @@ export class RequestService implements RequestServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.RequestNotFound);
         }
         return result;
+    }
+
+    private isUserDirectStakeholder(userId: string, userStakeholderIds: string[]) {
+        return userStakeholderIds.includes(userId);
+    }
+
+    private async isUserGroupStakeholder(userId: string, groupStakeholderIds: string[]) {
+        const queryRequest = new GroupsQueryRequest();
+        queryRequest.idFilter = groupStakeholderIds.map(item => {
+            const filter = new StringFilter();
+            filter.value = item;
+            filter.operator = 'equals';
+            return filter;
+        });
+        const { content } = await this.groupRepo.query(queryRequest);
+        return content.find(item => item.memberIds.includes(userId)) !== undefined;
     }
 
     private makeRequestStateInfo(request: RequestInfoDto, requestState?: RequestStateDto | null) {

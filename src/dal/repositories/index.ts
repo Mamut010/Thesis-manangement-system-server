@@ -20,3 +20,4 @@ export * from './process.repo';
 export * from './request.repo';
 export * from './group.repo';
 export * from './request-data.repo';
+export * from './request-stakeholder.repo';

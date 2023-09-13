@@ -47,8 +47,9 @@ export * from './users-query.request';
 
 export * from './processes-query.request';
 export * from './requests-query.request';
-export * from './request-stakeholders-update.request';
 export * from './group-create.request';
 export * from './group-update.request';
 export * from './groups-query.request';
 export * from './group-membes-update.request';
+export * from './request-user-stakeholders-update.request';
+export * from './request-group-stakeholders-update.request';

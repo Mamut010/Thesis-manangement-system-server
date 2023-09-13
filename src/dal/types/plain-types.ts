@@ -15,6 +15,7 @@ import {
     RefreshToken, 
     Request, 
     RequestData, 
+    RequestStakeholder, 
     Role, 
     State, 
     Student, 
@@ -58,6 +59,7 @@ export type PlainTopic = Topic;
 export type PlainLocation = Location;
 
 export type PlainThesis = Thesis & {
+    creator: Lecturer,
     topic: Topic | null,
     field: Field | null,
 }
@@ -86,19 +88,23 @@ export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & PlainStud
     supervisor: Lecturer
 };
 
-export type PlainProcess = Process;
-
 export type WithUserId = Pick<User, 'userId'>; 
 
-export type PlainRequest = Request & {
-    state: State & {
-        stateType: WorkflowStaticType
-    },
-    stakeholders: WithUserId[]
+export type PlainProcess = Process;
+
+export type PlainRequestStakeholder = Omit<RequestStakeholder, 'requestId'> & {
+    group: PlainGroup | null,
 };
 
 export type PlainGroup = Group & {
     users: WithUserId[]
 }
+
+export type PlainRequest = Request & {
+    state: State & {
+        stateType: WorkflowStaticType
+    },
+    requestStakeholders: RequestStakeholder[],
+};
 
 export type PlainRequestData = RequestData;

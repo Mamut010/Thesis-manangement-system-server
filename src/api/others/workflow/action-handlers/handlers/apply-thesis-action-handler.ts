@@ -20,11 +20,13 @@ export class ApplyThesisActionHandler extends BaseActionHandler {
     }
 
     async handle(requestId: string, actionInput: ActionHandlerInput): Promise<ActionHandlerOutput> {
-        const thesisId = this.getInputDataStringValue(actionInput, STORED_REQUEST_DATA_KEYS.Thesis);
-        if (!isNumericString(thesisId)) {
+        const inputThesisId = this.getInputDataStringValue(actionInput, STORED_REQUEST_DATA_KEYS.Thesis);
+        if (!isNumericString(inputThesisId)) {
             throw new BadRequestError(ERROR_MESSAGES.BadRequest.DataMustBeNumber);
         }
-        else if (!await this.thesisRepo.findOneById(Number(thesisId))) {
+
+        const thesisId = Number(inputThesisId);
+        if (!await this.thesisRepo.findOneById(thesisId)) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);
         }
     

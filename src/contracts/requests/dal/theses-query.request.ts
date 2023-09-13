@@ -1,4 +1,5 @@
 import { 
+    IsDateFilterArray,
     IsNullableDateFilterArray,
     IsNullableNumberFilterArray, 
     IsNullableStringFilterArray, 
@@ -6,6 +7,7 @@ import {
     IsStringFilterArray 
 } from "../../../decorators";
 import { 
+    DateFilter,
     NullableDateFilter, 
     NullableNumberFilter, 
     NullableStringFilter, 
@@ -22,6 +24,12 @@ export class ThesesQueryRequest extends BaseQueryRequest {
     titleFilter?: NullableStringFilter[];
 
     @IsStringFilterArray()
+    creatorIdFilter?: StringFilter[];
+
+    @IsNullableStringFilterArray()
+    creatorTitleFilter?: NullableStringFilter[];
+
+    @IsStringFilterArray()
     topicTitleFilter?: StringFilter[];
 
     @IsStringFilterArray()
@@ -35,4 +43,10 @@ export class ThesesQueryRequest extends BaseQueryRequest {
 
     @IsNullableDateFilterArray()
     submissionDeadlineFilter?: NullableDateFilter[];
+
+    @IsDateFilterArray()
+    createdAtFilter?: DateFilter[];
+
+    @IsDateFilterArray()
+    updatedAtFilter?: DateFilter[];
 }

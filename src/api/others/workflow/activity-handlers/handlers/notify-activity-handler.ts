@@ -1,7 +1,7 @@
 import { DEFAULTS } from "../../constants/defaults";
 import { NotificationServiceInterface } from "../../../../../shared/interfaces";
 import { stringFormat } from "../../../../../utils/string-helpers";
-import { DEFAULT_FORMATS } from "../constants/default-formats";
+import { DEFAULT_FORMATS } from "../../constants/default-formats";
 import { ActivityHandlerInput } from "../types";
 import { BaseNotifyActivityHandler } from "../bases/base-notify-activity-handler";
 import { inject, injectable } from "inversify";
@@ -24,7 +24,7 @@ export class NotifyActivityHandler extends BaseNotifyActivityHandler {
             await this.notificationService.sendNotification({
                 receiverId,
                 title: DEFAULTS.Notification.Title,
-                content: stringFormat(DEFAULT_FORMATS.Notification.Content, requestId)
+                content: stringFormat(DEFAULT_FORMATS.Activity.Notification.Content, requestId)
             });
         }));
     }

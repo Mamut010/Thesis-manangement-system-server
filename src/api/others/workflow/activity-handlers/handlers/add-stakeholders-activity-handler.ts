@@ -1,35 +1,24 @@
-import { ActivityHandlerInterface } from "../interfaces/activity-handler.interface";
 import { ActivityHandlerInput, ActivityHandlerOutput } from "../types";
-import { removeDuplicates } from "../../../../../utils/array-helpers";
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
-import { RequestRepoInterface } from "../../../../../dal/interfaces";
-import { ERROR_MESSAGES } from "../../../../../contracts/constants/error-messages";
-import { NotFoundError } from "../../../../../contracts/errors/not-found.error";
+import { RequestDataRepoInterface, RequestStakeholderRepoInterface } from "../../../../../dal/interfaces";
+import { WorkflowRequestDataProcessorInterface } from "../../request-data-processor";
+import { BaseUserStakeholdersActivityHandler } from "../bases/base-user-stakeholders-activity-handler";
+import { RequestStakeholderDto } from "../../../../../shared/dtos";
 
 @injectable()
-export class AddStakeholdersActivityHandler implements ActivityHandlerInterface {
-    constructor(@inject(INJECTION_TOKENS.RequestRepo) private requestRepo: RequestRepoInterface) {
-
+export class AddStakeholdersActivityHandler extends BaseUserStakeholdersActivityHandler {
+    constructor(
+        @inject(INJECTION_TOKENS.RequestStakeholderRepo) requestStakeholderRepo: RequestStakeholderRepoInterface,
+        @inject(INJECTION_TOKENS.RequestDataRepo) requestDataRepo: RequestDataRepoInterface,
+        @inject(INJECTION_TOKENS.WorkflowRequestDataProcessor) requestDataProcessor: WorkflowRequestDataProcessorInterface) {
+        super(requestStakeholderRepo, requestDataRepo, requestDataProcessor);
     }
 
-    async handle(requestId: string, activityInput: ActivityHandlerInput): Promise<ActivityHandlerOutput> {
-        if (!activityInput.actionerId) {
-            return { requestUsers: activityInput.requestUsers };
-        }
-
-        const request = await this.requestRepo.updateMembers(requestId, {
-            addedUserIds: [activityInput.actionerId]
+    protected execute(requestId: string, userId: string, activityInput: ActivityHandlerInput)
+        : Promise<ActivityHandlerOutput | RequestStakeholderDto | null> {
+        return this.requestStakeholderRepo.updateUserStakeholders(requestId, {
+            addedUserIds: [userId]
         });
-        if (!request) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.RequestNotFound);
-        }
-
-        return {
-            requestUsers: {
-                requesterId: activityInput.requestUsers.requesterId,
-                stakeholderIds: request?.stakeholderIds,
-            }
-        }
     }
 }

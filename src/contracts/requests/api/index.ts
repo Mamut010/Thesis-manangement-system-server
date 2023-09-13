@@ -1,4 +1,6 @@
-export * from './admin-info-update.request';
+export * from './thesis-info-create.request';
+export * from './thesis-info-update.request';
+export * from './thesis-infos-query.request';
 export * from './bachelor-thesis-assessment-info-create.request';
 export * from './bachelor-thesis-assessment-info-update.request';
 export * from './bachelor-thesis-assessment-infos-query.request';
@@ -19,6 +21,7 @@ export * from './oral-defense-registration-info-update.request';
 export * from './oral-defense-registration-infos-query.request';
 export * from './student-info-update.request';
 export * from './student-infos-query.request';
+export * from './admin-info-update.request';
 
 export * from './request-infos-query.request';
 export * from './group-info-create.request';

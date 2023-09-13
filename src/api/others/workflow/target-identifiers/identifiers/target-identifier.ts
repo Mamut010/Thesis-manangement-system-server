@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TargetIdentifierInterface } from "../interfaces/target-identifier.interface";
-import { TargetIdentifierInput } from "../types";
+import { TargetIdentifierInput, TargetIdentifierOutput } from "../types";
 import { Target } from "../../types/targets";
 import { STORED_REQUEST_DATA_KEYS } from "../../constants/request-data-keys";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
@@ -18,33 +18,33 @@ export class TargetIdentifier implements TargetIdentifierInterface {
 
     }
     
-    async identifyTarget(actionerId: string, targetIdentifierInput: TargetIdentifierInput): Promise<Target | undefined> {
+    async identifyTarget(actionerId: string, targetIdentifierInput: TargetIdentifierInput): Promise<TargetIdentifierOutput> {
         // Simple case
         if (actionerId === targetIdentifierInput.creatorId) {
-            return Target.Requester;
+            return { target: Target.Requester };
         }
 
-        let associatedKey: string | undefined = undefined;
-        // Traverse the request data and make a record while also check for associated key
+        // Traverse the request data and make a record while also check if actionerId is stored in the request data
         const dataRecord: Record<string, string> = {};
         for(const { name, value } of targetIdentifierInput.requestData) {
             const orgValue = this.requestDataProcessor.retrieveOriginalValue(value);
+
+            // As all user Ids and group Id are strings, any non-string stored value is skipped
             if (typeof orgValue !== 'string') {
                 continue;
             }
+            // If the actionerId is stored as a request data's value 
             else if (orgValue === actionerId) {
-                associatedKey = name;
-                break;
+                // Identify the Target based on the request data's key
+                return { target: this.getTargetFromDataKey(name) };
             }
 
+            // Store the record for later use
             dataRecord[name] = orgValue;
         }
 
-        if (associatedKey) {
-            return this.getTargetFromAssociatedKey(associatedKey);
-        }
-        else if (!(STORED_REQUEST_DATA_KEYS.AdminGroup in dataRecord)) {
-            return undefined;
+        if (!(STORED_REQUEST_DATA_KEYS.AdminGroup in dataRecord)) {
+            return { target: undefined };
         }
 
         const idFilter = new StringFilter();
@@ -60,14 +60,14 @@ export class TargetIdentifier implements TargetIdentifierInterface {
 
         const queryResponse = await this.groupRepo.query(queryRequest);
         if (queryResponse.count > 0) {
-            return Target.AdminGroup;
+            return { target: Target.AdminGroup };
         }
 
-        return undefined;
+        return { target: undefined };
     }
 
-    private getTargetFromAssociatedKey(associatedKey: string) {
-        switch(associatedKey) {
+    private getTargetFromDataKey(dataKey: string) {
+        switch(dataKey) {
             case STORED_REQUEST_DATA_KEYS.Supervisor1: return Target.Supervisor1;
             case STORED_REQUEST_DATA_KEYS.Supervisor2: return Target.Supervisor2;
             default: return undefined;

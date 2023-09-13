@@ -10,27 +10,37 @@ export class ThesisDto {
     @Expose()
     @IsOptional()
     @IsString()
-    title?: string | null;
+    title!: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    topicId?: number | null;
+    topicId!: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    topicTitle?: string | null;
+    topicTitle!: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    fieldId?: number | null;
+    fieldId!: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    fieldTitle?: string | null;
+    fieldTitle!: string | null;
+
+    @Expose()
+    @IsDefined()
+    @IsString()
+    creatorId!: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    creatorTitle!: string | null;
 
     @Expose()
     @IsDefined()
@@ -40,7 +50,7 @@ export class ThesisDto {
     @Expose()
     @IsOptional()
     @IsNumber()
-    slotLimit?: number | null;
+    slotLimit!: number | null;
 
     @Expose()
     @IsDefined()
@@ -55,20 +65,30 @@ export class ThesisDto {
     @Expose()
     @IsOptional()
     @IsDate()
-    submissionDeadline?: Date | null;
+    submissionDeadline!: Date | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    numberHardCopies?: number | null;
+    numberHardCopies!: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    printRequirements?: string | null;
+    printRequirements!: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    templateFiles?: string | null;
+    templateFiles!: string | null;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    createdAt!: Date;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    updatedAt!: Date;
 }

@@ -90,8 +90,8 @@ function seedData(prisma: PrismaClient) {
         }),
         prisma.thesis.createMany({
             data: [
-                { topicId: 1, fieldId: 1, title: 'Thesis Management System: BE' },
-                { topicId: 1, fieldId: 1, title: 'Thesis Management System: FE' },
+                { topicId: 1, fieldId: 1, creatorId: '101', title: 'Thesis Management System: BE' },
+                { topicId: 1, fieldId: 1, creatorId: '401', title: 'Thesis Management System: FE' },
             ]
         }),
         prisma.location.createMany({
@@ -190,8 +190,8 @@ const Id = {
         AdminApprovedCreateThesisRequest: 'State-AdminApprovedCreateThesisRequest',
         AdminDeniedCreateThesisRequest: 'State-AdminDeniedCreateThesisRequest',
         ThesisApplied: 'State-ThesisApplied',
-        FindingSup1: 'State-FindingSup1',
-        SentFindingSup1ToAdmin: 'State-SentFindingSup1ToAdmin',
+        // FindingSup1: 'State-FindingSup1',
+        // SentFindingSup1ToAdmin: 'State-SentFindingSup1ToAdmin',
         RequestApplyThesisSentToSup1: 'State-RequestApplyThesisSentToSup1',
         Sup1ApprovedThesisApplication: 'State-Sup1ApprovedThesisApplication',
         FindingSup2: 'State-FindingSup2',
@@ -218,10 +218,13 @@ const Id = {
         RequestCreateThesisSentToAdmin_AdminDeniedCreateThesisRequest: 'Transition-RequestCreateThesisSentToAdmin_AdminDeniedCreateThesisRequest',
         FindingThesis_ThesisApplied: 'Transition-FindingThesis_ThesisApplied',
         ThesisApplied_FindingThesis: 'Transition-ThesisApplied_FindingThesis',
-        ThesisApplied_FindingSup1: 'Transition-ThesisApplied_FindingSup1',
-        FindingSup1_SentFindingSup1ToAdmin: 'Transition-FindingSup1_SentFindingSup1ToAdmin',
-        FindingSup1_RequestApplyThesisSentToSup1: 'Transition-FindingSup1_RequestApplyThesisSentToSup1',
-        RequestApplyThesisSentToSup1_FindingSup1: 'Transition-RequestApplyThesisSentToSup1_FindingSup1',
+        // ThesisApplied_FindingSup1: 'Transition-ThesisApplied_FindingSup1',
+        // FindingSup1_SentFindingSup1ToAdmin: 'Transition-FindingSup1_SentFindingSup1ToAdmin',
+        // FindingSup1_RequestApplyThesisSentToSup1: 'Transition-FindingSup1_RequestApplyThesisSentToSup1',
+        // FindingSup1_RequestApplyThesisSentToSup1: 'Transition-FindingSup1_RequestApplyThesisSentToSup1',
+        // RequestApplyThesisSentToSup1_FindingSup1: 'Transition-RequestApplyThesisSentToSup1_FindingSup1',
+        ThesisApplied_RequestApplyThesisSentToSup1: 'Transition-ThesisApplied_RequestApplyThesisSentToSup1',
+        RequestApplyThesisSentToSup1_FindingThesis: 'Transition-RequestApplyThesisSentToSup1_FindingThesis',
         RequestApplyThesisSentToSup1_Sup1ApprovedThesisApplication: 'Transition-RequestApplyThesisSentToSup1_Sup1ApprovedThesisApplication',
         Sup1ApprovedThesisApplication_FindingSup2: 'Transition-Sup1ApprovedThesisApplication_FindingSup2',
         FindingSup2_RequestApplyThesisSentToSup2: 'Transition-FindingSup2_RequestApplyThesisSentToSup2',
@@ -252,11 +255,13 @@ const Id = {
         Reject: 'ActionType-Reject',
         RejectThesis: 'ActionType-RejectThesis',
         Confirm: 'ActionType-Confirm',
+        ConfirmThesis: 'ActionType-ConfirmThesis',
         RequestAdminGroup: 'ActionType-RequestAdminGroup',
         RequestSupervisor1: 'ActionType-RequestSupervisor1',
         RequestSupervisor2: 'ActionType-RequestSupervisor2',
         InformAdminGroup: 'ActionType-InformAdminGroup',
         InformRequester: 'ActionType-InformRequester',
+        InviteSupervisor2: 'ActionType-InviteSupervisor2',
         Deny: 'ActionType-Deny',
         Cancel: 'ActionType-Cancel',
     },
@@ -267,6 +272,7 @@ const Id = {
         Requester_RequestAdminGroup: 'Action-Requester_RequestAdminGroup',
         Requester_RequestSupervisor1: 'Action-Requester_RequestSupervisor1',
         Requester_Confirm: 'Action-Requester_Confirm',
+        Requester_ConfirmThesis: 'Action-Requester_ConfirmThesis',
         Requester_InformAdminGroup: 'Action-Requester_InformAdminGroup',
         Requester_Cancel: 'Action-Requester_Cancel',
 
@@ -282,12 +288,14 @@ const Id = {
         Supervisor2_Approve: 'Action-Supervisor2_Approve',
         Supervisor2_Reject: 'Action-Supervisor2_Reject',
 
-        RequesterOrSupervisor1_RequestSupervisor2: 'Action-RequesterOrSupervisor1_RequestSupervisor2',
+        RequesterOrSupervisor1_InviteSupervisor2: 'Action-RequesterOrSupervisor1_InviteSupervisor2',
     },
     ActivityType: {
         Notify: 'ActivityType-Notify',
         SendEmail: 'ActivityType-SendEmail',
         AddStakeholders: 'ActivityType-AddStakeholders',
+        AcceptStakeholders: 'ActivityType-AcceptStakeholders',
+        RemoveStakeholders: 'ActivityType-RemoveStakeholders',
     },
     Activity: {
         Notify_Requester: 'Activity-Notify_Requester',
@@ -298,7 +306,12 @@ const Id = {
         SendEmail_Requester: 'Activity-SendEmail_Requester',
 
         AddStakeholders_Supervisor1: 'Activity-AddStakeholders_Supervisor1',
+        AcceptStakeholders_Supervisor1: 'Activity-AcceptStakeholders_Supervisor1',
+        RemoveStakeholders_Supervisor1: 'Activity-RemoveStakeholders_Supervisor1',
+
         AddStakeholders_Supervisor2: 'Activity-AddStakeholders_Supervisor2',
+        AcceptStakeholders_Supervisor2: 'Activity-AcceptStakeholders_Supervisor2',
+        RemoveStakeholders_Supervisor2: 'Activity-RemoveStakeholders_Supervisor2',
     }
 } as const;
 
@@ -384,18 +397,18 @@ function seedThesisWorkflow(prisma: PrismaClient) {
                     stateTypeId: Id.StateType.Normal,
                     name: 'Thesis applied',
                 },
-                {
-                    id: Id.State.FindingSup1,
-                    processId: Id.Process.Thesis,
-                    stateTypeId: Id.StateType.Normal,
-                    name: 'Finding supervisor 1 for thesis application',
-                },
-                {
-                    id: Id.State.SentFindingSup1ToAdmin,
-                    processId: Id.Process.Thesis,
-                    stateTypeId: Id.StateType.Completed,
-                    name: 'Request supervisor 1 sent to admin',
-                },
+                // {
+                //     id: Id.State.FindingSup1,
+                //     processId: Id.Process.Thesis,
+                //     stateTypeId: Id.StateType.Normal,
+                //     name: 'Finding supervisor 1 for thesis application',
+                // },
+                // {
+                //     id: Id.State.SentFindingSup1ToAdmin,
+                //     processId: Id.Process.Thesis,
+                //     stateTypeId: Id.StateType.Completed,
+                //     name: 'Request supervisor 1 sent to admin',
+                // },
                 {
                     id: Id.State.RequestApplyThesisSentToSup1,
                     processId: Id.Process.Thesis,
@@ -607,39 +620,70 @@ function configThesisWorkflow(prisma: PrismaClient) {
                 }
             },
         }),
+        // prisma.transition.update({
+        //     where: {
+        //         id: Id.Transition.ThesisApplied_FindingSup1,
+        //     },
+        //     data: {
+        //         actions: {
+        //             connect: { id: Id.Action.Requester_Confirm }
+        //         }
+        //     },
+        // }),
+        // prisma.transition.update({
+        //     where: {
+        //         id: Id.Transition.FindingSup1_SentFindingSup1ToAdmin,
+        //     },
+        //     data: {
+        //         actions: {
+        //             connect: { id: Id.Action.Requester_InformAdminGroup }
+        //         }
+        //     },
+        // }),
+        // prisma.transition.update({
+        //     where: {
+        //         id: Id.Transition.FindingSup1_RequestApplyThesisSentToSup1,
+        //     },
+        //     data: {
+        //         actions: {
+        //             connect: { id: Id.Action.Requester_RequestSupervisor1 }
+        //         }
+        //     },
+        // }),
+        // prisma.transition.update({
+        //     where: {
+        //         id: Id.Transition.RequestApplyThesisSentToSup1_FindingSup1
+        //     },
+        //     data: {
+        //         actions: {
+        //             connect: { id: Id.Action.Supervisor1_Reject }
+        //         },
+        //         activities: {
+        //             connect: [
+        //                 { id: Id.Activity.Notify_Stakeholders }
+        //             ]
+        //         }
+        //     },
+        // }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.ThesisApplied_FindingSup1,
+                id: Id.Transition.ThesisApplied_RequestApplyThesisSentToSup1,
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_Confirm }
+                    connect: { id: Id.Action.Requester_ConfirmThesis }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders },
+                        { id: Id.Activity.AddStakeholders_Supervisor1 },
+                    ]
                 }
             },
         }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.FindingSup1_SentFindingSup1ToAdmin,
-            },
-            data: {
-                actions: {
-                    connect: { id: Id.Action.Requester_InformAdminGroup }
-                }
-            },
-        }),
-        prisma.transition.update({
-            where: {
-                id: Id.Transition.FindingSup1_RequestApplyThesisSentToSup1,
-            },
-            data: {
-                actions: {
-                    connect: { id: Id.Action.Requester_RequestSupervisor1 }
-                }
-            },
-        }),
-        prisma.transition.update({
-            where: {
-                id: Id.Transition.RequestApplyThesisSentToSup1_FindingSup1
+                id: Id.Transition.RequestApplyThesisSentToSup1_FindingThesis
             },
             data: {
                 actions: {
@@ -647,7 +691,8 @@ function configThesisWorkflow(prisma: PrismaClient) {
                 },
                 activities: {
                     connect: [
-                        { id: Id.Activity.Notify_Stakeholders }
+                        { id: Id.Activity.Notify_Stakeholders },
+                        { id: Id.Activity.RemoveStakeholders_Supervisor1 },
                     ]
                 }
             },
@@ -663,7 +708,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
                 activities: {
                     connect: [
                         { id: Id.Activity.Notify_Stakeholders },
-                        { id: Id.Activity.AddStakeholders_Supervisor1 },
+                        { id: Id.Activity.AcceptStakeholders_Supervisor1 },
                     ]
                 }
             },
@@ -678,7 +723,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
                 },
                 activities: {
                     connect: [
-                        { id: Id.Activity.Notify_Stakeholders }
+                        { id: Id.Activity.Notify_Stakeholders },
                     ]
                 }
             },
@@ -689,7 +734,12 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.RequesterOrSupervisor1_RequestSupervisor2 }
+                    connect: { id: Id.Action.RequesterOrSupervisor1_InviteSupervisor2 }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.AddStakeholders_Supervisor2 },
+                    ]
                 }
             },
         }),
@@ -703,7 +753,8 @@ function configThesisWorkflow(prisma: PrismaClient) {
                 },
                 activities: {
                     connect: [
-                        { id: Id.Activity.Notify_Stakeholders }
+                        { id: Id.Activity.Notify_Stakeholders },
+                        { id: Id.Activity.RemoveStakeholders_Supervisor2 },
                     ]
                 }
             },
@@ -719,7 +770,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
                 activities: {
                     connect: [
                         { id: Id.Activity.Notify_Stakeholders },
-                        { id: Id.Activity.AddStakeholders_Supervisor2 },
+                        { id: Id.Activity.AcceptStakeholders_Supervisor2 },
                     ]
                 }
             },
@@ -840,7 +891,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor2_Approve }
+                    connect: { id: Id.Action.Supervisor1_Approve }
                 },
                 activities: {
                     connect: [

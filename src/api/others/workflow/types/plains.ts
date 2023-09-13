@@ -15,9 +15,16 @@ export type PlainRequestAction = Record<string, unknown> & {
         nextStateId: string,
     },
     action: PlainAction,
-}
-
-export type PlainRequestData = {
-    name: string,
-    value: string,
 };
+
+export type PlainRequestStakeholder = {
+    userId: string | null,
+    group: {
+        id: string,
+        name: string,
+        users: {
+            userId: string
+        }[]
+    } | null,
+    isAccepted: boolean,
+}

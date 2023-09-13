@@ -1,7 +1,17 @@
-import { PlainRequestData } from "../types/plains";
+import { Target } from "../types/targets"
+import { Stakeholder } from "../types/utility-types"
+
+export type NameValuePair = {
+    name: string,
+    value: string,
+}
 
 export type TargetIdentifierInput = {
     creatorId: string,
-    stakeholderIds: string[],
-    requestData: PlainRequestData[],
+    requestStakeholders: Stakeholder[],
+    requestData: NameValuePair[],
+}
+
+export type TargetIdentifierOutput = {
+    target: Target | undefined,
 }

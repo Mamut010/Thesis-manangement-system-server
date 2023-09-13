@@ -16,6 +16,9 @@ import {
     RefreshTokenDto, 
     RequestDataDto, 
     RequestDto, 
+    RequestGroupStakeholderDto, 
+    RequestStakeholderDto, 
+    RequestUserStakeholderDto, 
     RoleDto, 
     StudentDto,
     ThesisDto,
@@ -40,6 +43,7 @@ import {
     PlainProgram, 
     PlainRefreshToken, 
     PlainRequest, 
+    PlainRequestStakeholder, 
     PlainRole, 
     PlainStudent,
     PlainThesis,
@@ -117,6 +121,9 @@ export class PlainTransformer implements PlainTransformerInterface {
             transformedProps: ['topic', 'field'],
         }));
 
+        dto.creatorId = plain.creator.userId;
+        dto.creatorTitle = plain.creator.title;
+
         return dto;
     }
 
@@ -184,11 +191,19 @@ export class PlainTransformer implements PlainTransformerInterface {
 
     public toRequest(plain: PlainRequest): RequestDto {
         const dto = plainToInstanceExactMatch(RequestDto, plain);
+
         dto.creatorId = plain.userId;
-        dto.stakeholderIds = plain.stakeholders.map(item => item.userId);
         dto.state = plain.state.name;
         dto.stateDescription = plain.state.description;
         dto.stateType = plain.state.stateType.name as StateType;
+
+        dto.userStakeholderIds = plain.requestStakeholders
+            .filter(item => item.userId !== null)
+            .map(item => item.userId!);
+        dto.groupStakeholderIds = plain.requestStakeholders
+            .filter(item => item.groupId !== null)
+            .map(item => item.groupId!);
+
         return dto;
     }
 
@@ -201,6 +216,29 @@ export class PlainTransformer implements PlainTransformerInterface {
     public toRequestData(plain: RequestData): RequestDataDto {
         const dto = plainToInstanceExactMatch(RequestDataDto, plain);
         return dto;
+    }
+
+    public toRequestStakeholder(requestId: string, plains: PlainRequestStakeholder[]): RequestStakeholderDto {
+        const userStakeholders: RequestUserStakeholderDto[] = [];
+        const groupStakeholders: RequestGroupStakeholderDto[] = [];
+
+        plains.forEach(item => {
+            if (item.group !== null) {
+                groupStakeholders.push({
+                    groupId: item.group.id,
+                    memberIds: item.group.users.map(user => user.userId),
+                    isAccepted: item.isAccepted,
+                });
+            }
+            else if (item.userId !== null) {
+                userStakeholders.push({
+                    userId: item.userId,
+                    isAccepted: item.isAccepted
+                });
+            }
+        });
+
+        return { requestId, userStakeholders, groupStakeholders };
     }
 
     private toBachelorThesisOrOralDefenseDto<T>(cls: new (...args: any[]) => T, plain: object): T {

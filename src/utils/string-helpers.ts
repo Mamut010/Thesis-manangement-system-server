@@ -43,7 +43,7 @@ export function prettyJSON(toStringify: any): string {
 }
 
 /**
- * Format a string having {<#number>} placeholders. 
+ * Format a string having {#number} placeholders. 
  * 
  * For e.g.: 'My name is {0}. I'm {1} years old.'
  * @param format The format.

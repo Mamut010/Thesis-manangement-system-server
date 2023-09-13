@@ -12,4 +12,8 @@ export abstract class BaseActionHandler implements ActionHandlerInterface {
         }
         return value;
     }
+
+    protected defaultOutput(actionInput: ActionHandlerInput): ActionHandlerOutput {
+        return { requestUsers: actionInput.requestUsers };
+    } 
 }

@@ -20,3 +20,6 @@ export * from './process.dto';
 export * from './request.dto';
 export * from './group.dto';
 export * from './request-data.dto';
+export * from './request-user-stakeholder.dto';
+export * from './request-group-stakeholder.dto';
+export * from './request-stakeholder.dto';

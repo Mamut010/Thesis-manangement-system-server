@@ -15,6 +15,11 @@ export class ThesisUpdateRequest {
     @Expose()
     @IsOptional()
     @IsString()
+    creatorId?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
     title?: string;
 
     @Expose()

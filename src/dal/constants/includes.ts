@@ -41,6 +41,7 @@ export const bachelorThesisEvaluationInclude = {
 } as const;
 
 export const thesisInclude = {
+    creator: true,
     topic: true,
     field: true,
 } as const;
@@ -51,13 +52,17 @@ export const requestInclude = {
             stateType: true
         }
     },
-    stakeholders: {
-        select: {
-            userId: true
-        }
-    }
+    requestStakeholders: true
 } as const;
 
 export const groupInclude = {
     users: true
+} as const;
+
+export const requestStakeholderInclude = {
+    group: {
+        include: {
+            users: true
+        }
+    }
 } as const;

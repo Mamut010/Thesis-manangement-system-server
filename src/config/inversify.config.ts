@@ -66,6 +66,7 @@ import {
     RefreshTokenRepoInterface, 
     RequestDataRepoInterface, 
     RequestRepoInterface, 
+    RequestStakeholderRepoInterface, 
     RoleRepoInterface, 
     StudentRepoInterface, 
     ThesisRepoInterface, 
@@ -93,7 +94,8 @@ import {
     RequestRepo,
     ProcessRepo,
     GroupRepo,
-    RequestDataRepo
+    RequestDataRepo,
+    RequestStakeholderRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -124,23 +126,25 @@ import { RoomIdGenerator, RoomIdGeneratorInterface } from '../ws/utils/room-id-g
 import { BOOTSTRAP_SETTINGS_KEY } from '../settings/bootstrap-settings';
 import { Tracer } from '@opentelemetry/api';
 import { 
+    AcceptStakeholdersActivityHandler,
     AddStakeholdersActivityHandler,
     ApplyThesisActionHandler, 
     ApproveActionHandler, 
     CancelActionHandler, 
     ConfirmActionHandler, 
+    ConfirmThesisActionHandler, 
     DenyActionHandler, 
     InformAdminGroupActionHandler, 
     InformRequesterActionHandler, 
+    InviteSupervisor2ActionHandler, 
     NotifyActivityHandler, 
     RejectActionHandler, 
     RejectThesisActionHandler, 
+    RemoveStakeholdersActivityHandler, 
     RequestAdminGroupActionHandler, 
     RequestSupervisor1ActionHandler, 
     RequestSupervisor2ActionHandler, 
-    SendEmailActivityHandler, 
-    SimpleActionHandler, 
-    SimpleActivityHandler, 
+    SendEmailActivityHandler,
     TargetIdentifier, 
     WorkflowCommandFactory, 
     WorkflowCommandFactoryInterface, 
@@ -315,7 +319,12 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<RequestDataRepoInterface>(INJECTION_TOKENS.RequestDataRepo)
         .to(RequestDataRepo)
-        .inRequestScope();       
+        .inRequestScope();
+
+    container
+        .bind<RequestStakeholderRepoInterface>(INJECTION_TOKENS.RequestStakeholderRepo)
+        .to(RequestStakeholderRepo)
+        .inRequestScope();
 }
 
 function configAuthServerServices(container: Container, settings?: BootstrapSettingInterface) {
@@ -527,23 +536,27 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
         .inSingletonScope();
 
     container.bind(TargetIdentifier).toSelf().inRequestScope();
+
     container.bind(ApplyThesisActionHandler).toSelf().inRequestScope();
     container.bind(ApproveActionHandler).toSelf().inRequestScope();
     container.bind(CancelActionHandler).toSelf().inRequestScope();
     container.bind(ConfirmActionHandler).toSelf().inRequestScope();
+    container.bind(ConfirmThesisActionHandler).toSelf().inRequestScope();
     container.bind(DenyActionHandler).toSelf().inRequestScope();
     container.bind(InformAdminGroupActionHandler).toSelf().inRequestScope();
     container.bind(InformRequesterActionHandler).toSelf().inRequestScope();
+    container.bind(InviteSupervisor2ActionHandler).toSelf().inRequestScope();
     container.bind(RejectActionHandler).toSelf().inRequestScope();
     container.bind(RejectThesisActionHandler).toSelf().inRequestScope();
     container.bind(RequestAdminGroupActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor1ActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor2ActionHandler).toSelf().inRequestScope();
-    container.bind(SimpleActionHandler).toSelf().inRequestScope();
+    
     container.bind(NotifyActivityHandler).toSelf().inRequestScope();
     container.bind(SendEmailActivityHandler).toSelf().inRequestScope();
     container.bind(AddStakeholdersActivityHandler).toSelf().inRequestScope();
-    container.bind(SimpleActivityHandler).toSelf().inRequestScope();
+    container.bind(RemoveStakeholdersActivityHandler).toSelf().inRequestScope();
+    container.bind(AcceptStakeholdersActivityHandler).toSelf().inRequestScope();
 
     container
         .bind<WorkflowCoreFactoryInterface>(INJECTION_TOKENS.WorkflowCoreFactory)

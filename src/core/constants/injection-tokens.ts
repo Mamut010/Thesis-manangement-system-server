@@ -37,6 +37,7 @@ const REPOSITORY_TOKENS = {
     RequestRepo: Symbol.for('RequestRepo'),
     GroupRepo: Symbol.for('GroupRepo'),
     RequestDataRepo: Symbol.for('RequestDataRepo'),
+    RequestStakeholderRepo: Symbol.for('RequestStakeholderRepo'),
 } as const;
 
 const AUTH_SERVICE_TOKENS = {
