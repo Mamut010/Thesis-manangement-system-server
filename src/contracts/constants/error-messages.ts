@@ -37,6 +37,7 @@ export const ERROR_MESSAGES = {
         UserCreationFailed: 'Unable to create new user',
         RequestCreationFailed: 'Unable to create new request',
         ThesisProcessRetrievalFailed: 'Unable to retrieve thesis process',
+        MultipleSimultaneousFulfilledTransitions: 'Multiple transitions fulfilled at the same time',
     },
     UniqueConstraint: {
         RoleAlreadyExists: 'The role already exists',

@@ -327,7 +327,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
 
         // There should not be multiple fulfilled transitions at the same time
         if (fulfilledTransitions.length > 1) {
-            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.DefaultMessage);
+            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.MultipleSimultaneousFulfilledTransitions);
         }
         
         return {
@@ -369,14 +369,31 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                             select: {
                                 id: true,
                             }
-                        }
+                        },
+                        nextStateId: true,
                     }
                 },
                 activities: WorkflowEngine.ACTIVITIES_SELECT,
             }
         });
 
-        const transitionActionIds = state.outTransitions.flatMap(transition => {
+        const currentStateEffect: ActivityEffect = async () => {
+            const activityTypeWithTargets = this.constructActivityTypeWithTargetsFromActivities(state.activities);
+            await this.handleActivity(activityTypeWithTargets, requestId, activityInput);
+        };
+
+        // Final state, in which there is no out transition
+        if (state.outTransitions.length === 0) {
+            return currentStateEffect;
+        }
+        
+        const immediatelyFulfilledTransitions: (typeof state.outTransitions) = [];
+        const transitionWithActionIds = state.outTransitions.flatMap(transition => {
+            // If there is no action associated with a transition, 
+            // this transition is immediately fulfilled without any user interactions
+            if (transition.actions.length === 0) {
+                immediatelyFulfilledTransitions.push(transition);
+            }
             return transition.actions.map(action => {
                 return {
                     transitionId: transition.id,
@@ -384,25 +401,51 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                 }
             })
         });
+        // There should not be multiple fulfilled transitions at the same time
+        if (immediatelyFulfilledTransitions.length > 1) {
+            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.MultipleSimultaneousFulfilledTransitions);
+        }
 
-        await prisma.request.update({
-            where: {
-                id: requestId,
-            },
-            data: {
-                stateId: stateId,
-                requestActions: {
-                    createMany: {
-                        data: transitionActionIds
+        const fulfilledTransition = singleOrDefault(immediatelyFulfilledTransitions);
+
+        // Common case, where there is no immediately fulfilled transition
+        if (!fulfilledTransition) {
+            await prisma.request.update({
+                where: {
+                    id: requestId,
+                },
+                data: {
+                    stateId: stateId,
+                    requestActions: {
+                        createMany: {
+                            data: transitionWithActionIds
+                        }
                     }
                 }
-            }
-        });
+            });
+            return currentStateEffect;
+        }
+
+        const effects = await this.handleImmediatelyFulfilledTransition(prisma, requestId, fulfilledTransition.id,
+            fulfilledTransition.nextStateId, activityInput.requestUsers);
 
         return async () => {
-            const activityTypeWithTargets = this.constructActivityTypeWithTargetsFromActivities(state.activities);
-            await this.handleActivity(activityTypeWithTargets, requestId, activityInput);
-        };
+            await currentStateEffect();
+            await Promise.all(effects);
+        }
+    }
+
+    private async handleImmediatelyFulfilledTransition(prisma: PrismaClientLike, requestId: string, transitionId: string,
+        nextStateId: string, requestUsers: RequestUsersDto): Promise<ActivityEffect[]> {
+        // Process all effects of the fulfilled transition and those of its next state
+        const immediatelyFulfilledActivityInput: ActivityHandlerInputWithoutTarget = { requestUsers };
+
+        const transitionEffect = await this.handleRequestFulfillingTransition(prisma, requestId, 
+            transitionId, immediatelyFulfilledActivityInput);
+        const nextStateEffect = await this.handleRequestEnteringState(prisma, requestId,
+            nextStateId, immediatelyFulfilledActivityInput);
+
+        return [transitionEffect, nextStateEffect];
     }
 
     private async handleAction(actionType: ActionType, requestId: string, actionInput: ActionHandlerInput) {
