@@ -28,7 +28,7 @@ import { GroupInfoDto } from "../../shared/dtos";
 import { Role } from "../../core/constants/roles";
 
 @JsonController('groups')
-//@Authorized()
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
@@ -54,14 +54,14 @@ export class GroupController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(Role.Admin)
+    @Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(GroupInfoDto)
     updateGroup(@Param('id') id: string, @Body({ required: true }) updateRequest: GroupInfoUpdateRequest) {
         return this.groupService.updateGroup(id, updateRequest);
     }
 
-    //@Authorized(Role.Admin)
+    @Authorized(Role.Admin)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteGroup(@Param('id') id: string) {
@@ -69,7 +69,7 @@ export class GroupController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized(Role.Admin)
+    @Authorized(Role.Admin)
     @Post('/thesis-process')
     @ResponseSchema(GroupInfoDto)
     createThesisProcessGroup(@Body({ required: true }) createRequest: GroupInfoCreateRequest) {
@@ -77,7 +77,7 @@ export class GroupController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(Role.Admin)
+    @Authorized(Role.Admin)
     @Patch('/:id/update-members')
     @ResponseSchema(GroupInfoDto)
     updateGroupMembers(@Param('id') id: string, @Body({ required: true }) updateRequest: GroupMembersUpdateRequest) {
@@ -85,7 +85,7 @@ export class GroupController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(Role.Admin)
+    @Authorized(Role.Admin)
     @Patch('/:id/set-members')
     @ResponseSchema(GroupInfoDto)
     setGroupMembers(@Param('id') id: string, @Body({ required: true }) setRequest: GroupMembersSetRequest) {
