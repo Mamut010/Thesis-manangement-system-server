@@ -5,6 +5,8 @@ import { GroupDto } from "../../shared/dtos";
 export interface GroupRepoInterface {
     query(queryRequest: GroupsQueryRequest): Promise<GroupsQueryResponse>;
 
+    findManyByIds(ids: string[]): Promise<GroupDto[]>;
+
     findOneById(id: string): Promise<GroupDto | null>;
 
     create(createRequest: GroupCreateRequest): Promise<GroupDto>;

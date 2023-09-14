@@ -7,6 +7,7 @@ import { NameValuePair, RequestIdAndName } from "../types/utility-types";
 import { RequestDataDto } from "../../shared/dtos";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
+import { makeArray } from "../../utils/array-helpers";
 
 @injectable()
 export class RequestDataRepo implements RequestDataRepoInterface {
@@ -69,25 +70,30 @@ export class RequestDataRepo implements RequestDataRepoInterface {
         return this.plainTransformer.toRequestData(record);
     }
 
-    async upsert(requestId: string, nameValuePair: NameValuePair): Promise<RequestDataDto> {
+    async upsert(requestId: string, nameValuePair: NameValuePair | NameValuePair[]): Promise<RequestDataDto[]> {
         const impl = async () => {
-            const record = await this.prisma.requestData.upsert({
-                where: {
-                    requestId_name: {
-                        requestId: requestId,
-                        name: nameValuePair.name,
-                    }
-                },
-                create: {
-                    requestId: requestId,
-                    name: nameValuePair.name,
-                    value: nameValuePair.value
-                },
-                update: {
-                    value: nameValuePair.value
-                }
-            });
-            return this.plainTransformer.toRequestData(record);
+            const records = await this.prisma.$transaction(
+                makeArray(nameValuePair).map(({ name, value }) => {
+                    return this.prisma.requestData.upsert({
+                        where: {
+                            requestId_name: {
+                                requestId: requestId,
+                                name: name,
+                            }
+                        },
+                        create: {
+                            requestId: requestId,
+                            name: name,
+                            value:value,
+                        },
+                        update: {
+                            value: value,
+                        }
+                    });
+                })
+            );
+
+            return records.map(item => this.plainTransformer.toRequestData(item));
         }
 
         return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.RequestAlreadyConnectedDataWithName);

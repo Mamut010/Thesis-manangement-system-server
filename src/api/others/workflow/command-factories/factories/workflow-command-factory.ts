@@ -8,6 +8,7 @@ import { WorkflowCommandFactoryInterface } from "../interfaces/workflow-command-
 import { 
     ApplyThesisCommand,
     ApproveCommand,
+    BackCommand,
     CancelCommand,
     ConfirmCommand,
     ConfirmThesisCommand,
@@ -35,6 +36,9 @@ export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
 
             case ActionType.Approve:
                 return new ApproveCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.Back:
+                return new BackCommand(engine, commandInput.actionerId, commandInput.requestId);
 
             case ActionType.Cancel:
                 return new CancelCommand(engine, commandInput.actionerId, commandInput.requestId);
@@ -66,29 +70,21 @@ export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
                 return new RejectThesisCommand(engine, commandInput.actionerId, commandInput.requestId);
 
             case ActionType.RequestAdminGroup:
-                return new RequestAdminGroupCommand(engine, commandInput.actionerId, commandInput.requestId,
-                    this.getOptionalStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.AdminGroup));
+                return new RequestAdminGroupCommand(engine, commandInput.actionerId, commandInput.requestId);
 
             case ActionType.RequestSupervisor1:
-                return new RequestSupervisor1Command(engine, commandInput.actionerId, commandInput.requestId,
-                    this.getOptionalStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor1));
+                return new RequestSupervisor1Command(engine, commandInput.actionerId, commandInput.requestId);
 
             case ActionType.RequestSupervisor2:
-                return new RequestSupervisor2Command(engine, commandInput.actionerId, commandInput.requestId,
-                    this.getOptionalStringValueFromData(commandInput.data, STORED_REQUEST_DATA_KEYS.Supervisor2));
+                return new RequestSupervisor2Command(engine, commandInput.actionerId, commandInput.requestId);
         }
     }
 
     private getStringValueFromData(data: Record<string, unknown> | undefined, key: string) {
-        const value = this.getOptionalStringValueFromData(data, key);
+        const value = data?.[key];
         if (typeof value !== 'string') {
-            throw new BadRequestError(ERROR_MESSAGES.BadRequest.MissingRequiredRequestData + `: ${key}`);
+            throw new BadRequestError(ERROR_MESSAGES.BadRequest.MissingRequiredStringRequestData + `: ${key}`);
         }
         return value;
-    }
-
-    private getOptionalStringValueFromData(data: Record<string, unknown> | undefined, key: string) {
-        const value = data?.[key];
-        return typeof value === 'string' ? value : undefined;
     }
 }

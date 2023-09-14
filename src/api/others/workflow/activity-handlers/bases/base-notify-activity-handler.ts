@@ -54,8 +54,8 @@ export abstract class BaseNotifyActivityHandler extends BaseActivityHandler {
             return [];
         }
 
-        const supervisorId = await getRequestDataStringValueByKey(requestId, key, this.makeRequestRepoDeps());
-        return supervisorId ? [supervisorId] : []
+        const userId = await getRequestDataStringValueByKey(requestId, key, this.makeRequestRepoDeps());
+        return userId ? [userId] : []
     }
 
     private getAllAcceptedStakeholderIds(stakeholders: Stakeholder[]) {
