@@ -6,8 +6,8 @@ import { RequestUsersDto } from "../../types/dtos";
 import { makeArray, removeDuplicates, uniqueFrom } from "../../../../../utils/array-helpers";
 import { GroupRepoInterface, RequestDataRepoInterface } from "../../../../../dal/interfaces";
 import { WorkflowRequestDataProcessorInterface } from "../../request-data-processor";
-import { Stakeholder } from "../../types/utility-types";
 import { BaseActivityHandler } from "./base-activity-handler";
+import { GroupStakeholder, UserStakeholder } from "../../types/utility-types";
 
 export abstract class BaseNotifyActivityHandler extends BaseActivityHandler {
     constructor(
@@ -43,7 +43,7 @@ export abstract class BaseNotifyActivityHandler extends BaseActivityHandler {
             return makeArray(requestUsers.requesterId);
         }
         else if (target === Target.Stakeholders) {
-            return this.getAllAcceptedStakeholderIds(requestUsers.requestStakeholders);
+            return this.getAllAcceptedStakeholderIds(requestUsers.userStakeholders, requestUsers.groupStakeholders);
         }
         else if (target === Target.AdminGroup) {
             return this.getAdminGroupUserIds(requestId);
@@ -58,9 +58,10 @@ export abstract class BaseNotifyActivityHandler extends BaseActivityHandler {
         return userId ? [userId] : []
     }
 
-    private getAllAcceptedStakeholderIds(stakeholders: Stakeholder[]) {
-        return stakeholders
-            .flatMap(item => item.isAccepted ? (item.userId ?? item.memberIds) : []);
+    private getAllAcceptedStakeholderIds(userStakeholders: UserStakeholder[], groupStakeholders: GroupStakeholder[]) {
+        const acceptedUserStakeholderIds = userStakeholders.flatMap(item => item.isAccepted ? item.userId : []);
+        const acceptedGroupMemberStakeholderIds = groupStakeholders.flatMap(item => item.isAccepted ? item.memberIds : []);
+        return acceptedUserStakeholderIds.concat(acceptedGroupMemberStakeholderIds);
     }
 
     private async getAdminGroupUserIds(requestId: string) {

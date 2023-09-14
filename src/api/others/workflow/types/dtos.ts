@@ -1,10 +1,11 @@
 import { ActionType } from "./action-type";
 import { StateType } from "./state-type";
-import { Stakeholder } from "./utility-types";
+import { GroupStakeholder, UserStakeholder } from "./utility-types";
 
 export interface RequestUsersDto {
     requesterId: string,
-    requestStakeholders: Stakeholder[],
+    userStakeholders: UserStakeholder[],
+    groupStakeholders: GroupStakeholder[],
 }
 
 export interface RequestStateDto {

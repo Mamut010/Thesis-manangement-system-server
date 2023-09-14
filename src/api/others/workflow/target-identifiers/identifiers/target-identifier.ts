@@ -20,7 +20,7 @@ export class TargetIdentifier implements TargetIdentifierInterface {
     
     async identifyTarget(actionerId: string, targetIdentifierInput: TargetIdentifierInput): Promise<TargetIdentifierOutput> {
         // Simple case
-        if (actionerId === targetIdentifierInput.creatorId) {
+        if (actionerId === targetIdentifierInput.requestUsers.requesterId) {
             return { target: Target.Requester };
         }
 

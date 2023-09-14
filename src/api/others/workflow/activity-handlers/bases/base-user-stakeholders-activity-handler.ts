@@ -31,7 +31,8 @@ export abstract class BaseUserStakeholdersActivityHandler extends BaseActivityHa
             ? {
                 requestUsers: {
                     requesterId: activityInput.requestUsers.requesterId,
-                    requestStakeholders: [...executionResult.userStakeholders, ...executionResult.groupStakeholders],
+                    userStakeholders: executionResult.userStakeholders,
+                    groupStakeholders: executionResult.groupStakeholders,
                 } 
             } 
             : executionResult;

@@ -12,7 +12,8 @@ import {
     ActivityEffect, 
     ActivityHandlerInputWithoutTarget, 
     ActivityTypeWithTarget,
-    Stakeholder
+    GroupStakeholder,
+    UserStakeholder,
 } from "../../types/utility-types";
 import { ActionHandlerInput } from "../../action-handlers";
 import { ActivityHandlerInput } from "../../activity-handlers";
@@ -99,10 +100,11 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             const stateEffect = await this.handleRequestEnteringState(tx, request.id, request.stateId, {
                 requestUsers: {
                     requesterId: createOptions.userId,
-                    requestStakeholders: [{
+                    userStakeholders: [{
                         userId: createOptions.userId,
                         isAccepted: true
-                    }]
+                    }],
+                    groupStakeholders: []
                 },
             });
             activityEffects.push(stateEffect);
@@ -127,10 +129,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             return null;
         }
 
-        const requestUsers: RequestUsersDto = {
-            requesterId: request.userId,
-            requestStakeholders: this.constructStakeholdersFromPlains(request.requestStakeholders)
-        };
+        const requestUsers = this.constructRequestUsersDtoFromPlains(request.userId, request.requestStakeholders);
         const actionOutput = await this.handleAction(actionType, requestId, { requestUsers, actionerId, target, data });
         if (!actionOutput) {
             return null;
@@ -252,8 +251,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
             const targetIdentifier = this.coreFactory.createTargetIdentifier();
             const targetOutput = request 
                 ? await targetIdentifier.identifyTarget(actionerId, { 
-                    creatorId: request.userId,
-                    requestStakeholders: this.constructStakeholdersFromPlains(request.requestStakeholders),
+                    requestUsers: this.constructRequestUsersDtoFromPlains(request.userId, request.requestStakeholders),
                     requestData: request.data,
                 }) 
                 : undefined;
@@ -490,22 +488,32 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         });
     }
 
-    private constructStakeholdersFromPlains(plains: PlainRequestStakeholder[]): Stakeholder[] {
-        return plains
+    private constructRequestUsersDtoFromPlains(requesterId: string, plains: PlainRequestStakeholder[]): RequestUsersDto {
+        const stakeholders = plains
             .filter(item => item.userId !== null || item.group !== null)
-            .map<Stakeholder>(({ userId, group, isAccepted }) => {
-                if (group !== null) {
-                    return { 
-                        groupId: group.id,
-                        memberIds: group.users.map(user => user.userId),
-                        isAccepted,
-                    };
+            .reduce((result, item) => {
+                if (item.group !== null) {
+                    result.groupStakeholders.push({ 
+                        groupId: item.group.id,
+                        memberIds: item.group.users.map(user => user.userId),
+                        isAccepted: item.isAccepted
+                    });
                 }
-
-                return {
-                    userId: userId!,
-                    isAccepted,
-                };
+                if (item.userId !== null) {
+                    result.userStakeholders.push({
+                        userId: item.userId,
+                        isAccepted: item.isAccepted
+                    })
+                }
+                return result;
+            }, {
+                userStakeholders: new Array<UserStakeholder>(),
+                groupStakeholders: new Array<GroupStakeholder>(),
             });
+        return {
+            requesterId,
+            userStakeholders: stakeholders.userStakeholders,
+            groupStakeholders: stakeholders.groupStakeholders,
+        };
     }
 }
