@@ -37,7 +37,8 @@ export const ERROR_MESSAGES = {
         UserCreationFailed: 'Unable to create new user',
         RequestCreationFailed: 'Unable to create new request',
         ThesisProcessRetrievalFailed: 'Unable to retrieve thesis process',
-        MultipleSimultaneousFulfilledTransitions: 'Multiple transitions fulfilled at the same time',
+        MissingRequiredStringRequestData: 'Unable retrieve necessary string request data',
+        MultipleSimultaneousFulfilledTransitions: 'Unexpected multiple fulfilled transitions at the same time',
     },
     UniqueConstraint: {
         RoleAlreadyExists: 'The role already exists',
@@ -70,9 +71,10 @@ export const ERROR_MESSAGES = {
     Invalid: {
         RoleInvalid: 'Invalid role',
         InputInvalid: 'Invalid input',
+        Supervisor2MustNotBeSupervisor1: 'Supervisor2 must not be Supervisor1',
     },
     BadRequest: {
         DataMustBeNumber: 'Passed data must be number',
-        MissingRequiredRequestData: 'Missing required request data',
+        MissingRequiredStringRequestData: 'Missing required string request data',
     }
 } as const;

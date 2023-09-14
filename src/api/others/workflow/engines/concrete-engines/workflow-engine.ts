@@ -138,9 +138,9 @@ export class WorkflowEngine implements WorkflowEngineInterface {
 
         const validRequestActionIds = validRequestActions.map(item => item.id);
         const activityEffects = await this.updateRequestActions(requestId, request.requestActions, validRequestActionIds, {
-            requestUsers,
             actionerId,
             target,
+            requestUsers: actionOutput.requestUsers,
             actionResolvedUserIds: actionOutput.resolvedUserIds,
         });
         await this.handleActivityEffects(activityEffects);
@@ -386,6 +386,14 @@ export class WorkflowEngine implements WorkflowEngineInterface {
 
         // Final state, in which there is no out transition
         if (state.outTransitions.length === 0) {
+            await prisma.request.update({
+                where: {
+                    id: requestId,
+                },
+                data: {
+                    stateId: stateId
+                }
+            });
             return currentStateEffect;
         }
         
@@ -433,7 +441,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
 
         return async () => {
             await currentStateEffect();
-            await Promise.all(effects);
+            await this.handleActivityEffects(effects);
         }
     }
 

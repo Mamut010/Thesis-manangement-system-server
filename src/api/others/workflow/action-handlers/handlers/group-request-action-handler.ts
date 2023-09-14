@@ -7,6 +7,8 @@ import { getTitleAndContentFromData } from "../../utils/action-handler-helpers";
 import { removeDuplicates } from "../../../../../utils/array-helpers";
 import { GroupRepoInterface, RequestDataRepoInterface } from "../../../../../dal/interfaces";
 import { WorkflowRequestDataProcessorInterface } from "../../request-data-processor";
+import { KeyValuePair } from "../../types/utility-types";
+import { UnexpectedError } from "../../../../../contracts/errors/unexpected.error";
 
 export class GroupRequestActionHandler extends BaseRequestActionHandler {
     constructor(
@@ -18,13 +20,23 @@ export class GroupRequestActionHandler extends BaseRequestActionHandler {
         super(requestDataRepo, requestDataProcessor, dataKey);
     }
 
-    protected async sendRequest(dataValue: string, actionInput: ActionHandlerInput): Promise<ActionHandlerOutput> {
-        const group = await this.groupRepo.findOneById(dataValue);
-        if (!group) {
+    protected async sendRequest(requestId: string, dataKeyValuePairs: KeyValuePair<string | undefined>[], actionInput: ActionHandlerInput)
+        : Promise<ActionHandlerOutput> {
+        const groupIds = dataKeyValuePairs.map(item => {
+            if (typeof item.value === 'undefined') {
+                throw new UnexpectedError(ERROR_MESSAGES.Unexpected.MissingRequiredStringRequestData);
+            }
+            return item.value;
+        });
+
+        const groups = await this.groupRepo.findManyByIds(groupIds);
+        if (groups.length !== groupIds.length) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.GroupNotFound);
         }
 
-        await Promise.all(group.memberIds.map(userId => {
+        const userIds = groups.flatMap(item => item.memberIds);
+
+        await Promise.all(userIds.map(userId => {
             return this.notificationService.sendNotification({
                 senderId: actionInput.actionerId,
                 receiverId: userId,
@@ -34,7 +46,7 @@ export class GroupRequestActionHandler extends BaseRequestActionHandler {
 
         return {
             requestUsers: actionInput.requestUsers,
-            resolvedUserIds: removeDuplicates(group.memberIds.concat(actionInput.actionerId))
+            resolvedUserIds: removeDuplicates(userIds.concat(actionInput.actionerId))
         };
     }
 }

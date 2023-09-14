@@ -130,6 +130,7 @@ import {
     AddStakeholdersActivityHandler,
     ApplyThesisActionHandler, 
     ApproveActionHandler, 
+    BackActionHandler, 
     CancelActionHandler, 
     ConfirmActionHandler, 
     ConfirmThesisActionHandler, 
@@ -144,6 +145,7 @@ import {
     RequestAdminGroupActionHandler, 
     RequestSupervisor1ActionHandler, 
     RequestSupervisor2ActionHandler, 
+    RequestSupervisorsActionHandler, 
     SendEmailActivityHandler,
     TargetIdentifier, 
     WorkflowCommandFactory, 
@@ -549,6 +551,7 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
 
     container.bind(ApplyThesisActionHandler).toSelf().inRequestScope();
     container.bind(ApproveActionHandler).toSelf().inRequestScope();
+    container.bind(BackActionHandler).toSelf().inRequestScope();
     container.bind(CancelActionHandler).toSelf().inRequestScope();
     container.bind(ConfirmActionHandler).toSelf().inRequestScope();
     container.bind(ConfirmThesisActionHandler).toSelf().inRequestScope();
@@ -561,6 +564,7 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
     container.bind(RequestAdminGroupActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor1ActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor2ActionHandler).toSelf().inRequestScope();
+    container.bind(RequestSupervisorsActionHandler).toSelf().inRequestScope();
     
     container.bind(NotifyActivityHandler).toSelf().inRequestScope();
     container.bind(SendEmailActivityHandler).toSelf().inRequestScope();

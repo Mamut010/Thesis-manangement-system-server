@@ -3,6 +3,7 @@ import { Seeder } from "./seeder";
 import { ROLES, ROLE_IDS } from "../roles";
 import { hash } from "../utils/crypto";
 import { email } from "../utils/credentials";
+import { PascalCaseToStandard, trimPrefix } from "../utils/helpers";
 
 export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
     await prisma.$transaction([
@@ -206,7 +207,25 @@ const Id = {
         AdminDeniedApproveBTRFormRequest: 'State-AdminDeniedApproveBTRFormRequest',
         AdminFillingBTRequirements: 'State-AdminFillingBTRequirements',
         AdminFilledBTRequirements: 'State-AdminFilledBTRequirements',
-        SentBTRequirementsToStudent: 'State-SentBTRequirementsToStudent',
+        BTRequirementsSentToStudent: 'State-BTRequirementsSentToStudent',
+
+        RequestBTEFormSentToSup1: 'State-RequestBTEFormSentToSup1',
+        Sup1RejectedThesis: 'State-Sup1RejectedThesis',
+        Sup1FillingBTEForm: 'State-Sup1FillingBTEForm',
+        Sup1FilledBTEForm: 'State-Sup1FilledBTEForm',
+        Sup1SubmittedBTEForm: 'State-Sup1SubmittedBTEForm',
+        AdminDeniedPermissionToFillODRForm: 'State-AdminDeniedPermissionToFillODRForm',
+        StudentFillingODRForm: 'State-StudentFillingODRForm',
+        StudentFilledODRForm: 'State-StudentFilledODRForm',
+        RequestFinalizeODRFormSentToAdmin: 'State-RequestFinalizeODRFormSentToAdmin',
+        AdminFinalizedODRForm: 'State-AdminFinalizedODRForm',
+        RequestAssessmentsSentToSups: 'State-RequestAssessmentsSentToSups',
+        Sup1ConfirmedAssessmentsAwaitingSup2: 'State-Sup1ConfirmedAssessmentsAwaitingSup2',
+        Sup2ConfirmedAssessmentsAwaitingSup1: 'State-Sup2ConfirmedAssessmentsAwaitingSup1',
+        SupsConfirmedAssessments: 'State-SupsConfirmedAssessments',
+        AssessmentsSentToAdmin: 'State-AssessmentsSentToAdmin',
+        AdminConfirmedAssessments: 'State-AdminConfirmedAssessments',
+
         // Special state
         RequestCancelled: 'State-RequestCancelled'
     },
@@ -216,11 +235,6 @@ const Id = {
         RequestCreateThesisSentToAdmin_AdminDeniedCreateThesisRequest: 'Transition-RequestCreateThesisSentToAdmin_AdminDeniedCreateThesisRequest',
         FindingThesis_ThesisApplied: 'Transition-FindingThesis_ThesisApplied',
         ThesisApplied_FindingThesis: 'Transition-ThesisApplied_FindingThesis',
-        // ThesisApplied_FindingSup1: 'Transition-ThesisApplied_FindingSup1',
-        // FindingSup1_SentFindingSup1ToAdmin: 'Transition-FindingSup1_SentFindingSup1ToAdmin',
-        // FindingSup1_RequestApplyThesisSentToSup1: 'Transition-FindingSup1_RequestApplyThesisSentToSup1',
-        // FindingSup1_RequestApplyThesisSentToSup1: 'Transition-FindingSup1_RequestApplyThesisSentToSup1',
-        // RequestApplyThesisSentToSup1_FindingSup1: 'Transition-RequestApplyThesisSentToSup1_FindingSup1',
         ThesisApplied_RequestApplyThesisSentToSup1: 'Transition-ThesisApplied_RequestApplyThesisSentToSup1',
         RequestApplyThesisSentToSup1_FindingThesis: 'Transition-RequestApplyThesisSentToSup1_FindingThesis',
         RequestApplyThesisSentToSup1_Sup1ApprovedThesisApplication: 'Transition-RequestApplyThesisSentToSup1_Sup1ApprovedThesisApplication',
@@ -245,11 +259,40 @@ const Id = {
         RequestApproveBTRFormSentToAdmin_AdminFillingBTRequirements: 'Transition-RequestApproveBTRFormSentToAdmin_AdminFillingBTRequirements',
         AdminFillingBTRequirements_AdminFilledBTRequirements: 'Transition-AdminFillingBTRequirements_AdminFilledBTRequirements',
         AdminFilledBTRequirements_AdminFillingBTRequirements: 'Transition-AdminFilledBTRequirements_AdminFillingBTRequirements',
-        AdminFilledBTRequirements_SentBTRequirementsToStudent: 'Transition-AdminFilledBTRequirements_SentBTRequirementsToStudent',
+        AdminFilledBTRequirements_BTRequirementsSentToStudent: 'Transition-AdminFilledBTRequirements_BTRequirementsSentToStudent',
+    
+        BTRequirementsSentToStudent_RequestBTEFormSentToSup1: 'Transition-BTRequirementsSentToStudent_RequestBTEFormSentToSup1',
+        RequestBTEFormSentToSup1_Sup1RejectedThesis: 'Transition-RequestBTEFormSentToSup1_Sup1RejectedThesis',
+        RequestBTEFormSentToSup1_Sup1FillingBTEForm: 'Transition-RequestBTEFormSentToSup1_Sup1FillingBTEForm',
+        Sup1RejectedThesis_StudentFillingBTRForm: 'Transition-Sup1RejectedThesis_StudentFillingBTRForm',
+        Sup1RejectedThesis_Sup1FillingBTEForm: 'Transition-Sup1RejectedThesis_Sup1FillingBTEForm',
+        Sup1FillingBTEForm_Sup1RejectedThesis: 'Transition-Sup1FillingBTEForm_Sup1RejectedThesis',
+        Sup1FillingBTEForm_Sup1FilledBTEForm: 'Transition-Sup1FillingBTEForm_Sup1FilledBTEForm',
+        Sup1FilledBTEForm_Sup1FillingBTEForm: 'Transition-Sup1FilledBTEForm_Sup1FillingBTEForm',
+        Sup1FilledBTEForm_Sup1SubmittedBTEForm: 'Transition-Sup1FilledBTEForm_Sup1SubmittedBTEForm',
+        Sup1SubmittedBTEForm_AdminDeniedPermissionToFillODRForm: 'Transition-Sup1SubmittedBTEForm_AdminDeniedPermissionToFillODRForm',
+        Sup1SubmittedBTEForm_StudentFillingODRForm: 'Transition-Sup1SubmittedBTEForm_StudentFillingODRForm',
+        StudentFillingODRForm_StudentFilledODRForm: 'Transition-StudentFillingODRForm_StudentFilledODRForm',
+        StudentFilledODRForm_StudentFillingODRForm: 'Transition-StudentFilledODRForm_StudentFillingODRForm',
+        StudentFilledODRForm_RequestFinalizeODRFormSentToAdmin: 'Transition-StudentFilledODRForm_RequestFinalizeODRFormSentToAdmin',
+        RequestFinalizeODRFormSentToAdmin_AdminFinalizedODRForm: 'Transition-RequestFinalizeODRFormSentToAdmin_AdminFinalizedODRForm',
+        AdminFinalizedODRForm_RequestFinalizeODRFormSentToAdmin: 'Transition-AdminFinalizedODRForm_RequestFinalizeODRFormSentToAdmin',
+        AdminFinalizedODRForm_RequestAssessmentsSentToSups: 'Transition-AdminFinalizedODRForm_RequestAssessmentsSentToSups',
+        RequestAssessmentsSentToSups_Sup1ConfirmedAssessmentsAwaitingSup2: 'Transition-RequestAssessmentsSentToSups_Sup1ConfirmedAssessmentsAwaitingSup2',
+        RequestAssessmentsSentToSups_Sup2ConfirmedAssessmentsAwaitingSup1: 'Transition-RequestAssessmentsSentToSups_Sup2ConfirmedAssessmentsAwaitingSup1',
+        Sup1ConfirmedAssessmentsAwaitingSup2_RequestAssessmentsSentToSups: 'Transition-Sup1ConfirmedAssessmentsAwaitingSup2_RequestAssessmentsSentToSups',
+        Sup1ConfirmedAssessmentsAwaitingSup2_SupsConfirmedAssessments: 'Transition-Sup1ConfirmedAssessmentsAwaitingSup2_SupsConfirmedAssessments',
+        Sup2ConfirmedAssessmentsAwaitingSup1_RequestAssessmentsSentToSups: 'Transition-Sup2ConfirmedAssessmentsAwaitingSup1_RequestAssessmentsSentToSups',
+        Sup2ConfirmedAssessmentsAwaitingSup1_SupsConfirmedAssessments: 'Transition-Sup2ConfirmedAssessmentsAwaitingSup1_SupsConfirmedAssessments',
+        SupsConfirmedAssessments_Sup1ConfirmedAssessmentsAwaitingSup2: 'Transition-SupsConfirmedAssessments_Sup1ConfirmedAssessmentsAwaitingSup2',
+        SupsConfirmedAssessments_Sup2ConfirmedAssessmentsAwaitingSup1: 'Transition-SupsConfirmedAssessments_Sup2ConfirmedAssessmentsAwaitingSup1',
+        SupsConfirmedAssessments_AssessmentsSentToAdmin: 'Transition-SupsConfirmedAssessments_AssessmentsSentToAdmin',
+        AssessmentsSentToAdmin_AdminConfirmedAssessments: 'Transition-AssessmentsSentToAdmin_AdminConfirmedAssessments',
     },
     ActionType: {
         Approve: 'ActionType-Approve',
         ApplyThesis: 'ActionType-ApplyThesis',
+        Back: 'ActionType-Back',
         Reject: 'ActionType-Reject',
         RejectThesis: 'ActionType-RejectThesis',
         Confirm: 'ActionType-Confirm',
@@ -257,6 +300,7 @@ const Id = {
         RequestAdminGroup: 'ActionType-RequestAdminGroup',
         RequestSupervisor1: 'ActionType-RequestSupervisor1',
         RequestSupervisor2: 'ActionType-RequestSupervisor2',
+        RequestSupervisors: 'ActionType-RequestSupervisors',
         InformAdminGroup: 'ActionType-InformAdminGroup',
         InformRequester: 'ActionType-InformRequester',
         InviteSupervisor2: 'ActionType-InviteSupervisor2',
@@ -265,6 +309,7 @@ const Id = {
     },
     Action: {
         Requester_ApplyThesis: 'Action-Requester_ApplyThesis',
+        Requester_Back: 'Action-Requester_Back',
         Requester_Reject: 'Action-Requester_Reject',
         Requester_RejectThesis: 'Action-Requester_RejectThesis',
         Requester_RequestAdminGroup: 'Action-Requester_RequestAdminGroup',
@@ -275,15 +320,23 @@ const Id = {
         Requester_Cancel: 'Action-Requester_Cancel',
 
         AdminGroup_Approve: 'Action-AdminGroup_Approve',
+        AdminGroup_Back: 'Action-AdminGroup_Back',
         AdminGroup_Reject: 'Action-AdminGroup_Reject',
         AdminGroup_Confirm: 'Action-AdminGroup_Confirm',
-        AdminGroup_InformRequester: 'Action-AdminGroup_InformRequester',
         AdminGroup_Deny: 'Action-AdminGroup_Deny',
+        AdminGroup_InformRequester: 'Action-AdminGroup_InformRequester',
+        AdminGroup_RequestSupervisor1: 'Action-AdminGroup_RequestSupervisor1',
+        AdminGroup_RequestSupervisors: 'Action-AdminGroup_RequestSupervisors',
 
         Supervisor1_Approve: 'Action-Supervisor1_Approve',
+        Supervisor1_Back: 'Action-Supervisor1_Back',
+        Supervisor1_Confirm: 'Action-Supervisor1_Confirm',
         Supervisor1_Reject: 'Action-Supervisor1_Reject',
+        Supervisor1_RequestAdminGroup: 'Action-Supervisor1_RequestAdminGroup',
 
         Supervisor2_Approve: 'Action-Supervisor2_Approve',
+        Supervisor2_Back: 'Action-Supervisor2_Back',
+        Supervisor2_Confirm: 'Action-Supervisor2_Confirm',
         Supervisor2_Reject: 'Action-Supervisor2_Reject',
 
         RequesterOrSupervisor1_InviteSupervisor2: 'Action-RequesterOrSupervisor1_InviteSupervisor2',
@@ -337,6 +390,16 @@ function seedProcessIndependentTables(prisma: PrismaClient) {
         })
     ];
 }
+
+const nonCancellableStateIds: NonRequestCancelledStateId[] = [
+    Id.State.AdminApprovedCreateThesisRequest,
+    Id.State.AdminDeniedCreateThesisRequest,
+    Id.State.AdminDeniedPermissionToFillBTRRequest,
+    Id.State.AdminDeniedApproveBTRFormRequest,
+    Id.State.AdminDeniedPermissionToFillODRForm,
+    Id.State.AdminConfirmedAssessments,
+];
+const cancelRelatedTransitionOps = createInTransitionsForRequestCancelledState(nonCancellableStateIds, Id.Process.Thesis);
 
 function seedThesisWorkflow(prisma: PrismaClient) {
     return [
@@ -434,20 +497,21 @@ function seedThesisWorkflow(prisma: PrismaClient) {
                 {
                     id: Id.State.AdminRejectedPermissionToFillBTRRequest,
                     processId: Id.Process.Thesis,
-                    stateTypeId: Id.StateType.Denied,
+                    stateTypeId: Id.StateType.Normal,
                     name: 'Admin rejected permission-to-fill-bachelor-thesis-registration request',
                 },
                 {
                     id: Id.State.AdminDeniedPermissionToFillBTRRequest,
                     processId: Id.Process.Thesis,
                     stateTypeId: Id.StateType.Denied,
-                    name: 'Admin denied permission-to-fill-bachelor-thesis-registration request',
+                    name: 'Admin denied permission to fill bachelor thesis registration',
                 },
                 {
                     id: Id.State.StudentFillingBTRForm,
                     processId: Id.Process.Thesis,
                     stateTypeId: Id.StateType.Normal,
-                    name: 'Student filling bachelor thesis registration form',
+                    name: 'Admin approved permission to fill bachelor thesis registration. ' 
+                        + 'Awaiting student filling bachelor thesis registration form',
                 },
                 {
                     id: Id.State.StudentFilledBTRForm,
@@ -492,22 +556,125 @@ function seedThesisWorkflow(prisma: PrismaClient) {
                     name: 'Admin filled bachelor thesis requirements',
                 },
                 {
-                    id: Id.State.SentBTRequirementsToStudent,
+                    id: Id.State.BTRequirementsSentToStudent,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Bachelor thesis requirements sent to student',
+                },
+                {
+                    id: Id.State.RequestBTEFormSentToSup1,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Awaiting approval on bachelor thesis from supervisor1',
+                },
+                {
+                    id: Id.State.Sup1RejectedThesis,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Supervisor1 rejected bachelor thesis',
+                },
+                {
+                    id: Id.State.Sup1FillingBTEForm,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Supervisor1 approved bachelor thesis. Awaiting supervisor1 filling bachelor thesis assessment',
+                },
+                {
+                    id: Id.State.Sup1FilledBTEForm,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Supervisor1 approved bachelor thesis and finished filling bachelor thesis assessment',
+                },
+                {
+                    id: Id.State.Sup1SubmittedBTEForm,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Awaiting approval on filling oral defense registration form from admin',
+                },
+                {
+                    id: Id.State.AdminDeniedPermissionToFillODRForm,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Denied,
+                    name: 'Admin denied permission to fill oral defense registration form',
+                },
+                {
+                    id: Id.State.StudentFillingODRForm,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Admin approved permission to fill oral defense registration form. '
+                        + 'Awaiting student filling oral defense registration form',
+                },
+                {
+                    id: Id.State.StudentFilledODRForm,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Student filled oral defense registration form',
+                },
+                {
+                    id: Id.State.RequestFinalizeODRFormSentToAdmin,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Awaiting finalization on oral defense registration form from admin',
+                },
+                {
+                    id: Id.State.AdminFinalizedODRForm,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Admin finalized oral defense registration form',
+                },
+                {
+                    id: Id.State.RequestAssessmentsSentToSups,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Awaiting assessment for bachelor thesis and oral defense from supervisor1 and supervisor2',
+                },
+                {
+                    id: Id.State.Sup1ConfirmedAssessmentsAwaitingSup2,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Supervisor1 completed assessment for bachelor thesis and oral defense. '
+                        + 'Awaiting assessments from supervisor2',
+                },
+                {
+                    id: Id.State.Sup2ConfirmedAssessmentsAwaitingSup1,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Supervisor2 completed assessment for bachelor thesis and oral defense. '
+                        + 'Awaiting assessments from supervisor1',
+                },
+                {
+                    id: Id.State.SupsConfirmedAssessments,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Supervisor1 and supervisor2 completed assessment for bachelor thesis and oral defense',
+                },
+                {
+                    id: Id.State.AssessmentsSentToAdmin,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Awaiting confirmation on assessment for bachelor thesis and oral defense from admin',
+                },
+                {
+                    id: Id.State.AdminConfirmedAssessments,
                     processId: Id.Process.Thesis,
                     stateTypeId: Id.StateType.Completed,
-                    name: 'Bachelor thesis requirements sent to student'
+                    name: 'Admin confirmed assessment for bachelor thesis and oral defense',
                 },
+
                 // Special state
                 {
                     id: Id.State.RequestCancelled,
                     processId: Id.Process.Thesis,
                     stateTypeId: Id.StateType.Cancelled,
-                    name: 'Request cancelled'
+                    name: 'Request cancelled by requester'
                 }
             ]
         }),
         prisma.transition.createMany({
-            data: Object.values(Id.Transition).map(transitionId => creatTransition(transitionId, Id.Process.Thesis)),
+            data: [
+                ...Object.values(Id.Transition).map(transitionId => creatTransition(transitionId, Id.Process.Thesis)),
+                ...cancelRelatedTransitionOps.createMany
+            ],
         }),
         prisma.action.createMany({
             data: Object.values(Id.Action).map(actionId => createAction(actionId, Id.Process.Thesis)),
@@ -529,7 +696,6 @@ function configThesisWorkflow(prisma: PrismaClient) {
         /**
          * State
          */
-        // Config special state (This state should be implicitly reachable from all other states)
         prisma.state.update({
             where: {
                 id: Id.State.RequestCancelled,
@@ -546,6 +712,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
         /** 
          * Transition
          */
+        ...cancelRelatedTransitionOps.updates.map(item => prisma.transition.update(item)),
         prisma.transition.update({
             where: {
                 id: Id.Transition.FindingThesis_RequestCreateThesisSentToAdmin,
@@ -797,7 +964,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_Reject }
+                    connect: { id: Id.Action.Requester_Back }
                 }
             },
         }),
@@ -933,13 +1100,13 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.AdminGroup_Reject }
+                    connect: { id: Id.Action.AdminGroup_Back }
                 }
             },
         }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.AdminFilledBTRequirements_SentBTRequirementsToStudent
+                id: Id.Transition.AdminFilledBTRequirements_BTRequirementsSentToStudent
             },
             data: {
                 actions: {
@@ -953,27 +1120,344 @@ function configThesisWorkflow(prisma: PrismaClient) {
                 }
             },
         }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.BTRequirementsSentToStudent_RequestBTEFormSentToSup1
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.AdminGroup_RequestSupervisor1 }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders },
+                    ]
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.RequestBTEFormSentToSup1_Sup1RejectedThesis
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Reject }
+                },
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.RequestBTEFormSentToSup1_Sup1FillingBTEForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Approve }
+                },
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1RejectedThesis_StudentFillingBTRForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Confirm }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders },
+                        { id: Id.Activity.SendEmail_Requester },
+                    ]
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1RejectedThesis_Sup1FillingBTEForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Approve }
+                },
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1FillingBTEForm_Sup1RejectedThesis
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Reject }
+                },
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1FillingBTEForm_Sup1FilledBTEForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Confirm }
+                },
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1FilledBTEForm_Sup1FillingBTEForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Back }
+                },
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1FilledBTEForm_Sup1SubmittedBTEForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_RequestAdminGroup }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders }
+                    ]
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1SubmittedBTEForm_AdminDeniedPermissionToFillODRForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.AdminGroup_Deny }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders },
+                        { id: Id.Activity.SendEmail_Requester },
+                    ]
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1SubmittedBTEForm_StudentFillingODRForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.AdminGroup_Approve }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders },
+                        { id: Id.Activity.SendEmail_Requester },
+                    ]
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.StudentFillingODRForm_StudentFilledODRForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Requester_Confirm }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.StudentFilledODRForm_StudentFillingODRForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Requester_Back }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.StudentFilledODRForm_RequestFinalizeODRFormSentToAdmin
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Requester_RequestAdminGroup }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders }
+                    ]
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.RequestFinalizeODRFormSentToAdmin_AdminFinalizedODRForm
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.AdminGroup_Confirm }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.AdminFinalizedODRForm_RequestFinalizeODRFormSentToAdmin
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.AdminGroup_Back }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.AdminFinalizedODRForm_RequestAssessmentsSentToSups
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.AdminGroup_RequestSupervisors }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders },
+                    ]
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.RequestAssessmentsSentToSups_Sup1ConfirmedAssessmentsAwaitingSup2
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Confirm }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.RequestAssessmentsSentToSups_Sup2ConfirmedAssessmentsAwaitingSup1
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor2_Confirm }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1ConfirmedAssessmentsAwaitingSup2_RequestAssessmentsSentToSups
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Back }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup1ConfirmedAssessmentsAwaitingSup2_SupsConfirmedAssessments
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor2_Confirm }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup2ConfirmedAssessmentsAwaitingSup1_RequestAssessmentsSentToSups
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor2_Back }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.Sup2ConfirmedAssessmentsAwaitingSup1_SupsConfirmedAssessments
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Confirm }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.SupsConfirmedAssessments_Sup1ConfirmedAssessmentsAwaitingSup2
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor2_Back }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.SupsConfirmedAssessments_Sup2ConfirmedAssessmentsAwaitingSup1
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_Back }
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.SupsConfirmedAssessments_AssessmentsSentToAdmin
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Supervisor1_RequestAdminGroup }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders }
+                    ]
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.AssessmentsSentToAdmin_AdminConfirmedAssessments
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.AdminGroup_Confirm }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders }
+                    ]
+                }
+            }
+        }),
     ];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-function PascalCaseToStandard(pascalCaseStr: string, capitalizeEachWord: boolean = false) {
-    return Array.from(pascalCaseStr).reduce((name, char, index) => {
-        const isUpperCaseLetter = char === char.toUpperCase() && isNaN(+char);
-        if (!capitalizeEachWord && index !== 0) {
-            char = char.toLowerCase();
-        }
-        name += isUpperCaseLetter && index !== 0 ? ` ${char}` : char
-        return name;
-    }, '');
-}
-
 type ValueOf<T> = T[keyof T];
+type StateId = ValueOf<typeof Id.State>;
+type TransitionId = ValueOf<typeof Id.Transition>;
+type ActionId = ValueOf<typeof Id.Action>;
+type ActivityId = ValueOf<typeof Id.Activity>;
+type NonRequestCancelledStateId = Exclude<StateId, typeof Id.State.RequestCancelled>;
+
 const staticTypeIdRegex = /\w+-(\w+)/;
+const transitionIdRegex = /Transition-(\w+)_(\w+)/;
+const actionIdRegex = /Action-(\w+)_(\w+)/;
+const activityIdRegex = /Activity-(\w+)_(\w+)/;
+
 function createStaticType(staticTypeId: string) {
     const match = staticTypeId.match(staticTypeIdRegex);
     if (!match) {
-        throw new Error('Invalid static type ID');
+        throw new Error(`Invalid static type ID: ${staticTypeId}`);
     }
     return {
         id: staticTypeId,
@@ -981,8 +1465,7 @@ function createStaticType(staticTypeId: string) {
     }
 }
 
-const transitionIdRegex = /Transition-(\w+)_(\w+)/;
-function creatTransition(transitionId: ValueOf<typeof Id.Transition>, processId: string) {
+function creatTransition(transitionId: TransitionId, processId: string) {
     const match = transitionId.match(transitionIdRegex);
     if (!match) {
         throw new Error(`Invalid transition ID: ${transitionId}`);
@@ -995,8 +1478,7 @@ function creatTransition(transitionId: ValueOf<typeof Id.Transition>, processId:
     }
 }
 
-const actionIdRegex = /Action-(\w+)_(\w+)/;
-function createAction(actionId: ValueOf<typeof Id.Action>, processId: string) {
+function createAction(actionId: ActionId, processId: string) {
     const match = actionId.match(actionIdRegex);
     if (!match) {
         throw new Error(`Invalid action ID: ${actionId}`);
@@ -1009,8 +1491,7 @@ function createAction(actionId: ValueOf<typeof Id.Action>, processId: string) {
     }
 }
 
-const activityIdRegex = /Activity-(\w+)_(\w+)/;
-function createActivity(activityId: ValueOf<typeof Id.Activity>, processId: string) {
+function createActivity(activityId: ActivityId, processId: string) {
     const match = activityId.match(activityIdRegex);
     if (!match) {
         throw new Error(`Invalid activity ID: ${activityId}`);
@@ -1023,7 +1504,7 @@ function createActivity(activityId: ValueOf<typeof Id.Activity>, processId: stri
     }
 }
 
-function createActionTarget(actionId: ValueOf<typeof Id.Action>) {
+function createActionTarget(actionId: ActionId) {
     const match = actionId.match(actionIdRegex);
     if (!match) {
         throw new Error(`Invalid action ID: ${actionId}`);
@@ -1048,7 +1529,7 @@ function createActionTarget(actionId: ValueOf<typeof Id.Action>) {
     }
 }
 
-function createActivityTarget(activityId: ValueOf<typeof Id.Activity>) {
+function createActivityTarget(activityId: ActivityId) {
     const match = activityId.match(activityIdRegex);
     if (!match) {
         throw new Error(`Invalid activity ID: ${activityId}`);
@@ -1060,5 +1541,42 @@ function createActivityTarget(activityId: ValueOf<typeof Id.Activity>) {
         id: `ActivityTarget-${match[1]}_${match[2]}`,
         activityId,
         targetId,
+    };
+}
+
+function createInTransitionsForRequestCancelledState(excludedStateIds: NonRequestCancelledStateId[], processId: string) {
+    const STATE_PREFIX = 'State-';
+    const fromStateIds = Object.values(Id.State).filter(item => 
+            item !== Id.State.RequestCancelled
+            && !excludedStateIds.find(stateId => stateId === item));
+
+    const trimmedRequestCancelledStateId = trimPrefix(Id.State.RequestCancelled, STATE_PREFIX);
+    
+    const inTransitionsCreateMany = fromStateIds.map(fromStateId => {
+        const trimmedFromStateId = trimPrefix(fromStateId, STATE_PREFIX);
+        return {
+            id: `Transition-${trimmedFromStateId}_${trimmedRequestCancelledStateId}`,
+            processId: processId,
+            currentStateId: fromStateId,
+            nextStateId: Id.State.RequestCancelled
+        }
+    });
+
+    const inTransitionUpdates = inTransitionsCreateMany.map(item => {
+        return {
+            where: {
+                id: item.id
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.Requester_Cancel }
+                },
+            }
+        }
+    });
+
+    return {
+        createMany: inTransitionsCreateMany,
+        updates: inTransitionUpdates,
     };
 }
