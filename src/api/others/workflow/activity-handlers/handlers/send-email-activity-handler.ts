@@ -9,6 +9,8 @@ import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 import { WorkflowRequestDataProcessorInterface } from "../../request-data-processor";
 import { isEmail } from "class-validator";
+import { logger } from "../../../../../decorators";
+import { LoggerInterface } from "../../../../../lib/logger";
 
 @injectable()
 export class SendEmailActivityHandler extends BaseNotifyActivityHandler {
@@ -17,7 +19,8 @@ export class SendEmailActivityHandler extends BaseNotifyActivityHandler {
         @inject(INJECTION_TOKENS.GroupRepo) groupRepo: GroupRepoInterface,
         @inject(INJECTION_TOKENS.WorkflowRequestDataProcessor) requestDataProcessor: WorkflowRequestDataProcessorInterface,
         @inject(INJECTION_TOKENS.UserRepo) private userRepo: UserRepoInterface,
-        @inject(INJECTION_TOKENS.MailService) private emailService: MailServiceInterface) {
+        @inject(INJECTION_TOKENS.MailService) private emailService: MailServiceInterface,
+        @logger(__filename) private logger: LoggerInterface) {
         super(requestDataRepo, groupRepo, requestDataProcessor);
     }
 
@@ -26,10 +29,16 @@ export class SendEmailActivityHandler extends BaseNotifyActivityHandler {
         const emails = users.map(user => user.email)
                             .filter(email => isEmail(email));
 
-        await this.emailService.sendTextMail(stringFormat(DEFAULT_FORMATS.Activity.Email.Content, requestId), {
-            from: DEFAULTS.Email.From,
-            to: emails,
-            subject: DEFAULTS.Email.Subject,
-        });
+        // Failed to send email should not be a big problem
+        try {
+            await this.emailService.sendTextMail(stringFormat(DEFAULT_FORMATS.Activity.Email.Content, requestId), {
+                from: DEFAULTS.Email.From,
+                to: emails,
+                subject: DEFAULTS.Email.Subject,
+            });
+        }
+        catch {
+            this.logger.warn(`Failed to send email to: [${emails.join(', ')}]`)
+        }
     }
 }
