@@ -8,7 +8,7 @@ export abstract class BaseActionHandler implements ActionHandlerInterface {
     protected getInputDataStringValue(actionInput: ActionHandlerInput, key: string): string {
         const value = actionInput.data?.[key];
         if (typeof value !== 'string') {
-            throw new BadRequestError(`Missing property ${key} of type string in actionInput's data`);
+            throw new BadRequestError(`Missing property ${key} of type string in request data`);
         }
         return value;
     }

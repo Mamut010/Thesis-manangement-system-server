@@ -12,7 +12,7 @@ import { WorkflowRequestDataProcessorInterface } from "../../request-data-proces
 @injectable()
 export class NotifyActivityHandler extends BaseNotifyActivityHandler {
     constructor(
-        @inject(INJECTION_TOKENS.RequestRepo) requestDataRepo: RequestDataRepoInterface,
+        @inject(INJECTION_TOKENS.RequestDataRepo) requestDataRepo: RequestDataRepoInterface,
         @inject(INJECTION_TOKENS.GroupRepo) groupRepo: GroupRepoInterface,
         @inject(INJECTION_TOKENS.WorkflowRequestDataProcessor) requestDataProcessor: WorkflowRequestDataProcessorInterface,
         @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface) {

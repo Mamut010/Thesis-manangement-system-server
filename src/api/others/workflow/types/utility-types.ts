@@ -33,3 +33,8 @@ export interface RequestDataDeps {
     repo: RequestDataRepoInterface, 
     processor: WorkflowRequestDataProcessorInterface,
 }
+
+export interface KeyValuePair<T = unknown> {
+    key: string,
+    value: T,
+} 

@@ -71,6 +71,18 @@ export function firstOrDefault<TValue, TDefault>(arr: TValue[], defaultValue?: T
     }
 }
 
+export function lastOrDefault<TValue>(arr: TValue[]): TValue | undefined;
+export function lastOrDefault<TValue, TDefault>(arr: TValue[], defaultValue: TDefault): TValue | TDefault;
+export function lastOrDefault<TValue, TDefault>(arr: TValue[], defaultValue?: TDefault) {
+    const lastIndex = arr.length - 1;
+    if (typeof defaultValue === 'undefined') {
+        return arr.length > 0 ? arr[lastIndex] : undefined;
+    }
+    else {
+        return arr.length > 0 ? arr[lastIndex] : defaultValue;
+    }
+}
+
 export function singleOrThrow<TValue>(arr: TValue[]): TValue {
     if (arr.length !== 1) {
         throw new Error('Array is not single');
@@ -83,6 +95,13 @@ export function firstOrThrow<TValue>(arr: TValue[]): TValue {
         throw new Error('Array is empty');
     }
     return arr[0];
+}
+
+export function lastOrThrow<TValue>(arr: TValue[]): TValue {
+    if (arr.length === 0) {
+        throw new Error('Array is empty');
+    }
+    return arr[arr.length - 1];
 }
 
 /**

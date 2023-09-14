@@ -10,7 +10,7 @@ export interface RequestDataRepoInterface {
 
     update(requestIdAndName: RequestIdAndName, value: string): Promise<RequestDataDto | null>;
 
-    upsert(requestId: string, nameValuePair: NameValuePair): Promise<RequestDataDto>;
+    upsert(requestId: string, nameValuePair: NameValuePair | NameValuePair[]): Promise<RequestDataDto[]>;
 
     deleteManyByRequestId(requestId: string): Promise<number>;
 

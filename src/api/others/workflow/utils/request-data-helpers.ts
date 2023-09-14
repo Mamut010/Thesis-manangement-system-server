@@ -1,6 +1,7 @@
+import { makeArray } from "../../../../utils/array-helpers";
 import { STORED_INDIVIDUAL_REQUEST_DATA_KEYS } from "../constants/request-data-keys";
 import { Target } from "../types/targets";
-import { RequestDataDeps } from "../types/utility-types";
+import { KeyValuePair, RequestDataDeps } from "../types/utility-types";
 
 export async function getRequestDataValueByKey(requestId: string, key: string, requestDataDeps: RequestDataDeps): Promise<unknown> {
     const storedRequestData = await requestDataDeps.repo.findOneByRequestIdAndName({
@@ -31,9 +32,12 @@ export function getIndividualDataKeyByTarget(target: Target): string | undefined
     }
 }
 
-export async function upsertRequestData(requestId: string, key: string, value: string, requestDataDeps: RequestDataDeps) {
-    await requestDataDeps.repo.upsert(requestId, {
-        name: key,
-        value: requestDataDeps.processor.makeStoredValue(value)
+export async function upsertRequestData(requestId: string, keyValuePair: KeyValuePair | KeyValuePair[], requestDataDeps: RequestDataDeps) {
+    const storableNameValuePairs = makeArray(keyValuePair).map(({ key, value }) => {
+        return {
+            name: key,
+            value: requestDataDeps.processor.makeStoredValue(value)
+        }
     });
+    await requestDataDeps.repo.upsert(requestId, storableNameValuePairs);
 }

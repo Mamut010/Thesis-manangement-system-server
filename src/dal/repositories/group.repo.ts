@@ -39,6 +39,18 @@ export class GroupRepo implements GroupRepoInterface {
         return response;
     }
 
+    async findManyByIds(ids: string[]): Promise<GroupDto[]> {
+        const records = await this.prisma.group.findMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            include: groupInclude
+        });
+        return records.map(item => this.plainTransformer.toGroup(item));
+    }
+
     async findOneById(id: string): Promise<GroupDto | null> {
         const record = await this.findRecordById(id);
         if (!record) {

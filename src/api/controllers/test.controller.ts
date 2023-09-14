@@ -19,8 +19,7 @@ import {
     StringFilter
 } from '../../lib/query';
 import { prettyJSON } from "../../utils/string-helpers";
-import { LoggerInterface } from "../../lib/logger";
-import { logger } from "../../decorators";
+import { LoggerFactory, LoggerInterface } from "../../lib/logger";
 import { StudentsQueryRequest } from "../../contracts/requests";
 import { PlainTransformerInterface } from "../../dal/utils/plain-transfomer";
 import { compareObjectByEntries, defaultOrGiven } from "../../utils/object-helpers";
@@ -67,8 +66,7 @@ const pdfMimeType = 'application/pdf';
     security: [{ bearerAuth: [] }]
 })
 export class TestController {
-    @logger(__filename)
-    private logger!: LoggerInterface;
+    private logger: LoggerInterface;
 
     constructor(
         @inject(INJECTION_TOKENS.Prisma) private prisma: PrismaClient,
@@ -78,8 +76,9 @@ export class TestController {
         @inject(INJECTION_TOKENS.PdfFormFiller) private pdfFormFiller: FormFillerInterface,
         @inject(INJECTION_TOKENS.PdfFormGenerator) private pdfFormGenerator: PdfFormGeneratorInterface,
         @inject(INJECTION_TOKENS.NotificationService) private notificationService: NotificationServiceInterface,
-        @inject(INJECTION_TOKENS.DIContainer) private container: Container) {
-
+        @inject(INJECTION_TOKENS.DIContainer) private container: Container,
+        @inject(INJECTION_TOKENS.LoggerFactory) loggerFactory: LoggerFactory) {
+        this.logger = loggerFactory(__filename);
     }
 
     @HttpCode(HTTP_CODES.Ok)

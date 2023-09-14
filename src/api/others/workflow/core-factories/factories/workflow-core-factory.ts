@@ -3,6 +3,7 @@ import {
     ActionHandlerInterface, 
     ApplyThesisActionHandler, 
     ApproveActionHandler, 
+    BackActionHandler, 
     CancelActionHandler, 
     ConfirmActionHandler, 
     ConfirmThesisActionHandler, 
@@ -14,7 +15,8 @@ import {
     RejectThesisActionHandler,
     RequestAdminGroupActionHandler,
     RequestSupervisor1ActionHandler,
-    RequestSupervisor2ActionHandler
+    RequestSupervisor2ActionHandler,
+    RequestSupervisorsActionHandler
 } from "../../action-handlers";
 import { 
     AcceptStakeholdersActivityHandler, 
@@ -44,6 +46,7 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
         switch(actionType) {
             case ActionType.ApplyThesis: return this.container.get(ApplyThesisActionHandler);
             case ActionType.Approve: return this.container.get(ApproveActionHandler);
+            case ActionType.Back: return this.container.get(BackActionHandler);
             case ActionType.Cancel: return this.container.get(CancelActionHandler);
             case ActionType.Confirm: return this.container.get(ConfirmActionHandler);
             case ActionType.ConfirmThesis: return this.container.get(ConfirmThesisActionHandler);
@@ -56,6 +59,7 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
             case ActionType.RequestAdminGroup: return this.container.get(RequestAdminGroupActionHandler);
             case ActionType.RequestSupervisor1: return this.container.get(RequestSupervisor1ActionHandler);
             case ActionType.RequestSupervisor2: return this.container.get(RequestSupervisor2ActionHandler);
+            case ActionType.RequestSupervisors: return this.container.get(RequestSupervisorsActionHandler);
         }
     }
 
