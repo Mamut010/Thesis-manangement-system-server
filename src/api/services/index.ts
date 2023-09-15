@@ -11,11 +11,11 @@ export * from './resources/oral-defense-registration.service';
 export * from './resources/oral-defense-assessment.service';
 export * from './resources/program.service';
 
+// Utility
+export * from './assets.service';
+
 // Main
 export * from './admin.service';
-export * from './admin-student.service';
-export * from './admin-lecturer.service';
-export * from './assets.service';
 export * from './student.service';
 export * from './lecturer.service';
 

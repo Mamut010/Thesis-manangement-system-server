@@ -8,4 +8,6 @@ export interface RoleServiceInterface {
     createRole(createRequest: RoleCreateRequest): Promise<RoleDto>;
     updateRole(id: number, updateRequest: RoleUpdateRequest): Promise<RoleDto>;
     deleteRole(id: number): Promise<void>;
+
+    getLecturerRoles(): Promise<RolesQueryResponse>;
 }

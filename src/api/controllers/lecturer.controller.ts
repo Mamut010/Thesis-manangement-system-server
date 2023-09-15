@@ -1,110 +1,123 @@
 import { inject, injectable } from "inversify";
 import { 
-    Authorized,
-    Body,
-    CurrentUser,
-    Get,
-    HttpCode,
-    JsonController,
+    Authorized, 
+    Body, 
+    Get, 
+    HttpCode, 
+    JsonController, 
+    Param,
     Patch,
-    QueryParams,
+    QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
+import { Role } from "../../core/constants/roles";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { LecturerServiceInterface } from "../interfaces";
-import { LecturerRoles } from "../../core/constants/roles";
 import { HTTP_CODES } from "../../core/constants/http-codes";
-import { 
+import {
+    LecturerInfoDto,
+    BachelorThesisRegistrationInfoDto,
     BachelorThesisAssessmentInfoDto,
     BachelorThesisEvaluationInfoDto,
-    BachelorThesisRegistrationInfoDto,
-    LecturerInfoDto,
-    OralDefenseAssessmentInfoDto,
-    OralDefenseRegistrationInfoDto
+    OralDefenseRegistrationInfoDto,
+    OralDefenseAssessmentInfoDto
 } from "../../shared/dtos";
-import { AuthorizedUser } from "../../core/auth-checkers";
-import { LecturerDetailResponse } from "../../contracts/responses";
+import { LecturerDetailResponse, LecturerInfosQueryResponse } from "../../contracts/responses";
 import { 
-    BachelorThesisAssessmentsQueryRequest,
-    BachelorThesisEvaluationsQueryRequest,
-    BachelorThesisRegistrationsQueryRequest,
     LecturerAssetsQueryRequest,
-    LecturerInfoUpdateRequest,
+    BachelorThesisRegistrationsQueryRequest,
+    BachelorThesisAssessmentsQueryRequest,
+    OralDefenseRegistrationsQueryRequest,
     OralDefenseAssessmentsQueryRequest,
-    OralDefenseRegistrationsQueryRequest
+    BachelorThesisEvaluationsQueryRequest,
+    LecturerInfosQueryRequest,
+    LecturerInfoUpdateRequest
 } from "../../contracts/requests";
 
-@JsonController('lecturer')
-@Authorized(LecturerRoles)
+@JsonController('lecturers')
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
 })
-export class LecturerController {
-    constructor(@inject(INJECTION_TOKENS.LecturerService) private lecturerService: LecturerServiceInterface) {
+export class LecturerController { 
+    constructor(
+        @inject(INJECTION_TOKENS.LecturerService) private lecturerService: LecturerServiceInterface) {
 
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/info')
+    @Get()
+    @ResponseSchema(LecturerInfosQueryResponse)
+    getLecturers(@QueryParams() lecturersQuery: LecturerInfosQueryRequest) {
+        return this.lecturerService.getLecturers(lecturersQuery);
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Get('/:id')
     @ResponseSchema(LecturerInfoDto)
-    getLecturerInfo(@CurrentUser() user: AuthorizedUser) {
-        return this.lecturerService.getLecturerInfo(user.userId);
+    getLecturerInfo(@Param('id') id: string) {
+        return this.lecturerService.getLecturerInfo(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/detail')
+    @Authorized(Role.Admin)
+    @Get('/:id/detail')
     @ResponseSchema(LecturerDetailResponse)
-    getLecturerDetail(@CurrentUser() user: AuthorizedUser, 
-        @QueryParams() lecturerAssetsQueryRequest: LecturerAssetsQueryRequest) {
-        return this.lecturerService.getLecturerDetail(user.userId, lecturerAssetsQueryRequest);
+    getLecturerDetail(@Param('id') id: string, @QueryParams() lecturerAssetsQueryRequest: LecturerAssetsQueryRequest) {
+        return this.lecturerService.getLecturerDetail(id, lecturerAssetsQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/bachelor-thesis-registrations')
+    @Authorized(Role.Admin)
+    @Get('/:id/bachelor-thesis-registrations')
     @ResponseSchema(BachelorThesisRegistrationInfoDto, { isArray: true })
-    getLecturerBachelorThesisRegistrations(@CurrentUser() user: AuthorizedUser, 
+    getLecturerBachelorThesisRegistrations(@Param('id') id: string, 
         @QueryParams() btrQueryRequest: BachelorThesisRegistrationsQueryRequest) {
-        return this.lecturerService.getLecturerBachelorThesisRegistrations(user.userId, btrQueryRequest);
+        return this.lecturerService.getLecturerBachelorThesisRegistrations(id, btrQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/bachelor-thesis-assessments')
+    @Authorized(Role.Admin)
+    @Get('/:id/bachelor-thesis-assessments')
     @ResponseSchema(BachelorThesisAssessmentInfoDto, { isArray: true })
-    getLecturerBachelorThesisAssessments(@CurrentUser() user: AuthorizedUser,
+    getLecturerBachelorThesisAssessments(@Param('id') id: string, 
         @QueryParams() btaQueryRequest: BachelorThesisAssessmentsQueryRequest) {
-        return this.lecturerService.getLecturerBachelorThesisAssessments(user.userId, btaQueryRequest);
+        return this.lecturerService.getLecturerBachelorThesisAssessments(id, btaQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/bachelor-thesis-evaluations')
+    @Authorized(Role.Admin)
+    @Get('/:id/bachelor-thesis-evaluations')
     @ResponseSchema(BachelorThesisEvaluationInfoDto, { isArray: true })
-    getLecturerBachelorThesisEvaluations(@CurrentUser() user: AuthorizedUser, 
+    getLecturerBachelorThesisEvaluations(@Param('id') id: string, 
         @QueryParams() bteQueryRequest: BachelorThesisEvaluationsQueryRequest) {
-        return this.lecturerService.getLecturerBachelorThesisEvaluations(user.userId, bteQueryRequest);
+        return this.lecturerService.getLecturerBachelorThesisEvaluations(id, bteQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/oral-defense-registrations')
+    @Authorized(Role.Admin)
+    @Get('/:id/oral-defense-registrations')
     @ResponseSchema(OralDefenseRegistrationInfoDto, { isArray: true })
-    getLecturerOralDefenseRegistrations(@CurrentUser() user: AuthorizedUser, 
+    getLecturerOralDefenseRegistrations(@Param('id') id: string, 
         @QueryParams() odrQueryRequest: OralDefenseRegistrationsQueryRequest) {
-        return this.lecturerService.getLecturerOralDefenseRegistrations(user.userId, odrQueryRequest);
+        return this.lecturerService.getLecturerOralDefenseRegistrations(id, odrQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/oral-defense-assessments')
+    @Authorized(Role.Admin)
+    @Get('/:id/oral-defense-assessments')
     @ResponseSchema(OralDefenseAssessmentInfoDto, { isArray: true })
-    getLecturerOralDefenseAssessments(@CurrentUser() user: AuthorizedUser,
+    getLecturerOralDefenseAssessments(@Param('id') id: string, 
         @QueryParams() odaQueryRequest: OralDefenseAssessmentsQueryRequest) {
-        return this.lecturerService.getLecturerOralDefenseAssessments(user.userId, odaQueryRequest);
+        return this.lecturerService.getLecturerOralDefenseAssessments(id, odaQueryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Patch('/info')
+    @Authorized(Role.Admin)
+    @Patch('/:id/lecturer-info')
     @ResponseSchema(LecturerInfoDto)
-    updateLecturerInfo(@CurrentUser() user: AuthorizedUser,
-        @Body({ required: true }) updateRequest: LecturerInfoUpdateRequest) {
-        return this.lecturerService.updateLecturerInfo(user.userId, updateRequest);
+    updateLecturerInfo(@Param('id') id: string, @Body({ required: true }) updateRequest: LecturerInfoUpdateRequest) {
+        return this.lecturerService.updateLecturerInfo(id, updateRequest);
     }
 }

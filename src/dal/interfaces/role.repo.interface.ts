@@ -5,6 +5,8 @@ import { RoleDto } from "../../shared/dtos";
 export interface RoleRepoInterface {
     query(queryRequest: RolesQueryRequest): Promise<RolesQueryResponse>;
 
+    findManyByNames(names: string[]): Promise<RoleDto[]>;
+
     findOneById(id: number): Promise<RoleDto | null>;
 
     create(createRequest: RoleCreateRequest): Promise<RoleDto>;

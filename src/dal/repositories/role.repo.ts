@@ -34,6 +34,17 @@ export class RoleRepo implements RoleRepoInterface {
         return response;
     }
 
+    async findManyByNames(names: string[]): Promise<RoleDto[]> {
+        const records = await this.prisma.role.findMany({
+            where: {
+                name: {
+                    in: names
+                }
+            }
+        })
+        return records.map(item => this.plainTransformer.toRole(item));
+    }
+
     async findOneById(id: number): Promise<RoleDto | null> {
         const record = await this.findRecordById(id);
         if (!record) {

@@ -8,6 +8,7 @@ import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { MethodNotAllowedError } from "../../../contracts/errors/method-not-allowed.error";
 import { RoleRepoInterface } from "../../../dal/interfaces";
+import { LecturerRoles } from "../../../core/constants/roles";
 
 @injectable()
 export class RoleService implements RoleServiceInterface {
@@ -43,6 +44,14 @@ export class RoleService implements RoleServiceInterface {
         const deleted = await this.roleRepo.delete(id);
         if (!deleted) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.RoleNotFound);
+        }
+    }
+
+    async getLecturerRoles(): Promise<RolesQueryResponse> {
+        const roles = await this.roleRepo.findManyByNames(Object.values(LecturerRoles));
+        return {
+            content: roles,
+            count: roles.length
         }
     }
 

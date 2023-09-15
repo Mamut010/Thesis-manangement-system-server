@@ -7,10 +7,8 @@ import { Configuration } from './configuration';
 import { AuthService, UserService } from '../auth/services';
 import {  AuthServiceInterface, UserServiceInterface } from '../auth/interfaces';
 import { JwtCookieHandler, JwtCookieHandlerInterface } from '../auth/utils/jwt-cookie-handlers';
-import { 
-    AdminLecturerServiceInterface,
+import {
     AdminServiceInterface,
-    AdminStudentServiceInterface, 
     ThesisServiceInterface,
     RoleServiceInterface,
     FieldServiceInterface,
@@ -28,10 +26,8 @@ import {
     LecturerServiceInterface,
     GroupServiceInterface
 } from '../api/interfaces';
-import { 
-    AdminLecturerService,
+import {
     AdminService,
-    AdminStudentService, 
     ThesisService,
     RoleService,
     FieldService,
@@ -412,16 +408,6 @@ function configApiServerServices(container: Container, settings?: BootstrapSetti
     container
         .bind<AdminServiceInterface>(INJECTION_TOKENS.AdminService)
         .to(AdminService)
-        .inRequestScope();
-
-    container
-        .bind<AdminStudentServiceInterface>(INJECTION_TOKENS.AdminStudentService)
-        .to(AdminStudentService)
-        .inRequestScope();
-
-    container
-        .bind<AdminLecturerServiceInterface>(INJECTION_TOKENS.AdminLecturerService)
-        .to(AdminLecturerService)
         .inRequestScope();
 
     container

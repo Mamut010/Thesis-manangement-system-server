@@ -63,8 +63,6 @@ const API_SERVICE_TOKENS = {
 
     // Main
     AdminService: Symbol.for('AdminService'),
-    AdminStudentService: Symbol.for('AdminStudentService'),
-    AdminLecturerService: Symbol.for('AdminLecturerService'),
     AssetsService: Symbol.for('AssetsService'),
     StudentService: Symbol.for('StudentService'),
     LecturerService: Symbol.for('LecturerService'),

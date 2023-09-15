@@ -2,112 +2,108 @@ import { inject, injectable } from "inversify";
 import { 
     Authorized, 
     Body, 
-    CurrentUser, 
     Get, 
     HttpCode, 
-    JsonController,
-    Patch, 
-    Post
+    JsonController, 
+    Param,
+    Patch,
+    QueryParams
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
-import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { StudentServiceInterface } from "../interfaces";
 import { Role } from "../../core/constants/roles";
+import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { HTTP_CODES } from "../../core/constants/http-codes";
+import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
 import { 
     BachelorThesisAssessmentInfoDto,
     BachelorThesisEvaluationInfoDto,
     BachelorThesisRegistrationInfoDto,
     OralDefenseAssessmentInfoDto,
-    OralDefenseRegistrationInfoDto,
-    RequestStateInfoDto,
-    StudentInfoDto
+    OralDefenseRegistrationInfoDto, 
+    StudentInfoDto 
 } from "../../shared/dtos";
-import { AuthorizedUser } from "../../core/auth-checkers";
-import { ThesisRequestCreateRequest } from "../../contracts/requests/api/thesis-request-create.request";
-import { StudentInfoUpdateRequest } from "../../contracts/requests";
-import { StudentDetailResponse } from "../../contracts/responses";
+import { StudentInfosQueryRequest, StudentInfoUpdateRequest } from "../../contracts/requests";
+import { StudentServiceInterface } from "../interfaces";
 
-@JsonController('student')
-@Authorized(Role.Student)
+@JsonController('students')
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
 })
-export class StudentController {
-    constructor(@inject(INJECTION_TOKENS.StudentService) private studentService: StudentServiceInterface) {
+export class StudentController { 
+    constructor(
+        @inject(INJECTION_TOKENS.StudentService) private studentService: StudentServiceInterface) {
 
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/info')
+    @Get()
+    @ResponseSchema(StudentInfosQueryResponse)
+    getStudents(@QueryParams() studentsQuery: StudentInfosQueryRequest) {
+        return this.studentService.getStudents(studentsQuery);
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Get('/:id')
     @ResponseSchema(StudentInfoDto)
-    getStudentInfo(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentInfo(user.userId);
+    getStudentInfo(@Param('id') id: string) {
+        return this.studentService.getStudentInfo(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/detail')
+    @Authorized(Role.Admin)
+    @Get('/:id/detail')
     @ResponseSchema(StudentDetailResponse)
-    getStudentDetail(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentDetail(user.userId);
+    getStudentDetail(@Param('id') id: string) {
+        return this.studentService.getStudentDetail(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/bachelor-thesis-registration')
+    @Authorized(Role.Admin)
+    @Get('/:id/bachelor-thesis-registration')
     @ResponseSchema(BachelorThesisRegistrationInfoDto)
-    getStudentBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentBachelorThesisRegistration(user.userId);
+    getStudentBachelorThesisRegistration(@Param('id') id: string) {
+        return this.studentService.getStudentBachelorThesisRegistration(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/bachelor-thesis-assessment')
+    @Authorized(Role.Admin)
+    @Get('/:id/bachelor-thesis-assessment')
     @ResponseSchema(BachelorThesisAssessmentInfoDto)
-    getStudentBachelorThesisAssessment(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentBachelorThesisAssessment(user.userId);
+    getStudentBachelorThesisAssessment(@Param('id') id: string) {
+        return this.studentService.getStudentBachelorThesisAssessment(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/bachelor-thesis-evaluation')
+    @Authorized(Role.Admin)
+    @Get('/:id/bachelor-thesis-evaluation')
     @ResponseSchema(BachelorThesisEvaluationInfoDto)
-    getStudentBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentBachelorThesisEvaluation(user.userId);
+    getStudentBachelorThesisEvaluation(@Param('id') id: string) {
+        return this.studentService.getStudentBachelorThesisEvaluation(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/oral-defense-registration')
+    @Authorized(Role.Admin)
+    @Get('/:id/oral-defense-registration')
     @ResponseSchema(OralDefenseRegistrationInfoDto)
-    getStudentOralDefenseRegistration(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentOralDefenseRegistration(user.userId);
+    getStudentOralDefenseRegistration(@Param('id') id: string) {
+        return this.studentService.getStudentOralDefenseRegistration(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/oral-defense-assessment')
+    @Authorized(Role.Admin)
+    @Get('/:id/oral-defense-assessment')
     @ResponseSchema(OralDefenseAssessmentInfoDto)
-    getStudentOralDefenseAssessment(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentOralDefenseAssessment(user.userId);
+    getStudentOralDefenseAssessment(@Param('id') id: string) {
+        return this.studentService.getStudentOralDefenseAssessment(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Patch('/info')
+    @Authorized(Role.Admin)
+    @Patch('/:id/student-info')
     @ResponseSchema(StudentInfoDto)
-    updateAdminInfo(@CurrentUser() user: AuthorizedUser, 
-        @Body({ required: true }) updateRequest: StudentInfoUpdateRequest) {
-        return this.studentService.updateStudentInfo(user.userId, updateRequest);
-    }
-
-    @HttpCode(HTTP_CODES.Ok)
-    @Post('/create-thesis-request')
-    @ResponseSchema(RequestStateInfoDto)
-    createThesisRequest(@CurrentUser() user: AuthorizedUser,
-        @Body({ required: true }) createRequest: ThesisRequestCreateRequest) {
-        return this.studentService.createThesisRequest(user.userId, createRequest);
-    }
-
-    @HttpCode(HTTP_CODES.Ok)
-    @Get('/latest-created-request')
-    @ResponseSchema(RequestStateInfoDto)
-    getLatestCreatedRequestState(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getLatestCreatedRequestState(user.userId);
+    updateStudentInfo(@Param('id') id: string, @Body({ required: true }) updateRequest: StudentInfoUpdateRequest) {
+        return this.studentService.updateStudentInfo(id, updateRequest);
     }
 }

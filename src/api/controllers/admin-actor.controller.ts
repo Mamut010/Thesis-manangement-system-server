@@ -23,7 +23,7 @@ import { AdminInfoUpdateRequest } from "../../contracts/requests";
 @OpenAPI({
     security: [{ bearerAuth: [] }]
 })
-export class AdminController {
+export class AdminActorController {
     constructor(
         @inject(INJECTION_TOKENS.AdminService) private adminService: AdminServiceInterface) {
 
