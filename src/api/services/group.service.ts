@@ -1,7 +1,12 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { GroupServiceInterface } from "../interfaces";
-import { GroupInfosQueryRequest, GroupInfoCreateRequest, GroupInfoUpdateRequest, GroupMembersUpdateRequest } from "../../contracts/requests";
+import { 
+    GroupInfosQueryRequest, 
+    GroupInfoCreateRequest, 
+    GroupInfoUpdateRequest, 
+    GroupMembersUpdateRequest 
+} from "../../contracts/requests";
 import { GroupInfosQueryResponse } from "../../contracts/responses";
 import { GroupInfoDto, UserDto } from "../../shared/dtos";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
