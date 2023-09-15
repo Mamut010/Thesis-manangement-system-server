@@ -14,17 +14,19 @@ import { firstOrDefault } from "../../utils/array-helpers";
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { ThesisRequestCreateRequest } from "../../contracts/requests/api/thesis-request-create.request";
-import { StudentRepoInterface } from "../../dal/interfaces";
+import { ProcessRepoInterface, StudentRepoInterface } from "../../dal/interfaces";
 import { AssetsServiceInterface, RequestServiceInterface } from "../interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { StudentInfoUpdateRequest, StudentInfosQueryRequest } from "../../contracts/requests";
 import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
+import { getThesisProcessOrThrow } from "../../utils/process-helpers";
 
 @injectable()
 export class StudentService implements StudentServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.StudentRepo) private studentRepo: StudentRepoInterface,
+        @inject(INJECTION_TOKENS.ProcessRepo) private processRepo: ProcessRepoInterface,
         @inject(INJECTION_TOKENS.AssetsService) private assetsService: AssetsServiceInterface,
         @inject(INJECTION_TOKENS.RequestService) private requestService: RequestServiceInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
@@ -125,7 +127,8 @@ export class StudentService implements StudentServiceInterface {
     }
 
     async createThesisRequest(userId: string, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto> {
-        const createdRequest = await this.requestService.createThesisRequest(userId, request.title);
+        const process = await getThesisProcessOrThrow(this.processRepo);
+        const createdRequest = await this.requestService.createRequest(userId, process.id, request.title);
         if (!createdRequest) {
             throw new UnexpectedError(ERROR_MESSAGES.Unexpected.RequestCreationFailed);
         }

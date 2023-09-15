@@ -3,7 +3,7 @@ import { GroupsQueryRequest, RequestInfosQueryRequest, RequestsQueryRequest } fr
 import { RequestInfosQueryResponse } from "../../contracts/responses";
 import { RequestServiceInterface } from "../interfaces/request.service.interface";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { GroupRepoInterface, ProcessRepoInterface, RequestRepoInterface } from "../../dal/interfaces";
+import { GroupRepoInterface, RequestRepoInterface } from "../../dal/interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
@@ -21,13 +21,11 @@ import { RequestActionSubmitRequest } from "../../contracts/requests/api/request
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { OrderBy, StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
-import { getThesisProcessOrThrow } from "../../utils/process-helpers";
 
 @injectable()
 export class RequestService implements RequestServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.RequestRepo) private requestRepo: RequestRepoInterface,
-        @inject(INJECTION_TOKENS.ProcessRepo) private processRepo: ProcessRepoInterface,
         @inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface,
         @inject(INJECTION_TOKENS.WorkflowEngine) private workflowEngine: WorkflowEngineInterface,
@@ -98,11 +96,10 @@ export class RequestService implements RequestServiceInterface {
         return this.makeRequestStateInfo(record, requestState);
     }
 
-    async createThesisRequest(userId: string, requestTitle: string): Promise<RequestStateInfoDto | undefined> {
-        const process = await getThesisProcessOrThrow(this.processRepo);
-
+    async createRequest(userId: string, processId: string, requestTitle: string)
+        : Promise<RequestStateInfoDto | undefined> {
         const requestState = await this.workflowEngine.createRequest({
-            processId: process.id,
+            processId: processId,
             userId: userId,
             title: requestTitle
         });
