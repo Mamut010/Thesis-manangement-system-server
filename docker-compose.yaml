@@ -46,8 +46,8 @@ services:
       - ./prometheus:/etc/prometheus
       - prometheus-storage:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--web.config.file=/etc/prometheus/web.yml'
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--web.config.file=/etc/prometheus/web.yaml' 
       - '--storage.tsdb.path=/prometheus'
     ports:
       - 9090:9090
