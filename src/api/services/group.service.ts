@@ -3,13 +3,15 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { GroupServiceInterface } from "../interfaces";
 import { GroupInfosQueryRequest, GroupInfoCreateRequest, GroupInfoUpdateRequest, GroupMembersUpdateRequest } from "../../contracts/requests";
 import { GroupInfosQueryResponse } from "../../contracts/responses";
-import { GroupInfoDto } from "../../shared/dtos";
+import { GroupInfoDto, UserDto } from "../../shared/dtos";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { GroupRepoInterface, ProcessRepoInterface, UserRepoInterface } from "../../dal/interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces"
 import { getThesisProcessOrThrow } from "../../utils/process-helpers";
 import { arrayUnion } from "../../utils/array-helpers";
+import { Role } from "../../core/constants/roles";
+import { BadRequestError } from "../../contracts/errors/bad-request.error";
 
 @injectable()
 export class GroupService implements GroupServiceInterface {
@@ -67,7 +69,8 @@ export class GroupService implements GroupServiceInterface {
             return await this.getGroup(id);
         }
         
-        await this.ensureUsersExist(userIds);
+        const users = await this.ensureUsersExist(userIds);
+        this.ensureAdminUsers(users);
 
         const result = await this.groupRepo.updateMembers(id, updateRequest);
         if (!result) {
@@ -78,7 +81,8 @@ export class GroupService implements GroupServiceInterface {
     }
         
     async setGroupMembers(id: string, userIds: string[]): Promise<GroupInfoDto> {
-        await this.ensureUsersExist(userIds);
+        const users = await this.ensureUsersExist(userIds);
+        this.ensureAdminUsers(users);
 
         const result = await this.groupRepo.setMembers(id, userIds);
         if (!result) {
@@ -100,6 +104,13 @@ export class GroupService implements GroupServiceInterface {
         const users = await this.userRepo.findManyByIds(userIds);
         if (users.length !== userIds.length) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
+        }
+        return users;
+    }
+
+    private ensureAdminUsers(users: UserDto[]) {
+        if (users.some(user => user.roleName !== Role.Admin)) {
+            throw new BadRequestError(ERROR_MESSAGES.BadRequest.UsersMustBeAdmin);
         }
     }
 }

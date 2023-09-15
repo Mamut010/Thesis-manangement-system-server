@@ -76,5 +76,6 @@ export const ERROR_MESSAGES = {
     BadRequest: {
         DataMustBeNumber: 'Passed data must be number',
         MissingRequiredStringRequestData: 'Missing required string request data',
+        UsersMustBeAdmin: 'Group members must be admin',
     }
 } as const;
