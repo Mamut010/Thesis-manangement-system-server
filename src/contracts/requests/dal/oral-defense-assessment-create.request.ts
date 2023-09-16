@@ -4,23 +4,13 @@ import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "cl
 export class OralDefenseAssessmentCreateRequest {
     @Expose()
     @IsDefined()
-    @IsNumber()
-    thesisId!: number;
-
-    @Expose()
-    @IsDefined()
     @IsString()
     studentId!: string;
 
     @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id?: string;
+    @IsDefined()
+    @IsNumber()
+    attemptNo!: number;
 
     @Expose()
     @IsOptional()

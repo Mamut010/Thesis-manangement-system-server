@@ -44,6 +44,7 @@ export const ERROR_MESSAGES = {
         RoleAlreadyExists: 'The role already exists',
         UserAlreadyExists: 'The user already exists',
         ProgramAlreadyExists: 'The program already exists',
+        StudentWithAttemptAlreadyExists: 'The student with attempt already exists.',
         StudentAlreadyConnectedBachelorThesisRegistration: 'The student already associates with a bachelor thesis registration',
         StudentAlreadyConnectedBachelorThesisAssessment: 'The student already associates with a bachelor thesis assessment',
         StudentAlreadyConnectedBachelorThesisEvaluation: 'The student already associates with a bachelor thesis evaluation',

@@ -51,4 +51,9 @@ export class StudentDto {
     @IsDefined()
     @IsNumber()
     ects!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
+    numberOfAttempts!: number;
 }

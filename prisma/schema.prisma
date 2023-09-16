@@ -8,7 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model User {
     id                      Int             @id @default(autoincrement())
     userId                  String          @unique
@@ -72,15 +71,13 @@ model Notification {
 }
 
 model Admin {
-    id                            Int                           @id @default(autoincrement())
-    userId                        String                        @unique
-    contact                       String?                       @db.VarChar(255)
-    title                         String?                       @db.VarChar(255)
-    signature                     String?                       @db.VarChar(255)
+    id                                 Int                           @id @default(autoincrement())
+    userId                             String                        @unique
+    contact                            String?                       @db.VarChar(255)
+    title                              String?                       @db.VarChar(255)
+    signature                          String?                       @db.VarChar(255)
 
-    user                          User                          @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)                        
-    bachelorThesisRegistrations   BachelorThesisRegistration[]
-    oralDefenseRegistrations      OralDefenseRegistration[]
+    user                               User                          @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Lecturer {
@@ -93,25 +90,27 @@ model Lecturer {
 
     user                             User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     createdTheses                    Thesis[]
-    sup1BachelorThesisRegistrations  BachelorThesisRegistration[]    @relation("supervisor1BachelorThesisRegistrations")
-    sup2BachelorThesisRegistrations  BachelorThesisRegistration[]    @relation("supervisor2BachelorThesisRegistrations")
-    supBachelorThesisEvaluations     BachelorThesisEvaluation[]      @relation("supervisorBachelorThesisEvaluations")
-    sup1OralDefenseRegistrations     OralDefenseRegistration[]       @relation("supervisor1OralDefenseRegistrations")
-    sup2OralDefenseRegistrations     OralDefenseRegistration[]       @relation("supervisor2OralDefenseRegistrations")
-    sup1BachelorThesisAssessments    BachelorThesisAssessment[]      @relation("supervisor1BachelorThesisAssessments")
-    sup2BachelorThesisAssessments    BachelorThesisAssessment[]      @relation("supervisor2BachelorThesisAssessments")
-    sup1OralDefenseAssessments       OralDefenseAssessment[]         @relation("supervisor1OralDefenseAssessments")
-    sup2OralDefenseAssessments       OralDefenseAssessment[]         @relation("supervisor2OralDefenseAssessments")
+    sup2StudentAttempts              StudentAttempt[]
 }
 
 model Program {
-    id              Int         @id @default(autoincrement())
-    title           String      @unique @db.VarChar(255)
-    description     String?     @db.VarChar(2000)
-    createdAt       DateTime    @default(now()) @db.Timestamp(6)
-    updatedAt       DateTime    @updatedAt @db.Timestamp(6)
+    id                  Int                 @id @default(autoincrement())
+    title               String              @unique @db.VarChar(255)
+    description         String?             @db.VarChar(2000)
+    createdAt           DateTime            @default(now()) @db.Timestamp(6)
+    updatedAt           DateTime            @updatedAt @db.Timestamp(6)
 
-    students        Student[]
+    students            Student[]
+    programAdminGroup   ProgramAdminGroup?
+}
+
+model ProgramAdminGroup {
+    id              Int         @id @default(autoincrement())
+    groupId         String      @unique
+    programId       Int         @unique
+
+    group           Group       @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    program         Program     @relation(fields: [programId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Student {
@@ -126,11 +125,29 @@ model Student {
 
     user                          User                            @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
     program                       Program?                        @relation(fields: [programId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-    bachelorThesisRegistration    BachelorThesisRegistration?
-    oralDefenseRegistration       OralDefenseRegistration?
-    bachelorThesisAssessment      BachelorThesisAssessment?
-    oralDefenseAssessment         OralDefenseAssessment?
-    bachelorThesisEvaluation      BachelorThesisEvaluation?
+    studentAttempts               StudentAttempt[]
+}
+
+model StudentAttempt {
+    id                              String                          @id @default(cuid())
+    studentId                       String
+    attemptNo                       Int
+    thesisId                        Int
+    // supervisor1 is the creator of the thesis so no need to store it here
+    supervisor2Id                   String
+    createdAt                       DateTime                        @default(now()) @db.Timestamp(6)
+    updatedAt                       DateTime                        @updatedAt @db.Timestamp(6)
+
+    student                         Student                         @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    thesis                          Thesis                          @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    supervisor2                     Lecturer                        @relation(fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    bachelorThesisRegistration      BachelorThesisRegistration?
+    oralDefenseRegistration         OralDefenseRegistration?
+    bachelorThesisAssessment        BachelorThesisAssessment?
+    oralDefenseAssessment           OralDefenseAssessment?
+    bachelorThesisEvaluation        BachelorThesisEvaluation?
+
+    @@unique([studentId, attemptNo])
 }
 
 model Topic {
@@ -170,14 +187,10 @@ model Thesis {
     createdAt                     DateTime                            @default(now()) @db.Timestamp(6)
     updatedAt                     DateTime                            @updatedAt @db.Timestamp(6)
 
-    topic                         Topic?                              @relation(fields: [topicId], references: [id])
-    field                         Field?                              @relation(fields: [fieldId], references: [id])
-    creator                       Lecturer                            @relation(fields: [creatorId], references: [userId])
-    bachelorThesisRegistrations   BachelorThesisRegistration[]
-    oralDefenseRegistrations      OralDefenseRegistration[]
-    bachelorThesisAssessments     BachelorThesisAssessment[]
-    oralDefenseAssessments        OralDefenseAssessment[]
-    bachelorThesisEvaluations     BachelorThesisEvaluation[]
+    topic                         Topic?                              @relation(fields: [topicId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    field                         Field?                              @relation(fields: [fieldId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    creator                       Lecturer                            @relation(fields: [creatorId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    studentAttempts               StudentAttempt[]
 }
 
 model Location {
@@ -189,127 +202,89 @@ model Location {
 }
 
 model BachelorThesisRegistration {
-    id                      Int         @id @default(autoincrement())
-    thesisId                Int
-    studentId               String      @unique
-    supervisor1Id           String?
-    supervisor2Id           String?
-    adminId                 String?
-    dateOfBirth             DateTime?   @db.Date
-    placeOfBirth            String?     @db.VarChar(255)
-    studentDate             DateTime?   @db.Date
-    furtherParticipants     String?     @db.VarChar(255)
-    supervisor1Date         DateTime?   @db.Date
-    supervisor1Confirmed    Boolean?    
-    supervisor2Date         DateTime?   @db.Date
-    supervisor2Confirmed    Boolean?
-    adminConfirmed          Boolean?
-    adminAllowed            Boolean?    
-    issued                  DateTime?   @db.Date
-    deadlineCopy            DateTime?   @db.Date
-    extensionGranted        DateTime?   @db.Date
-    chairmanOfExamination   String?     @db.VarChar(255)
-    dateOfIssue             DateTime?   @db.Date
-    createdAt               DateTime    @default(now()) @db.Timestamp(6)
-    updatedAt               DateTime    @updatedAt @db.Timestamp(6)
+    id                      Int                 @id @default(autoincrement())
+    studentAttemptId        String              @unique
+    dateOfBirth             DateTime?           @db.Date
+    placeOfBirth            String?             @db.VarChar(255)
+    studentDate             DateTime?           @db.Date
+    furtherParticipants     String?             @db.VarChar(255)
+    supervisor1Date         DateTime?           @db.Date    
+    supervisor2Date         DateTime?           @db.Date    
+    issued                  DateTime?           @db.Date
+    deadlineCopy            DateTime?           @db.Date
+    extensionGranted        DateTime?           @db.Date
+    chairmanOfExamination   String?             @db.VarChar(255)
+    dateOfIssue             DateTime?           @db.Date
+    createdAt               DateTime            @default(now()) @db.Timestamp(6)
+    updatedAt               DateTime            @updatedAt @db.Timestamp(6)
 
-    student                 Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    thesis                  Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    supervisor1             Lecturer?   @relation("supervisor1BachelorThesisRegistrations", fields: [supervisor1Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    supervisor2             Lecturer?   @relation("supervisor2BachelorThesisRegistrations", fields: [supervisor2Id], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    admin                   Admin?      @relation(fields: [adminId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    studentAttempt          StudentAttempt      @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model OralDefenseRegistration {
-    id                     Int         @id @default(autoincrement())
-    studentId              String      @unique
-    thesisId               Int
-    supervisor1Id          String?
-    supervisor2Id          String?
-    adminId                String?
-    room                   String?     @db.VarChar(255)
+    id                     Int              @id @default(autoincrement())
+    studentAttemptId       String           @unique
+    room                   String?          @db.VarChar(255)
     areSpectatorsAllowed   Boolean?    
-    proposedDate           DateTime?   @db.DateTime
-    actualDate             DateTime?   @db.DateTime
-    concernedAgreed        Int?        @default(0)
-    dateReceived           DateTime?   @db.DateTime
-    admissionDate          DateTime?   @db.DateTime
-    adminAllowed           Boolean?
-    createdAt              DateTime    @default(now()) @db.Timestamp(6)
-    updatedAt              DateTime    @updatedAt @db.Timestamp(6)
+    proposedDate           DateTime?        @db.DateTime
+    actualDate             DateTime?        @db.DateTime
+    concernedAgreed        Int?             @default(0)
+    dateReceived           DateTime?        @db.DateTime
+    admissionDate          DateTime?        @db.DateTime
+    createdAt              DateTime         @default(now()) @db.Timestamp(6)
+    updatedAt              DateTime         @updatedAt @db.Timestamp(6)
 
-    student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    supervisor1            Lecturer?   @relation("supervisor1OralDefenseRegistrations", fields: [supervisor1Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
-    supervisor2            Lecturer?   @relation("supervisor2OralDefenseRegistrations", fields: [supervisor2Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
-    admin                  Admin?      @relation(fields: [adminId], references: [userId], onDelete: SetNull, onUpdate: Cascade)
+    studentAttempt         StudentAttempt   @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model BachelorThesisAssessment {
-    id                     Int         @id @default(autoincrement())
-    studentId              String      @unique
-    thesisId               Int
-    supervisor1Id          String?
-    supervisor2Id          String?
-    furtherParticipants    String?     @db.VarChar(255)
-    supervisor1Grade       Float?      @db.Float
-    supervisor2Grade       Float?      @db.Float
-    assessmentDescription  String?     @db.VarChar(255)
-    assessmentDate         DateTime?   @db.Date
-    createdAt              DateTime    @default(now()) @db.Timestamp(6)
-    updatedAt              DateTime    @updatedAt @db.Timestamp(6)
+    id                     Int              @id @default(autoincrement())
+    studentAttemptId       String           @unique
+    furtherParticipants    String?          @db.VarChar(255)
+    supervisor1Grade       Float?           @db.Float
+    supervisor2Grade       Float?           @db.Float
+    assessmentDescription  String?          @db.VarChar(255)
+    assessmentDate         DateTime?        @db.Date
+    createdAt              DateTime         @default(now()) @db.Timestamp(6)
+    updatedAt              DateTime         @updatedAt @db.Timestamp(6)
 
-    student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    supervisor1            Lecturer?   @relation("supervisor1BachelorThesisAssessments", fields: [supervisor1Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
-    supervisor2            Lecturer?   @relation("supervisor2BachelorThesisAssessments", fields: [supervisor2Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
+    studentAttempt         StudentAttempt   @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model OralDefenseAssessment {
-    id                     Int         @id @default(autoincrement())
-    studentId              String      @unique
-    thesisId               Int
-    supervisor1Id          String?
-    supervisor2Id          String?
-    dateDefense            DateTime?   @db.Date
-    placeDefense           String?     @db.VarChar(255)
-    startDate              DateTime?   @db.Date
-    finishDate             DateTime?   @db.Date
+    id                     Int              @id @default(autoincrement())
+    studentAttemptId       String           @unique
+    dateDefense            DateTime?        @db.Date
+    placeDefense           String?          @db.VarChar(255)
+    startDate              DateTime?        @db.Date
+    finishDate             DateTime?        @db.Date
     stateOfHealth          Boolean?
-    supervisor1Grade       Float?      @db.Float
-    supervisor2Grade       Float?      @db.Float
-    record                 String?     @db.VarChar(2000)
-    assessmentDate         DateTime?   @db.Date
-    createdAt              DateTime    @default(now()) @db.Timestamp(6)
-    updatedAt              DateTime    @updatedAt @db.Timestamp(6)
+    supervisor1Grade       Float?           @db.Float
+    supervisor2Grade       Float?           @db.Float
+    record                 String?          @db.VarChar(2000)
+    assessmentDate         DateTime?        @db.Date
+    createdAt              DateTime         @default(now()) @db.Timestamp(6)
+    updatedAt              DateTime         @updatedAt @db.Timestamp(6)
 
-    student                Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    thesis                 Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    supervisor1            Lecturer?   @relation("supervisor1OralDefenseAssessments", fields: [supervisor1Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
-    supervisor2            Lecturer?   @relation("supervisor2OralDefenseAssessments", fields: [supervisor2Id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
+    studentAttempt         StudentAttempt   @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model BachelorThesisEvaluation {
-    id                      Int         @id @default(autoincrement())
-    thesisId                Int
-    studentId               String      @unique
-    supervisorId            String
-    title                   String?     @db.VarChar(255)
-    date                    DateTime?   @db.Date
-    supervisorConfirmed     Boolean?    
-    createdAt               DateTime    @default(now()) @db.Timestamp(6)
-    updatedAt               DateTime    @updatedAt @db.Timestamp(6)
+    id                      Int              @id @default(autoincrement())
+    studentAttemptId        String           @unique
+    title                   String?          @db.VarChar(255)
+    date                    DateTime?        @db.Date
+    createdAt               DateTime         @default(now()) @db.Timestamp(6)
+    updatedAt               DateTime         @updatedAt @db.Timestamp(6)
 
-    student                 Student     @relation(fields: [studentId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    thesis                  Thesis      @relation(fields: [thesisId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    supervisor              Lecturer    @relation("supervisorBachelorThesisEvaluations", fields: [supervisorId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    studentAttempt          StudentAttempt   @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 ///
 /// The following tables are to construct a workflow engine database
 /// See: https://exceptionnotfound.net/designing-a-workflow-engine-database-part-1-introduction-and-purpose/
 ///
-/// Note: ProcessAdmin table is not adopted as the the system does not require this concept for now 
+/// Note: ProcessAdmin table is not adopted as the the system does not require this concept
 ///
 model Process {
     id              String      @id @default(cuid())
@@ -317,7 +292,6 @@ model Process {
     description     String?     @db.VarChar(2000)
 
     states          State[]
-    transitions     Transition[]
     actions         Action[]
     activities      Activity[]
     groups          Group[]
@@ -408,14 +382,12 @@ model State {
 }
 
 model Transition {
-    id              String      @id @default(cuid())
-    processId       String
+    id              String          @id @default(cuid())
     currentStateId  String
     nextStateId     String
 
-    process         Process     @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    currentState    State       @relation("currentStateTransitions", fields: [currentStateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    nextState       State       @relation("nextStateTransitions", fields: [nextStateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    currentState    State           @relation("currentStateTransitions", fields: [currentStateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    nextState       State           @relation("nextStateTransitions", fields: [nextStateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     actions         Action[]
     activities      Activity[]
     requestActions  RequestAction[]
@@ -464,14 +436,16 @@ model Activity {
 }
 
 model Group {
-    id                  String                  @id @default(cuid())
-    processId           String
-    name                String
-    description         String?                 @db.VarChar(2000)
+    id                      String                  @id @default(cuid())
+    processId               String
+    name                    String
+    description             String?                 @db.VarChar(2000)
 
-    process             Process                 @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    users               User[]
-    requestStakeholders RequestStakeholder[]
+    programAdminGroup       ProgramAdminGroup?
+
+    process                 Process                 @relation(fields: [processId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    users                   User[]
+    requestStakeholders     RequestStakeholder[]
 }
 
 model Target {

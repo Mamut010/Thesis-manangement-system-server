@@ -64,6 +64,7 @@ import {
     RequestRepoInterface, 
     RequestStakeholderRepoInterface, 
     RoleRepoInterface, 
+    StudentAttemptRepoInterface, 
     StudentRepoInterface, 
     ThesisRepoInterface, 
     TopicRepoInterface, 
@@ -91,7 +92,8 @@ import {
     ProcessRepo,
     GroupRepo,
     RequestDataRepo,
-    RequestStakeholderRepo
+    RequestStakeholderRepo,
+    StudentAttemptRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -247,6 +249,11 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<StudentRepoInterface>(INJECTION_TOKENS.StudentRepo)
         .to(StudentRepo)
+        .inRequestScope();
+
+    container
+        .bind<StudentAttemptRepoInterface>(INJECTION_TOKENS.StudentAttemptRepo)
+        .to(StudentAttemptRepo)
         .inRequestScope();
 
     container

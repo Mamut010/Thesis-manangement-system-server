@@ -1,20 +1,23 @@
 import {
     IsNullableStringFilterArray, 
     IsNullableDateFilterArray,
-    IsNullableBooleanFilterArray,
-    IsStringFilterArray
+    IsStringFilterArray,
+    IsNumberFilterArray
 } from "../../../decorators";
 import {
     NullableStringFilter, 
     NullableDateFilter,
-    NullableBooleanFilter,
-    StringFilter
+    StringFilter,
+    NumberFilter
 } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class BachelorThesisRegistrationsQueryRequest extends BaseQueryRequest {
     @IsStringFilterArray()
     studentIdFilter?: StringFilter[];
+
+    @IsNumberFilterArray()
+    attemptNoFilter?: NumberFilter[];
 
     @IsNullableStringFilterArray()
     surnameFilter?: NullableStringFilter[];
@@ -43,20 +46,11 @@ export class BachelorThesisRegistrationsQueryRequest extends BaseQueryRequest {
     @IsNullableDateFilterArray()
     supervisor1DateFilter?: NullableDateFilter[];
 
-    @IsNullableBooleanFilterArray()
-    supervisor1ConfirmedFilter?: NullableBooleanFilter[];
-
     @IsNullableStringFilterArray()
     supervisor2TitleFilter?: NullableStringFilter[];
 
     @IsNullableDateFilterArray()
     supervisor2DateFilter?: NullableDateFilter[];
-
-    @IsNullableBooleanFilterArray()
-    supervisor2ConfirmedFilter?: NullableBooleanFilter[];
-
-    @IsNullableBooleanFilterArray()
-    adminConfirmedFilter?: NullableBooleanFilter[];
 
     @IsNullableDateFilterArray()
     issuedFilter?: NullableDateFilter[];

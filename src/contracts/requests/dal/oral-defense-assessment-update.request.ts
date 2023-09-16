@@ -4,26 +4,6 @@ import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from "class-validat
 export class OralDefenseAssessmentUpdateRequest {
     @Expose()
     @IsOptional()
-    @IsNumber()
-    thesisId?: number;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    studentId?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id?: string;
-
-    @Expose()
-    @IsOptional()
     @IsDate()
     @Type(() => Date)
     dateDefense?: Date;

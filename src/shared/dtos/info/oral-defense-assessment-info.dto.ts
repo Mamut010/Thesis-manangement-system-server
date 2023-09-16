@@ -15,6 +15,11 @@ export class OralDefenseAssessmentInfoDto {
     @Expose()
     @IsDefined()
     @IsNumber()
+    attemptNo!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
     thesisId!: number;
 
     @Expose()

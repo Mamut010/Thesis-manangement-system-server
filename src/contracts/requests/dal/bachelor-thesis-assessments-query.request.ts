@@ -2,19 +2,24 @@ import {
     IsNullableStringFilterArray,
     IsNullableNumberFilterArray,
     IsNullableDateFilterArray,
-    IsStringFilterArray
+    IsStringFilterArray,
+    IsNumberFilterArray
 } from "../../../decorators";
 import {
     NullableStringFilter,
     NullableNumberFilter,
     NullableDateFilter,
-    StringFilter
+    StringFilter,
+    NumberFilter
 } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class BachelorThesisAssessmentsQueryRequest extends BaseQueryRequest {
     @IsStringFilterArray()
     studentIdFilter?: StringFilter[];
+
+    @IsNumberFilterArray()
+    attemptNoFilter?: NumberFilter[];
 
     @IsNullableStringFilterArray()
     surnameFilter?: NullableStringFilter[];

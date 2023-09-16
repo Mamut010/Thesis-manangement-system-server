@@ -10,6 +10,8 @@ export * from './thesis.model';
 export * from './topic.model';
 export * from './field.model';
 export * from './location.model';
+export * from './student-attempt.model';
+export * from './program-admin-group.model';
 export * from './bachelor-thesis-registration.model';
 export * from './bachelor-thesis-assessment.model';
 export * from './bachelor-thesis-evaluation.model';

@@ -15,6 +15,11 @@ export class OralDefenseAssessmentDto {
     @Expose()
     @IsDefined()
     @IsNumber()
+    attemptNo!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
     thesisId!: number;
 
     @Expose()
@@ -116,4 +121,14 @@ export class OralDefenseAssessmentDto {
     @IsOptional()
     @IsDate()
     assessmentDate?: Date | null;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    createdAt!: Date;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    updatedAt!: Date;
 }

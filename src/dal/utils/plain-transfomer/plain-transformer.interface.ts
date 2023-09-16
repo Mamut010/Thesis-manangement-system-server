@@ -17,6 +17,7 @@ import {
     RequestDto, 
     RequestStakeholderDto, 
     RoleDto, 
+    StudentAttemptDto, 
     StudentDto,
     ThesisDto,
     TopicDto,
@@ -42,6 +43,7 @@ import {
     PlainRequestStakeholder, 
     PlainRole, 
     PlainStudent,
+    PlainStudentAttempt,
     PlainThesis,
     PlainTopic,
     PlainUser,
@@ -60,6 +62,7 @@ export interface PlainTransformerInterface {
     toField(plain: PlainField): FieldDto;
     toTopic(plain: PlainTopic): TopicDto;
     toLocation(plain: PlainLocation): LocationDto;
+    toStudentAttempt(plain: PlainStudentAttempt): StudentAttemptDto;
     toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto;
     toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto;
     toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto;

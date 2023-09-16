@@ -150,6 +150,11 @@ export class TestController {
             include: { 
                 user: true,
                 program: true,
+                _count: {
+                    select: {
+                        studentAttempts: true
+                    }
+                }
             } 
         });
 
@@ -178,96 +183,96 @@ export class TestController {
         return msgInfo.response;
     }
 
-    @HttpCode(HTTP_CODES.Created)
-    @Post('/pdf')
-    async createPdf(@CurrentUser() user: AuthorizedUser, @Req() req: Request, @Res() res: Response) {
-        const { filename, path } = ASSETS.Templates.BachelorThesisRegistration;
-        const record = await this.prisma.bachelorThesisRegistration.findUniqueOrThrow(
-            { 
-                where: { 
-                    id: 1 
-                },
-                include: {
-                    student: true,
-                    supervisor1: true,
-                    supervisor2: true,
-                    thesis: {
-                        include: {
-                            field: true
-                        }
-                    },
-                    admin: true
-                } 
-            }
-        );
-        const dto1 = this.plainTransformer.toBachelorThesisRegistration(record);
-        dto1.dateOfBirth = new Date('2001-06-13');
-        dto1.studentDate = new Date('2023-08-06');
-        const pdfBuffer1 = await this.pdfFormGenerator.generateBachelorThesisRegistration(dto1);
+    // @HttpCode(HTTP_CODES.Created)
+    // @Post('/pdf')
+    // async createPdf(@CurrentUser() user: AuthorizedUser, @Req() req: Request, @Res() res: Response) {
+    //     const { filename, path } = ASSETS.Templates.BachelorThesisRegistration;
+    //     const record = await this.prisma.bachelorThesisRegistration.findUniqueOrThrow(
+    //         { 
+    //             where: { 
+    //                 id: 1 
+    //             },
+    //             include: {
+    //                 student: true,
+    //                 supervisor1: true,
+    //                 supervisor2: true,
+    //                 thesis: {
+    //                     include: {
+    //                         field: true
+    //                     }
+    //                 },
+    //                 admin: true
+    //             } 
+    //         }
+    //     );
+    //     const dto1 = this.plainTransformer.toBachelorThesisRegistration(record);
+    //     dto1.dateOfBirth = new Date('2001-06-13');
+    //     dto1.studentDate = new Date('2023-08-06');
+    //     const pdfBuffer1 = await this.pdfFormGenerator.generateBachelorThesisRegistration(dto1);
         
-        ////////////
-        const btaRepo = this.container.get(INJECTION_TOKENS.BachelorThesisAssessmentRepo) as 
-            BachelorThesisAssessmentRepoInterface;
-        const dto2 = (await btaRepo.findOneById(1))!;
-        dto2.assessmentDate = new Date();
-        dto2.assessmentDescription = 'Lorem ipsum '.repeat(40);
-        const pdfBuffer2 = await this.pdfFormGenerator.generateBachelorThesisAssessment(dto2);
-        ////////////
-        const bteRepo = this.container.get(INJECTION_TOKENS.BachelorThesisEvaluationRepo) as 
-            BachelorThesisEvaluationRepoInterface;
-        const dto3 = (await bteRepo.findOneById(1))!;
-        const pdfBuffer3 = await this.pdfFormGenerator.generateBachelorThesisEvaluation(dto3);
-        ////////////
-        const odrRepo = this.container.get(INJECTION_TOKENS.OralDefenseRegistrationRepo) as 
-            OralDefenseRegistrationRepoInterface;
-        const dto4 = (await odrRepo.findOneById(1))!;
-        dto4.proposedDate = new Date();
-        const admissionDate = new Date();
-        const dateReceived = new Date();
-        dateReceived.setDate(dateReceived.getDate() - 2);
-        admissionDate.setDate(admissionDate.getDate() - 1);
-        dto4.dateReceived = dateReceived;
-        dto4.admissionDate = admissionDate;
-        const pdfBuffer4 = await this.pdfFormGenerator.generateOralDefenseRegistration(dto4);
-        ////////////
-        const odaRepo = this.container.get(INJECTION_TOKENS.OralDefenseAssessmentRepo) as 
-            OralDefenseAssessmentRepoInterface;
-        const dto5 = (await odaRepo.findOneById(1))!;
-        dto5.placeDefense = 'ABC Building';
-        dto5.supervisor1Grade = 2.3;
-        dto5.supervisor2Grade = 3;
-        dto5.overallGrade = (2.3 + 3) / 2;
-        dto5.assessmentDate = new Date();
-        dto5.record = 'Lorem ipsum '.repeat(50);
-        const pdfBuffer5 = await this.pdfFormGenerator.generateOralDefenseAssessment(dto5);
-        ////////////
+    //     ////////////
+    //     const btaRepo = this.container.get(INJECTION_TOKENS.BachelorThesisAssessmentRepo) as 
+    //         BachelorThesisAssessmentRepoInterface;
+    //     const dto2 = (await btaRepo.findOneById(1))!;
+    //     dto2.assessmentDate = new Date();
+    //     dto2.assessmentDescription = 'Lorem ipsum '.repeat(40);
+    //     const pdfBuffer2 = await this.pdfFormGenerator.generateBachelorThesisAssessment(dto2);
+    //     ////////////
+    //     const bteRepo = this.container.get(INJECTION_TOKENS.BachelorThesisEvaluationRepo) as 
+    //         BachelorThesisEvaluationRepoInterface;
+    //     const dto3 = (await bteRepo.findOneById(1))!;
+    //     const pdfBuffer3 = await this.pdfFormGenerator.generateBachelorThesisEvaluation(dto3);
+    //     ////////////
+    //     const odrRepo = this.container.get(INJECTION_TOKENS.OralDefenseRegistrationRepo) as 
+    //         OralDefenseRegistrationRepoInterface;
+    //     const dto4 = (await odrRepo.findOneById(1))!;
+    //     dto4.proposedDate = new Date();
+    //     const admissionDate = new Date();
+    //     const dateReceived = new Date();
+    //     dateReceived.setDate(dateReceived.getDate() - 2);
+    //     admissionDate.setDate(admissionDate.getDate() - 1);
+    //     dto4.dateReceived = dateReceived;
+    //     dto4.admissionDate = admissionDate;
+    //     const pdfBuffer4 = await this.pdfFormGenerator.generateOralDefenseRegistration(dto4);
+    //     ////////////
+    //     const odaRepo = this.container.get(INJECTION_TOKENS.OralDefenseAssessmentRepo) as 
+    //         OralDefenseAssessmentRepoInterface;
+    //     const dto5 = (await odaRepo.findOneById(1))!;
+    //     dto5.placeDefense = 'ABC Building';
+    //     dto5.supervisor1Grade = 2.3;
+    //     dto5.supervisor2Grade = 3;
+    //     dto5.overallGrade = (2.3 + 3) / 2;
+    //     dto5.assessmentDate = new Date();
+    //     dto5.record = 'Lorem ipsum '.repeat(50);
+    //     const pdfBuffer5 = await this.pdfFormGenerator.generateOralDefenseAssessment(dto5);
+    //     ////////////
         
-        const name1 = uuidv4();
-        const tempPath1 = temp(name1);
-        const name2 = uuidv4();
-        const tempPath2 = temp(name2);
-        const name3 = uuidv4();
-        const tempPath3 = temp(name3);
-        const name4 = uuidv4();
-        const tempPath4 = temp(name4);
-        const name5 = uuidv4();
-        const tempPath5 = temp(name5);
+    //     const name1 = uuidv4();
+    //     const tempPath1 = temp(name1);
+    //     const name2 = uuidv4();
+    //     const tempPath2 = temp(name2);
+    //     const name3 = uuidv4();
+    //     const tempPath3 = temp(name3);
+    //     const name4 = uuidv4();
+    //     const tempPath4 = temp(name4);
+    //     const name5 = uuidv4();
+    //     const tempPath5 = temp(name5);
 
-        await mkdir(temp(), { recursive: true });
-        await writeFile(tempPath1, pdfBuffer1);
-        await writeFile(tempPath2, pdfBuffer2);
-        await writeFile(tempPath3, pdfBuffer3);
-        await writeFile(tempPath4, pdfBuffer4);
-        await writeFile(tempPath5, pdfBuffer5);
+    //     await mkdir(temp(), { recursive: true });
+    //     await writeFile(tempPath1, pdfBuffer1);
+    //     await writeFile(tempPath2, pdfBuffer2);
+    //     await writeFile(tempPath3, pdfBuffer3);
+    //     await writeFile(tempPath4, pdfBuffer4);
+    //     await writeFile(tempPath5, pdfBuffer5);
 
-        return {
-            bachelorThesisRegistration: name1,
-            bachelorThesisAssessment: name2,
-            bachelorThesisEvaluation: name3,
-            oralDefenseRegistration: name4,
-            oralDefenseAssessment: name5,
-        };
-    }
+    //     return {
+    //         bachelorThesisRegistration: name1,
+    //         bachelorThesisAssessment: name2,
+    //         bachelorThesisEvaluation: name3,
+    //         oralDefenseRegistration: name4,
+    //         oralDefenseAssessment: name5,
+    //     };
+    // }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/pdf/:filename')

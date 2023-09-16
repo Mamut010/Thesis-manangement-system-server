@@ -12,6 +12,7 @@ import {
     OralDefenseRegistration, 
     Process, 
     Program, 
+    ProgramAdminGroup, 
     RefreshToken, 
     Request, 
     RequestData, 
@@ -19,6 +20,7 @@ import {
     Role, 
     State, 
     Student, 
+    StudentAttempt, 
     Thesis, 
     Topic, 
     User, 
@@ -40,6 +42,9 @@ export type PlainAdmin = Admin & {
 export type PlainStudent = Student & {
     user: User,
     program: Program | null,
+    _count: {
+        studentAttempts: number
+    },
 };
 
 export type PlainLecturer = Lecturer & {
@@ -74,18 +79,61 @@ export type PlainStudentWithThesis = {
     thesis: Thesis,
 }
 
-export type PlainBachelorThesisRegistration = BachelorThesisRegistration & PlainStudentWithThesis & Supervisors & {
-    admin: Admin | null
+export type PlainProgramWithAdminGroup = Program & {
+    programAdminGroup: ProgramAdminGroup | null
 };
 
-export type PlainOralDefenseRegistration = OralDefenseRegistration & PlainStudentWithThesis & Supervisors;
+export type PlainStudentAttempt = StudentAttempt & {
+    thesis: Thesis,
+};
 
-export type PlainBachelorThesisAssessment = BachelorThesisAssessment & PlainStudentWithThesis & Supervisors;
+export type PlainBachelorThesisRegistration = BachelorThesisRegistration & {
+    studentAttempt: StudentAttempt & {
+        student: Student,
+        thesis: Thesis & {
+            creator: Lecturer,
+        },
+        supervisor2: Lecturer,
+    },
+};
 
-export type PlainOralDefenseAssessment = OralDefenseAssessment & PlainStudentWithThesis & Supervisors;
+export type PlainOralDefenseRegistration = OralDefenseRegistration & {
+    studentAttempt: StudentAttempt & {
+        student: Student,
+        thesis: Thesis & {
+            creator: Lecturer,
+        },
+        supervisor2: Lecturer,
+    },
+};
 
-export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & PlainStudentWithThesis & {
-    supervisor: Lecturer
+export type PlainBachelorThesisAssessment = BachelorThesisAssessment & {
+    studentAttempt: StudentAttempt & {
+        student: Student,
+        thesis: Thesis & {
+            creator: Lecturer,
+        },
+        supervisor2: Lecturer,
+    },
+};
+
+export type PlainOralDefenseAssessment = OralDefenseAssessment & {
+    studentAttempt: StudentAttempt & {
+        student: Student,
+        thesis: Thesis & {
+            creator: Lecturer,
+        },
+        supervisor2: Lecturer,
+    },
+};
+
+export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & {
+    studentAttempt: StudentAttempt & {
+        thesis: Thesis & {
+            creator: Lecturer,
+        },
+        student: Student,
+    },
 };
 
 export type WithUserId = Pick<User, 'userId'>; 

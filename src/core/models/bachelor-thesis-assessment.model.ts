@@ -9,23 +9,8 @@ export class BachelorThesisAssessment {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    thesisId!: number;
-
-    @Expose()
-    @IsDefined()
     @IsString()
-    studentId!: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id!: string | null;
+    studentAttemptId!: string;
 
     @Expose()
     @IsOptional()

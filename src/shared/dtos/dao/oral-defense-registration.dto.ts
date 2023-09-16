@@ -15,8 +15,12 @@ export class OralDefenseRegistrationDto {
     @Expose()
     @IsDefined()
     @IsNumber()
+    attemptNo!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
     thesisId!: number;
-    
 
     @Expose()
     @IsOptional()
@@ -104,22 +108,12 @@ export class OralDefenseRegistrationDto {
     admissionDate?: Date | null;
 
     @Expose()
-    @IsOptional()
-    @IsString()
-    adminId?: string | null;
-    
-    @Expose()
-    @IsOptional()
-    @IsString()
-    adminTitle?: string | null;
+    @IsDefined()
+    @IsDate()
+    createdAt!: Date;
 
     @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminAllowed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminConfirmed?: boolean | null;
+    @IsDefined()
+    @IsDate()
+    updatedAt!: Date;
 }

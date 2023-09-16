@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class BachelorThesisRegistrationDto {
     @Expose()
@@ -11,6 +11,11 @@ export class BachelorThesisRegistrationDto {
     @IsDefined()
     @IsString()
     studentId!: string;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
+    attemptNo!: number;
 
     @Expose()
     @IsDefined()
@@ -74,11 +79,6 @@ export class BachelorThesisRegistrationDto {
 
     @Expose()
     @IsOptional()
-    @IsBoolean()
-    supervisor1Confirmed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
     @IsString()
     supervisor1Signature?: string | null;
 
@@ -99,38 +99,8 @@ export class BachelorThesisRegistrationDto {
 
     @Expose()
     @IsOptional()
-    @IsBoolean()
-    supervisor2Confirmed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
     @IsString()
     supervisor2Signature?: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    adminId?: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    adminTitle?: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminAllowed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminConfirmed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    adminSignature?: string | null;
 
     @Expose()
     @IsOptional()
@@ -152,8 +122,23 @@ export class BachelorThesisRegistrationDto {
     @IsString()
     chairmanOfExamination?: string | null;
 
+    // @Expose()
+    // @IsOptional()
+    // @IsString()
+    // chairmanOfExaminationSignature?: string | null;
+
     @Expose()
     @IsOptional()
     @IsDate()
     dateOfIssue?: Date | null;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    createdAt!: Date;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    updatedAt!: Date;
 }

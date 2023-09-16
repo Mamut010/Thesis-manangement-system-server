@@ -15,6 +15,11 @@ export class BachelorThesisAssessmentDto {
     @Expose()
     @IsDefined()
     @IsNumber()
+    attemptNo!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
     thesisId!: number;
 
     @Expose()
@@ -96,4 +101,14 @@ export class BachelorThesisAssessmentDto {
     @IsOptional()
     @IsDate()
     assessmentDate?: Date | null;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    createdAt!: Date;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    updatedAt!: Date;
 }

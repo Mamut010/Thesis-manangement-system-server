@@ -28,6 +28,10 @@ function seedData(prisma: PrismaClient) {
                     roleId: ROLE_IDS['Admin'],
                 },
                 { 
+                    userId: '3', username: 'admin3', password: hash('1234'), email: email('3'),
+                    roleId: ROLE_IDS['Admin'],
+                },
+                { 
                     userId: '101', username: 'lecturer1.1', password: hash('lecturer1.1'), email: email('101'),
                     roleId: ROLE_IDS['Lecturer1.1'],
                 },
@@ -51,12 +55,17 @@ function seedData(prisma: PrismaClient) {
                     userId: '10003', username: 'student3', password: hash('student3'), email: email('10003'),
                     roleId: ROLE_IDS['Student'],
                 },
+                { 
+                    userId: '10004', username: 'student4', password: hash('student4'), email: email('10004'),
+                    roleId: ROLE_IDS['Student'],
+                },
             ]
         }),
         prisma.admin.createMany({
             data: [
                 { userId: '1', title: 'CSE Program', contact: 'ABC City' },
                 { userId: '2', title: 'Mr. Fred', contact: 'HCM City' },
+                { userId: '3', title: 'MEN Program', contact: 'Da Lat' },
             ]
         }),
         prisma.lecturer.createMany({
@@ -77,6 +86,7 @@ function seedData(prisma: PrismaClient) {
                 { userId: '10001', programId: 1, intake: 2019, surname: 'Doe', forename: 'John' },
                 { userId: '10002', programId: 1, intake: 2019, surname: 'Doe', forename: 'Jane' },
                 { userId: '10003', programId: 2, intake: 2021, surname: 'Doe', forename: 'Mary' },
+                { userId: '10004', programId: 2, intake: 2021, surname: 'Doe', forename: 'Katy' },
             ]
         }),
         prisma.topic.createMany({
@@ -101,40 +111,44 @@ function seedData(prisma: PrismaClient) {
                 { title: 'Academic Cluster', description: 'Sample location description 2' },
             ]
         }),
+        prisma.studentAttempt.createMany({
+            data: [
+                { id: '1', studentId: '10003', attemptNo: 1, thesisId: 1, supervisor2Id: '401' },
+                { id: '2', studentId: '10004', attemptNo: 1, thesisId: 2, supervisor2Id: '701' },
+            ]
+        }),
         prisma.bachelorThesisRegistration.createMany({
             data: [
                 { 
-                    thesisId: 1, studentId: '10001', supervisor1Id: '101', supervisor2Id: '401', adminId: '1',
-                    furtherParticipants: 'Jane Doe', 
-                    supervisor1Confirmed: true
+                    studentAttemptId: '1',
+                    furtherParticipants: 'Katy Doe',
                 },
                 { 
-                    thesisId: 2, studentId: '10002', supervisor1Id: '101', supervisor2Id: '401', adminId: '1',
-                    furtherParticipants: 'John Doe',
-                    supervisor1Confirmed: true, supervisor2Confirmed: false
+                    studentAttemptId: '2',
+                    furtherParticipants: 'Mary Doe',
                 },
             ]
         }),
         prisma.oralDefenseRegistration.createMany({
             data: [
                 { 
-                    thesisId: 1, studentId: '10001', supervisor1Id: '101', supervisor2Id: '401' 
+                    studentAttemptId: '1',
                 },
                 { 
-                    thesisId: 2, studentId: '10002', supervisor1Id: '101', supervisor2Id: '401' 
+                    studentAttemptId: '2',
                 },
             ]
         }),
         prisma.bachelorThesisAssessment.createMany({
             data: [
                 { 
-                    thesisId: 1, studentId: '10001', supervisor1Id: '101', supervisor2Id: '401',
-                    furtherParticipants: 'Jane Doe', 
+                    studentAttemptId: '1',
+                    furtherParticipants: 'Katy Doe',
                     supervisor1Grade: 1, supervisor2Grade: 1,
                 },
                 { 
-                    thesisId: 2, studentId: '10002', supervisor1Id: '101', supervisor2Id: '401',
-                    furtherParticipants: 'John Doe',
+                    studentAttemptId: '2',
+                    furtherParticipants: 'Mary Doe',
                     supervisor1Grade: 1, supervisor2Grade: 1,
                 }
             ]
@@ -142,21 +156,23 @@ function seedData(prisma: PrismaClient) {
         prisma.oralDefenseAssessment.createMany({
             data: [
                 { 
-                    thesisId: 1, studentId: '10001', supervisor1Id: '101', supervisor2Id: '401' 
+                    studentAttemptId: '1',
+                    supervisor1Grade: 1.3, supervisor2Grade: 1.3,
                 },
                 { 
-                    thesisId: 2, studentId: '10002', supervisor1Id: '101', supervisor2Id: '401' 
+                    studentAttemptId: '2',
+                    supervisor1Grade: 1, supervisor2Grade: 1.7,
                 },
             ]
         }),
         prisma.bachelorThesisEvaluation.createMany({
             data: [
                 {
-                    thesisId: 1, studentId: '10001', supervisorId: '101',
-                    title: 'Mr', date: new Date(), supervisorConfirmed: true
+                    studentAttemptId: '1',
+                    title: 'Mr', date: new Date(),
                 },
                 {
-                    thesisId: 2, studentId: '10002', supervisorId: '401',
+                    studentAttemptId: '2',
                     title: 'Ms'
                 }
             ]
@@ -170,6 +186,7 @@ const Id = {
     },
     Group: {
         Thesis_CSEAdmins: 'Group-Thesis_CSEAdmins',
+        Thesis_MENAdmins: 'Group-Thesis_MENAdmins',
     },
     Target: {
         Requester: 'Target-Requester',
@@ -399,14 +416,14 @@ const nonCancellableStateIds: NonRequestCancelledStateId[] = [
     Id.State.AdminDeniedPermissionToFillODRForm,
     Id.State.AdminConfirmedAssessments,
 ];
-const cancelRelatedTransitionOps = createInTransitionsForRequestCancelledState(nonCancellableStateIds, Id.Process.Thesis);
+const cancelRelatedTransitionOps = createInTransitionsForRequestCancelledState(nonCancellableStateIds);
 
 function seedThesisWorkflow(prisma: PrismaClient) {
     return [
         prisma.process.create({
             data: {
                 id: Id.Process.Thesis, 
-                name: 'Thesis process',
+                name: 'Thesis Process',
             }
         }),
         prisma.group.create({
@@ -423,6 +440,30 @@ function seedThesisWorkflow(prisma: PrismaClient) {
                             userId: '2',
                         }
                     ]
+                },
+                programAdminGroup: {
+                    create: {
+                        programId: 1,
+                    }
+                }
+            }
+        }),
+        prisma.group.create({
+            data: {
+                id: Id.Group.Thesis_MENAdmins,
+                processId: Id.Process.Thesis,
+                name: 'MEN Admins',
+                users: {
+                    connect: [
+                        {
+                            userId: '3',
+                        },
+                    ]
+                },
+                programAdminGroup: {
+                    create: {
+                        programId: 2,
+                    }
                 }
             }
         }),
@@ -672,7 +713,7 @@ function seedThesisWorkflow(prisma: PrismaClient) {
         }),
         prisma.transition.createMany({
             data: [
-                ...Object.values(Id.Transition).map(transitionId => creatTransition(transitionId, Id.Process.Thesis)),
+                ...Object.values(Id.Transition).map(transitionId => creatTransition(transitionId)),
                 ...cancelRelatedTransitionOps.createMany
             ],
         }),
@@ -1465,14 +1506,13 @@ function createStaticType(staticTypeId: string) {
     }
 }
 
-function creatTransition(transitionId: TransitionId, processId: string) {
+function creatTransition(transitionId: TransitionId) {
     const match = transitionId.match(transitionIdRegex);
     if (!match) {
         throw new Error(`Invalid transition ID: ${transitionId}`);
     }
     return {
         id: transitionId,
-        processId: processId,
         currentStateId: `State-${match[1]}`,
         nextStateId: `State-${match[2]}`,
     }
@@ -1544,7 +1584,7 @@ function createActivityTarget(activityId: ActivityId) {
     };
 }
 
-function createInTransitionsForRequestCancelledState(excludedStateIds: NonRequestCancelledStateId[], processId: string) {
+function createInTransitionsForRequestCancelledState(excludedStateIds: NonRequestCancelledStateId[]) {
     const STATE_PREFIX = 'State-';
     const fromStateIds = Object.values(Id.State).filter(item => 
             item !== Id.State.RequestCancelled
@@ -1556,7 +1596,6 @@ function createInTransitionsForRequestCancelledState(excludedStateIds: NonReques
         const trimmedFromStateId = trimPrefix(fromStateId, STATE_PREFIX);
         return {
             id: `Transition-${trimmedFromStateId}_${trimmedRequestCancelledStateId}`,
-            processId: processId,
             currentStateId: fromStateId,
             nextStateId: Id.State.RequestCancelled
         }

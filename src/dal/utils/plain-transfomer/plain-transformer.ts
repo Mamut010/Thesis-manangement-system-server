@@ -20,6 +20,7 @@ import {
     RequestStakeholderDto, 
     RequestUserStakeholderDto, 
     RoleDto, 
+    StudentAttemptDto, 
     StudentDto,
     ThesisDto,
     TopicDto,
@@ -46,6 +47,7 @@ import {
     PlainRequestStakeholder, 
     PlainRole, 
     PlainStudent,
+    PlainStudentAttempt,
     PlainThesis,
     PlainTopic,
     PlainUser
@@ -59,9 +61,6 @@ import { RequestData } from "@prisma/client";
 
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
-    private static readonly bachelorThesisAndOralDefenseRelations 
-        = ['thesis', 'admin', 'supervisor', 'supervisor1', 'supervisor2'];
-
     constructor(@inject(INJECTION_TOKENS.CryptoService) private cryptoService: CryptoServiceInterface) {
 
     }
@@ -100,6 +99,7 @@ export class PlainTransformer implements PlainTransformerInterface {
 
         this.tryDecryptingEmail(dto);
         dto.studentId = plain.userId;
+        dto.numberOfAttempts = plain._count.studentAttempts;
         
         return dto;
     }
@@ -152,35 +152,75 @@ export class PlainTransformer implements PlainTransformerInterface {
         return dto;
     }
 
+    public toStudentAttempt(plain: PlainStudentAttempt): StudentAttemptDto {
+        const dto = plainToInstanceExactMatch(StudentAttemptDto, plain);
+
+        dto.supervisor1Id = plain.thesis.creatorId;
+
+        return dto;
+    }
+
     public toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisRegistrationDto, plain);
-        dto.studentSignature = plain.student.signature;
-        dto.adminSignature = plain.admin?.signature ?? null;
+    
+        dto.supervisor1Id = plain.studentAttempt.thesis.creatorId;
+        dto.supervisor1Title = plain.studentAttempt.thesis.creator.title;
+        dto.supervisor1Signature = plain.studentAttempt.thesis.creator.signature;
+        dto.supervisor2Title = plain.studentAttempt.supervisor2.title;
+        dto.supervisor2Signature = plain.studentAttempt.supervisor2.signature;
+        dto.studentSignature = plain.studentAttempt.student.signature;
+
         return dto;
     }
 
     public toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseRegistrationDto, plain);
-        dto.studentSignature = plain.student.signature;
+
+        dto.supervisor1Id = plain.studentAttempt.thesis.creatorId;
+        dto.supervisor1Title = plain.studentAttempt.thesis.creator.title;
+        dto.supervisor1Signature = plain.studentAttempt.thesis.creator.signature;
+        dto.supervisor2Title = plain.studentAttempt.supervisor2.title;
+        dto.supervisor2Signature = plain.studentAttempt.supervisor2.signature;
+        dto.studentSignature = plain.studentAttempt.student.signature;
+
         return dto;
     }
 
     public toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisAssessmentDto, plain);
-        dto.studentSignature = plain.student.signature;
+
+        dto.supervisor1Id = plain.studentAttempt.thesis.creatorId;
+        dto.supervisor1Title = plain.studentAttempt.thesis.creator.title;
+        dto.supervisor1Signature = plain.studentAttempt.thesis.creator.signature;
+        dto.supervisor2Title = plain.studentAttempt.supervisor2.title;
+        dto.supervisor2Signature = plain.studentAttempt.supervisor2.signature;
+        dto.studentSignature = plain.studentAttempt.student.signature;
         dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
+
         return dto;
     }
 
     public toOralDefenseAssessment(plain: PlainOralDefenseAssessment): OralDefenseAssessmentDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseAssessmentDto, plain);
-        dto.studentSignature = plain.student.signature;
+
+        dto.supervisor1Id = plain.studentAttempt.thesis.creatorId;
+        dto.supervisor1Title = plain.studentAttempt.thesis.creator.title;
+        dto.supervisor1Signature = plain.studentAttempt.thesis.creator.signature;
+        dto.supervisor2Title = plain.studentAttempt.supervisor2.title;
+        dto.supervisor2Signature = plain.studentAttempt.supervisor2.signature;
+        dto.studentSignature = plain.studentAttempt.student.signature;
         dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
+
         return dto;
     }
 
     public toBachelorThesisEvaluation(plain: PlainBachelorThesisEvaluation): BachelorThesisEvaluationDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisEvaluationDto, plain);
+
+        dto.supervisorId = plain.studentAttempt.thesis.creatorId;
+        dto.supervisorTitle = plain.studentAttempt.thesis.creator.title;
+        dto.supervisorSignature = plain.studentAttempt.thesis.creator.signature;
+
         return dto;
     }
 
@@ -250,10 +290,9 @@ export class PlainTransformer implements PlainTransformerInterface {
         return { requestId, userStakeholders, groupStakeholders };
     }
 
-    private toBachelorThesisOrOralDefenseDto<T>(cls: new (...args: any[]) => T, plain: object): T {
+    private toBachelorThesisOrOralDefenseDto<T extends object>(cls: new (...args: any[]) => T, plain: object): T {
         return plainToInstanceExactMatch(cls, flattenObject(plain, {
             keepDuplicate: true,
-            transformedProps: PlainTransformer.bachelorThesisAndOralDefenseRelations,
         }));
     }
 

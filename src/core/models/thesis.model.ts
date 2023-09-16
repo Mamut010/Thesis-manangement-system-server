@@ -18,6 +18,11 @@ export class Thesis {
     fieldId!: number | null;
 
     @Expose()
+    @IsDefined()
+    @IsNumber()
+    creatorId!: string;
+
+    @Expose()
     @IsOptional()
     @IsString()
     title!: string | null;

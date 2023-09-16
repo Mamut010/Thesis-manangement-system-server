@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class BachelorThesisRegistration {
     @Expose()
@@ -9,28 +9,8 @@ export class BachelorThesisRegistration {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    thesisId!: number;
-
-    @Expose()
-    @IsDefined()
     @IsString()
-    studentId!: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    adminId!: string | null;
+    studentAttemptId!: string;
 
     @Expose()
     @IsOptional()
@@ -59,28 +39,8 @@ export class BachelorThesisRegistration {
 
     @Expose()
     @IsOptional()
-    @IsBoolean()
-    supervisor1Confirmed!: boolean | null;
-
-    @Expose()
-    @IsOptional()
     @IsDate()
     supervisor2Date!: Date | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    supervisor2Confirmed!: boolean | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminConfirmed!: boolean | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminAllowed!: boolean | null;
 
     @Expose()
     @IsOptional()

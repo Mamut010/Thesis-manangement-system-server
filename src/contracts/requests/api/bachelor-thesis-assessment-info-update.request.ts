@@ -4,26 +4,6 @@ import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 export class BachelorThesisAssessmentInfoUpdateRequest {
     @Expose()
     @IsOptional()
-    @IsNumber()
-    thesisId?: number;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    studentId?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id?: string;
-
-    @Expose()
-    @IsOptional()
     @IsString()
     furtherParticipants?: string;
 
