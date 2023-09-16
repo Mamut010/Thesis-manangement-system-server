@@ -19,7 +19,7 @@ export abstract class BaseNotifyActivityHandler extends BaseActivityHandler {
 
     public async handle(requestId: string, activityInput: ActivityHandlerInput): Promise<ActivityHandlerOutput> {
         const orgReceiverIds = await this.getUserIdsFromTarget(requestId, activityInput.target, activityInput.requestUsers);
-        let receiverIds = activityInput.actionResolvedUserIds
+        const receiverIds = activityInput.actionResolvedUserIds
             ? uniqueFrom(orgReceiverIds, activityInput.actionResolvedUserIds)
             : removeDuplicates(orgReceiverIds);
 
