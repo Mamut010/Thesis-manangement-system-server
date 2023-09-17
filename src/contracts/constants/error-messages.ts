@@ -29,6 +29,7 @@ export const ERROR_MESSAGES = {
 
         GroupNotFound: 'Group not found',
         RequestNotFound: 'Request not found',
+        AttemptAssociatedWithRequestNotFound: 'No attempt associated with request',
     },
     Unexpected: {
         DefaultMessage: 'Unexpected error has occurred',
@@ -55,6 +56,10 @@ export const ERROR_MESSAGES = {
     MethodNotAllowed: {
         RoleCreationNotAllowed: 'Role creation is not allowed',
         RoleDeletionNotAllowed: 'Role deletion is not allowed',
+    },
+    Conflict: {
+        RequestCurrentlyUndeletable: 'Request is currently undeletable',
+        LatestAttemptRequestIsInProgress: 'Latest attempt\'s request is in progress',
     },
     Forbidden: {
         DefaultMessage: 'Access is denied',

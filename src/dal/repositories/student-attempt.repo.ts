@@ -39,6 +39,20 @@ export class StudentAttemptRepo implements StudentAttemptRepoInterface {
         return records.map(item => this.plainTransformer.toStudentAttempt(item));
     }
 
+    async findOneByRequestId(requestId: string): Promise<StudentAttemptDto | null> {
+        const record = await this.prisma.studentAttemptRequest.findUnique({
+            where: {
+                requestId: requestId
+            },
+            select: {
+                studentAttempt: {
+                    include: studentAttemptInclude
+                }
+            }
+        });
+        return record ? this.plainTransformer.toStudentAttempt(record.studentAttempt) : null;
+    }
+
     async create(createRequest: StudentAttemptCreateRequest): Promise<StudentAttemptDto> {
         const impl = async () => {
             const record = await this.prisma.studentAttempt.create({

@@ -147,6 +147,8 @@ model StudentAttempt {
     oralDefenseAssessment           OralDefenseAssessment?
     bachelorThesisEvaluation        BachelorThesisEvaluation?
 
+    studentAttemptRequest           StudentAttemptRequest?
+
     @@unique([studentId, attemptNo])
 }
 
@@ -215,6 +217,10 @@ model BachelorThesisRegistration {
     extensionGranted        DateTime?           @db.Date
     chairmanOfExamination   String?             @db.VarChar(255)
     dateOfIssue             DateTime?           @db.Date
+    studentConfirmed        Boolean             @default(false)
+    supervisor1Confirmed    Boolean             @default(false)
+    supervisor2Confirmed    Boolean             @default(false)
+    adminConfirmed          Boolean             @default(false)
     createdAt               DateTime            @default(now()) @db.Timestamp(6)
     updatedAt               DateTime            @updatedAt @db.Timestamp(6)
 
@@ -280,6 +286,15 @@ model BachelorThesisEvaluation {
     studentAttempt          StudentAttempt   @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
+model StudentAttemptRequest {
+    id                      String              @id @default(cuid())
+    studentAttemptId        String              @unique
+    requestId               String              @unique
+
+    studentAttempt          StudentAttempt      @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    request                 Request             @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
 ///
 /// The following tables are to construct a workflow engine database
 /// See: https://exceptionnotfound.net/designing-a-workflow-engine-database-part-1-introduction-and-purpose/
@@ -299,23 +314,25 @@ model Process {
 }
 
 model Request {
-    id                  String                  @id @default(cuid())
-    processId           String
-    userId              String
-    stateId             String
-    title               String                  @db.VarChar(255)
-    createdAt           DateTime                @default(now()) @db.Timestamp(6)
-    updatedAt           DateTime                @updatedAt @db.Timestamp(6)
+    id                          String                  @id @default(cuid())
+    processId                   String
+    userId                      String
+    stateId                     String
+    title                       String                  @db.VarChar(255)
+    createdAt                   DateTime                @default(now()) @db.Timestamp(6)
+    updatedAt                   DateTime                @updatedAt @db.Timestamp(6)
 
-    data                RequestData[]
-    notes               RequestNote[]
-    files               RequestFile[]
+    data                        RequestData[]
+    notes                       RequestNote[]
+    files                       RequestFile[]
 
-    process             Process                 @relation(fields: [processId], references: [id], onUpdate: Cascade)
-    creator             User                    @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
-    requestStakeholders RequestStakeholder[]          
-    state               State                   @relation(fields: [stateId], references: [id], onUpdate: Cascade)
-    requestActions      RequestAction[]
+    process                     Process                 @relation(fields: [processId], references: [id], onUpdate: Cascade)
+    creator                     User                    @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+    requestStakeholders         RequestStakeholder[]          
+    state                       State                   @relation(fields: [stateId], references: [id], onUpdate: Cascade)
+    requestActions              RequestAction[]
+
+    studentAttemptRequest       StudentAttemptRequest?
 }
 
 model RequestData {

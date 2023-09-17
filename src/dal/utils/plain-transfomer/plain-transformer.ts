@@ -153,8 +153,10 @@ export class PlainTransformer implements PlainTransformerInterface {
     }
 
     public toStudentAttempt(plain: PlainStudentAttempt): StudentAttemptDto {
-        const dto = plainToInstanceExactMatch(StudentAttemptDto, plain);
-
+        const dto = plainToInstanceExactMatch(StudentAttemptDto, flattenObject(plain, {
+            keepDuplicate: true,
+        }));
+        
         dto.supervisor1Id = plain.thesis.creatorId;
 
         return dto;

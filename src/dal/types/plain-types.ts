@@ -21,6 +21,7 @@ import {
     State, 
     Student, 
     StudentAttempt, 
+    StudentAttemptRequest, 
     Thesis, 
     Topic, 
     User, 
@@ -85,6 +86,11 @@ export type PlainProgramWithAdminGroup = Program & {
 
 export type PlainStudentAttempt = StudentAttempt & {
     thesis: Thesis,
+    bachelorThesisRegistration: Pick<BachelorThesisRegistration, 'id'> | null,
+    oralDefenseRegistration: Pick<OralDefenseRegistration, 'id'> | null,
+    bachelorThesisAssessment: Pick<BachelorThesisAssessment, 'id'> | null,
+    oralDefenseAssessment: Pick<OralDefenseAssessment, 'id'> | null,
+    studentAttemptRequest: Pick<StudentAttemptRequest, 'requestId'> | null,
 };
 
 export type PlainBachelorThesisRegistration = BachelorThesisRegistration & {

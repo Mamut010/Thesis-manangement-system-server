@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
 import { GroupsQueryRequest, RequestInfosQueryRequest, RequestsQueryRequest } from "../../contracts/requests";
-import { RequestInfosQueryResponse } from "../../contracts/responses";
+import { RequestAssociatedFormsResponse, RequestInfosQueryResponse } from "../../contracts/responses";
 import { RequestServiceInterface } from "../interfaces/request.service.interface";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { GroupRepoInterface, RequestRepoInterface } from "../../dal/interfaces";
+import { GroupRepoInterface, RequestRepoInterface, StudentAttemptRepoInterface } from "../../dal/interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { RequestDto, RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
@@ -22,7 +22,7 @@ import { RequestActionSubmitRequest } from "../../contracts/requests/api/request
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { OrderBy, StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
-import { MethodNotAllowedError } from "../../contracts/errors/method-not-allowed.error";
+import { ConflictError } from "../../contracts/errors/conflict.error";
 
 @injectable()
 export class RequestService implements RequestServiceInterface {
@@ -31,6 +31,7 @@ export class RequestService implements RequestServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.RequestRepo) private requestRepo: RequestRepoInterface,
         @inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface,
+        @inject(INJECTION_TOKENS.StudentAttemptRepo) private studentAttemptRepo: StudentAttemptRepoInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface,
         @inject(INJECTION_TOKENS.WorkflowEngine) private workflowEngine: WorkflowEngineInterface,
         @inject(INJECTION_TOKENS.WorkflowCommandFactory) private workflowCommandFactory: WorkflowCommandFactoryInterface,
@@ -74,7 +75,7 @@ export class RequestService implements RequestServiceInterface {
         const record = await this.ensureRecordExists(id);
 
         if (!this.isDeletableStateType(record.stateType)) {
-            throw new MethodNotAllowedError(ERROR_MESSAGES.MethodNotAllowed.RequestCurrentlyUndeletable);
+            throw new ConflictError(ERROR_MESSAGES.Conflict.RequestCurrentlyUndeletable);
         }
         // Only admin or the creator is allowed to delete the request
         else if (!isAdmin(user) && record.creatorId !== user.userId) {
@@ -142,6 +143,23 @@ export class RequestService implements RequestServiceInterface {
         const requestStates = await this.workflowEngine.getRequestStates(creatorId, content.map(item => item.id));
 
         return content.map((request, index) => this.makeRequestStateInfo(request, requestStates[index]));
+    }
+
+    async getRequestAssociatedForms(user: AuthorizedUser, requestId: string): Promise<RequestAssociatedFormsResponse> {
+        const request = await this.ensureRecordExists(requestId);
+        await this.ensureValidRequestAccess(user, request.userStakeholderIds, request.groupStakeholderIds);
+
+        const record = await this.studentAttemptRepo.findOneByRequestId(requestId);
+        if (!record) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.AttemptAssociatedWithRequestNotFound);
+        }
+        return {
+            bachelorThesisRegistrationId: record.bachelorThesisRegistrationId ?? undefined,
+            oralDefenseRegistrationId: record.oralDefenseRegistrationId ?? undefined,
+            bachelorThesisAssessmentId: record.bachelorThesisAssessmentId ?? undefined,
+            oralDefenseAssessmentId: record.oralDefenseAssessmentId ?? undefined,
+            bachelorThesisEvaluationId: record.bachelorThesisEvaluationId ?? undefined,
+        }
     }
 
     private async ensureRecordExists(id: string) {

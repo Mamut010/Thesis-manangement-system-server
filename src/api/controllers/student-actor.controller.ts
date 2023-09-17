@@ -101,7 +101,7 @@ export class StudentActorController {
     @ResponseSchema(RequestStateInfoDto)
     createThesisRequest(@CurrentUser() user: AuthorizedUser,
         @Body({ required: true }) createRequest: ThesisRequestCreateRequest) {
-        return this.studentService.createThesisRequest(user.userId, createRequest);
+        return this.studentService.createThesisRequest(user, createRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)

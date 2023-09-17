@@ -23,15 +23,15 @@ import {
     OralDefenseAssessmentInfoDto
 } from "../../shared/dtos";
 import { LecturerDetailResponse, LecturerInfosQueryResponse } from "../../contracts/responses";
-import { 
-    LecturerAssetsQueryRequest,
+import {
     BachelorThesisRegistrationsQueryRequest,
     BachelorThesisAssessmentsQueryRequest,
     OralDefenseRegistrationsQueryRequest,
     OralDefenseAssessmentsQueryRequest,
     BachelorThesisEvaluationsQueryRequest,
     LecturerInfosQueryRequest,
-    LecturerInfoUpdateRequest
+    LecturerInfoUpdateRequest,
+    SimpleQueryRequest
 } from "../../contracts/requests";
 
 @JsonController('lecturers')
@@ -64,8 +64,8 @@ export class LecturerController {
     @Authorized(Role.Admin)
     @Get('/:id/detail')
     @ResponseSchema(LecturerDetailResponse)
-    getLecturerDetail(@Param('id') id: string, @QueryParams() lecturerAssetsQueryRequest: LecturerAssetsQueryRequest) {
-        return this.lecturerService.getLecturerDetail(id, lecturerAssetsQueryRequest);
+    getLecturerDetail(@Param('id') id: string, @QueryParams() queryRequest: SimpleQueryRequest) {
+        return this.lecturerService.getLecturerDetail(id, queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)

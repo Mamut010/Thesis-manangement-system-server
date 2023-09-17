@@ -59,6 +59,36 @@ export const thesisInclude = {
 
 export const studentAttemptInclude = {
     thesis: true,
+    bachelorThesisRegistration: {
+        select: {
+            id: true,
+        }
+    },
+    oralDefenseRegistration: {
+        select: {
+            id: true,
+        }
+    },
+    bachelorThesisAssessment: {
+        select: {
+            id: true,
+        }
+    },
+    oralDefenseAssessment: {
+        select: {
+            id: true,
+        }
+    },
+    bachelorThesisEvaluation: {
+        select: {
+            id: true,
+        }
+    },
+    studentAttemptRequest: {
+        select: {
+            requestId: true,
+        }
+    }
 }
 
 export const requestInclude = {

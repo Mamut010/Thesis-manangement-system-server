@@ -1,6 +1,7 @@
 import { StudentInfoUpdateRequest, StudentInfosQueryRequest } from "../../contracts/requests";
 import { ThesisRequestCreateRequest } from "../../contracts/requests/api/thesis-request-create.request";
 import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
+import { AuthorizedUser } from "../../core/auth-checkers";
 import { 
     BachelorThesisAssessmentInfoDto, 
     BachelorThesisEvaluationInfoDto, 
@@ -30,7 +31,7 @@ export interface StudentServiceInterface {
 
     updateStudentInfo(studentId: string, updateRequest: StudentInfoUpdateRequest): Promise<StudentInfoDto>;
 
-    createThesisRequest(userId: string, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto>;
+    createThesisRequest(user: AuthorizedUser, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto>;
     
     getLatestCreatedRequestState(userId: string): Promise<RequestStateInfoDto>;
 }

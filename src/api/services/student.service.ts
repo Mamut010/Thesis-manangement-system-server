@@ -14,18 +14,21 @@ import { firstOrDefault } from "../../utils/array-helpers";
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { ThesisRequestCreateRequest } from "../../contracts/requests/api/thesis-request-create.request";
-import { ProcessRepoInterface, StudentRepoInterface } from "../../dal/interfaces";
+import { ProcessRepoInterface, StudentAttemptRepoInterface, StudentRepoInterface } from "../../dal/interfaces";
 import { AssetsServiceInterface, RequestServiceInterface } from "../interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { StudentInfoUpdateRequest, StudentInfosQueryRequest } from "../../contracts/requests";
 import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
 import { getThesisProcessOrThrow } from "../../utils/process-helpers";
+import { AuthorizedUser } from "../../core/auth-checkers";
+import { ConflictError } from "../../contracts/errors/conflict.error";
 
 @injectable()
 export class StudentService implements StudentServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.StudentRepo) private studentRepo: StudentRepoInterface,
+        @inject(INJECTION_TOKENS.StudentAttemptRepo) private studentAttemptRepo: StudentAttemptRepoInterface,
         @inject(INJECTION_TOKENS.ProcessRepo) private processRepo: ProcessRepoInterface,
         @inject(INJECTION_TOKENS.AssetsService) private assetsService: AssetsServiceInterface,
         @inject(INJECTION_TOKENS.RequestService) private requestService: RequestServiceInterface,
@@ -127,9 +130,11 @@ export class StudentService implements StudentServiceInterface {
         return this.mapper.map(StudentInfoDto, result);
     }
 
-    async createThesisRequest(userId: string, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto> {
+    async createThesisRequest(user: AuthorizedUser, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto> {
+        await this.ensureLatestRequestDeletable(user);
+
         const process = await getThesisProcessOrThrow(this.processRepo);
-        const createdRequest = await this.requestService.createRequest(userId, process.id, request.title);
+        const createdRequest = await this.requestService.createRequest(user.userId, process.id, request.title);
         if (!createdRequest) {
             throw new UnexpectedError(ERROR_MESSAGES.Unexpected.RequestCreationFailed);
         }
@@ -153,5 +158,25 @@ export class StudentService implements StudentServiceInterface {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.StudentNotFound);
         }
         return result;
+    }
+
+    private async ensureLatestRequestDeletable(user: AuthorizedUser) {
+        const attempts = await this.studentAttemptRepo.findManyByStudentId(user.userId);
+        if (attempts.length === 0) {
+            return;
+        }
+
+        const { requestId } = attempts.reduce((attempt1, attempt2) => {
+            return attempt1.attemptNo > attempt2.attemptNo ? attempt1 : attempt2;
+        });
+        
+        if (typeof requestId !== 'string') {
+            return;
+        }
+
+        const request = await this.requestService.getRequestState(user, requestId);
+        if (!request.isDeletable) {
+            throw new ConflictError(ERROR_MESSAGES.Conflict.LatestAttemptRequestIsInProgress);
+        }
     }
 }

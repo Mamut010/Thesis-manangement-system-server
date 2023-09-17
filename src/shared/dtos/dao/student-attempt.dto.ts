@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDate, IsDefined, IsNumber, IsString } from "class-validator";
+import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class StudentAttemptDto {
     @Expose()
@@ -31,6 +31,36 @@ export class StudentAttemptDto {
     @IsDefined()
     @IsString()
     supervisor2Id!: string;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    bachelorThesisRegistrationId?: number | null;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    oralDefenseRegistrationId?: number | null;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    bachelorThesisAssessmentId?: number | null;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    oralDefenseAssessmentId?: number | null;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    bachelorThesisEvaluationId?: number | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    requestId?: string | null;
 
     @Expose()
     @IsDefined()

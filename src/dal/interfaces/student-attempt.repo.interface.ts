@@ -6,6 +6,8 @@ export interface StudentAttemptRepoInterface {
 
     findOneByStudentIdAndAttempt(studentId: string, attempt: number): Promise<StudentAttemptDto | null>;
 
+    findOneByRequestId(requestId: string): Promise<StudentAttemptDto | null>;
+
     findManyByStudentId(studentId: string): Promise<StudentAttemptDto[]>;
 
     create(createRequest: StudentAttemptCreateRequest): Promise<StudentAttemptDto>;
