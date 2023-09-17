@@ -60,4 +60,14 @@ export class OralDefenseAssessmentCreateRequest {
     @IsDate()
     @Type(() => Date)
     assessmentDate?: Date;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    supervisor1Confirmed?: boolean;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    supervisor2Confirmed?: boolean;
 }

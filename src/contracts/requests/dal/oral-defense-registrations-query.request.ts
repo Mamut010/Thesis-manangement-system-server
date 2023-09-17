@@ -2,17 +2,17 @@ import {
     IsNullableBooleanFilterArray, 
     IsNullableStringFilterArray,
     IsNullableDateFilterArray,
-    IsNullableNumberFilterArray,
     IsStringFilterArray,
-    IsNumberFilterArray
+    IsNumberFilterArray,
+    IsBooleanFilterArray
 } from "../../../decorators";
 import {
     NullableBooleanFilter, 
     NullableStringFilter,
     NullableDateFilter,
-    NullableNumberFilter,
     StringFilter,
-    NumberFilter
+    NumberFilter,
+    BooleanFilter
 } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
@@ -50,12 +50,18 @@ export class OralDefenseRegistrationsQueryRequest extends BaseQueryRequest {
     @IsNullableStringFilterArray()
     roomFilter?: NullableStringFilter[];
 
-    @IsNullableNumberFilterArray()
-    concernedAgreedFilter?: NullableNumberFilter[];
+    @IsNullableBooleanFilterArray()
+    concernedAgreedFilter?: NullableBooleanFilter[];
 
     @IsNullableDateFilterArray()
     receivingDateFilter?: NullableDateFilter[];
 
     @IsNullableDateFilterArray()
     submissionDateFilter?: NullableDateFilter[];
+
+    @IsBooleanFilterArray()
+    studentConfirmedFilter?: BooleanFilter[];
+
+    @IsBooleanFilterArray()
+    adminConfirmedFilter?: BooleanFilter[];
 }

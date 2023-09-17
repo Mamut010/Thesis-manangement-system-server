@@ -2,7 +2,6 @@ import {
     IsNullableBooleanFilterArray, 
     IsNullableStringFilterArray,
     IsNullableDateFilterArray,
-    IsNullableNumberFilterArray,
     IsStringFilterArray,
     IsNumberFilterArray
 } from "../../../decorators";
@@ -10,7 +9,6 @@ import {
     NullableBooleanFilter, 
     NullableStringFilter,
     NullableDateFilter,
-    NullableNumberFilter,
     StringFilter,
     NumberFilter
 } from "../../../lib/query";
@@ -50,8 +48,8 @@ export class OralDefenseRegistrationInfosQueryRequest extends BaseQueryRequest {
     @IsNullableStringFilterArray()
     roomFilter?: NullableStringFilter[];
 
-    @IsNullableNumberFilterArray()
-    concernedAgreedFilter?: NullableNumberFilter[];
+    @IsNullableBooleanFilterArray()
+    concernedAgreedFilter?: NullableBooleanFilter[];
 
     @IsNullableDateFilterArray()
     receivingDateFilter?: NullableDateFilter[];

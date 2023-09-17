@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsOptional, IsString } from "class-validator";
 
 export class OralDefenseRegistrationUpdateRequest {
     @Expose()
@@ -26,8 +26,8 @@ export class OralDefenseRegistrationUpdateRequest {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    concernedAgreed?: number;
+    @IsBoolean()
+    concernedAgreed?: boolean;
 
     @Expose()
     @IsOptional()
@@ -40,4 +40,14 @@ export class OralDefenseRegistrationUpdateRequest {
     @IsDate()
     @Type(() => Date)
     admissionDate?: Date;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    studentConfirmed?: boolean;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    adminConfirmed?: boolean;
 }

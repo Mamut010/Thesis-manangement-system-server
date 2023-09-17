@@ -118,7 +118,8 @@ model Student {
     userId                        String                          @unique
     programId                     Int?
     surname                       String?                         @db.VarChar(255)
-    forename                      String?                         @db.VarChar(255)                            
+    forename                      String?                         @db.VarChar(255)
+    sex                           Int                             @default(0) // ISO/IEC 5218 codes                           
     intake                        Int?
     ects                          Int                             @default(0)
     signature                     String?                         @db.VarChar(255)
@@ -218,8 +219,6 @@ model BachelorThesisRegistration {
     chairmanOfExamination   String?             @db.VarChar(255)
     dateOfIssue             DateTime?           @db.Date
     studentConfirmed        Boolean             @default(false)
-    supervisor1Confirmed    Boolean             @default(false)
-    supervisor2Confirmed    Boolean             @default(false)
     adminConfirmed          Boolean             @default(false)
     createdAt               DateTime            @default(now()) @db.Timestamp(6)
     updatedAt               DateTime            @updatedAt @db.Timestamp(6)
@@ -234,9 +233,11 @@ model OralDefenseRegistration {
     areSpectatorsAllowed   Boolean?    
     proposedDate           DateTime?        @db.DateTime
     actualDate             DateTime?        @db.DateTime
-    concernedAgreed        Int?             @default(0)
+    concernedAgreed        Boolean?
     dateReceived           DateTime?        @db.DateTime
     admissionDate          DateTime?        @db.DateTime
+    studentConfirmed       Boolean          @default(false)
+    adminConfirmed         Boolean          @default(false)
     createdAt              DateTime         @default(now()) @db.Timestamp(6)
     updatedAt              DateTime         @updatedAt @db.Timestamp(6)
 
@@ -244,41 +245,44 @@ model OralDefenseRegistration {
 }
 
 model BachelorThesisAssessment {
-    id                     Int              @id @default(autoincrement())
-    studentAttemptId       String           @unique
-    furtherParticipants    String?          @db.VarChar(255)
-    supervisor1Grade       Float?           @db.Float
-    supervisor2Grade       Float?           @db.Float
-    assessmentDescription  String?          @db.VarChar(255)
-    assessmentDate         DateTime?        @db.Date
-    createdAt              DateTime         @default(now()) @db.Timestamp(6)
-    updatedAt              DateTime         @updatedAt @db.Timestamp(6)
+    id                         Int              @id @default(autoincrement())
+    studentAttemptId           String           @unique
+    furtherParticipants        String?          @db.VarChar(255)
+    supervisor1Grade           Float?           @db.Float
+    supervisor2Grade           Float?           @db.Float
+    assessmentDescription      String?          @db.VarChar(255)
+    assessmentDate             DateTime?        @db.Date
+    supervisor1Confirmed       Boolean          @default(false)
+    supervisor2Confirmed       Boolean          @default(false)
+    createdAt                  DateTime         @default(now()) @db.Timestamp(6)
+    updatedAt                  DateTime         @updatedAt @db.Timestamp(6)
 
-    studentAttempt         StudentAttempt   @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    studentAttempt             StudentAttempt   @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model OralDefenseAssessment {
-    id                     Int              @id @default(autoincrement())
-    studentAttemptId       String           @unique
-    dateDefense            DateTime?        @db.Date
-    placeDefense           String?          @db.VarChar(255)
-    startDate              DateTime?        @db.Date
-    finishDate             DateTime?        @db.Date
-    stateOfHealth          Boolean?
-    supervisor1Grade       Float?           @db.Float
-    supervisor2Grade       Float?           @db.Float
-    record                 String?          @db.VarChar(2000)
-    assessmentDate         DateTime?        @db.Date
-    createdAt              DateTime         @default(now()) @db.Timestamp(6)
-    updatedAt              DateTime         @updatedAt @db.Timestamp(6)
+    id                         Int              @id @default(autoincrement())
+    studentAttemptId           String           @unique
+    dateDefense                DateTime?        @db.Date
+    placeDefense               String?          @db.VarChar(255)
+    startDate                  DateTime?        @db.Date
+    finishDate                 DateTime?        @db.Date
+    stateOfHealth              Boolean?
+    supervisor1Grade           Float?           @db.Float
+    supervisor2Grade           Float?           @db.Float
+    record                     String?          @db.VarChar(2000)
+    assessmentDate             DateTime?        @db.Date
+    supervisor1Confirmed       Boolean          @default(false)
+    supervisor2Confirmed       Boolean          @default(false)
+    createdAt                  DateTime         @default(now()) @db.Timestamp(6)
+    updatedAt                  DateTime         @updatedAt @db.Timestamp(6)
 
-    studentAttempt         StudentAttempt   @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    studentAttempt             StudentAttempt   @relation(fields: [studentAttemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model BachelorThesisEvaluation {
     id                      Int              @id @default(autoincrement())
     studentAttemptId        String           @unique
-    title                   String?          @db.VarChar(255)
     date                    DateTime?        @db.Date
     createdAt               DateTime         @default(now()) @db.Timestamp(6)
     updatedAt               DateTime         @updatedAt @db.Timestamp(6)

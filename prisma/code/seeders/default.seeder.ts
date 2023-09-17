@@ -3,6 +3,7 @@ import { Seeder } from "./seeder";
 import { ROLES, ROLE_IDS } from "../roles";
 import { hash } from "../utils/crypto";
 import { email } from "../utils/credentials";
+import { Sex } from "../types/sex";
 import { PascalCaseToStandard, trimPrefix } from "../utils/helpers";
 
 export const DefaultSeeder: Seeder = async (prisma: PrismaClient) => {
@@ -83,10 +84,10 @@ function seedData(prisma: PrismaClient) {
         }),
         prisma.student.createMany({
             data: [
-                { userId: '10001', programId: 1, intake: 2019, surname: 'Doe', forename: 'John' },
-                { userId: '10002', programId: 1, intake: 2019, surname: 'Doe', forename: 'Jane' },
-                { userId: '10003', programId: 2, intake: 2021, surname: 'Doe', forename: 'Mary' },
-                { userId: '10004', programId: 2, intake: 2021, surname: 'Doe', forename: 'Katy' },
+                { userId: '10001', programId: 1, intake: 2019, surname: 'Doe', forename: 'John', sex: Sex.Male },
+                { userId: '10002', programId: 1, intake: 2019, surname: 'Doe', forename: 'Jane', sex: Sex.Female },
+                { userId: '10003', programId: 2, intake: 2021, surname: 'Doe', forename: 'Mary', sex: Sex.Female },
+                { userId: '10004', programId: 2, intake: 2021, surname: 'Doe', forename: 'Katy', sex: Sex.Female },
             ]
         }),
         prisma.topic.createMany({
@@ -168,12 +169,10 @@ function seedData(prisma: PrismaClient) {
         prisma.bachelorThesisEvaluation.createMany({
             data: [
                 {
-                    studentAttemptId: '1',
-                    title: 'Mr', date: new Date(),
+                    studentAttemptId: '1', date: new Date(),
                 },
                 {
                     studentAttemptId: '2',
-                    title: 'Ms'
                 }
             ]
         }),
@@ -227,9 +226,8 @@ const Id = {
         BTRequirementsSentToStudent: 'State-BTRequirementsSentToStudent',
 
         RequestBTEFormSentToSup1: 'State-RequestBTEFormSentToSup1',
-        Sup1RejectedThesis: 'State-Sup1RejectedThesis',
-        Sup1FillingBTEForm: 'State-Sup1FillingBTEForm',
-        Sup1FilledBTEForm: 'State-Sup1FilledBTEForm',
+        Sup1DeniedThesis: 'State-Sup1DeniedThesis',
+        Sup1ApprovedThesis: 'State-Sup1ApprovedThesis',
         Sup1SubmittedBTEForm: 'State-Sup1SubmittedBTEForm',
         AdminDeniedPermissionToFillODRForm: 'State-AdminDeniedPermissionToFillODRForm',
         StudentFillingODRForm: 'State-StudentFillingODRForm',
@@ -279,14 +277,11 @@ const Id = {
         AdminFilledBTRequirements_BTRequirementsSentToStudent: 'Transition-AdminFilledBTRequirements_BTRequirementsSentToStudent',
     
         BTRequirementsSentToStudent_RequestBTEFormSentToSup1: 'Transition-BTRequirementsSentToStudent_RequestBTEFormSentToSup1',
-        RequestBTEFormSentToSup1_Sup1RejectedThesis: 'Transition-RequestBTEFormSentToSup1_Sup1RejectedThesis',
-        RequestBTEFormSentToSup1_Sup1FillingBTEForm: 'Transition-RequestBTEFormSentToSup1_Sup1FillingBTEForm',
-        Sup1RejectedThesis_StudentFillingBTRForm: 'Transition-Sup1RejectedThesis_StudentFillingBTRForm',
-        Sup1RejectedThesis_Sup1FillingBTEForm: 'Transition-Sup1RejectedThesis_Sup1FillingBTEForm',
-        Sup1FillingBTEForm_Sup1RejectedThesis: 'Transition-Sup1FillingBTEForm_Sup1RejectedThesis',
-        Sup1FillingBTEForm_Sup1FilledBTEForm: 'Transition-Sup1FillingBTEForm_Sup1FilledBTEForm',
-        Sup1FilledBTEForm_Sup1FillingBTEForm: 'Transition-Sup1FilledBTEForm_Sup1FillingBTEForm',
-        Sup1FilledBTEForm_Sup1SubmittedBTEForm: 'Transition-Sup1FilledBTEForm_Sup1SubmittedBTEForm',
+        RequestBTEFormSentToSup1_Sup1DeniedThesis: 'Transition-RequestBTEFormSentToSup1_Sup1DeniedThesis',
+        RequestBTEFormSentToSup1_Sup1ApprovedThesis: 'Transition-RequestBTEFormSentToSup1_Sup1ApprovedThesis',
+        Sup1ApprovedThesis_RequestBTEFormSentToSup1: 'Transition-Sup1ApprovedThesis_RequestBTEFormSentToSup1',
+        Sup1ApprovedThesis_Sup1SubmittedBTEForm: 'Transition-Sup1ApprovedThesis_Sup1SubmittedBTEForm',
+
         Sup1SubmittedBTEForm_AdminDeniedPermissionToFillODRForm: 'Transition-Sup1SubmittedBTEForm_AdminDeniedPermissionToFillODRForm',
         Sup1SubmittedBTEForm_StudentFillingODRForm: 'Transition-Sup1SubmittedBTEForm_StudentFillingODRForm',
         StudentFillingODRForm_StudentFilledODRForm: 'Transition-StudentFillingODRForm_StudentFilledODRForm',
@@ -308,12 +303,9 @@ const Id = {
     },
     ActionType: {
         Approve: 'ActionType-Approve',
-        ApplyThesis: 'ActionType-ApplyThesis',
         Back: 'ActionType-Back',
-        Reject: 'ActionType-Reject',
-        RejectThesis: 'ActionType-RejectThesis',
         Confirm: 'ActionType-Confirm',
-        ConfirmThesis: 'ActionType-ConfirmThesis',
+        Reject: 'ActionType-Reject',
         RequestAdminGroup: 'ActionType-RequestAdminGroup',
         RequestSupervisor1: 'ActionType-RequestSupervisor1',
         RequestSupervisor2: 'ActionType-RequestSupervisor2',
@@ -323,6 +315,22 @@ const Id = {
         InviteSupervisor2: 'ActionType-InviteSupervisor2',
         Deny: 'ActionType-Deny',
         Cancel: 'ActionType-Cancel',
+
+        // Variants
+        ApplyThesis: 'ActionType-ApplyThesis',
+        RejectThesis: 'ActionType-RejectThesis',
+        ConfirmThesis: 'ActionType-ConfirmThesis',
+
+        RejectBachelorThesisRegistration: 'ActionType-RejectBachelorThesisRegistration',
+        ApproveBachelorThesisRegistration: 'ActionType-ApproveBachelorThesisRegistration',
+        ApproveBachelorThesisEvaluation: 'ActionType-ApproveBachelorThesisEvaluation',
+        BackBachelorThesisRegistration: 'ActionType-BackBachelorThesisRegistration',
+        BackBachelorThesisEvaluation: 'ActionType-BackBachelorThesisEvaluation',
+        BackOralDefenseRegistration: 'ActionType-BackOralDefenseRegistration',
+        BackAssessments: 'ActionType-BackAssessments',
+        ConfirmBachelorThesisRegistration: 'ActionType-ConfirmBachelorThesisRegistration',
+        ConfirmOralDefenseRegistration: 'ActionType-ConfirmOralDefenseRegistration',
+        ConfirmAssessments: 'ActionType-ConfirmAssessments',
     },
     Action: {
         Requester_ApplyThesis: 'Action-Requester_ApplyThesis',
@@ -335,6 +343,10 @@ const Id = {
         Requester_ConfirmThesis: 'Action-Requester_ConfirmThesis',
         Requester_InformAdminGroup: 'Action-Requester_InformAdminGroup',
         Requester_Cancel: 'Action-Requester_Cancel',
+        Requester_ConfirmBachelorThesisRegistration: 'Action-Requester_ConfirmBachelorThesisRegistration',
+        Requester_BackBachelorThesisRegistration: 'Action-Requester_BackBachelorThesisRegistration',
+        Requester_ConfirmOralDefenseRegistration: 'Action-Requester_ConfirmOralDefenseRegistration',
+        Requester_BackOralDefenseRegistration: 'Action-Requester_BackOralDefenseRegistration',
 
         AdminGroup_Approve: 'Action-AdminGroup_Approve',
         AdminGroup_Back: 'Action-AdminGroup_Back',
@@ -344,17 +356,34 @@ const Id = {
         AdminGroup_InformRequester: 'Action-AdminGroup_InformRequester',
         AdminGroup_RequestSupervisor1: 'Action-AdminGroup_RequestSupervisor1',
         AdminGroup_RequestSupervisors: 'Action-AdminGroup_RequestSupervisors',
+        AdminGroup_ApproveBachelorThesisRegistration: 'Action-AdminGroup_ApproveBachelorThesisRegistration',
+        AdminGroup_RejectBachelorThesisRegistration: 'Action-AdminGroup_RejectBachelorThesisRegistration',
+        AdminGroup_ConfirmBachelorThesisRegistration: 'Action-AdminGroup_ConfirmBachelorThesisRegistration',
+        AdminGroup_BackBachelorThesisRegistration: 'Action-AdminGroup_BackBachelorThesisRegistration',
+        AdminGroup_ConfirmOralDefenseRegistration: 'Action-AdminGroup_ConfirmOralDefenseRegistration',
+        AdminGroup_BackOralDefenseRegistration: 'Action-AdminGroup_BackOralDefenseRegistration',
 
         Supervisor1_Approve: 'Action-Supervisor1_Approve',
         Supervisor1_Back: 'Action-Supervisor1_Back',
         Supervisor1_Confirm: 'Action-Supervisor1_Confirm',
+        Supervisor1_Deny: 'Action-Supervisor1_Deny',
         Supervisor1_Reject: 'Action-Supervisor1_Reject',
         Supervisor1_RequestAdminGroup: 'Action-Supervisor1_RequestAdminGroup',
+        Supervisor1_RejectBachelorThesisRegistration: 'Action-Supervisor1_RejectBachelorThesisRegistration',
+        Supervisor1_ApproveBachelorThesisRegistration: 'Action-Supervisor1_ApproveBachelorThesisRegistration',
+        Supervisor1_ApproveBachelorThesisEvaluation: 'Action-Supervisor1_ApproveBachelorThesisEvaluation',
+        Supervisor1_BackBachelorThesisEvaluation: 'Action-Supervisor1_BackBachelorThesisEvaluation',
+        Supervisor1_ConfirmAssessments: 'Action-Supervisor1_ConfirmAssessments',
+        Supervisor1_BackAssessments: 'Action-Supervisor1_BackAssessments',
 
         Supervisor2_Approve: 'Action-Supervisor2_Approve',
         Supervisor2_Back: 'Action-Supervisor2_Back',
         Supervisor2_Confirm: 'Action-Supervisor2_Confirm',
         Supervisor2_Reject: 'Action-Supervisor2_Reject',
+        Supervisor2_RejectBachelorThesisRegistration: 'Action-Supervisor2_RejectBachelorThesisRegistration',
+        Supervisor2_ApproveBachelorThesisRegistration: 'Action-Supervisor2_ApproveBachelorThesisRegistration',
+        Supervisor2_ConfirmAssessments: 'Action-Supervisor2_ConfirmAssessments',
+        Supervisor2_BackAssessments: 'Action-Supervisor2_BackAssessments',
 
         RequesterOrSupervisor1_InviteSupervisor2: 'Action-RequesterOrSupervisor1_InviteSupervisor2',
     },
@@ -415,6 +444,19 @@ const nonCancellableStateIds: NonRequestCancelledStateId[] = [
     Id.State.AdminDeniedApproveBTRFormRequest,
     Id.State.AdminDeniedPermissionToFillODRForm,
     Id.State.AdminConfirmedAssessments,
+
+    Id.State.Sup1DeniedThesis,
+    Id.State.Sup1ApprovedThesis,
+    Id.State.Sup1SubmittedBTEForm,
+    Id.State.StudentFillingODRForm,
+    Id.State.StudentFilledODRForm,
+    Id.State.RequestFinalizeODRFormSentToAdmin,
+    Id.State.AdminFinalizedODRForm,
+    Id.State.RequestAssessmentsSentToSups,
+    Id.State.Sup1ConfirmedAssessmentsAwaitingSup2,
+    Id.State.Sup2ConfirmedAssessmentsAwaitingSup1,
+    Id.State.SupsConfirmedAssessments,
+    Id.State.AssessmentsSentToAdmin,
 ];
 const cancelRelatedTransitionOps = createInTransitionsForRequestCancelledState(nonCancellableStateIds);
 
@@ -609,22 +651,16 @@ function seedThesisWorkflow(prisma: PrismaClient) {
                     name: 'Awaiting approval on bachelor thesis from supervisor1',
                 },
                 {
-                    id: Id.State.Sup1RejectedThesis,
+                    id: Id.State.Sup1DeniedThesis,
                     processId: Id.Process.Thesis,
                     stateTypeId: Id.StateType.Normal,
-                    name: 'Supervisor1 rejected bachelor thesis',
+                    name: 'Supervisor1 denied bachelor thesis',
                 },
                 {
-                    id: Id.State.Sup1FillingBTEForm,
+                    id: Id.State.Sup1ApprovedThesis,
                     processId: Id.Process.Thesis,
                     stateTypeId: Id.StateType.Normal,
-                    name: 'Supervisor1 approved bachelor thesis. Awaiting supervisor1 filling bachelor thesis assessment',
-                },
-                {
-                    id: Id.State.Sup1FilledBTEForm,
-                    processId: Id.Process.Thesis,
-                    stateTypeId: Id.StateType.Normal,
-                    name: 'Supervisor1 approved bachelor thesis and finished filling bachelor thesis assessment',
+                    name: 'Supervisor1 approved bachelor thesis',
                 },
                 {
                     id: Id.State.Sup1SubmittedBTEForm,
@@ -980,7 +1016,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.AdminGroup_Approve }
+                    connect: { id: Id.Action.AdminGroup_ApproveBachelorThesisRegistration }
                 },
                 activities: {
                     connect: [
@@ -995,7 +1031,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_Confirm }
+                    connect: { id: Id.Action.Requester_ConfirmBachelorThesisRegistration }
                 }
             },
         }),
@@ -1005,7 +1041,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_Back }
+                    connect: { id: Id.Action.Requester_BackBachelorThesisRegistration }
                 }
             },
         }),
@@ -1025,7 +1061,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Reject }
+                    connect: { id: Id.Action.Supervisor1_RejectBachelorThesisRegistration }
                 },
                 activities: {
                     connect: [
@@ -1040,7 +1076,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Approve }
+                    connect: { id: Id.Action.Supervisor1_ApproveBachelorThesisRegistration }
                 },
                 activities: {
                     connect: [
@@ -1055,7 +1091,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor2_Reject }
+                    connect: { id: Id.Action.Supervisor2_RejectBachelorThesisRegistration }
                 },
                 activities: {
                     connect: [
@@ -1070,7 +1106,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor2_Approve }
+                    connect: { id: Id.Action.Supervisor2_ApproveBachelorThesisRegistration }
                 },
                 activities: {
                     connect: [
@@ -1085,7 +1121,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.AdminGroup_Reject }
+                    connect: { id: Id.Action.AdminGroup_RejectBachelorThesisRegistration }
                 },
                 activities: {
                     connect: [
@@ -1131,7 +1167,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.AdminGroup_Confirm }
+                    connect: { id: Id.Action.AdminGroup_ConfirmBachelorThesisRegistration }
                 }
             },
         }),
@@ -1141,7 +1177,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.AdminGroup_Back }
+                    connect: { id: Id.Action.AdminGroup_BackBachelorThesisRegistration }
                 }
             },
         }),
@@ -1178,31 +1214,11 @@ function configThesisWorkflow(prisma: PrismaClient) {
         }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.RequestBTEFormSentToSup1_Sup1RejectedThesis
+                id: Id.Transition.RequestBTEFormSentToSup1_Sup1DeniedThesis
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Reject }
-                },
-            }
-        }),
-        prisma.transition.update({
-            where: {
-                id: Id.Transition.RequestBTEFormSentToSup1_Sup1FillingBTEForm
-            },
-            data: {
-                actions: {
-                    connect: { id: Id.Action.Supervisor1_Approve }
-                },
-            }
-        }),
-        prisma.transition.update({
-            where: {
-                id: Id.Transition.Sup1RejectedThesis_StudentFillingBTRForm
-            },
-            data: {
-                actions: {
-                    connect: { id: Id.Action.Supervisor1_Confirm }
+                    connect: { id: Id.Action.Supervisor1_Deny }
                 },
                 activities: {
                     connect: [
@@ -1214,47 +1230,27 @@ function configThesisWorkflow(prisma: PrismaClient) {
         }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.Sup1RejectedThesis_Sup1FillingBTEForm
+                id: Id.Transition.RequestBTEFormSentToSup1_Sup1ApprovedThesis
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Approve }
+                    connect: { id: Id.Action.Supervisor1_ApproveBachelorThesisEvaluation }
                 },
             }
         }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.Sup1FillingBTEForm_Sup1RejectedThesis
+                id: Id.Transition.Sup1ApprovedThesis_RequestBTEFormSentToSup1
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Reject }
+                    connect: { id: Id.Action.Supervisor1_BackBachelorThesisEvaluation }
                 },
             }
         }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.Sup1FillingBTEForm_Sup1FilledBTEForm
-            },
-            data: {
-                actions: {
-                    connect: { id: Id.Action.Supervisor1_Confirm }
-                },
-            }
-        }),
-        prisma.transition.update({
-            where: {
-                id: Id.Transition.Sup1FilledBTEForm_Sup1FillingBTEForm
-            },
-            data: {
-                actions: {
-                    connect: { id: Id.Action.Supervisor1_Back }
-                },
-            }
-        }),
-        prisma.transition.update({
-            where: {
-                id: Id.Transition.Sup1FilledBTEForm_Sup1SubmittedBTEForm
+                id: Id.Transition.Sup1ApprovedThesis_Sup1SubmittedBTEForm
             },
             data: {
                 actions: {
@@ -1305,7 +1301,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_Confirm }
+                    connect: { id: Id.Action.Requester_ConfirmOralDefenseRegistration }
                 }
             }
         }),
@@ -1315,7 +1311,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Requester_Back }
+                    connect: { id: Id.Action.Requester_BackOralDefenseRegistration }
                 }
             }
         }),
@@ -1340,7 +1336,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.AdminGroup_Confirm }
+                    connect: { id: Id.Action.AdminGroup_ConfirmOralDefenseRegistration }
                 }
             }
         }),
@@ -1350,7 +1346,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.AdminGroup_Back }
+                    connect: { id: Id.Action.AdminGroup_BackOralDefenseRegistration }
                 }
             }
         }),
@@ -1375,7 +1371,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Confirm }
+                    connect: { id: Id.Action.Supervisor1_ConfirmAssessments }
                 }
             }
         }),
@@ -1385,7 +1381,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor2_Confirm }
+                    connect: { id: Id.Action.Supervisor2_ConfirmAssessments }
                 }
             }
         }),
@@ -1395,7 +1391,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Back }
+                    connect: { id: Id.Action.Supervisor1_BackAssessments }
                 }
             }
         }),
@@ -1405,7 +1401,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor2_Confirm }
+                    connect: { id: Id.Action.Supervisor2_ConfirmAssessments }
                 }
             }
         }),
@@ -1415,7 +1411,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor2_Back }
+                    connect: { id: Id.Action.Supervisor2_BackAssessments }
                 }
             }
         }),
@@ -1425,7 +1421,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Confirm }
+                    connect: { id: Id.Action.Supervisor1_ConfirmAssessments }
                 }
             }
         }),
@@ -1435,7 +1431,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor2_Back }
+                    connect: { id: Id.Action.Supervisor2_BackAssessments }
                 }
             }
         }),
@@ -1445,7 +1441,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Back }
+                    connect: { id: Id.Action.Supervisor1_BackAssessments }
                 }
             }
         }),

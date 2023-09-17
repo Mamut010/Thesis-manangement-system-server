@@ -79,8 +79,8 @@ export class OralDefenseRegistrationInfoDto {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    concernedAgreed?: number | null;
+    @IsBoolean()
+    concernedAgreed?: boolean | null;
 
     @Expose()
     @IsOptional()

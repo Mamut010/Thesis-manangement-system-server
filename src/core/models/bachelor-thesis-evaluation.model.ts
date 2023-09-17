@@ -15,12 +15,6 @@ export class BachelorThesisEvaluation {
 
     @Expose()
     @IsOptional()
-    @IsString()
-    @IsIn(TitleValues)
-    title!: string | null;
-
-    @Expose()
-    @IsOptional()
     @IsDate()
     date!: Date | null;
 

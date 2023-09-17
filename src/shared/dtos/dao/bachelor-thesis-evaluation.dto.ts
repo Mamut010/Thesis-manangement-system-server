@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import { IsDate, IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
-import { TitleValues } from "../../../contracts/constants/title";
+import { Title, TitleValues } from "../../../contracts/constants/title";
 
 export class BachelorThesisEvaluationDto {
     @Expose()
@@ -55,9 +55,8 @@ export class BachelorThesisEvaluationDto {
 
     @Expose()
     @IsOptional()
-    @IsString()
     @IsIn(TitleValues)
-    title?: string | null;
+    title?: Title | null;
 
     @Expose()
     @IsOptional()

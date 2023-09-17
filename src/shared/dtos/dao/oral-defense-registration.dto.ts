@@ -94,8 +94,8 @@ export class OralDefenseRegistrationDto {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    concernedAgreed?: number | null;
+    @IsBoolean()
+    concernedAgreed?: boolean | null;
 
     @Expose()
     @IsOptional()
@@ -106,6 +106,16 @@ export class OralDefenseRegistrationDto {
     @IsOptional()
     @IsDate()
     admissionDate?: Date | null;
+
+    @Expose()
+    @IsDefined()
+    @IsBoolean()
+    studentConfirmed!: boolean;
+
+    @Expose()
+    @IsDefined()
+    @IsBoolean()
+    adminConfirmed!: boolean;
 
     @Expose()
     @IsDefined()

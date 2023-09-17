@@ -32,9 +32,6 @@ export class BachelorThesisEvaluationsQueryRequest extends BaseQueryRequest {
     @IsNullableStringFilterArray()    
     supervisorTitleFilter?: NullableStringFilter[];
 
-    @IsNullableStringFilterArray()
-    titleFilter?: NullableStringFilter[];
-
     @IsNullableDateFilterArray()
     dateFilter?: NullableDateFilter[];
 }

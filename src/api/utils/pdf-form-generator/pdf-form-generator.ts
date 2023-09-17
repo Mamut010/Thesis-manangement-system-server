@@ -14,10 +14,10 @@ import {
 import { ASSETS } from "../../constants/assets";
 import { TEMPLATE_FIELDS } from "../../constants/template-fields";
 import { PdfFormGeneratorInterface } from "./pdf-form-generator.interface";
-import { TITLES } from "../../../contracts/constants/title";
 import { DATETIME_FORMATS } from "../../constants/datetime";
 import { LOCALES } from "../../constants/locales";
 import { getWeekday } from "../../../utils/date-helpers";
+import { Title } from "../../../contracts/constants/title";
 
 @injectable()
 export class PdfFormGenerator implements PdfFormGeneratorInterface {
@@ -116,12 +116,12 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.ThesisTitle, data.thesisTitle));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.MatriculationNo, data.studentId));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Forename, data.forename));
-        if (data.title === TITLES.Mr) {
+        if (data.title === Title.Mr) {
             fields.push(new RadioButtonField(
                 TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Name,
                 TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Options.Mr));
         }
-        else if (data.title === TITLES.Ms) {
+        else if (data.title === Title.Ms) {
             fields.push(new RadioButtonField(
                 TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Name,
                 TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Options.Ms));

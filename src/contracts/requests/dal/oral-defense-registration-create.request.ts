@@ -36,8 +36,8 @@ export class OralDefenseRegistrationCreateRequest {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    concernedAgreed?: number;
+    @IsBoolean()
+    concernedAgreed?: boolean;
 
     @Expose()
     @IsOptional()
@@ -50,4 +50,14 @@ export class OralDefenseRegistrationCreateRequest {
     @IsDate()
     @Type(() => Date)
     admissionDate?: Date;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    studentConfirmed?: boolean;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    adminConfirmed?: boolean;
 }

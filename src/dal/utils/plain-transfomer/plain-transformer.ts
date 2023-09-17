@@ -58,6 +58,7 @@ import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { CryptoServiceInterface } from "../../../shared/interfaces";
 import { wrapDecryptionError } from "../../../utils/wrap";
 import { RequestData } from "@prisma/client";
+import { getSexFromNumericCode, sexToTitle } from "../../../utils/sex-helpers";
 
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
@@ -99,6 +100,7 @@ export class PlainTransformer implements PlainTransformerInterface {
 
         this.tryDecryptingEmail(dto);
         dto.studentId = plain.userId;
+        dto.sex = getSexFromNumericCode(plain.sex);
         dto.numberOfAttempts = plain._count.studentAttempts;
         
         return dto;
@@ -219,6 +221,7 @@ export class PlainTransformer implements PlainTransformerInterface {
     public toBachelorThesisEvaluation(plain: PlainBachelorThesisEvaluation): BachelorThesisEvaluationDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisEvaluationDto, plain);
 
+        dto.title = sexToTitle(getSexFromNumericCode(plain.studentAttempt.student.sex));
         dto.supervisorId = plain.studentAttempt.thesis.creatorId;
         dto.supervisorTitle = plain.studentAttempt.thesis.creator.title;
         dto.supervisorSignature = plain.studentAttempt.thesis.creator.signature;

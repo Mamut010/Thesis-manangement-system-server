@@ -36,8 +36,8 @@ export class OralDefenseRegistrationInfoCreateRequest {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    concernedAgreed?: number;
+    @IsBoolean()
+    concernedAgreed?: boolean;
 
     @Expose()
     @IsOptional()

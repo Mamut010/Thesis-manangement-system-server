@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class BachelorThesisAssessmentUpdateRequest {
     @Expose()
@@ -27,4 +27,14 @@ export class BachelorThesisAssessmentUpdateRequest {
     @IsDate()
     @Type(() => Date)
     assessmentDate?: Date;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    supervisor1Confirmed?: boolean;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    supervisor2Confirmed?: boolean;
 }

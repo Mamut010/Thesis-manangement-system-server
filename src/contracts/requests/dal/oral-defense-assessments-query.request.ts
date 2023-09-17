@@ -4,7 +4,8 @@ import {
     IsNullableDateFilterArray,
     IsNullableNumberFilterArray,
     IsStringFilterArray,
-    IsNumberFilterArray
+    IsNumberFilterArray,
+    IsBooleanFilterArray
 } from "../../../decorators";
 import {
     NullableBooleanFilter, 
@@ -12,7 +13,8 @@ import {
     NullableDateFilter,
     NullableNumberFilter,
     StringFilter,
-    NumberFilter
+    NumberFilter,
+    BooleanFilter
 } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
@@ -64,4 +66,10 @@ export class OralDefenseAssessmentsQueryRequest extends BaseQueryRequest {
 
     @IsNullableDateFilterArray()
     assessmentDateFilter?: NullableDateFilter[];
+
+    @IsBooleanFilterArray()
+    supervisor1ConfirmedFilter?: BooleanFilter[];
+
+    @IsBooleanFilterArray()
+    supervisor2ConfirmedFilter?: BooleanFilter[];
 }

@@ -3,14 +3,16 @@ import {
     IsNullableNumberFilterArray,
     IsNullableDateFilterArray,
     IsStringFilterArray,
-    IsNumberFilterArray
+    IsNumberFilterArray,
+    IsBooleanFilterArray
 } from "../../../decorators";
 import {
     NullableStringFilter,
     NullableNumberFilter,
     NullableDateFilter,
     StringFilter,
-    NumberFilter
+    NumberFilter,
+    BooleanFilter
 } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
@@ -50,4 +52,10 @@ export class BachelorThesisAssessmentsQueryRequest extends BaseQueryRequest {
 
     @IsNullableDateFilterArray()
     assessmentDateFilter?: NullableDateFilter[];
+
+    @IsBooleanFilterArray()
+    supervisor1ConfirmedFilter?: BooleanFilter[];
+
+    @IsBooleanFilterArray()
+    supervisor2ConfirmedFilter?: BooleanFilter[];
 }

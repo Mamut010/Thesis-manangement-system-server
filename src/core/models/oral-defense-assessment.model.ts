@@ -59,6 +59,16 @@ export class OralDefenseAssessment {
 
     @Expose()
     @IsDefined()
+    @IsBoolean()
+    supervisor1Confirmed!: boolean;
+
+    @Expose()
+    @IsDefined()
+    @IsBoolean()
+    supervisor2Confirmed!: boolean;
+
+    @Expose()
+    @IsDefined()
     @IsDate()
     createdAt!: Date;
 

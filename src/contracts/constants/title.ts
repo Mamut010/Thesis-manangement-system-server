@@ -1,8 +1,11 @@
 import { valuesOf } from "../../utils/object-helpers";
+import { ValueOf } from "../../utils/types";
 
-export const TITLES = {
+export const Title = {
     Mr: 'Mr',
     Ms: 'Ms',
 } as const;
 
-export const TitleValues = valuesOf(TITLES);
+export type Title = ValueOf<typeof Title>;
+
+export const TitleValues = valuesOf(Title);
