@@ -108,14 +108,20 @@ export class OralDefenseAssessmentRepo implements OralDefenseAssessmentRepoInter
     }
 
     async queryLecturerAssets(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentDto[]> {
+        : Promise<OralDefenseAssessmentsQueryResponse> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
         const assetsQuery = createLecturerAssetsQuery(lecturerId, prismaQuery);
+
+        const count = await this.prisma.oralDefenseAssessment.count({ where: assetsQuery.where });
         const records = await this.prisma.oralDefenseAssessment.findMany({
             ...assetsQuery,
             include: bachelorThesisAndOralDefenseInclude,
         });
-        return records.map(item => this.plainTransformer.toOralDefenseAssessment(item));
+
+        return {
+            count,
+            content: records.map(item => this.plainTransformer.toOralDefenseAssessment(item)),
+        }
     }
     
     private async findRecordById(id: number) {

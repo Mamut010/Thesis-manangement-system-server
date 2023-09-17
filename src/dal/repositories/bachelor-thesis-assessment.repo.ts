@@ -108,14 +108,20 @@ export class BachelorThesisAssessmentRepo implements BachelorThesisAssessmentRep
     }
 
     async queryLecturerAssets(lecturerId: string, queryRequest: BachelorThesisAssessmentsQueryRequest)
-        : Promise<BachelorThesisAssessmentDto[]> {
+        : Promise<BachelorThesisAssessmentsQueryResponse> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
         const assetsQuery = createLecturerAssetsQuery(lecturerId, prismaQuery);
+
+        const count = await this.prisma.bachelorThesisAssessment.count({ where: assetsQuery.where });
         const records = await this.prisma.bachelorThesisAssessment.findMany({
             ...assetsQuery,
             include: bachelorThesisAndOralDefenseInclude,
         });
-        return records.map(item => this.plainTransformer.toBachelorThesisAssessment(item));
+
+        return {
+            count,
+            content: records.map(item => this.plainTransformer.toBachelorThesisAssessment(item)),
+        }
     }
     
     private async findRecordById(id: number) {

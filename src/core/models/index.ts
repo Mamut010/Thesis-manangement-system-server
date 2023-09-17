@@ -25,3 +25,4 @@ export * from './workflow-static-type.model';
 export * from './group.model';
 export * from './request-data.model';
 export * from './request-stakeholder.model';
+export * from './student-attempt-request.model';

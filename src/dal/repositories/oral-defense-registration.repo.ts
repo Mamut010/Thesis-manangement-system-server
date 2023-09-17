@@ -108,14 +108,20 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
     }
 
     async queryLecturerAssets(lecturerId: string, queryRequest: OralDefenseRegistrationsQueryRequest)
-        : Promise<OralDefenseRegistrationDto[]> {
+        : Promise<OralDefenseRegistrationsQueryResponse> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
         const assetsQuery = createLecturerAssetsQuery(lecturerId, prismaQuery);
+
+        const count = await this.prisma.oralDefenseRegistration.count({ where: assetsQuery.where });
         const records = await this.prisma.oralDefenseRegistration.findMany({
             ...assetsQuery,
             include: bachelorThesisAndOralDefenseInclude,
         });
-        return records.map(item => this.plainTransformer.toOralDefenseRegistration(item));
+
+        return {
+            count,
+            content: records.map(item => this.plainTransformer.toOralDefenseRegistration(item)),
+        }
     }
     
     private async findRecordById(id: number) {

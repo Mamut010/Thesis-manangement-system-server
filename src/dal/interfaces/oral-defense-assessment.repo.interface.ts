@@ -18,5 +18,5 @@ export interface OralDefenseAssessmentRepoInterface {
     delete(id: number): Promise<boolean>;
 
     queryLecturerAssets(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentDto[]>;
+        : Promise<OralDefenseAssessmentsQueryResponse>;
 }

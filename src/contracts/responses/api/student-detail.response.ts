@@ -18,31 +18,31 @@ export class StudentDetailResponse {
 
     @Expose()
     @IsOptional()
-    @ValidateNested()
+    @ValidateNested({ each: true })
     @Type(() => BachelorThesisRegistrationInfoDto)
-    bachelorThesisRegistration!: BachelorThesisRegistrationInfoDto | null;
+    bachelorThesisRegistrations!: BachelorThesisRegistrationInfoDto[];
 
     @Expose()
     @IsOptional()
-    @ValidateNested()
+    @ValidateNested({ each: true })
     @Type(() => BachelorThesisAssessmentInfoDto)
-    bachelorThesisAssessment!: BachelorThesisAssessmentInfoDto | null;
+    bachelorThesisAssessments!: BachelorThesisAssessmentInfoDto[];
 
     @Expose()
     @IsOptional()
-    @ValidateNested()
+    @ValidateNested({ each: true })
     @Type(() => BachelorThesisEvaluationInfoDto)
-    bachelorThesisEvaluation!: BachelorThesisEvaluationInfoDto | null;
+    bachelorThesisEvaluations!: BachelorThesisEvaluationInfoDto[];
 
     @Expose()
     @IsOptional()
-    @ValidateNested()
+    @ValidateNested({ each: true })
     @Type(() => OralDefenseRegistrationInfoDto)
-    oralDefenseRegistration!: OralDefenseRegistrationInfoDto | null;
+    oralDefenseRegistrations!: OralDefenseRegistrationInfoDto[];
 
     @Expose()
     @IsOptional()
-    @ValidateNested()
+    @ValidateNested({ each: true })
     @Type(() => OralDefenseAssessmentInfoDto)
-    oralDefenseAssessment!: OralDefenseAssessmentInfoDto | null;
+    oralDefenseAssessments!: OralDefenseAssessmentInfoDto[];
 }

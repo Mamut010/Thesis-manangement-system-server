@@ -18,5 +18,5 @@ export interface BachelorThesisAssessmentRepoInterface {
     delete(id: number): Promise<boolean>;
 
     queryLecturerAssets(lecturerId: string, queryRequest: BachelorThesisAssessmentsQueryRequest)
-    : Promise<BachelorThesisAssessmentDto[]>;
+    : Promise<BachelorThesisAssessmentsQueryResponse>;
 }

@@ -55,37 +55,37 @@ export class StudentActorController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/bachelor-thesis-registration')
-    @ResponseSchema(BachelorThesisRegistrationInfoDto)
+    @ResponseSchema(BachelorThesisRegistrationInfoDto, { isArray: true })
     getStudentBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentBachelorThesisRegistration(user.userId);
+        return this.studentService.getStudentBachelorThesisRegistrations(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/bachelor-thesis-assessment')
-    @ResponseSchema(BachelorThesisAssessmentInfoDto)
+    @ResponseSchema(BachelorThesisAssessmentInfoDto, { isArray: true })
     getStudentBachelorThesisAssessment(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentBachelorThesisAssessment(user.userId);
+        return this.studentService.getStudentBachelorThesisAssessments(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/bachelor-thesis-evaluation')
-    @ResponseSchema(BachelorThesisEvaluationInfoDto)
+    @ResponseSchema(BachelorThesisEvaluationInfoDto, { isArray: true })
     getStudentBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentBachelorThesisEvaluation(user.userId);
+        return this.studentService.getStudentBachelorThesisEvaluations(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/oral-defense-registration')
-    @ResponseSchema(OralDefenseRegistrationInfoDto)
+    @ResponseSchema(OralDefenseRegistrationInfoDto, { isArray: true })
     getStudentOralDefenseRegistration(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentOralDefenseRegistration(user.userId);
+        return this.studentService.getStudentOralDefenseRegistrations(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/oral-defense-assessment')
-    @ResponseSchema(OralDefenseAssessmentInfoDto)
+    @ResponseSchema(OralDefenseAssessmentInfoDto, { isArray: true })
     getStudentOralDefenseAssessment(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentOralDefenseAssessment(user.userId);
+        return this.studentService.getStudentOralDefenseAssessments(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
