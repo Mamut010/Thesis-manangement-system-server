@@ -5,7 +5,7 @@ import { RequestServiceInterface } from "../interfaces/request.service.interface
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { GroupRepoInterface, RequestRepoInterface } from "../../dal/interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
-import { RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
+import { RequestDto, RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
@@ -13,6 +13,7 @@ import { ForbiddenError } from "routing-controllers";
 import { isAdmin } from "../../utils/role-predicates";
 import { 
     RequestStateDto,
+    StateType,
     WorkflowCommandFactoryInterface, 
     WorkflowCommandInvokerInterface, 
     WorkflowEngineInterface 
@@ -21,9 +22,12 @@ import { RequestActionSubmitRequest } from "../../contracts/requests/api/request
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { OrderBy, StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
+import { MethodNotAllowedError } from "../../contracts/errors/method-not-allowed.error";
 
 @injectable()
 export class RequestService implements RequestServiceInterface {
+    private static NON_DELETABLE_STATE_TYPES = [StateType.Initial, StateType.Normal] as const;
+
     constructor(
         @inject(INJECTION_TOKENS.RequestRepo) private requestRepo: RequestRepoInterface,
         @inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface,
@@ -49,7 +53,11 @@ export class RequestService implements RequestServiceInterface {
             stakeholderIdFilter
         });
         return {
-            content: this.mapper.map(RequestInfoDto, response.content),
+            content: response.content.map(item => {
+                const dto = this.mapper.map(RequestInfoDto, item);
+                dto.isDeletable = this.isDeletableStateType(dto.stateType);
+                return dto;
+            }),
             count: response.count,
         }
     }
@@ -64,8 +72,12 @@ export class RequestService implements RequestServiceInterface {
 
     async deleteRequest(user: AuthorizedUser, id: string): Promise<void> {
         const record = await this.ensureRecordExists(id);
+
+        if (!this.isDeletableStateType(record.stateType)) {
+            throw new MethodNotAllowedError(ERROR_MESSAGES.MethodNotAllowed.RequestCurrentlyUndeletable);
+        }
         // Only admin or the creator is allowed to delete the request
-        if (!isAdmin(user) && record.creatorId !== user.userId) {
+        else if (!isAdmin(user) && record.creatorId !== user.userId) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
         }
 
@@ -172,9 +184,14 @@ export class RequestService implements RequestServiceInterface {
         return content.find(item => item.memberIds.includes(userId)) !== undefined;
     }
 
-    private makeRequestStateInfo(request: RequestInfoDto, requestState: RequestStateDto | null) {
+    private makeRequestStateInfo(request: RequestDto, requestState: RequestStateDto | null) {
         const result = this.mapper.map(RequestStateInfoDto, request);
         result.actionTypes = requestState?.actionTypes ?? [];
+        result.isDeletable = this.isDeletableStateType(request.stateType);
         return result;
+    }
+
+    private isDeletableStateType(requestStateType: StateType) {
+        return !RequestService.NON_DELETABLE_STATE_TYPES.some(item => item === requestStateType);
     }
 }
