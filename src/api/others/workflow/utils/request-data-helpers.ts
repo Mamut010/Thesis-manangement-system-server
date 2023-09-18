@@ -9,20 +9,39 @@ export async function getRequestDataValueByKey(requestId: string, key: string, r
         name: key,
     });
     
-    const originalDataValue = storedRequestData 
-        ? requestDataDeps.processor.retrieveOriginalValue(storedRequestData.value) 
+    return storedRequestData
+        ? requestDataDeps.processor.retrieveOriginalValue(storedRequestData.value)
         : undefined;
-    if (!storedRequestData) {
-        return undefined;
-    }
-    
-    return originalDataValue;
+}
+
+export async function getRequestDataValuesByKeys(requestId: string, keys: string[], requestDataDeps: RequestDataDeps)
+    : Promise<Record<string, unknown>> {
+    const storedRequestDatum = await requestDataDeps.repo.findMany(requestId, keys);
+    const keySet = new Set(keys);
+    return storedRequestDatum.reduce((result, item) => {
+        if (keySet.has(item.name)) {
+            result[item.name] = requestDataDeps.processor.retrieveOriginalValue(item.value);
+        }
+        return result;
+    }, {} as Record<string, unknown>);
 }
 
 export async function getRequestDataStringValueByKey(requestId: string, key: string, requestDataDeps: RequestDataDeps)
     : Promise<string | undefined> {
     const value = await getRequestDataValueByKey(requestId, key, requestDataDeps);
     return typeof value === 'string' ? value : undefined
+}
+
+export async function getRequestDataStringValuesByKeys(requestId: string, keys: string[], requestDataDeps: RequestDataDeps)
+    : Promise<Record<string, string>> {
+    const dataRecord = await getRequestDataValuesByKeys(requestId, keys, requestDataDeps);
+    return Object.entries(dataRecord)
+        .reduce((result, item) => {
+            if (typeof item[1] === 'string') {
+                result[item[0]] = item[1];
+            }
+            return result;
+        }, {} as Record<string, string>);
 }
 
 export function getIndividualDataKeyByTarget(target: Target): string | undefined {

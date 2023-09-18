@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsNumber, IsString } from "class-validator";
+import { IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class StudentAttemptCreateRequest {
     @Expose()
@@ -21,4 +21,9 @@ export class StudentAttemptCreateRequest {
     @IsDefined()
     @IsString()
     supervisor2Id!: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    requestId?: string;
 }

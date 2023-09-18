@@ -21,4 +21,9 @@ export class StudentAttemptUpdateRequest {
     @IsOptional()
     @IsString()
     supervisor2Id?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    requestId?: string;
 }

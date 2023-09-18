@@ -6,13 +6,18 @@ import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
 import { ThesisInfoCreateRequest, ThesisInfoUpdateRequest, ThesisInfosQueryRequest } from "../../../contracts/requests";
 import { ThesisInfosQueryResponse } from "../../../contracts/responses";
-import { ThesisRepoInterface } from "../../../dal/interfaces";
+import { LecturerRepoInterface, ThesisRepoInterface } from "../../../dal/interfaces";
 import { MapperServiceInterface } from "../../../shared/interfaces";
+import { AuthorizedUser } from "../../../core/auth-checkers";
+import { isAdmin } from "../../../utils/role-predicates";
+import { BadRequestError } from "../../../contracts/errors/bad-request.error";
+import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 
 @injectable()
 export class ThesisService implements ThesisServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.ThesisRepo) private thesisRepo: ThesisRepoInterface,
+        @inject(INJECTION_TOKENS.LecturerRepo) private lecturerRepo: LecturerRepoInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
@@ -26,18 +31,27 @@ export class ThesisService implements ThesisServiceInterface {
     }
 
     async getThesis(id: number): Promise<ThesisInfoDto> {
-        return await this.ensureRecordExists(id);
+        return await this.ensureThesisExists(id);
     }
 
-    async createThesis(userId: string, createRequest: ThesisInfoCreateRequest): Promise<ThesisInfoDto> {
+    async createThesis(user: AuthorizedUser, createRequest: ThesisInfoCreateRequest): Promise<ThesisInfoDto> {
+        let creatorId = user.userId;
+        if (isAdmin(user)) {
+            if (typeof createRequest.creatorId !== 'string') {
+                throw new BadRequestError(ERROR_MESSAGES.BadRequest.MissingCreatorId);
+            }
+            await this.ensureLecturerExists(createRequest.creatorId);
+            creatorId = createRequest.creatorId;
+        }
+
         const result = await this.thesisRepo.create({
             ...createRequest,
-            creatorId: userId
+            creatorId,
         });
         return this.mapper.map(ThesisInfoDto, result);
     }
 
-    async updateThesis(id: number, updateRequest: ThesisInfoUpdateRequest): Promise<ThesisInfoDto> {
+    async updateThesis(user: AuthorizedUser, id: number, updateRequest: ThesisInfoUpdateRequest): Promise<ThesisInfoDto> {
         const result = await this.thesisRepo.update(id, updateRequest);
         if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);
@@ -46,17 +60,28 @@ export class ThesisService implements ThesisServiceInterface {
         return this.mapper.map(ThesisInfoDto, result);
     }
 
-    async deleteThesis(id: number): Promise<void> {
-        const deleted = await this.thesisRepo.delete(id);
-        if (!deleted) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);
-        }
+    async deleteThesis(user: AuthorizedUser, id: number): Promise<void> {
+        const thesis = await this.ensureThesisExists(id);
+        // Users other than admins cannot delete others' theses
+        if (!isAdmin(user) && user.userId !== thesis.creatorId) {
+            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.CannotDeleteOthersTheses);
+        } 
+
+        await this.thesisRepo.delete(id);
     }
 
-    private async ensureRecordExists(id: number) {
+    private async ensureThesisExists(id: number) {
         const result = await this.thesisRepo.findOneById(id);
         if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.ThesisNotFound);
+        }
+        return result;
+    }
+
+    private async ensureLecturerExists(id: string) {
+        const result = await this.lecturerRepo.findOneById(id);
+        if (!result) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.LecturerNotFound);
         }
         return result;
     }

@@ -6,64 +6,64 @@ export class BachelorThesisRegistrationUpdateRequest {
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    dateOfBirth?: Date;
+    dateOfBirth?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    placeOfBirth?: string;
+    placeOfBirth?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    studentDate?: Date;
+    studentDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    furtherParticipants?: string;
+    furtherParticipants?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    supervisor1Date?: Date;
+    supervisor1Date?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    supervisor2Date?: Date;
+    supervisor2Date?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    issued?: Date;
+    issued?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    deadlineCopy?: Date;
+    deadlineCopy?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    extensionGranted?: Date;
+    extensionGranted?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    chairmanOfExamination?: string;
+    chairmanOfExamination?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    dateOfIssue?: Date;
+    dateOfIssue?: Date | null;
 
     @Expose()
     @IsOptional()

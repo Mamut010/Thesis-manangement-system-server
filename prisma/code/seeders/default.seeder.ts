@@ -213,7 +213,6 @@ const Id = {
         RequestApplyThesisSentToSup2: 'State-RequestApplyThesisSentToSup2',
         Sup2ApprovedThesisApplication: 'State-Sup2ApprovedThesisApplication',
         RequestPermissionToFillBTRSentToAdmin: 'State-RequestPermissionToFillBTRSentToAdmin',
-        AdminRejectedPermissionToFillBTRRequest: 'State-AdminRejectedPermissionToFillBTRRequest',
         AdminDeniedPermissionToFillBTRRequest: 'State-AdminDeniedPermissionToFillBTRRequest',
         StudentFillingBTRForm: 'State-StudentFillingBTRForm',
         StudentFilledBTRForm:'State-StudentFilledBTRForm',
@@ -258,8 +257,6 @@ const Id = {
         RequestApplyThesisSentToSup2_FindingSup2: 'Transition-RequestApplyThesisSentToSup2_FindingSup2',
         RequestApplyThesisSentToSup2_Sup2ApprovedThesisApplication: 'Transition-RequestApplyThesisSentToSup2_Sup2ApprovedThesisApplication',
         Sup2ApprovedThesisApplication_RequestPermissionToFillBTRSentToAdmin: 'Transition-Sup2ApprovedThesisApplication_RequestPermissionToFillBTRSentToAdmin',
-        RequestPermissionToFillBTRSentToAdmin_AdminRejectedPermissionToFillBTRRequest: 'Transition-RequestPermissionToFillBTRSentToAdmin_AdminRejectedPermissionToFillBTRRequest',
-        AdminRejectedPermissionToFillBTRRequest_RequestPermissionToFillBTRSentToAdmin: 'Transition-AdminRejectedPermissionToFillBTRRequest_RequestPermissionToFillBTRSentToAdmin',
         RequestPermissionToFillBTRSentToAdmin_AdminDeniedPermissionToFillBTRRequest: 'Transition-RequestPermissionToFillBTRSentToAdmin_AdminDeniedPermissionToFillBTRRequest',
         RequestPermissionToFillBTRSentToAdmin_StudentFillingBTRForm: 'Transition-RequestPermissionToFillBTRSentToAdmin_StudentFillingBTRForm',
         StudentFillingBTRForm_StudentFilledBTRForm: 'Transition-StudentFillingBTRForm_StudentFilledBTRForm',
@@ -279,9 +276,7 @@ const Id = {
         BTRequirementsSentToStudent_RequestBTEFormSentToSup1: 'Transition-BTRequirementsSentToStudent_RequestBTEFormSentToSup1',
         RequestBTEFormSentToSup1_Sup1DeniedThesis: 'Transition-RequestBTEFormSentToSup1_Sup1DeniedThesis',
         RequestBTEFormSentToSup1_Sup1ApprovedThesis: 'Transition-RequestBTEFormSentToSup1_Sup1ApprovedThesis',
-        Sup1ApprovedThesis_RequestBTEFormSentToSup1: 'Transition-Sup1ApprovedThesis_RequestBTEFormSentToSup1',
         Sup1ApprovedThesis_Sup1SubmittedBTEForm: 'Transition-Sup1ApprovedThesis_Sup1SubmittedBTEForm',
-
         Sup1SubmittedBTEForm_AdminDeniedPermissionToFillODRForm: 'Transition-Sup1SubmittedBTEForm_AdminDeniedPermissionToFillODRForm',
         Sup1SubmittedBTEForm_StudentFillingODRForm: 'Transition-Sup1SubmittedBTEForm_StudentFillingODRForm',
         StudentFillingODRForm_StudentFilledODRForm: 'Transition-StudentFillingODRForm_StudentFilledODRForm',
@@ -321,11 +316,14 @@ const Id = {
         RejectThesis: 'ActionType-RejectThesis',
         ConfirmThesis: 'ActionType-ConfirmThesis',
 
+        ApprovePermissionBachelorThesisRegistration: 'ActionType-ApprovePermissionBachelorThesisRegistration',
+        ApprovePermissionOralDefenseRegistration: 'ActionType-ApprovePermissionOralDefenseRegistration',
+
         RejectBachelorThesisRegistration: 'ActionType-RejectBachelorThesisRegistration',
         ApproveBachelorThesisRegistration: 'ActionType-ApproveBachelorThesisRegistration',
         ApproveBachelorThesisEvaluation: 'ActionType-ApproveBachelorThesisEvaluation',
+
         BackBachelorThesisRegistration: 'ActionType-BackBachelorThesisRegistration',
-        BackBachelorThesisEvaluation: 'ActionType-BackBachelorThesisEvaluation',
         BackOralDefenseRegistration: 'ActionType-BackOralDefenseRegistration',
         BackAssessments: 'ActionType-BackAssessments',
         ConfirmBachelorThesisRegistration: 'ActionType-ConfirmBachelorThesisRegistration',
@@ -334,8 +332,6 @@ const Id = {
     },
     Action: {
         Requester_ApplyThesis: 'Action-Requester_ApplyThesis',
-        Requester_Back: 'Action-Requester_Back',
-        Requester_Reject: 'Action-Requester_Reject',
         Requester_RejectThesis: 'Action-Requester_RejectThesis',
         Requester_RequestAdminGroup: 'Action-Requester_RequestAdminGroup',
         Requester_RequestSupervisor1: 'Action-Requester_RequestSupervisor1',
@@ -344,44 +340,39 @@ const Id = {
         Requester_InformAdminGroup: 'Action-Requester_InformAdminGroup',
         Requester_Cancel: 'Action-Requester_Cancel',
         Requester_ConfirmBachelorThesisRegistration: 'Action-Requester_ConfirmBachelorThesisRegistration',
-        Requester_BackBachelorThesisRegistration: 'Action-Requester_BackBachelorThesisRegistration',
         Requester_ConfirmOralDefenseRegistration: 'Action-Requester_ConfirmOralDefenseRegistration',
+        Requester_BackBachelorThesisRegistration: 'Action-Requester_BackBachelorThesisRegistration',
         Requester_BackOralDefenseRegistration: 'Action-Requester_BackOralDefenseRegistration',
 
         AdminGroup_Approve: 'Action-AdminGroup_Approve',
-        AdminGroup_Back: 'Action-AdminGroup_Back',
-        AdminGroup_Reject: 'Action-AdminGroup_Reject',
         AdminGroup_Confirm: 'Action-AdminGroup_Confirm',
         AdminGroup_Deny: 'Action-AdminGroup_Deny',
         AdminGroup_InformRequester: 'Action-AdminGroup_InformRequester',
         AdminGroup_RequestSupervisor1: 'Action-AdminGroup_RequestSupervisor1',
         AdminGroup_RequestSupervisors: 'Action-AdminGroup_RequestSupervisors',
+        AdminGroup_ApprovePermissionBachelorThesisRegistration: 'Action-AdminGroup_ApprovePermissionBachelorThesisRegistration',
+        AdminGroup_ApprovePermissionOralDefenseRegistration: 'Action-AdminGroup_ApprovePermissionOralDefenseRegistration',
         AdminGroup_ApproveBachelorThesisRegistration: 'Action-AdminGroup_ApproveBachelorThesisRegistration',
         AdminGroup_RejectBachelorThesisRegistration: 'Action-AdminGroup_RejectBachelorThesisRegistration',
         AdminGroup_ConfirmBachelorThesisRegistration: 'Action-AdminGroup_ConfirmBachelorThesisRegistration',
-        AdminGroup_BackBachelorThesisRegistration: 'Action-AdminGroup_BackBachelorThesisRegistration',
         AdminGroup_ConfirmOralDefenseRegistration: 'Action-AdminGroup_ConfirmOralDefenseRegistration',
+        AdminGroup_BackBachelorThesisRegistration: 'Action-AdminGroup_BackBachelorThesisRegistration',
         AdminGroup_BackOralDefenseRegistration: 'Action-AdminGroup_BackOralDefenseRegistration',
 
         Supervisor1_Approve: 'Action-Supervisor1_Approve',
-        Supervisor1_Back: 'Action-Supervisor1_Back',
-        Supervisor1_Confirm: 'Action-Supervisor1_Confirm',
         Supervisor1_Deny: 'Action-Supervisor1_Deny',
-        Supervisor1_Reject: 'Action-Supervisor1_Reject',
+        Supervisor1_RejectThesis: 'Action-Supervisor1_RejectThesis',
         Supervisor1_RequestAdminGroup: 'Action-Supervisor1_RequestAdminGroup',
-        Supervisor1_RejectBachelorThesisRegistration: 'Action-Supervisor1_RejectBachelorThesisRegistration',
         Supervisor1_ApproveBachelorThesisRegistration: 'Action-Supervisor1_ApproveBachelorThesisRegistration',
         Supervisor1_ApproveBachelorThesisEvaluation: 'Action-Supervisor1_ApproveBachelorThesisEvaluation',
-        Supervisor1_BackBachelorThesisEvaluation: 'Action-Supervisor1_BackBachelorThesisEvaluation',
+        Supervisor1_RejectBachelorThesisRegistration: 'Action-Supervisor1_RejectBachelorThesisRegistration',
         Supervisor1_ConfirmAssessments: 'Action-Supervisor1_ConfirmAssessments',
         Supervisor1_BackAssessments: 'Action-Supervisor1_BackAssessments',
 
         Supervisor2_Approve: 'Action-Supervisor2_Approve',
-        Supervisor2_Back: 'Action-Supervisor2_Back',
-        Supervisor2_Confirm: 'Action-Supervisor2_Confirm',
         Supervisor2_Reject: 'Action-Supervisor2_Reject',
-        Supervisor2_RejectBachelorThesisRegistration: 'Action-Supervisor2_RejectBachelorThesisRegistration',
         Supervisor2_ApproveBachelorThesisRegistration: 'Action-Supervisor2_ApproveBachelorThesisRegistration',
+        Supervisor2_RejectBachelorThesisRegistration: 'Action-Supervisor2_RejectBachelorThesisRegistration',
         Supervisor2_ConfirmAssessments: 'Action-Supervisor2_ConfirmAssessments',
         Supervisor2_BackAssessments: 'Action-Supervisor2_BackAssessments',
 
@@ -576,12 +567,6 @@ function seedThesisWorkflow(prisma: PrismaClient) {
                     processId: Id.Process.Thesis,
                     stateTypeId: Id.StateType.Normal,
                     name: 'Awaiting permission to fill bachelor thesis registration from admin',
-                },
-                {
-                    id: Id.State.AdminRejectedPermissionToFillBTRRequest,
-                    processId: Id.Process.Thesis,
-                    stateTypeId: Id.StateType.Normal,
-                    name: 'Admin rejected permission-to-fill-bachelor-thesis-registration request',
                 },
                 {
                     id: Id.State.AdminDeniedPermissionToFillBTRRequest,
@@ -872,7 +857,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.Supervisor1_Reject }
+                    connect: { id: Id.Action.Supervisor1_RejectThesis }
                 },
                 activities: {
                     connect: [
@@ -972,31 +957,6 @@ function configThesisWorkflow(prisma: PrismaClient) {
         }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.RequestPermissionToFillBTRSentToAdmin_AdminRejectedPermissionToFillBTRRequest
-            },
-            data: {
-                actions: {
-                    connect: { id: Id.Action.AdminGroup_Reject }
-                },
-                activities: {
-                    connect: [
-                        { id: Id.Activity.Notify_Stakeholders },
-                    ]
-                }
-            },
-        }),
-        prisma.transition.update({
-            where: {
-                id: Id.Transition.AdminRejectedPermissionToFillBTRRequest_RequestPermissionToFillBTRSentToAdmin
-            },
-            data: {
-                actions: {
-                    connect: { id: Id.Action.Requester_InformAdminGroup }
-                },
-            },
-        }),
-        prisma.transition.update({
-            where: {
                 id: Id.Transition.RequestPermissionToFillBTRSentToAdmin_AdminDeniedPermissionToFillBTRRequest
             },
             data: {
@@ -1016,7 +976,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.AdminGroup_ApproveBachelorThesisRegistration }
+                    connect: { id: Id.Action.AdminGroup_ApprovePermissionBachelorThesisRegistration }
                 },
                 activities: {
                     connect: [
@@ -1240,16 +1200,6 @@ function configThesisWorkflow(prisma: PrismaClient) {
         }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.Sup1ApprovedThesis_RequestBTEFormSentToSup1
-            },
-            data: {
-                actions: {
-                    connect: { id: Id.Action.Supervisor1_BackBachelorThesisEvaluation }
-                },
-            }
-        }),
-        prisma.transition.update({
-            where: {
                 id: Id.Transition.Sup1ApprovedThesis_Sup1SubmittedBTEForm
             },
             data: {
@@ -1285,7 +1235,7 @@ function configThesisWorkflow(prisma: PrismaClient) {
             },
             data: {
                 actions: {
-                    connect: { id: Id.Action.AdminGroup_Approve }
+                    connect: { id: Id.Action.AdminGroup_ApprovePermissionOralDefenseRegistration }
                 },
                 activities: {
                     connect: [

@@ -5,6 +5,11 @@ export class ThesisInfoCreateRequest {
     @Expose()
     @IsOptional()
     @IsNumber()
+    creatorId?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
     topicId?: number;
 
     @Expose()

@@ -20,7 +20,7 @@ export class ThesisInfoUpdateRequest {
     @Expose()
     @IsOptional()
     @IsNumber()
-    slot: number = 0;
+    slot?: number;
 
     @Expose()
     @IsOptional()
@@ -30,12 +30,12 @@ export class ThesisInfoUpdateRequest {
     @Expose()
     @IsOptional()
     @IsBoolean()
-    activateRegistration: boolean = false;
+    activateRegistration?: boolean;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    activateDefense: boolean = false;
+    activateDefense?: boolean;
 
     @Expose()
     @IsOptional()

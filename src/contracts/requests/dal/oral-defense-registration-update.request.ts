@@ -5,41 +5,41 @@ export class OralDefenseRegistrationUpdateRequest {
     @Expose()
     @IsOptional()
     @IsString()
-    room?: string;
+    room?: string | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    areSpectatorsAllowed?: boolean;
+    areSpectatorsAllowed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    proposedDate?: Date;
+    proposedDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    actualDate?: Date;
+    actualDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    concernedAgreed?: boolean;
+    concernedAgreed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    dateReceived?: Date;
+    dateReceived?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    admissionDate?: Date;
+    admissionDate?: Date | null;
 
     @Expose()
     @IsOptional()

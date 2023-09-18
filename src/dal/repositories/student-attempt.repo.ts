@@ -55,8 +55,12 @@ export class StudentAttemptRepo implements StudentAttemptRepoInterface {
 
     async create(createRequest: StudentAttemptCreateRequest): Promise<StudentAttemptDto> {
         const impl = async () => {
+            const { requestId, ...createData } = createRequest;
             const record = await this.prisma.studentAttempt.create({
-                data: createRequest,
+                data: {
+                    ...createData,
+                    studentAttemptRequest: this.connectOrCreateStudentAttemptRequest(requestId),
+                },
                 include: studentAttemptInclude
             });
             return this.plainTransformer.toStudentAttempt(record);
@@ -73,12 +77,16 @@ export class StudentAttemptRepo implements StudentAttemptRepoInterface {
                     return null;
                 }
     
-                if (anyChanges(record, updateRequest)) {
+                if (anyChanges(record, updateRequest) || typeof updateRequest.requestId !== 'undefined') {
+                    const { requestId, ...updateData } = updateRequest;
                     record = await tx.studentAttempt.update({
                         where: {
                             id: id
                         },
-                        data: updateRequest,
+                        data: {
+                            ...updateData,
+                            studentAttemptRequest: this.connectOrCreateStudentAttemptRequest(requestId),
+                        },
                         include: studentAttemptInclude
                     });
                 }
@@ -101,6 +109,7 @@ export class StudentAttemptRepo implements StudentAttemptRepoInterface {
                 }
     
                 if (anyChanges(record, updateRequest)) {
+                    const { requestId, ...updateData } = updateRequest;
                     record = await tx.studentAttempt.update({
                         where: {
                             studentId_attemptNo: {
@@ -108,7 +117,10 @@ export class StudentAttemptRepo implements StudentAttemptRepoInterface {
                                 attemptNo: attempt
                             }
                         },
-                        data: updateRequest,
+                        data: {
+                            ...updateData,
+                            studentAttemptRequest: this.connectOrCreateStudentAttemptRequest(requestId),
+                        },
                         include: studentAttemptInclude
                     });
                 }
@@ -138,6 +150,15 @@ export class StudentAttemptRepo implements StudentAttemptRepoInterface {
             }
         });
         return count > 0;
+    }
+
+    private connectOrCreateStudentAttemptRequest(requestId?: string) {
+        return requestId ? {
+            connectOrCreate: {
+                where: { requestId },
+                create: { requestId },
+            }
+        } : undefined;
     }
 
     private findRecordById(id: string, prisma: PrismaClientLike = this.prisma) {

@@ -5,28 +5,28 @@ export class BachelorThesisAssessmentUpdateRequest {
     @Expose()
     @IsOptional()
     @IsString()
-    furtherParticipants?: string;
+    furtherParticipants?: string | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    supervisor1Grade?: number;
+    supervisor1Grade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    supervisor2Grade?: number;
+    supervisor2Grade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    assessmentDescription?: string;
+    assessmentDescription?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    assessmentDate?: Date;
+    assessmentDate?: Date | null;
 
     @Expose()
     @IsOptional()

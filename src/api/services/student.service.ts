@@ -23,6 +23,7 @@ import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contract
 import { getThesisProcessOrThrow } from "../../utils/process-helpers";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { ConflictError } from "../../contracts/errors/conflict.error";
+import { getElementWithLatestAttemptNo } from "../../utils/attempt-helpers";
 
 @injectable()
 export class StudentService implements StudentServiceInterface {
@@ -162,19 +163,12 @@ export class StudentService implements StudentServiceInterface {
 
     private async ensureLatestRequestDeletable(user: AuthorizedUser) {
         const attempts = await this.studentAttemptRepo.findManyByStudentId(user.userId);
-        if (attempts.length === 0) {
+        const latestAttempt = getElementWithLatestAttemptNo(attempts, attempt => attempt.attemptNo);
+        if (!latestAttempt || typeof latestAttempt.requestId !== 'string') {
             return;
         }
 
-        const { requestId } = attempts.reduce((attempt1, attempt2) => {
-            return attempt1.attemptNo > attempt2.attemptNo ? attempt1 : attempt2;
-        });
-        
-        if (typeof requestId !== 'string') {
-            return;
-        }
-
-        const request = await this.requestService.getRequestState(user, requestId);
+        const request = await this.requestService.getRequestState(user, latestAttempt.requestId);
         if (!request.isDeletable) {
             throw new ConflictError(ERROR_MESSAGES.Conflict.LatestAttemptRequestIsInProgress);
         }

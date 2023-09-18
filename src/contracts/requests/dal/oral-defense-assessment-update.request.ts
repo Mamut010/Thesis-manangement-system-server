@@ -6,50 +6,50 @@ export class OralDefenseAssessmentUpdateRequest {
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    dateDefense?: Date;
+    dateDefense?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    placeDefense?: string;
+    placeDefense?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    startDate?: Date;
+    startDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    finishDate?: Date;
+    finishDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    stateOfHealth?: boolean;
+    stateOfHealth?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    supervisor1Grade?: number;
+    supervisor1Grade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    supervisor2Grade?: number;
+    supervisor2Grade?: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    record?: string;
+    record?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    assessmentDate?: Date;
+    assessmentDate?: Date | null;
 
     @Expose()
     @IsOptional()

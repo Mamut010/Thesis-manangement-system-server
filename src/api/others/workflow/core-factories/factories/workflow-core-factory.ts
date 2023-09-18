@@ -1,17 +1,28 @@
-import { inject, injectable, interfaces } from "inversify";
+import { interfaces } from "inversify";
 import { 
     ActionHandlerInterface, 
     ApplyThesisActionHandler, 
     ApproveActionHandler, 
+    ApproveBTEActionHandler, 
+    ApproveBTRActionHandler, 
+    ApprovePermissionBTRActionHandler, 
+    ApprovePermissionODRActionHandler, 
     BackActionHandler, 
+    BackAssessmentsActionHandler, 
+    BackBTRActionHandler, 
+    BackODRActionHandler, 
     CancelActionHandler, 
     ConfirmActionHandler, 
+    ConfirmAssessmentsActionHandler, 
+    ConfirmBTRActionHandler, 
+    ConfirmODRActionHandler, 
     ConfirmThesisActionHandler, 
     DenyActionHandler, 
     InformAdminGroupActionHandler, 
     InformRequesterActionHandler, 
     InviteSupervisor2ActionHandler, 
     RejectActionHandler,
+    RejectBTRActionHandler,
     RejectThesisActionHandler,
     RequestAdminGroupActionHandler,
     RequestSupervisor1ActionHandler,
@@ -30,11 +41,9 @@ import { TargetIdentifierInterface, TargetIdentifier } from "../../target-identi
 import { ActionType } from "../../types/action-type";
 import { ActivityType } from "../../types/activity-type";
 import { WorkflowCoreFactoryInterface } from "../interfaces/workflow-core-factory.interface";
-import { INJECTION_TOKENS } from "../../../../../core/constants/injection-tokens";
 
-@injectable()
 export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
-    constructor(@inject(INJECTION_TOKENS.DIContainer) private container: interfaces.Container) {
+    constructor(private container: interfaces.Container) {
         
     }
 
@@ -60,6 +69,17 @@ export class  WorkflowCoreFactory implements WorkflowCoreFactoryInterface {
             case ActionType.RequestSupervisor1: return this.container.get(RequestSupervisor1ActionHandler);
             case ActionType.RequestSupervisor2: return this.container.get(RequestSupervisor2ActionHandler);
             case ActionType.RequestSupervisors: return this.container.get(RequestSupervisorsActionHandler);
+            case ActionType.ApproveBachelorThesisEvaluation: return this.container.get(ApproveBTEActionHandler);
+            case ActionType.ApproveBachelorThesisRegistration: return this.container.get(ApproveBTRActionHandler);
+            case ActionType.ApprovePermissionBachelorThesisRegistration: return this.container.get(ApprovePermissionBTRActionHandler);
+            case ActionType.ApprovePermissionOralDefenseRegistration: return this.container.get(ApprovePermissionODRActionHandler);
+            case ActionType.BackAssessments: return this.container.get(BackAssessmentsActionHandler);
+            case ActionType.BackBachelorThesisRegistration: return this.container.get(BackBTRActionHandler);
+            case ActionType.BackOralDefenseRegistration: return this.container.get(BackODRActionHandler);
+            case ActionType.ConfirmAssessments: return this.container.get(ConfirmAssessmentsActionHandler);
+            case ActionType.ConfirmBachelorThesisRegistration: return this.container.get(ConfirmBTRActionHandler);
+            case ActionType.ConfirmOralDefenseRegistration: return this.container.get(ConfirmODRActionHandler);
+            case ActionType.RejectBachelorThesisRegistration: return this.container.get(RejectBTRActionHandler);
         }
     }
 

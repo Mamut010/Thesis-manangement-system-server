@@ -1,7 +1,27 @@
 import { ValueOf } from "../../../../utils/types";
 
-export const ActionType = {
+const VariantActionType = {
     ApplyThesis: 'Apply Thesis',
+    RejectThesis: 'Reject Thesis',
+    ConfirmThesis: 'Confirm Thesis',
+
+    ApprovePermissionBachelorThesisRegistration: 'Approve Permission Bachelor Thesis Registration',
+    ApprovePermissionOralDefenseRegistration: 'Approve Permission Oral Defense Registration',
+
+    RejectBachelorThesisRegistration: 'Reject Bachelor Thesis Registration',
+    ApproveBachelorThesisRegistration: 'Approve Bachelor Thesis Registration',
+    ApproveBachelorThesisEvaluation: 'Approve Bachelor Thesis Evaluation',
+
+    BackBachelorThesisRegistration: 'Back Bachelor Thesis Registration',
+    BackOralDefenseRegistration: 'Back Oral Defense Registration',
+    BackAssessments: 'Back Assessments',
+    ConfirmBachelorThesisRegistration: 'Confirm Bachelor Thesis Registration',
+    ConfirmOralDefenseRegistration: 'Confirm Oral Defense Registration',
+    ConfirmAssessments: 'Confirm Assessments',
+} as const;
+
+export const ActionType = {
+    ...VariantActionType,
     Approve: 'Approve',
     Back: 'Back',
     Cancel: 'Cancel',
