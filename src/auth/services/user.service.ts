@@ -13,6 +13,7 @@ import { Role } from "../../core/constants/roles";
 import { equalsOrUndefined } from "../../utils/object-helpers";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { UserInfoCreateRequest } from "../../contracts/requests/auth/user-info-create.request";
+import { ConflictError } from "../../contracts/errors/conflict.error";
 
 @injectable()
 export class UserService implements UserServiceInterface {
@@ -38,12 +39,13 @@ export class UserService implements UserServiceInterface {
     async createUser(currentUser: AuthorizedUser, createRequest: UserInfoCreateRequest)
     : Promise<UserInfoDto> {
         // If intending to create an admin account
-        if (createRequest.roleName === Role.Admin) 
+        if (createRequest.userId === Role.Admin) 
         {
             // Admin account is not creatable on application level
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.UnpermittedAction);
         }
 
+        await this.ensureRecordNotExists(createRequest.userId);
         const result = await this.userRepo.create(createRequest);
         return this.mapper.map(UserInfoDto, result);
     }
@@ -69,9 +71,8 @@ export class UserService implements UserServiceInterface {
     }
 
     async deleteUser(currentUser: AuthorizedUser, userId: string): Promise<void> {
-        const record = await this.ensureRecordExists(userId);
-        // Admin accounts are not deletable on application level
-        if (record.roleName === Role.Admin) {
+        // Cannot delete self
+        if (userId === currentUser.userId) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.UnpermittedAction);
         }
 
@@ -82,6 +83,14 @@ export class UserService implements UserServiceInterface {
         const result = await this.userRepo.findOneById(userId);
         if (!result) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.UserNotFound);
+        }
+        return result;
+    }
+
+    private async ensureRecordNotExists(userId: string) {
+        const result = await this.userRepo.findOneById(userId);
+        if (result) {
+            throw new ConflictError(ERROR_MESSAGES.Conflict.UserAlreadyExists);
         }
         return result;
     }
