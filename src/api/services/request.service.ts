@@ -72,14 +72,17 @@ export class RequestService implements RequestServiceInterface {
     }
 
     async deleteRequest(user: AuthorizedUser, id: string): Promise<void> {
-        const record = await this.ensureRecordExists(id);
-
-        if (!this.isDeletableStateType(record.stateType)) {
-            throw new ConflictError(ERROR_MESSAGES.Conflict.RequestCurrentlyUndeletable);
-        }
-        // Only admin or the creator is allowed to delete the request
-        else if (!isAdmin(user) && record.creatorId !== user.userId) {
-            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
+        // Admin is freely to delete a request
+        if (!isAdmin(user)) {
+            // Otherwise
+            const record = await this.ensureRecordExists(id);
+            // Only the creator is allowed to delete the request
+            if (record.creatorId !== user.userId) {
+                throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
+            }
+            else if (!this.isDeletableStateType(record.stateType)) {
+                throw new ConflictError(ERROR_MESSAGES.Conflict.RequestCurrentlyUndeletable);
+            }
         }
 
         await this.requestRepo.delete(id);
