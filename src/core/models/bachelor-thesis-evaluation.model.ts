@@ -1,6 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDate, IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
-import { TitleValues } from "../../contracts/constants/title";
+import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class BachelorThesisEvaluation {
     @Expose()

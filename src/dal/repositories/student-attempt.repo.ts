@@ -152,7 +152,7 @@ export class StudentAttemptRepo implements StudentAttemptRepoInterface {
         return count > 0;
     }
 
-    private connectOrCreateStudentAttemptRequest(requestId?: string) {
+    private connectOrCreateStudentAttemptRequest(requestId?: string | null) {
         return requestId ? {
             connectOrCreate: {
                 where: { requestId },

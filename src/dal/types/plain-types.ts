@@ -86,6 +86,7 @@ export type PlainStudentAttempt = StudentAttempt & {
     oralDefenseRegistration: Pick<OralDefenseRegistration, 'id'> | null,
     bachelorThesisAssessment: Pick<BachelorThesisAssessment, 'id'> | null,
     oralDefenseAssessment: Pick<OralDefenseAssessment, 'id'> | null,
+    bachelorThesisEvaluation: Pick<BachelorThesisEvaluation, 'id'> | null,
     studentAttemptRequest: Pick<StudentAttemptRequest, 'requestId'> | null,
 };
 export type ProgramOnlyGroupAndMemberIds = {

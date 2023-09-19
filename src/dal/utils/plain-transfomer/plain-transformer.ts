@@ -162,6 +162,12 @@ export class PlainTransformer implements PlainTransformerInterface {
         }));
         
         dto.supervisor1Id = plain.thesis.creatorId;
+        dto.bachelorThesisRegistrationId = plain.bachelorThesisRegistration?.id ?? null;
+        dto.oralDefenseRegistrationId = plain.oralDefenseRegistration?.id ?? null;
+        dto.bachelorThesisAssessmentId = plain.bachelorThesisAssessment?.id ?? null;
+        dto.oralDefenseAssessmentId = plain.oralDefenseAssessment?.id ?? null;
+        dto.bachelorThesisEvaluationId = plain.bachelorThesisEvaluation?.id ?? null;
+        dto.requestId = plain.studentAttemptRequest?.requestId ?? null;
 
         return dto;
     }

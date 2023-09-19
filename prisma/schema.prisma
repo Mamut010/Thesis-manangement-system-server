@@ -136,6 +136,9 @@ model StudentAttempt {
     thesisId                        Int
     // supervisor1 is the creator of the thesis so no need to store it here
     supervisor2Id                   String
+    submissionDeadline              DateTime?                       @db.DateTime
+    numberHardCopies                Int?                
+    printRequirements               String?                         @db.VarChar(255)
     createdAt                       DateTime                        @default(now()) @db.Timestamp(6)
     updatedAt                       DateTime                        @updatedAt @db.Timestamp(6)
 
@@ -178,15 +181,9 @@ model Thesis {
     topicId                       Int?
     fieldId                       Int?
     creatorId                     String
-    title                         String?                             @db.VarChar(255)       
+    title                         String                              @db.VarChar(255)       
     slot                          Int                                 @default(0)
     slotLimit                     Int?                                @default(2)
-    activateRegistration          Boolean                             @default(false)
-    activateDefense               Boolean                             @default(false)
-    submissionDeadline            DateTime?                           @db.DateTime
-    numberHardCopies              Int?                
-    printRequirements             String?                             @db.VarChar(255)
-    templateFiles                 String?                             @db.VarChar(255)
     createdAt                     DateTime                            @default(now()) @db.Timestamp(6)
     updatedAt                     DateTime                            @updatedAt @db.Timestamp(6)
 

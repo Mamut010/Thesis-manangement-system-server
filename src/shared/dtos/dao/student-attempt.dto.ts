@@ -35,32 +35,47 @@ export class StudentAttemptDto {
     @Expose()
     @IsOptional()
     @IsNumber()
-    bachelorThesisRegistrationId?: number | null;
+    bachelorThesisRegistrationId!: number | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    oralDefenseRegistrationId?: number | null;
+    oralDefenseRegistrationId!: number | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    bachelorThesisAssessmentId?: number | null;
+    bachelorThesisAssessmentId!: number | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    oralDefenseAssessmentId?: number | null;
+    oralDefenseAssessmentId!: number | null;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    bachelorThesisEvaluationId?: number | null;
+    bachelorThesisEvaluationId!: number | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    requestId?: string | null;
+    requestId!: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsDate()
+    submissionDeadline!: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    numberHardCopies!: number | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    printRequirements!: string | null;
 
     @Expose()
     @IsDefined()

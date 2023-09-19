@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class StudentAttemptCreateRequest {
     @Expose()
@@ -26,4 +26,19 @@ export class StudentAttemptCreateRequest {
     @IsOptional()
     @IsString()
     requestId?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsDate()
+    submissionDeadline?: Date;
+
+    @Expose()
+    @IsOptional()
+    @IsNumber()
+    numberHardCopies?: number;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    printRequirements?: string;
 }

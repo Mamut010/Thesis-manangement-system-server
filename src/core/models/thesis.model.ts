@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class Thesis {
     @Expose()
@@ -23,9 +23,9 @@ export class Thesis {
     creatorId!: string;
 
     @Expose()
-    @IsOptional()
+    @IsDefined()
     @IsString()
-    title!: string | null;
+    title!: string;
 
     @Expose()
     @IsDefined()
@@ -36,36 +36,6 @@ export class Thesis {
     @IsOptional()
     @IsNumber()
     slotLimit!: number | null;
-
-    @Expose()
-    @IsDefined()
-    @IsBoolean()
-    activateRegistration!: boolean;
-
-    @Expose()
-    @IsDefined()
-    @IsBoolean()
-    activateDefense!: boolean;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    submissionDeadline!: Date | null;
-
-    @Expose()
-    @IsOptional()
-    @IsNumber()
-    numberHardCopies!: number | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    printRequirements!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    templateFiles!: string | null;
 
     @Expose()
     @IsDefined()
