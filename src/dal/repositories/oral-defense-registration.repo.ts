@@ -16,7 +16,7 @@ import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { OralDefenseRegistrationRepoInterface } from "../interfaces";
 import { createBachelorThesisOrOralDefenseQueryModel, createLecturerAssetsQuery } from "../utils/query-helpers";
-import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
+import { bachelorThesisAndOralDefenseWithProgramInclude } from "../constants/includes";
 
 @injectable()
 export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoInterface {
@@ -34,7 +34,7 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
         const count = await this.prisma.oralDefenseRegistration.count({ where: prismaQuery.where });
         const records = await this.prisma.oralDefenseRegistration.findMany({
             ...prismaQuery,
-            include: bachelorThesisAndOralDefenseInclude,
+            include: bachelorThesisAndOralDefenseWithProgramInclude,
         });
 
         const response = new OralDefenseRegistrationsQueryResponse();
@@ -66,7 +66,7 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
                         }
                     },
                 },
-                include: bachelorThesisAndOralDefenseInclude,
+                include: bachelorThesisAndOralDefenseWithProgramInclude,
             });
             return this.plainTransformer.toOralDefenseRegistration(record);
         }
@@ -88,7 +88,7 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
                         id: id
                     },
                     data: updateRequest,
-                    include: bachelorThesisAndOralDefenseInclude
+                    include: bachelorThesisAndOralDefenseWithProgramInclude
                 });
             }
     
@@ -115,7 +115,7 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
         const count = await this.prisma.oralDefenseRegistration.count({ where: assetsQuery.where });
         const records = await this.prisma.oralDefenseRegistration.findMany({
             ...assetsQuery,
-            include: bachelorThesisAndOralDefenseInclude,
+            include: bachelorThesisAndOralDefenseWithProgramInclude,
         });
 
         return {
@@ -129,7 +129,7 @@ export class OralDefenseRegistrationRepo implements OralDefenseRegistrationRepoI
             where: {
                 id: id
             },
-            include: bachelorThesisAndOralDefenseInclude
+            include: bachelorThesisAndOralDefenseWithProgramInclude
         });
     }
 

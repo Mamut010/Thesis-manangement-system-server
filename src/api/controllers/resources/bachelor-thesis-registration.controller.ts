@@ -9,8 +9,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
-    Patch, 
-    Post, 
+    Patch,
     QueryParams 
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -18,9 +17,8 @@ import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { BachelorThesisRegistrationServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { 
-    BachelorThesisRegistrationsQueryRequest,
-    BachelorThesisRegistrationCreateRequest,
-    BachelorThesisRegistrationUpdateRequest
+    BachelorThesisRegistrationInfoUpdateRequest,
+    BachelorThesisRegistrationInfosQueryRequest,
 } from "../../../contracts/requests";
 import { BachelorThesisRegistrationInfoDto } from "../../../shared/dtos";
 import { Role } from "../../../core/constants/roles";
@@ -44,7 +42,7 @@ export class BachelorThesisRegistrationController {
     @Get()
     @ResponseSchema(BachelorThesisRegistrationInfosQueryResponse)
     getBachelorThesisRegistrations(@CurrentUser() user: AuthorizedUser, 
-        @QueryParams() queryRequest: BachelorThesisRegistrationsQueryRequest) {
+        @QueryParams() queryRequest: BachelorThesisRegistrationInfosQueryRequest) {
         return this.bachelorThesisRegistrationService.getBachelorThesisRegistrations(user, queryRequest);
     }
 
@@ -55,21 +53,12 @@ export class BachelorThesisRegistrationController {
         return this.bachelorThesisRegistrationService.getBachelorThesisRegistration(user, id);
     }
 
-    @HttpCode(HTTP_CODES.Created)
-    //@Authorized(Role.Admin)
-    @Post()
-    @ResponseSchema(BachelorThesisRegistrationInfoDto)
-    createBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser, 
-        @Body({ required: true }) createRequest: BachelorThesisRegistrationCreateRequest) {
-        return this.bachelorThesisRegistrationService.createBachelorThesisRegistration(user, createRequest);
-    }
-
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(BachelorThesisRegistrationInfoDto)
     updateBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
-        @Body({ required: true }) updateRequest: BachelorThesisRegistrationUpdateRequest) {
+        @Body({ required: true }) updateRequest: BachelorThesisRegistrationInfoUpdateRequest) {
         return this.bachelorThesisRegistrationService.updateBachelorThesisRegistration(user, id, updateRequest);
     }
 

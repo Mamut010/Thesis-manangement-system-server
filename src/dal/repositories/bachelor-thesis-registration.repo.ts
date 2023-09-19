@@ -10,7 +10,7 @@ import {
 } from "../../contracts/requests";
 import { BachelorThesisRegistrationsQueryResponse } from "../../contracts/responses";
 import { BachelorThesisRegistration } from "../../core/models";
-import { bachelorThesisAndOralDefenseInclude } from "../constants/includes";
+import { bachelorThesisAndOralDefenseWithProgramInclude } from "../constants/includes";
 import { BachelorThesisRegistrationDto } from "../../shared/dtos";
 import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
@@ -34,7 +34,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
         const count = await this.prisma.bachelorThesisRegistration.count({ where: prismaQuery.where });
         const records = await this.prisma.bachelorThesisRegistration.findMany({
             ...prismaQuery,
-            include: bachelorThesisAndOralDefenseInclude,
+            include: bachelorThesisAndOralDefenseWithProgramInclude,
         });
 
         const response = new BachelorThesisRegistrationsQueryResponse();
@@ -66,7 +66,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
                         }
                     },
                 },
-                include: bachelorThesisAndOralDefenseInclude,
+                include: bachelorThesisAndOralDefenseWithProgramInclude,
             });
             return this.plainTransformer.toBachelorThesisRegistration(record);
         }
@@ -88,7 +88,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
                         id: id,
                     },
                     data: updateRequest,
-                    include: bachelorThesisAndOralDefenseInclude,
+                    include: bachelorThesisAndOralDefenseWithProgramInclude,
                 });
             }
     
@@ -115,7 +115,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
         const count = await this.prisma.bachelorThesisRegistration.count({ where: assetsQuery.where });
         const records = await this.prisma.bachelorThesisRegistration.findMany({
             ...assetsQuery,
-            include: bachelorThesisAndOralDefenseInclude,
+            include: bachelorThesisAndOralDefenseWithProgramInclude,
         });
         
         return {
@@ -129,7 +129,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
             where: {
                 id: id
             },
-            include:  bachelorThesisAndOralDefenseInclude,
+            include: bachelorThesisAndOralDefenseWithProgramInclude,
         });
     }
 

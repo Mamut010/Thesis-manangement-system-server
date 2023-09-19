@@ -28,11 +28,12 @@ import {
 } from "../../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 import { flattenObject } from "../../../utils/object-helpers";
-import { 
+import {
     PlainAdmin,
     PlainBachelorThesisAssessment,
     PlainBachelorThesisEvaluation,
     PlainBachelorThesisRegistration, 
+    PlainDetailedStudentAttempt, 
     PlainField, 
     PlainGroup, 
     PlainLecturer, 
@@ -50,7 +51,8 @@ import {
     PlainStudentAttempt,
     PlainThesis,
     PlainTopic,
-    PlainUser
+    PlainUser,
+    ProgramOnlyGroupAndMemberIds
 } from "../../types/plain-types";
 import { PlainTransformerInterface } from "./plain-transformer.interface";
 import { StateType } from "../../../api/others/workflow";
@@ -165,55 +167,39 @@ export class PlainTransformer implements PlainTransformerInterface {
     }
 
     public toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto {
-        const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisRegistrationDto, plain);
+        let dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisRegistrationDto, plain);
     
-        dto.supervisor1Id = plain.studentAttempt.thesis.creatorId;
-        dto.supervisor1Title = plain.studentAttempt.thesis.creator.title;
-        dto.supervisor1Signature = plain.studentAttempt.thesis.creator.signature;
-        dto.supervisor2Title = plain.studentAttempt.supervisor2.title;
-        dto.supervisor2Signature = plain.studentAttempt.supervisor2.signature;
-        dto.studentSignature = plain.studentAttempt.student.signature;
+        const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
+        const programAdminGroup = this.mapProgramGroupAndMemberIds(plain.studentAttempt.student.program);
+        dto = { ...dto, ...studentAttempt, ...programAdminGroup };
 
         return dto;
     }
 
     public toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto {
-        const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseRegistrationDto, plain);
+        let dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseRegistrationDto, plain);
 
-        dto.supervisor1Id = plain.studentAttempt.thesis.creatorId;
-        dto.supervisor1Title = plain.studentAttempt.thesis.creator.title;
-        dto.supervisor1Signature = plain.studentAttempt.thesis.creator.signature;
-        dto.supervisor2Title = plain.studentAttempt.supervisor2.title;
-        dto.supervisor2Signature = plain.studentAttempt.supervisor2.signature;
-        dto.studentSignature = plain.studentAttempt.student.signature;
+        const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
+        const programAdminGroup = this.mapProgramGroupAndMemberIds(plain.studentAttempt.student.program);
+        dto = { ...dto, ...studentAttempt, ...programAdminGroup };
 
         return dto;
     }
 
     public toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto {
-        const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisAssessmentDto, plain);
+        let dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisAssessmentDto, plain);
 
-        dto.supervisor1Id = plain.studentAttempt.thesis.creatorId;
-        dto.supervisor1Title = plain.studentAttempt.thesis.creator.title;
-        dto.supervisor1Signature = plain.studentAttempt.thesis.creator.signature;
-        dto.supervisor2Title = plain.studentAttempt.supervisor2.title;
-        dto.supervisor2Signature = plain.studentAttempt.supervisor2.signature;
-        dto.studentSignature = plain.studentAttempt.student.signature;
-        dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
+        const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
+        dto = { ...dto, ...studentAttempt };
 
         return dto;
     }
 
     public toOralDefenseAssessment(plain: PlainOralDefenseAssessment): OralDefenseAssessmentDto {
-        const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseAssessmentDto, plain);
+        let dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseAssessmentDto, plain);
 
-        dto.supervisor1Id = plain.studentAttempt.thesis.creatorId;
-        dto.supervisor1Title = plain.studentAttempt.thesis.creator.title;
-        dto.supervisor1Signature = plain.studentAttempt.thesis.creator.signature;
-        dto.supervisor2Title = plain.studentAttempt.supervisor2.title;
-        dto.supervisor2Signature = plain.studentAttempt.supervisor2.signature;
-        dto.studentSignature = plain.studentAttempt.student.signature;
-        dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
+        const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
+        dto = { ...dto, ...studentAttempt };
 
         return dto;
     }
@@ -299,6 +285,24 @@ export class PlainTransformer implements PlainTransformerInterface {
         return plainToInstanceExactMatch(cls, flattenObject(plain, {
             keepDuplicate: true,
         }));
+    }
+
+    private mapDetailedStudentAttempt(plain: PlainDetailedStudentAttempt) {
+        return {
+            supervisor1Id: plain.thesis.creatorId,
+            supervisor1Title: plain.thesis.creator.title,
+            supervisor1Signature: plain.thesis.creator.signature,
+            supervisor2Title: plain.supervisor2.title,
+            supervisor2Signature: plain.supervisor2.signature,
+            studentSignature: plain.student.signature,
+        }
+    }
+
+    private mapProgramGroupAndMemberIds(plain: ProgramOnlyGroupAndMemberIds | null) {
+        return {
+            programAdminGroupId: plain ? plain.programAdminGroup?.group.id : null,
+            programAdminGroupMemberIds: plain?.programAdminGroup?.group.users.map(item => item.userId),
+        }
     }
 
     private computeOverallGrade(...grades: (number | null | undefined)[]) {

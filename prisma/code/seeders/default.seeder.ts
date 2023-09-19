@@ -578,8 +578,7 @@ function seedThesisWorkflow(prisma: PrismaClient) {
                     id: Id.State.StudentFillingBTRForm,
                     processId: Id.Process.Thesis,
                     stateTypeId: Id.StateType.Normal,
-                    name: 'Admin approved permission to fill bachelor thesis registration. ' 
-                        + 'Awaiting student filling bachelor thesis registration form',
+                    name: 'Awaiting student filling bachelor thesis registration form',
                 },
                 {
                     id: Id.State.StudentFilledBTRForm,

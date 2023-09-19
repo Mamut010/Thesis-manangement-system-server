@@ -104,6 +104,16 @@ export class BachelorThesisRegistrationDto {
 
     @Expose()
     @IsOptional()
+    @IsString()
+    programAdminGroupId?: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString({ each: true })
+    programAdminGroupMemberIds?: string[];
+
+    @Expose()
+    @IsOptional()
     @IsDate()
     issued?: Date | null;
 

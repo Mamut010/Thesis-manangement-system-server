@@ -80,10 +80,6 @@ export type PlainStudentWithThesis = {
     thesis: Thesis,
 }
 
-export type PlainProgramWithAdminGroup = Program & {
-    programAdminGroup: ProgramAdminGroup | null
-};
-
 export type PlainStudentAttempt = StudentAttempt & {
     thesis: Thesis,
     bachelorThesisRegistration: Pick<BachelorThesisRegistration, 'id'> | null,
@@ -92,57 +88,51 @@ export type PlainStudentAttempt = StudentAttempt & {
     oralDefenseAssessment: Pick<OralDefenseAssessment, 'id'> | null,
     studentAttemptRequest: Pick<StudentAttemptRequest, 'requestId'> | null,
 };
+export type ProgramOnlyGroupAndMemberIds = {
+    programAdminGroup: {
+        group: WithGroupId & {
+            users: WithUserId[]
+        }
+    } | null
+}
+
+export type PlainDetailedStudentAttempt = StudentAttempt & {
+    student: Student,
+    thesis: Thesis & {
+        creator: Lecturer,
+    },
+    supervisor2: Lecturer,
+};
+
+export type PlainDetailedStudentAttemptWithProgram = PlainDetailedStudentAttempt & {
+    student: Student & {
+        program: ProgramOnlyGroupAndMemberIds | null
+    },
+};
 
 export type PlainBachelorThesisRegistration = BachelorThesisRegistration & {
-    studentAttempt: StudentAttempt & {
-        student: Student,
-        thesis: Thesis & {
-            creator: Lecturer,
-        },
-        supervisor2: Lecturer,
-    },
+    studentAttempt: PlainDetailedStudentAttemptWithProgram
 };
 
 export type PlainOralDefenseRegistration = OralDefenseRegistration & {
-    studentAttempt: StudentAttempt & {
-        student: Student,
-        thesis: Thesis & {
-            creator: Lecturer,
-        },
-        supervisor2: Lecturer,
-    },
+    studentAttempt: PlainDetailedStudentAttemptWithProgram
 };
 
 export type PlainBachelorThesisAssessment = BachelorThesisAssessment & {
-    studentAttempt: StudentAttempt & {
-        student: Student,
-        thesis: Thesis & {
-            creator: Lecturer,
-        },
-        supervisor2: Lecturer,
-    },
+    studentAttempt: PlainDetailedStudentAttempt
 };
 
 export type PlainOralDefenseAssessment = OralDefenseAssessment & {
-    studentAttempt: StudentAttempt & {
-        student: Student,
-        thesis: Thesis & {
-            creator: Lecturer,
-        },
-        supervisor2: Lecturer,
-    },
+    studentAttempt: PlainDetailedStudentAttempt
 };
 
 export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & {
-    studentAttempt: StudentAttempt & {
-        thesis: Thesis & {
-            creator: Lecturer,
-        },
-        student: Student,
-    },
+    studentAttempt: Omit<PlainDetailedStudentAttempt, 'supervisor2'>
 };
 
-export type WithUserId = Pick<User, 'userId'>; 
+export type WithUserId = Pick<User, 'userId'>;
+
+export type WithGroupId = Pick<Group, 'id'>;
 
 export type PlainProcess = Process;
 

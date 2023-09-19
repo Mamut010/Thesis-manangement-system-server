@@ -9,8 +9,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
-    Patch, 
-    Post, 
+    Patch,
     QueryParams 
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -18,9 +17,8 @@ import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { BachelorThesisAssessmentServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { 
-    BachelorThesisAssessmentsQueryRequest,
-    BachelorThesisAssessmentCreateRequest,
-    BachelorThesisAssessmentUpdateRequest
+    BachelorThesisAssessmentInfosQueryRequest,
+    BachelorThesisAssessmentInfoUpdateRequest
 } from "../../../contracts/requests";
 import { BachelorThesisAssessmentInfoDto } from "../../../shared/dtos";
 import { Role } from "../../../core/constants/roles";
@@ -44,7 +42,7 @@ export class BachelorThesisAssessmentController {
     @Get()
     @ResponseSchema(BachelorThesisAssessmentInfosQueryResponse)
     getBachelorThesisAssessments(@CurrentUser() user: AuthorizedUser, 
-        @QueryParams() queryRequest: BachelorThesisAssessmentsQueryRequest) {
+        @QueryParams() queryRequest: BachelorThesisAssessmentInfosQueryRequest) {
         return this.bachelorThesisAssessmentService.getBachelorThesisAssessments(user, queryRequest);
     }
 
@@ -55,21 +53,12 @@ export class BachelorThesisAssessmentController {
         return this.bachelorThesisAssessmentService.getBachelorThesisAssessment(user, id);
     }
 
-    @HttpCode(HTTP_CODES.Created)
-    //@Authorized(Role.Admin)
-    @Post()
-    @ResponseSchema(BachelorThesisAssessmentInfoDto)
-    createBachelorThesisAssessment(@CurrentUser() user: AuthorizedUser, 
-        @Body({ required: true }) createRequest: BachelorThesisAssessmentCreateRequest) {
-        return this.bachelorThesisAssessmentService.createBachelorThesisAssessment(user, createRequest);
-    }
-
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(BachelorThesisAssessmentInfoDto)
     updateBachelorThesisAssessment(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
-        @Body({ required: true }) updateRequest: BachelorThesisAssessmentUpdateRequest) {
+        @Body({ required: true }) updateRequest: BachelorThesisAssessmentInfoUpdateRequest) {
         return this.bachelorThesisAssessmentService.updateBachelorThesisAssessment(user, id, updateRequest);
     }
 

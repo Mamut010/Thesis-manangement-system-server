@@ -23,6 +23,7 @@ export class ApproveBTEActionHandler extends BaseStudentAttemptActionHandler {
         await this.bteRepo.create({ 
             studentId: actionInput.requestUsers.requesterId,
             attemptNo: studentAttempt.attemptNo,
+            date: new Date(),
         });
     }
 }

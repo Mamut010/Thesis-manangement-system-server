@@ -74,6 +74,16 @@ export class OralDefenseRegistrationDto {
 
     @Expose()
     @IsOptional()
+    @IsString()
+    programAdminGroupId?: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString({ each: true })
+    programAdminGroupMemberIds?: string[];
+
+    @Expose()
+    @IsOptional()
     @IsBoolean()
     areSpectatorsAllowed?: boolean | null;
 

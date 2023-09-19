@@ -85,7 +85,7 @@ export const ERROR_MESSAGES = {
     Invalid: {
         RoleInvalid: 'Invalid role',
         InputInvalid: 'Invalid input',
-        Supervisor2MustNotBeSupervisor1: 'Supervisor2 must not be Supervisor1',
+        Supervisor2MustNotBeSupervisor1: 'Supervisor1 and Supervisor2 must not be the same',
     },
     BadRequest: {
         DataMustBeNumber: 'Passed data must be number',

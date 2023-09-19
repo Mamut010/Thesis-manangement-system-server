@@ -38,6 +38,41 @@ export const bachelorThesisAndOralDefenseInclude = {
     }
 } as const;
 
+export const bachelorThesisAndOralDefenseWithProgramInclude = {
+    studentAttempt: {
+        include: {
+            student: {
+                include: {
+                    program: {
+                        select: {
+                            programAdminGroup: {
+                                select: {
+                                    group: {
+                                        select: {
+                                            id: true,
+                                            users: {
+                                                select: {
+                                                    userId: true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } 
+                    }
+                }
+            },
+            thesis: {
+                include: {
+                    creator: true
+                }
+            },
+            supervisor2: true,
+        }
+    }
+} as const;
+
 export const bachelorThesisEvaluationInclude = {
     studentAttempt: {
         include: {

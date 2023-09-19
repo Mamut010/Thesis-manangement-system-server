@@ -28,18 +28,6 @@ export class BachelorThesisRegistrationInfoUpdateRequest {
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    supervisor1Date?: Date;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    supervisor2Date?: Date;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
     issued?: Date;
 
     @Expose()

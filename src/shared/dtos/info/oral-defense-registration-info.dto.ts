@@ -91,4 +91,9 @@ export class OralDefenseRegistrationInfoDto {
     @IsOptional()
     @IsDate()
     admissionDate?: Date | null;
+
+    @Expose()
+    @IsDefined()
+    @IsString({ each: true })
+    updatableFields: string[] = [];
 }

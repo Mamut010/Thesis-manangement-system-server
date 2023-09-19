@@ -111,4 +111,9 @@ export class BachelorThesisRegistrationInfoDto {
     @IsOptional()
     @IsDate()
     dateOfIssue?: Date | null;
+
+    @Expose()
+    @IsDefined()
+    @IsString({ each: true })
+    updatableFields: string[] = [];
 }
