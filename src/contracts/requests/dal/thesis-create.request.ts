@@ -25,7 +25,7 @@ export class ThesisCreateRequest {
     @Expose()
     @IsOptional()
     @IsNumber()
-    slot: number = 0;
+    slot?: number;
 
     @Expose()
     @IsOptional()
@@ -35,12 +35,12 @@ export class ThesisCreateRequest {
     @Expose()
     @IsOptional()
     @IsBoolean()
-    activateRegistration: boolean = false;
+    activateRegistration?: boolean;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    activateDefense: boolean = false;
+    activateDefense?: boolean;
 
     @Expose()
     @IsOptional()
