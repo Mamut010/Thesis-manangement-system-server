@@ -50,7 +50,7 @@ export class ThesisController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    @Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Post()
     @ResponseSchema(ThesisInfoDto)
     createThesis(@CurrentUser() user: AuthorizedUser, @Body({ required: true }) createRequest: ThesisInfoCreateRequest) {
@@ -58,7 +58,7 @@ export class ThesisController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Patch('/:id')
     @ResponseSchema(ThesisInfoDto)
     updateThesis(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
@@ -66,7 +66,7 @@ export class ThesisController {
         return this.thesisService.updateThesis(user, id, updateRequest);
     }
 
-    @Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteThesis(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {
