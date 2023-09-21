@@ -42,7 +42,6 @@ model RefreshToken {
     id      Int         @id @default(autoincrement())
     userId  String      @unique
     token   String      @db.VarChar(255)
-    exp     DateTime    @db.Timestamp(6)
 
     user    User        @relation(fields: [userId], references: [userId], onUpdate: Cascade, onDelete: Cascade)
 }

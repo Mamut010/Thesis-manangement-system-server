@@ -11,7 +11,6 @@ import {
 import { AuthServiceInterface } from '../interfaces';
 import { UnauthorizedError } from '../../contracts/errors/unauthorized.error';
 import { AuthenticationError } from '../../contracts/errors/authentication.error';
-import { plainToInstanceExactMatch } from '../../utils/class-transformer-helpers';
 import { JwtCookieHandlerInterface } from '../utils/jwt-cookie-handlers';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import {
@@ -26,9 +25,7 @@ import {
     LoginRequest,
     SignUpRequest,
     UserCreateRequest, 
-    UsersQueryRequest,
-    RefreshTokenUpsertCreateRequest, 
-    RefreshTokenUpsertUpdateRequest,
+    UsersQueryRequest
 } from '../../contracts/requests';
 import { StringFilter } from '../../lib/query';
 import { makeArray, singleOrDefault } from '../../utils/array-helpers';
@@ -85,22 +82,17 @@ export class AuthService implements AuthServiceInterface {
             throw new UnauthorizedError(ERROR_MESSAGES.Auth.InvalidLoginCredentials);
         }
 
-        const jwtAccessContext = plainToInstanceExactMatch(JwtAccessContextDto, user);
+        const jwtAccessContext = this.mapper.map(JwtAccessContextDto, user);
         jwtAccessContext.roles = [user.roleName];
-        const jwtRefreshContext = plainToInstanceExactMatch(JwtRefreshContextDto, user);
+        const jwtRefreshContext = this.mapper.map(JwtRefreshContextDto, user);
 
         const { accessToken, refreshToken } = this.jwtService.generateTokens(jwtAccessContext, jwtRefreshContext);
-
-        const tokenRequest = {
-            userId: user.userId,
-            token: await this.cryptoService.hash(refreshToken),
-            exp: this.jwtService.getTokenExp(refreshToken),
-        };
+        const hashedRefreshToken = await this.cryptoService.hash(refreshToken);
 
         await this.refreshTokenRepo.upsert({
-            userId: tokenRequest.userId,
-            create: plainToInstanceExactMatch(RefreshTokenUpsertCreateRequest, tokenRequest),
-            update: plainToInstanceExactMatch(RefreshTokenUpsertUpdateRequest, tokenRequest),
+            userId: user.userId,
+            create: { token: hashedRefreshToken },
+            update: { token: hashedRefreshToken },
         });
         await this.jwtCookieHandler.attachRefreshTokenToCookie(response, refreshToken);
 
@@ -127,7 +119,7 @@ export class AuthService implements AuthServiceInterface {
             // verify the token payload
             payload = this.jwtService.verifyRefreshToken(refreshToken);
             
-            // verify if the token against records in the DB
+            // verify the token against records in the DB
             const user = await this.userRepo.findOneById(payload.context.userId);
             if (!user) {
                 throw new AuthenticationError(ERROR_MESSAGES.Auth.InvalidEmbeddedCredentials);
@@ -140,7 +132,7 @@ export class AuthService implements AuthServiceInterface {
             }
     
             // If everything is valid, issue new access token
-            const jwtAccessContext = plainToInstanceExactMatch(JwtAccessContextDto, user);
+            const jwtAccessContext = this.mapper.map(JwtAccessContextDto, user);
             jwtAccessContext.roles = [user.roleName];
             return new StringResponse(this.jwtService.generateAccessToken(jwtAccessContext));
         }
