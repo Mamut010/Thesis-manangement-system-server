@@ -1,5 +1,6 @@
 import { Expose } from "class-transformer";
-import { IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
+import { Role, Roles } from "../../../core/constants/roles";
 
 export class UserDto {
     @Expose()
@@ -19,8 +20,8 @@ export class UserDto {
 
     @Expose()
     @IsDefined()
-    @IsString()
-    roleName!: string;
+    @IsIn(Roles)
+    roleName!: Role;
 
     @Expose()
     @IsDefined()
