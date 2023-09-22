@@ -4,7 +4,7 @@ import { IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 export class ThesisInfoCreateRequest {
     @Expose()
     @IsOptional()
-    @IsNumber()
+    @IsString()
     creatorId?: string;
 
     @Expose()
