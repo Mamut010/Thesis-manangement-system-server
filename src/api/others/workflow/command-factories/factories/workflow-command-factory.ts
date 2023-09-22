@@ -33,7 +33,8 @@ import {
     RequestAdvanceCommandInput, 
     RequestAdvanceCommandInterface,
     RequestSupervisor1Command,
-    RequestSupervisor2Command
+    RequestSupervisor2Command,
+    RequestSupervisorsCommand
 } from "../../commands";
 
 export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
@@ -87,6 +88,9 @@ export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
 
             case ActionType.RequestSupervisor2:
                 return new RequestSupervisor2Command(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.RequestSupervisors:
+                    return new RequestSupervisorsCommand(engine, commandInput.actionerId, commandInput.requestId);
 
             case ActionType.ApprovePermissionBachelorThesisRegistration:
                 return new ApprovePermissionBTRCommand(engine, commandInput.actionerId, commandInput.requestId);
