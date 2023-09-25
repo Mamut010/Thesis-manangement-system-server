@@ -45,6 +45,7 @@ export const ERROR_MESSAGES = {
         RequestNotAssociatedWithStudentAttempt: 'Unexpected request not associated with any student attempt',
         RequestAlreadyAssociatedWithForm: 'Unexpected request already associated with an expected-to-not-exist form',
         MaxAttemptReached: 'Student has reached max attempts',
+        CommandNotFound: 'Unable to identify the operation',
     },
     UniqueConstraint: {
         RoleAlreadyExists: 'The role already exists',

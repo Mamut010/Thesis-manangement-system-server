@@ -23,6 +23,7 @@ import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { OrderBy, StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
 import { ConflictError } from "../../contracts/errors/conflict.error";
+import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 
 @injectable()
 export class RequestService implements RequestServiceInterface {
@@ -98,7 +99,7 @@ export class RequestService implements RequestServiceInterface {
             data: request.data,
         });
         if (!command) {
-            throw new BadRequestError(ERROR_MESSAGES.Invalid.InputInvalid);
+            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.CommandNotFound);
         }
 
         this.workflowCommandInvoker.setCommand(command);
