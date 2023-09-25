@@ -1,45 +1,46 @@
-import { 
-    LecturerAssetsQueryRequest,
+import {
     LecturerInfoUpdateRequest,
-    BachelorThesisAssessmentsQueryRequest,
-    BachelorThesisEvaluationsQueryRequest,
-    BachelorThesisRegistrationsQueryRequest,
-    OralDefenseAssessmentsQueryRequest,
-    OralDefenseRegistrationsQueryRequest,
-    LecturerInfosQueryRequest
+    LecturerInfosQueryRequest,
+    BachelorThesisAssessmentInfosQueryRequest,
+    BachelorThesisEvaluationInfosQueryRequest,
+    OralDefenseRegistrationInfosQueryRequest,
+    OralDefenseAssessmentInfosQueryRequest,
+    BachelorThesisRegistrationInfosQueryRequest,
+    SimpleQueryRequest
 } from "../../contracts/requests";
-import { LecturerDetailResponse, LecturerInfosQueryResponse } from "../../contracts/responses";
 import { 
-    BachelorThesisAssessmentInfoDto, 
-    BachelorThesisEvaluationInfoDto, 
-    BachelorThesisRegistrationInfoDto,
-    LecturerInfoDto, 
-    OralDefenseAssessmentInfoDto, 
-    OralDefenseRegistrationInfoDto
-} from "../../shared/dtos";
+    BachelorThesisAssessmentInfosQueryResponse, 
+    BachelorThesisEvaluationInfosQueryResponse, 
+    BachelorThesisRegistrationInfosQueryResponse, 
+    LecturerDetailResponse, 
+    LecturerInfosQueryResponse, 
+    OralDefenseAssessmentInfosQueryResponse, 
+    OralDefenseRegistrationInfosQueryResponse 
+} from "../../contracts/responses";
+import { LecturerInfoDto } from "../../shared/dtos";
 
 export interface LecturerServiceInterface {
     getLecturers(lecturersQuery: LecturerInfosQueryRequest): Promise<LecturerInfosQueryResponse>;
 
     getLecturerInfo(lecturerId: string): Promise<LecturerInfoDto>;
 
-    getLecturerDetail(lecturerId: string, lecturerAssetsQueryRequest: LecturerAssetsQueryRequest)
+    getLecturerDetail(lecturerId: string, queryRequest?: SimpleQueryRequest)
         : Promise<LecturerDetailResponse>;
 
-    getLecturerBachelorThesisRegistrations(lecturerId: string, btrQueryRequest: BachelorThesisRegistrationsQueryRequest)
-        : Promise<BachelorThesisRegistrationInfoDto[]>;
+    getLecturerBachelorThesisRegistrations(lecturerId: string, btrQueryRequest?: BachelorThesisRegistrationInfosQueryRequest)
+        : Promise<BachelorThesisRegistrationInfosQueryResponse>;
 
-    getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest: BachelorThesisAssessmentsQueryRequest)
-        : Promise<BachelorThesisAssessmentInfoDto[]>;
+    getLecturerBachelorThesisAssessments(lecturerId: string, btaQueryRequest?: BachelorThesisAssessmentInfosQueryRequest)
+        : Promise<BachelorThesisAssessmentInfosQueryResponse>;
 
-    getLecturerBachelorThesisEvaluations(lecturerId: string, bteQueryRequest: BachelorThesisEvaluationsQueryRequest)
-        : Promise<BachelorThesisEvaluationInfoDto[]>
+    getLecturerBachelorThesisEvaluations(lecturerId: string, bteQueryRequest?: BachelorThesisEvaluationInfosQueryRequest)
+        : Promise<BachelorThesisEvaluationInfosQueryResponse>
 
-    getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest: OralDefenseRegistrationsQueryRequest)
-        : Promise<OralDefenseRegistrationInfoDto[]>;
+    getLecturerOralDefenseRegistrations(lecturerId: string, odrQueryRequest?: OralDefenseRegistrationInfosQueryRequest)
+        : Promise<OralDefenseRegistrationInfosQueryResponse>;
 
-    getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentInfoDto[]>;
+    getLecturerOralDefenseAssessments(lecturerId: string, odaQueryRequest?: OralDefenseAssessmentInfosQueryRequest)
+        : Promise<OralDefenseAssessmentInfosQueryResponse>;
 
     updateLecturerInfo(lecturerId: string, updateRequest: LecturerInfoUpdateRequest): Promise<LecturerInfoDto>;
 }

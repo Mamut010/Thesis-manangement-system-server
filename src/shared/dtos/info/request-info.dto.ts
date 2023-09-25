@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsDate, IsDefined, IsIn, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDefined, IsIn, IsOptional, IsString } from "class-validator";
 import { StateType } from "../../../api/others/workflow";
 import { valuesOf } from "../../../utils/object-helpers";
 
@@ -33,6 +33,11 @@ export class RequestInfoDto {
     @IsOptional()
     @IsString()
     stateDescription!: string | null;
+
+    @Expose()
+    @IsDefined()
+    @IsBoolean()
+    isDeletable!: boolean;
 
     @Expose()
     @IsDefined()

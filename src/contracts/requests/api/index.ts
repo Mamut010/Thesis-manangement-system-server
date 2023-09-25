@@ -10,7 +10,7 @@ export * from './bachelor-thesis-evaluation-infos-query.request';
 export * from './bachelor-thesis-registration-info-create.request';
 export * from './bachelor-thesis-registration-info-update.request';
 export * from './bachelor-thesis-registration-infos-query.request';
-export * from './lecturer-assets-query.request';
+export * from './simple-query.request';
 export * from './lecturer-info-update.request';
 export * from './lecturer-infos-query.request';
 export * from './oral-defense-assessment-info-create.request';

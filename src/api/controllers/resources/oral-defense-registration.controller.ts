@@ -9,8 +9,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
-    Patch, 
-    Post, 
+    Patch,
     QueryParams 
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -18,9 +17,8 @@ import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { OralDefenseRegistrationServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { 
-    OralDefenseRegistrationsQueryRequest,
-    OralDefenseRegistrationCreateRequest,
-    OralDefenseRegistrationUpdateRequest
+    OralDefenseRegistrationInfoUpdateRequest,
+    OralDefenseRegistrationInfosQueryRequest,
 } from "../../../contracts/requests";
 import { OralDefenseRegistrationInfoDto } from "../../../shared/dtos";
 import { Role } from "../../../core/constants/roles";
@@ -44,7 +42,7 @@ export class OralDefenseRegistrationController {
     @Get()
     @ResponseSchema(OralDefenseRegistrationInfosQueryResponse)
     getOralDefenseRegistrations(@CurrentUser() user: AuthorizedUser, 
-        @QueryParams() queryRequest: OralDefenseRegistrationsQueryRequest) {
+        @QueryParams() queryRequest: OralDefenseRegistrationInfosQueryRequest) {
         return this.oralDefenseRegistrationService.getOralDefenseRegistrations(user, queryRequest);
     }
 
@@ -55,21 +53,12 @@ export class OralDefenseRegistrationController {
         return this.oralDefenseRegistrationService.getOralDefenseRegistration(user, id);
     }
 
-    @HttpCode(HTTP_CODES.Created)
-    //@Authorized(Role.Admin)
-    @Post()
-    @ResponseSchema(OralDefenseRegistrationInfoDto)
-    createOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, 
-        @Body({ required: true }) createRequest: OralDefenseRegistrationCreateRequest) {
-        return this.oralDefenseRegistrationService.createOralDefenseRegistration(user, createRequest);
-    }
-
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(OralDefenseRegistrationInfoDto)
     updateOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
-        @Body({ required: true }) updateRequest: OralDefenseRegistrationUpdateRequest) {
+        @Body({ required: true }) updateRequest: OralDefenseRegistrationInfoUpdateRequest) {
         return this.oralDefenseRegistrationService.updateOralDefenseRegistration(user, id, updateRequest);
     }
 

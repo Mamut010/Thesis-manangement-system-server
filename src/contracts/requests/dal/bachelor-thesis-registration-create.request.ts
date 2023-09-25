@@ -4,23 +4,13 @@ import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "cl
 export class BachelorThesisRegistrationCreateRequest {
     @Expose()
     @IsDefined()
-    @IsNumber()
-    thesisId!: number;
-
-    @Expose()
-    @IsDefined()
     @IsString()
     studentId!: string;
 
     @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id?: string;
+    @IsDefined()
+    @IsNumber()
+    attemptNo!: number;
     
     @Expose()
     @IsOptional()
@@ -52,19 +42,9 @@ export class BachelorThesisRegistrationCreateRequest {
 
     @Expose()
     @IsOptional()
-    @IsBoolean()
-    supervisor1Confirmed?: boolean;
-
-    @Expose()
-    @IsOptional()
     @IsDate()
     @Type(() => Date)
     supervisor2Date?: Date;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    supervisor2Confirmed?: boolean;
 
     @Expose()
     @IsOptional()
@@ -94,4 +74,14 @@ export class BachelorThesisRegistrationCreateRequest {
     @IsDate()
     @Type(() => Date)
     dateOfIssue?: Date;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    studentConfirmed?: boolean;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    adminConfirmed?: boolean;
 }

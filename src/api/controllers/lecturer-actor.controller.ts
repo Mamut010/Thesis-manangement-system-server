@@ -14,24 +14,24 @@ import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { LecturerServiceInterface } from "../interfaces";
 import { LecturerRoles } from "../../core/constants/roles";
 import { HTTP_CODES } from "../../core/constants/http-codes";
-import { 
-    BachelorThesisAssessmentInfoDto,
-    BachelorThesisEvaluationInfoDto,
-    BachelorThesisRegistrationInfoDto,
-    LecturerInfoDto,
-    OralDefenseAssessmentInfoDto,
-    OralDefenseRegistrationInfoDto
-} from "../../shared/dtos";
+import { LecturerInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
-import { LecturerDetailResponse } from "../../contracts/responses";
+import { 
+    BachelorThesisAssessmentInfosQueryResponse, 
+    BachelorThesisEvaluationInfosQueryResponse, 
+    BachelorThesisRegistrationInfosQueryResponse, 
+    LecturerDetailResponse, 
+    OralDefenseAssessmentInfosQueryResponse, 
+    OralDefenseRegistrationInfosQueryResponse 
+} from "../../contracts/responses";
 import { 
     BachelorThesisAssessmentsQueryRequest,
     BachelorThesisEvaluationsQueryRequest,
     BachelorThesisRegistrationsQueryRequest,
-    LecturerAssetsQueryRequest,
     LecturerInfoUpdateRequest,
     OralDefenseAssessmentsQueryRequest,
-    OralDefenseRegistrationsQueryRequest
+    OralDefenseRegistrationsQueryRequest,
+    SimpleQueryRequest
 } from "../../contracts/requests";
 
 @JsonController('lecturer')
@@ -55,14 +55,13 @@ export class LecturerActorController {
     @HttpCode(HTTP_CODES.Ok)
     @Get('/detail')
     @ResponseSchema(LecturerDetailResponse)
-    getLecturerDetail(@CurrentUser() user: AuthorizedUser, 
-        @QueryParams() lecturerAssetsQueryRequest: LecturerAssetsQueryRequest) {
-        return this.lecturerService.getLecturerDetail(user.userId, lecturerAssetsQueryRequest);
+    getLecturerDetail(@CurrentUser() user: AuthorizedUser, @QueryParams() queryRequest: SimpleQueryRequest) {
+        return this.lecturerService.getLecturerDetail(user.userId, queryRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/bachelor-thesis-registrations')
-    @ResponseSchema(BachelorThesisRegistrationInfoDto, { isArray: true })
+    @ResponseSchema(BachelorThesisRegistrationInfosQueryResponse)
     getLecturerBachelorThesisRegistrations(@CurrentUser() user: AuthorizedUser, 
         @QueryParams() btrQueryRequest: BachelorThesisRegistrationsQueryRequest) {
         return this.lecturerService.getLecturerBachelorThesisRegistrations(user.userId, btrQueryRequest);
@@ -70,7 +69,7 @@ export class LecturerActorController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/bachelor-thesis-assessments')
-    @ResponseSchema(BachelorThesisAssessmentInfoDto, { isArray: true })
+    @ResponseSchema(BachelorThesisAssessmentInfosQueryResponse)
     getLecturerBachelorThesisAssessments(@CurrentUser() user: AuthorizedUser,
         @QueryParams() btaQueryRequest: BachelorThesisAssessmentsQueryRequest) {
         return this.lecturerService.getLecturerBachelorThesisAssessments(user.userId, btaQueryRequest);
@@ -78,7 +77,7 @@ export class LecturerActorController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/bachelor-thesis-evaluations')
-    @ResponseSchema(BachelorThesisEvaluationInfoDto, { isArray: true })
+    @ResponseSchema(BachelorThesisEvaluationInfosQueryResponse)
     getLecturerBachelorThesisEvaluations(@CurrentUser() user: AuthorizedUser, 
         @QueryParams() bteQueryRequest: BachelorThesisEvaluationsQueryRequest) {
         return this.lecturerService.getLecturerBachelorThesisEvaluations(user.userId, bteQueryRequest);
@@ -86,7 +85,7 @@ export class LecturerActorController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/oral-defense-registrations')
-    @ResponseSchema(OralDefenseRegistrationInfoDto, { isArray: true })
+    @ResponseSchema(OralDefenseRegistrationInfosQueryResponse)
     getLecturerOralDefenseRegistrations(@CurrentUser() user: AuthorizedUser, 
         @QueryParams() odrQueryRequest: OralDefenseRegistrationsQueryRequest) {
         return this.lecturerService.getLecturerOralDefenseRegistrations(user.userId, odrQueryRequest);
@@ -94,7 +93,7 @@ export class LecturerActorController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Get('/oral-defense-assessments')
-    @ResponseSchema(OralDefenseAssessmentInfoDto, { isArray: true })
+    @ResponseSchema(OralDefenseAssessmentInfosQueryResponse)
     getLecturerOralDefenseAssessments(@CurrentUser() user: AuthorizedUser,
         @QueryParams() odaQueryRequest: OralDefenseAssessmentsQueryRequest) {
         return this.lecturerService.getLecturerOralDefenseAssessments(user.userId, odaQueryRequest);

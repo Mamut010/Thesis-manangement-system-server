@@ -15,8 +15,12 @@ export class OralDefenseRegistrationDto {
     @Expose()
     @IsDefined()
     @IsNumber()
+    attemptNo!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
     thesisId!: number;
-    
 
     @Expose()
     @IsOptional()
@@ -70,6 +74,16 @@ export class OralDefenseRegistrationDto {
 
     @Expose()
     @IsOptional()
+    @IsString()
+    programAdminGroupId?: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString({ each: true })
+    programAdminGroupMemberIds?: string[];
+
+    @Expose()
+    @IsOptional()
     @IsBoolean()
     areSpectatorsAllowed?: boolean | null;
 
@@ -90,8 +104,8 @@ export class OralDefenseRegistrationDto {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    concernedAgreed?: number | null;
+    @IsBoolean()
+    concernedAgreed?: boolean | null;
 
     @Expose()
     @IsOptional()
@@ -104,22 +118,22 @@ export class OralDefenseRegistrationDto {
     admissionDate?: Date | null;
 
     @Expose()
-    @IsOptional()
-    @IsString()
-    adminId?: string | null;
-    
-    @Expose()
-    @IsOptional()
-    @IsString()
-    adminTitle?: string | null;
+    @IsDefined()
+    @IsBoolean()
+    studentConfirmed!: boolean;
 
     @Expose()
-    @IsOptional()
+    @IsDefined()
     @IsBoolean()
-    adminAllowed?: boolean | null;
+    adminConfirmed!: boolean;
 
     @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminConfirmed?: boolean | null;
+    @IsDefined()
+    @IsDate()
+    createdAt!: Date;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    updatedAt!: Date;
 }

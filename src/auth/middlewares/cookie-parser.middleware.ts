@@ -7,7 +7,9 @@ import { env } from '../../env';
 @Middleware({ type: 'before' })
 @injectable()
 export class CookieParserMiddleware implements ExpressMiddlewareInterface {
+    private handler = cookieParser(env.auth.cookieSecret);
+
     public use(req: Request, res: Response, next: NextFunction): any {
-        return cookieParser(env.auth.cookieSecret)(req, res, next);
+        return this.handler(req, res, next);
     }
 }

@@ -1,6 +1,5 @@
 import { 
     IsDateFilterArray,
-    IsNullableDateFilterArray,
     IsNullableNumberFilterArray, 
     IsNullableStringFilterArray, 
     IsNumberFilterArray, 
@@ -8,7 +7,6 @@ import {
 } from "../../../decorators";
 import { 
     DateFilter,
-    NullableDateFilter, 
     NullableNumberFilter, 
     NullableStringFilter, 
     NumberFilter, 
@@ -20,8 +18,8 @@ export class ThesisInfosQueryRequest extends BaseQueryRequest {
     @IsNumberFilterArray()
     thesisIdFilter?: NumberFilter[];
 
-    @IsNullableStringFilterArray()
-    titleFilter?: NullableStringFilter[];
+    @IsStringFilterArray()
+    titleFilter?: StringFilter[];
 
     @IsStringFilterArray()
     creatorIdFilter?: StringFilter[];
@@ -40,9 +38,6 @@ export class ThesisInfosQueryRequest extends BaseQueryRequest {
 
     @IsNullableNumberFilterArray()
     slotLimitFilter?: NullableNumberFilter[];
-
-    @IsNullableDateFilterArray()
-    submissionDeadlineFilter?: NullableDateFilter[];
 
     @IsDateFilterArray()
     createdAtFilter?: DateFilter[];

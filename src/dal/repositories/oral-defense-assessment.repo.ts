@@ -16,7 +16,7 @@ import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { OralDefenseAssessmentRepoInterface } from "../interfaces";
-import { getLecturerAssetsQuery } from "../utils/lecturer-assets-helpers";
+import { createBachelorThesisOrOralDefenseQueryModel, createLecturerAssetsQuery } from "../utils/query-helpers";
 
 @injectable()
 export class OralDefenseAssessmentRepo implements OralDefenseAssessmentRepoInterface {
@@ -53,9 +53,20 @@ export class OralDefenseAssessmentRepo implements OralDefenseAssessmentRepoInter
 
     async create(createRequest: OralDefenseAssessmentCreateRequest): Promise<OralDefenseAssessmentDto> {
         const impl = async () => {
+            const { studentId, attemptNo, ...createData } = createRequest;
             const record = await this.prisma.oralDefenseAssessment.create({
-                data: createRequest,
-                include:  bachelorThesisAndOralDefenseInclude
+                data: {
+                    ...createData,
+                    studentAttempt: {
+                        connect: {
+                            studentId_attemptNo: {
+                                studentId: studentId,
+                                attemptNo: attemptNo
+                            }
+                        }
+                    },
+                },
+                include: bachelorThesisAndOralDefenseInclude,
             });
             return this.plainTransformer.toOralDefenseAssessment(record);
         }
@@ -97,10 +108,20 @@ export class OralDefenseAssessmentRepo implements OralDefenseAssessmentRepoInter
     }
 
     async queryLecturerAssets(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentDto[]> {
+        : Promise<OralDefenseAssessmentsQueryResponse> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
-        const records = await this.prisma.oralDefenseAssessment.findMany(getLecturerAssetsQuery(lecturerId, prismaQuery));
-        return records.map(item => this.plainTransformer.toOralDefenseAssessment(item));
+        const assetsQuery = createLecturerAssetsQuery(lecturerId, prismaQuery);
+
+        const count = await this.prisma.oralDefenseAssessment.count({ where: assetsQuery.where });
+        const records = await this.prisma.oralDefenseAssessment.findMany({
+            ...assetsQuery,
+            include: bachelorThesisAndOralDefenseInclude,
+        });
+
+        return {
+            count,
+            content: records.map(item => this.plainTransformer.toOralDefenseAssessment(item)),
+        }
     }
     
     private async findRecordById(id: number) {
@@ -114,13 +135,11 @@ export class OralDefenseAssessmentRepo implements OralDefenseAssessmentRepoInter
 
     private createPrismaQuery(queryRequest: AutoQueryCreatable) {
         const fieldMap = {
-            surname: 'student.surname',
-            forename: 'student.forename',
-            thesisTitle: 'thesis.title',
-            supervisor1Title: 'supervisor1.title',
-            supervisor2Title: 'supervisor2.title',
+            thesisTitle: 'studentAttempt.thesis.title',
+            supervisor1Title: 'studentAttempt.thesis.creator.title',
+            supervisor2Title: 'studentAttempt.supervisor2.title',
         };
-        const model = this.queryCreator.createQueryModel(OralDefenseAssessment);
+        const model = createBachelorThesisOrOralDefenseQueryModel(OralDefenseAssessment, this.queryCreator);
         return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
     }
 }

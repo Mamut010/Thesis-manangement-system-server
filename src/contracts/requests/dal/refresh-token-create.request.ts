@@ -11,9 +11,4 @@ export class RefreshTokenCreateRequest {
     @IsDefined()
     @IsString()
     token!: string;
-
-    @Expose()
-    @IsDefined()
-    @IsDate()
-    exp!: Date;
 }

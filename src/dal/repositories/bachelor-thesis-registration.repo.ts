@@ -10,13 +10,13 @@ import {
 } from "../../contracts/requests";
 import { BachelorThesisRegistrationsQueryResponse } from "../../contracts/responses";
 import { BachelorThesisRegistration } from "../../core/models";
-import { bachelorThesisAndOralDefenseWithAdminInclude } from "../constants/includes";
+import { bachelorThesisAndOralDefenseWithProgramInclude } from "../constants/includes";
 import { BachelorThesisRegistrationDto } from "../../shared/dtos";
 import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BachelorThesisRegistrationRepoInterface } from "../interfaces";
-import { getLecturerAssetsQuery } from "../utils/lecturer-assets-helpers";
+import { createBachelorThesisOrOralDefenseQueryModel, createLecturerAssetsQuery } from "../utils/query-helpers";
 
 @injectable()
 export class BachelorThesisRegistrationRepo implements BachelorThesisRegistrationRepoInterface {
@@ -34,7 +34,7 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
         const count = await this.prisma.bachelorThesisRegistration.count({ where: prismaQuery.where });
         const records = await this.prisma.bachelorThesisRegistration.findMany({
             ...prismaQuery,
-            include: bachelorThesisAndOralDefenseWithAdminInclude,
+            include: bachelorThesisAndOralDefenseWithProgramInclude,
         });
 
         const response = new BachelorThesisRegistrationsQueryResponse();
@@ -53,9 +53,20 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
 
     async create(createRequest: BachelorThesisRegistrationCreateRequest): Promise<BachelorThesisRegistrationDto> {
         const impl = async () => {
+            const { studentId, attemptNo, ...createData } = createRequest;
             const record = await this.prisma.bachelorThesisRegistration.create({
-                data: createRequest,
-                include: bachelorThesisAndOralDefenseWithAdminInclude,
+                data: {
+                    ...createData,
+                    studentAttempt: {
+                        connect: {
+                            studentId_attemptNo: {
+                                studentId: studentId,
+                                attemptNo: attemptNo
+                            }
+                        }
+                    },
+                },
+                include: bachelorThesisAndOralDefenseWithProgramInclude,
             });
             return this.plainTransformer.toBachelorThesisRegistration(record);
         }
@@ -74,10 +85,10 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
             if (anyChanges(record, updateRequest)) {
                 record = await this.prisma.bachelorThesisRegistration.update({
                     where: {
-                        id: id
+                        id: id,
                     },
                     data: updateRequest,
-                    include: bachelorThesisAndOralDefenseWithAdminInclude
+                    include: bachelorThesisAndOralDefenseWithProgramInclude,
                 });
             }
     
@@ -97,14 +108,20 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
     }
 
     async queryLecturerAssets(lecturerId: string, queryRequest: BachelorThesisRegistrationsQueryRequest)
-        : Promise<BachelorThesisRegistrationDto[]> {
+        : Promise<BachelorThesisRegistrationsQueryResponse> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
-        const assetsQuery = getLecturerAssetsQuery(lecturerId, prismaQuery);
+        const assetsQuery = createLecturerAssetsQuery(lecturerId, prismaQuery);
+
+        const count = await this.prisma.bachelorThesisRegistration.count({ where: assetsQuery.where });
         const records = await this.prisma.bachelorThesisRegistration.findMany({
             ...assetsQuery,
-            include: bachelorThesisAndOralDefenseWithAdminInclude,
+            include: bachelorThesisAndOralDefenseWithProgramInclude,
         });
-        return records.map(item => this.plainTransformer.toBachelorThesisRegistration(item));
+        
+        return {
+            count,
+            content: records.map(item => this.plainTransformer.toBachelorThesisRegistration(item)),
+        }
     }
     
     private async findRecordById(id: number) {
@@ -112,19 +129,17 @@ export class BachelorThesisRegistrationRepo implements BachelorThesisRegistratio
             where: {
                 id: id
             },
-            include:  bachelorThesisAndOralDefenseWithAdminInclude,
+            include: bachelorThesisAndOralDefenseWithProgramInclude,
         });
     }
 
     private createPrismaQuery(queryRequest: AutoQueryCreatable) {
         const fieldMap = {
-            surname: 'student.surname',
-            forename: 'student.forename',
-            thesisTitle: 'thesis.title',
-            supervisor1Title: 'supervisor1.title',
-            supervisor2Title: 'supervisor2.title',
+            thesisTitle: 'studentAttempt.thesis.title',
+            supervisor1Title: 'studentAttempt.thesis.creator.title',
+            supervisor2Title: 'studentAttempt.supervisor2.title',
         };
-        const model = this.queryCreator.createQueryModel(BachelorThesisRegistration);
+        const model = createBachelorThesisOrOralDefenseQueryModel(BachelorThesisRegistration, this.queryCreator);
         return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
     }
 }

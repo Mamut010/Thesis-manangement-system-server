@@ -1,9 +1,8 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { 
-    OralDefenseRegistrationsQueryRequest, 
-    OralDefenseRegistrationCreateRequest,
-    OralDefenseRegistrationUpdateRequest
+    OralDefenseRegistrationInfoUpdateRequest,
+    OralDefenseRegistrationInfosQueryRequest,
 } from "../../../contracts/requests";
 import { OralDefenseRegistrationDto, OralDefenseRegistrationInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
@@ -14,47 +13,50 @@ import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { OralDefenseRegistrationRepoInterface } from "../../../dal/interfaces";
 import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses";
 import { MapperServiceInterface } from "../../../shared/interfaces";
+import { isAdmin } from "../../../utils/role-predicates";
 
 @injectable()
 export class OralDefenseRegistrationService implements OralDefenseRegistrationServiceInterface {
+    private static STUDENT_UPDATABLE_FIELDS: readonly (keyof OralDefenseRegistrationInfoUpdateRequest)[] = [
+        'room', 'areSpectatorsAllowed', 'proposedDate', 'concernedAgreed',
+    ];
+
+    private static ADMIN_UPDATABLE_FIELDS: readonly (keyof OralDefenseRegistrationInfoUpdateRequest)[] = [
+        'room', 'actualDate', 'dateReceived', 'admissionDate',
+    ];
+
     constructor(
         @inject(INJECTION_TOKENS.OralDefenseRegistrationRepo) private odrRepo: OralDefenseRegistrationRepoInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
 
     }
 
-    async getOralDefenseRegistrations(user: AuthorizedUser, queryRequest: OralDefenseRegistrationsQueryRequest)
+    async getOralDefenseRegistrations(user: AuthorizedUser, queryRequest: OralDefenseRegistrationInfosQueryRequest)
         : Promise<OralDefenseRegistrationInfosQueryResponse> {
         const result = await this.odrRepo.query(queryRequest);
         return {
-            content: this.mapper.map(OralDefenseRegistrationInfoDto, result.content),
+            content: result.content.map(item => this.makeInfoDto(user.userId, item)),
             count: result.count
         }
     }
 
     async getOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<OralDefenseRegistrationInfoDto> {
         const result = await this.ensureRecordExists(id);
-        return this.mapper.map(OralDefenseRegistrationInfoDto, result);
-    }
-
-    async createOralDefenseRegistration(user: AuthorizedUser, createRequest: OralDefenseRegistrationCreateRequest)
-        : Promise<OralDefenseRegistrationInfoDto> {
-        const result = await this.odrRepo.create(createRequest);
-        return this.mapper.map(OralDefenseRegistrationInfoDto, result);
+        return this.makeInfoDto(user.userId, result);
     }
 
     async updateOralDefenseRegistration(user: AuthorizedUser, id: number, 
-        updateRequest: OralDefenseRegistrationUpdateRequest) : Promise<OralDefenseRegistrationInfoDto> {
+        updateRequest: OralDefenseRegistrationInfoUpdateRequest) : Promise<OralDefenseRegistrationInfoDto> {
         const record = await this.ensureRecordExists(id);
-        this.ensureValidModification(user, record);
+        this.ensureValidUpdate(user, record, updateRequest);
 
         const result = await this.odrRepo.update(id, updateRequest);
-        return this.mapper.map(OralDefenseRegistrationInfoDto, result);
+        return this.makeInfoDto(user.userId, result!);
     }
 
     async deleteOralDefenseRegistration(user: AuthorizedUser, id: number): Promise<void> {
         const record = await this.ensureRecordExists(id);
-        this.ensureValidModification(user, record);
+        this.ensureValidDeletion(user, record);
 
         await this.odrRepo.delete(id);
     }
@@ -67,10 +69,44 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
         return result;
     }
 
-    private ensureValidModification(user: AuthorizedUser, record: OralDefenseRegistrationDto) {
-        const isValid = true;
+    private ensureValidUpdate(user: AuthorizedUser, record: OralDefenseRegistrationDto, 
+        updateRequest: OralDefenseRegistrationInfoUpdateRequest) {
+        const updatableFields = this.getUpdatableFields(user.userId, record);
+        const updatableFieldSet = new Set(updatableFields);
+
+        const isValid = Object.entries(updateRequest).every(entry => {
+            return typeof entry[1] === 'undefined' 
+                || updatableFieldSet.has(entry[0] as keyof OralDefenseRegistrationInfoUpdateRequest);
+        });
+
         if (!isValid) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.OralDefenseRegistrationDenied);
         }
+    }
+
+    private ensureValidDeletion(user: AuthorizedUser, record: OralDefenseRegistrationDto) {
+        const isValid = isAdmin(user);
+        if (!isValid) {
+            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.OralDefenseRegistrationDenied);
+        }
+    }
+
+    private makeInfoDto(userId: string, dto: OralDefenseRegistrationDto): OralDefenseRegistrationInfoDto {
+        const infoDto = this.mapper.map(OralDefenseRegistrationInfoDto, dto);
+        infoDto.updatableFields.push(...this.getUpdatableFields(userId, dto));
+        return infoDto;
+    }
+
+    private getUpdatableFields(userId: string, dto: OralDefenseRegistrationDto) {
+        // Student's perspective
+        if (dto.studentId === userId && !dto.studentConfirmed && !dto.adminConfirmed) {
+            return OralDefenseRegistrationService.STUDENT_UPDATABLE_FIELDS;
+        }
+        // Admin's perspective
+        else if (dto.programAdminGroupMemberIds?.includes(userId) && dto.studentConfirmed && !dto.adminConfirmed) {
+            return OralDefenseRegistrationService.ADMIN_UPDATABLE_FIELDS;
+        }
+        
+        return [];
     }
 }

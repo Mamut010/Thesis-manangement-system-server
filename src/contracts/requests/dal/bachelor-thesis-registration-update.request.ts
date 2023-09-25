@@ -1,97 +1,77 @@
 import { Expose, Type } from "class-transformer";
-import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsOptional, IsString } from "class-validator";
 
 export class BachelorThesisRegistrationUpdateRequest {
     @Expose()
     @IsOptional()
-    @IsNumber()
-    thesisId?: number;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    studentId?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id?: string;
-    
-    @Expose()
-    @IsOptional()
     @IsDate()
     @Type(() => Date)
-    dateOfBirth?: Date;
+    dateOfBirth?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    placeOfBirth?: string;
+    placeOfBirth?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    studentDate?: Date;
+    studentDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    furtherParticipants?: string;
+    furtherParticipants?: string | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    supervisor1Date?: Date;
+    supervisor1Date?: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    supervisor2Date?: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    issued?: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    deadlineCopy?: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    extensionGranted?: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsString()
+    chairmanOfExamination?: string | null;
+
+    @Expose()
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    dateOfIssue?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    supervisor1Confirmed?: boolean;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    supervisor2Date?: Date;
+    studentConfirmed?: boolean;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    supervisor2Confirmed?: boolean;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    issued?: Date;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    deadlineCopy?: Date;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    extensionGranted?: Date;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    chairmanOfExamination?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    dateOfIssue?: Date;
+    adminConfirmed?: boolean;
 }

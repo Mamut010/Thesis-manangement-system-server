@@ -61,42 +61,42 @@ export class StudentController {
 
     @HttpCode(HTTP_CODES.Ok)
     @Authorized(Role.Admin)
-    @Get('/:id/bachelor-thesis-registration')
-    @ResponseSchema(BachelorThesisRegistrationInfoDto)
-    getStudentBachelorThesisRegistration(@Param('id') id: string) {
-        return this.studentService.getStudentBachelorThesisRegistration(id);
+    @Get('/:id/bachelor-thesis-registrations')
+    @ResponseSchema(BachelorThesisRegistrationInfoDto, { isArray: true })
+    getStudentBachelorThesisRegistrations(@Param('id') id: string) {
+        return this.studentService.getStudentBachelorThesisRegistrations(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Authorized(Role.Admin)
-    @Get('/:id/bachelor-thesis-assessment')
-    @ResponseSchema(BachelorThesisAssessmentInfoDto)
-    getStudentBachelorThesisAssessment(@Param('id') id: string) {
-        return this.studentService.getStudentBachelorThesisAssessment(id);
+    @Get('/:id/bachelor-thesis-assessments')
+    @ResponseSchema(BachelorThesisAssessmentInfoDto, { isArray: true })
+    getStudentBachelorThesisAssessments(@Param('id') id: string) {
+        return this.studentService.getStudentBachelorThesisAssessments(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Authorized(Role.Admin)
-    @Get('/:id/bachelor-thesis-evaluation')
-    @ResponseSchema(BachelorThesisEvaluationInfoDto)
-    getStudentBachelorThesisEvaluation(@Param('id') id: string) {
-        return this.studentService.getStudentBachelorThesisEvaluation(id);
+    @Get('/:id/bachelor-thesis-evaluations')
+    @ResponseSchema(BachelorThesisEvaluationInfoDto, { isArray: true })
+    getStudentBachelorThesisEvaluations(@Param('id') id: string) {
+        return this.studentService.getStudentBachelorThesisEvaluations(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Authorized(Role.Admin)
-    @Get('/:id/oral-defense-registration')
-    @ResponseSchema(OralDefenseRegistrationInfoDto)
-    getStudentOralDefenseRegistration(@Param('id') id: string) {
-        return this.studentService.getStudentOralDefenseRegistration(id);
+    @Get('/:id/oral-defense-registrations')
+    @ResponseSchema(OralDefenseRegistrationInfoDto, { isArray: true })
+    getStudentOralDefenseRegistrations(@Param('id') id: string) {
+        return this.studentService.getStudentOralDefenseRegistrations(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)
     @Authorized(Role.Admin)
-    @Get('/:id/oral-defense-assessment')
-    @ResponseSchema(OralDefenseAssessmentInfoDto)
-    getStudentOralDefenseAssessment(@Param('id') id: string) {
-        return this.studentService.getStudentOralDefenseAssessment(id);
+    @Get('/:id/oral-defense-assessments')
+    @ResponseSchema(OralDefenseAssessmentInfoDto, { isArray: true })
+    getStudentOralDefenseAssessments(@Param('id') id: string) {
+        return this.studentService.getStudentOralDefenseAssessments(id);
     }
 
     @HttpCode(HTTP_CODES.Ok)

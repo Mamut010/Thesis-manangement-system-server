@@ -16,7 +16,7 @@ import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BachelorThesisAssessmentRepoInterface } from "../interfaces";
-import { getLecturerAssetsQuery } from "../utils/lecturer-assets-helpers";
+import { createBachelorThesisOrOralDefenseQueryModel, createLecturerAssetsQuery } from "../utils/query-helpers";
 
 @injectable()
 export class BachelorThesisAssessmentRepo implements BachelorThesisAssessmentRepoInterface {
@@ -53,8 +53,19 @@ export class BachelorThesisAssessmentRepo implements BachelorThesisAssessmentRep
 
     async create(createRequest: BachelorThesisAssessmentCreateRequest): Promise<BachelorThesisAssessmentDto> {
         const impl = async () => {
+            const { studentId, attemptNo, ...createData } = createRequest;
             const record = await this.prisma.bachelorThesisAssessment.create({
-                data: createRequest,
+                data: {
+                    ...createData,
+                    studentAttempt: {
+                        connect: {
+                            studentId_attemptNo: {
+                                studentId: studentId,
+                                attemptNo: attemptNo
+                            }
+                        }
+                    },
+                },
                 include:  bachelorThesisAndOralDefenseInclude
             });
             return this.plainTransformer.toBachelorThesisAssessment(record);
@@ -97,10 +108,20 @@ export class BachelorThesisAssessmentRepo implements BachelorThesisAssessmentRep
     }
 
     async queryLecturerAssets(lecturerId: string, queryRequest: BachelorThesisAssessmentsQueryRequest)
-        : Promise<BachelorThesisAssessmentDto[]> {
+        : Promise<BachelorThesisAssessmentsQueryResponse> {
         const prismaQuery = this.createPrismaQuery(queryRequest);
-        const records = await this.prisma.bachelorThesisAssessment.findMany(getLecturerAssetsQuery(lecturerId, prismaQuery));
-        return records.map(item => this.plainTransformer.toBachelorThesisAssessment(item));
+        const assetsQuery = createLecturerAssetsQuery(lecturerId, prismaQuery);
+
+        const count = await this.prisma.bachelorThesisAssessment.count({ where: assetsQuery.where });
+        const records = await this.prisma.bachelorThesisAssessment.findMany({
+            ...assetsQuery,
+            include: bachelorThesisAndOralDefenseInclude,
+        });
+
+        return {
+            count,
+            content: records.map(item => this.plainTransformer.toBachelorThesisAssessment(item)),
+        }
     }
     
     private async findRecordById(id: number) {
@@ -114,13 +135,11 @@ export class BachelorThesisAssessmentRepo implements BachelorThesisAssessmentRep
 
     private createPrismaQuery(queryRequest: AutoQueryCreatable) {
         const fieldMap = {
-            surname: 'student.surname',
-            forename: 'student.forename',
-            thesisTitle: 'thesis.title',
-            supervisor1Title: 'supervisor1.title',
-            supervisor2Title: 'supervisor2.title',
+            thesisTitle: 'studentAttempt.thesis.title',
+            supervisor1Title: 'studentAttempt.thesis.creator.title',
+            supervisor2Title: 'studentAttempt.supervisor2.title',
         };
-        const model = this.queryCreator.createQueryModel(BachelorThesisAssessment);
+        const model = createBachelorThesisOrOralDefenseQueryModel(BachelorThesisAssessment, this.queryCreator);
         return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
     }
 }

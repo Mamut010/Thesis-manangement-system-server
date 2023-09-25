@@ -1,10 +1,6 @@
 import { inject, injectable } from "inversify";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
-import { 
-    BachelorThesisEvaluationsQueryRequest,
-    BachelorThesisEvaluationCreateRequest,
-    BachelorThesisEvaluationUpdateRequest
-} from "../../../contracts/requests";
+import { BachelorThesisEvaluationInfosQueryRequest } from "../../../contracts/requests";
 import { BachelorThesisEvaluationDto, BachelorThesisEvaluationInfoDto } from "../../../shared/dtos";
 import { NotFoundError } from "../../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../../contracts/constants/error-messages";
@@ -14,6 +10,7 @@ import { ForbiddenError } from "../../../contracts/errors/forbidden.error";
 import { BachelorThesisEvaluationRepoInterface } from "../../../dal/interfaces";
 import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses";
 import { MapperServiceInterface } from "../../../shared/interfaces";
+import { isAdmin } from "../../../utils/role-predicates";
 
 @injectable()
 export class BachelorThesisEvaluationService implements BachelorThesisEvaluationServiceInterface {
@@ -23,7 +20,7 @@ export class BachelorThesisEvaluationService implements BachelorThesisEvaluation
 
     }
 
-    async getBachelorThesisEvaluations(user: AuthorizedUser, queryRequest: BachelorThesisEvaluationsQueryRequest)
+    async getBachelorThesisEvaluations(user: AuthorizedUser, queryRequest: BachelorThesisEvaluationInfosQueryRequest)
         : Promise<BachelorThesisEvaluationInfosQueryResponse> {
         const result = await this.bteRepo.query(queryRequest);
         return {
@@ -37,24 +34,9 @@ export class BachelorThesisEvaluationService implements BachelorThesisEvaluation
         return this.mapper.map(BachelorThesisEvaluationInfoDto, result);
     }
 
-    async createBachelorThesisEvaluation(user: AuthorizedUser, createRequest: BachelorThesisEvaluationCreateRequest)
-        : Promise<BachelorThesisEvaluationInfoDto> {
-        const result = await this.bteRepo.create(createRequest);
-        return this.mapper.map(BachelorThesisEvaluationInfoDto, result);
-    }
-
-    async updateBachelorThesisEvaluation(user: AuthorizedUser, id: number, 
-        updateRequest: BachelorThesisEvaluationUpdateRequest) : Promise<BachelorThesisEvaluationInfoDto> {
-        const record = await this.ensureRecordExists(id);
-        this.ensureValidModification(user, record);
-
-        const result = await this.bteRepo.update(id, updateRequest);
-        return this.mapper.map(BachelorThesisEvaluationInfoDto, result);
-    }
-
     async deleteBachelorThesisEvaluation(user: AuthorizedUser, id: number): Promise<void> {
         const record = await this.ensureRecordExists(id);
-        this.ensureValidModification(user, record);
+        this.ensureValidDeletion(user, record);
 
         await this.bteRepo.delete(id);
     }
@@ -67,8 +49,8 @@ export class BachelorThesisEvaluationService implements BachelorThesisEvaluation
         return result;
     }
 
-    private ensureValidModification(user: AuthorizedUser, record: BachelorThesisEvaluationDto) {
-        const isValid = true;
+    private ensureValidDeletion(user: AuthorizedUser, record: BachelorThesisEvaluationDto) {
+        const isValid = isAdmin(user);
         if (!isValid) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.BachelorThesisEvaluationDenied);
         }

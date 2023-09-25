@@ -15,6 +15,11 @@ export class BachelorThesisRegistrationDto {
     @Expose()
     @IsDefined()
     @IsNumber()
+    attemptNo!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
     thesisId!: number;
 
     @Expose()
@@ -74,11 +79,6 @@ export class BachelorThesisRegistrationDto {
 
     @Expose()
     @IsOptional()
-    @IsBoolean()
-    supervisor1Confirmed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
     @IsString()
     supervisor1Signature?: string | null;
 
@@ -99,38 +99,18 @@ export class BachelorThesisRegistrationDto {
 
     @Expose()
     @IsOptional()
-    @IsBoolean()
-    supervisor2Confirmed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
     @IsString()
     supervisor2Signature?: string | null;
 
     @Expose()
     @IsOptional()
     @IsString()
-    adminId?: string | null;
+    programAdminGroupId?: string | null;
 
     @Expose()
     @IsOptional()
-    @IsString()
-    adminTitle?: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminAllowed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminConfirmed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    adminSignature?: string | null;
+    @IsString({ each: true })
+    programAdminGroupMemberIds?: string[];
 
     @Expose()
     @IsOptional()
@@ -152,8 +132,33 @@ export class BachelorThesisRegistrationDto {
     @IsString()
     chairmanOfExamination?: string | null;
 
+    // @Expose()
+    // @IsOptional()
+    // @IsString()
+    // chairmanOfExaminationSignature?: string | null;
+
     @Expose()
     @IsOptional()
     @IsDate()
     dateOfIssue?: Date | null;
+
+    @Expose()
+    @IsDefined()
+    @IsBoolean()
+    studentConfirmed!: boolean;
+
+    @Expose()
+    @IsDefined()
+    @IsBoolean()
+    adminConfirmed!: boolean;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    createdAt!: Date;
+
+    @Expose()
+    @IsDefined()
+    @IsDate()
+    updatedAt!: Date;
 }

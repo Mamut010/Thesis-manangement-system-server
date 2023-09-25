@@ -1,5 +1,7 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
+import { Sex, Sexes } from "../../../core/constants/sex";
+import { valuesOf } from "../../../utils/object-helpers";
 
 export class StudentDto {
     @Expose()
@@ -34,6 +36,11 @@ export class StudentDto {
 
     @Expose()
     @IsDefined()
+    @IsIn(Sexes)
+    sex!: Sex;
+
+    @Expose()
+    @IsDefined()
     @IsString()
     email!: string;
 
@@ -51,4 +58,9 @@ export class StudentDto {
     @IsDefined()
     @IsNumber()
     ects!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
+    numberOfAttempts!: number;
 }

@@ -6,36 +6,43 @@ import {
     OralDefenseRegistrationsQueryRequest
 } from "../../contracts/requests";
 import { 
-    BachelorThesisAssessmentDto,
-    BachelorThesisEvaluationDto,
-    BachelorThesisRegistrationDto,
-    OralDefenseAssessmentDto,
+    BachelorThesisAssessmentsQueryResponse, 
+    BachelorThesisEvaluationsQueryResponse, 
+    BachelorThesisRegistrationsQueryResponse, 
+    OralDefenseAssessmentsQueryResponse, 
+    OralDefenseRegistrationsQueryResponse
+} from "../../contracts/responses";
+import { 
+    BachelorThesisAssessmentDto, 
+    BachelorThesisEvaluationDto, 
+    BachelorThesisRegistrationDto, 
+    OralDefenseAssessmentDto, 
     OralDefenseRegistrationDto
 } from "../../shared/dtos";
 
 export interface AssetsServiceInterface {
     getLecturerBachelorThesisRegistrations(lecturerId: string, queryRequest: BachelorThesisRegistrationsQueryRequest)
-        : Promise<BachelorThesisRegistrationDto[]>;
+        : Promise<BachelorThesisRegistrationsQueryResponse>;
 
     getLecturerBachelorThesisAssessments(lecturerId: string, queryRequest: BachelorThesisAssessmentsQueryRequest)
-        : Promise<BachelorThesisAssessmentDto[]>;
+        : Promise<BachelorThesisAssessmentsQueryResponse>;
 
     getLecturerBachelorThesisEvaluations(lecturerId: string, queryRequest: BachelorThesisEvaluationsQueryRequest)
-        : Promise<BachelorThesisEvaluationDto[]>;
+        : Promise<BachelorThesisEvaluationsQueryResponse>;
 
     getLecturerOralDefenseRegistrations(lecturerId: string, queryRequest: OralDefenseRegistrationsQueryRequest)
-        : Promise<OralDefenseRegistrationDto[]>;
+        : Promise<OralDefenseRegistrationsQueryResponse>;
 
     getLecturerOralDefenseAssessments(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentDto[]>;
+        : Promise<OralDefenseAssessmentsQueryResponse>;
 
-    getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationDto | null>;
+    getStudentBachelorThesisRegistrations(studentId: string): Promise<BachelorThesisRegistrationDto[]>;
 
-    getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentDto | null>;
+    getStudentBachelorThesisAssessments(studentId: string): Promise<BachelorThesisAssessmentDto[]>;
 
-    getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationDto | null>;
+    getStudentBachelorThesisEvaluations(studentId: string): Promise<BachelorThesisEvaluationDto[]>;
 
-    getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto | null>;
+    getStudentOralDefenseRegistrations(studentId: string): Promise<OralDefenseRegistrationDto[]>;
 
-    getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentDto | null>;
+    getStudentOralDefenseAssessments(studentId: string): Promise<OralDefenseAssessmentDto[]>;
 }

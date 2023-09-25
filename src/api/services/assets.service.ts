@@ -7,13 +7,6 @@ import {
     OralDefenseRegistrationsQueryRequest, 
     OralDefenseAssessmentsQueryRequest 
 } from "../../contracts/requests";
-import { 
-    BachelorThesisRegistrationDto, 
-    BachelorThesisAssessmentDto, 
-    BachelorThesisEvaluationDto, 
-    OralDefenseRegistrationDto, 
-    OralDefenseAssessmentDto
-} from "../../shared/dtos";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { 
     BachelorThesisAssessmentRepoInterface, 
@@ -22,9 +15,17 @@ import {
     OralDefenseAssessmentRepoInterface, 
     OralDefenseRegistrationRepoInterface 
 } from "../../dal/interfaces";
-import { makeArray, singleOrDefault } from "../../utils/array-helpers";
+import { makeArray } from "../../utils/array-helpers";
 import { StringFilter } from "../../lib/query";
 import { ClassConstructor } from "../../utils/types";
+import { 
+    BachelorThesisAssessmentsQueryResponse,
+    BachelorThesisEvaluationsQueryResponse,
+    BachelorThesisRegistrationsQueryResponse, 
+    OralDefenseAssessmentsQueryResponse, 
+    OralDefenseRegistrationsQueryResponse
+} from "../../contracts/responses";
+import { BachelorThesisAssessmentDto, BachelorThesisEvaluationDto, BachelorThesisRegistrationDto, OralDefenseAssessmentDto, OralDefenseRegistrationDto } from "../../shared/dtos";
 
 @injectable()
 export class AssetsService implements AssetsServiceInterface {
@@ -38,59 +39,59 @@ export class AssetsService implements AssetsServiceInterface {
     }
 
     async getLecturerBachelorThesisRegistrations(lecturerId: string, queryRequest: BachelorThesisRegistrationsQueryRequest)
-        : Promise<BachelorThesisRegistrationDto[]> {
+        : Promise<BachelorThesisRegistrationsQueryResponse> {
         return await this.btrRepo.queryLecturerAssets(lecturerId, queryRequest);
     }
 
     async getLecturerBachelorThesisAssessments(lecturerId: string, queryRequest: BachelorThesisAssessmentsQueryRequest)
-        : Promise<BachelorThesisAssessmentDto[]> {
+        : Promise<BachelorThesisAssessmentsQueryResponse> {
         return await this.btaRepo.queryLecturerAssets(lecturerId, queryRequest);
     }
 
     async getLecturerBachelorThesisEvaluations(lecturerId: string, queryRequest: BachelorThesisEvaluationsQueryRequest)
-        : Promise<BachelorThesisEvaluationDto[]> {
+        : Promise<BachelorThesisEvaluationsQueryResponse> {
         const supervisorIdFilter = new StringFilter();
         supervisorIdFilter.value = lecturerId;
         supervisorIdFilter.operator = 'equals';
         queryRequest.supervisorIdFilter = makeArray(supervisorIdFilter);
 
-        return (await this.bteRepo.query(queryRequest)).content;
+        return await this.bteRepo.query(queryRequest);
     }
 
     async getLecturerOralDefenseRegistrations(lecturerId: string, queryRequest: OralDefenseRegistrationsQueryRequest)
-        : Promise<OralDefenseRegistrationDto[]> {
+        : Promise<OralDefenseRegistrationsQueryResponse> {
         return await this.odrRepo.queryLecturerAssets(lecturerId, queryRequest);
     }
 
     async getLecturerOralDefenseAssessments(lecturerId: string, queryRequest: OralDefenseAssessmentsQueryRequest)
-        : Promise<OralDefenseAssessmentDto[]> {
+        : Promise<OralDefenseAssessmentsQueryResponse> {
         return await this.odaRepo.queryLecturerAssets(lecturerId, queryRequest);
     }
 
-    async getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationDto | null> {
+    async getStudentBachelorThesisRegistrations(studentId: string): Promise<BachelorThesisRegistrationDto[]> {
         const queryRequest = this.createStudentQueryRequest(BachelorThesisRegistrationsQueryRequest, studentId);
-        const queryResponse = await this.btrRepo.query(queryRequest);
-        return singleOrDefault(queryResponse.content, null);
+        const result = await this.btrRepo.query(queryRequest);
+        return result.content;
     }
-    async getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentDto | null> {
+    async getStudentBachelorThesisAssessments(studentId: string): Promise<BachelorThesisAssessmentDto[]> {
         const queryRequest = this.createStudentQueryRequest(BachelorThesisAssessmentsQueryRequest, studentId);
-        const queryResponse = await this.btaRepo.query(queryRequest);
-        return singleOrDefault(queryResponse.content, null);
+        const result = await this.btaRepo.query(queryRequest);
+        return result.content;
     }
-    async getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationDto | null> {
+    async getStudentBachelorThesisEvaluations(studentId: string): Promise<BachelorThesisEvaluationDto[]> {
         const queryRequest = this.createStudentQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
-        const queryResponse = await this.bteRepo.query(queryRequest);
-        return singleOrDefault(queryResponse.content, null);
+        const result = await this.bteRepo.query(queryRequest);
+        return result.content;
     }
-    async getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationDto | null> {
+    async getStudentOralDefenseRegistrations(studentId: string): Promise<OralDefenseRegistrationDto[]> {
         const queryRequest = this.createStudentQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
-        const queryResponse = await this.odrRepo.query(queryRequest);
-        return singleOrDefault(queryResponse.content, null);
+        const result = await this.odrRepo.query(queryRequest);
+        return result.content;
     }
-    async getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentDto | null> {
+    async getStudentOralDefenseAssessments(studentId: string): Promise<OralDefenseAssessmentDto[]> {
         const queryRequest = this.createStudentQueryRequest(BachelorThesisEvaluationsQueryRequest, studentId);
-        const queryResponse = await this.odaRepo.query(queryRequest);
-        return singleOrDefault(queryResponse.content, null);
+        const result = await this.odaRepo.query(queryRequest);
+        return result.content;
     }
 
     private createStudentQueryRequest<T extends object>(cls: ClassConstructor<T>, studentId: string): T {

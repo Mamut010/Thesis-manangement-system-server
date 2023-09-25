@@ -71,7 +71,7 @@ export class InviteSupervisor2ActionHandler extends BaseInviteActionHandler {
         }
 
         const invitee = await this.userRepo.findOneById(inviteeId);
-        if (!LecturerRoles.find(role => role === invitee?.roleName)) {
+        if (!invitee || !LecturerRoles.find(role => role === invitee.roleName)) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.LecturerNotFound);
         }
 

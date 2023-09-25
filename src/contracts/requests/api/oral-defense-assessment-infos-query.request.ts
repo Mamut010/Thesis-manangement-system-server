@@ -3,20 +3,25 @@ import {
     IsNullableStringFilterArray,
     IsNullableDateFilterArray,
     IsNullableNumberFilterArray,
-    IsStringFilterArray
+    IsStringFilterArray,
+    IsNumberFilterArray
 } from "../../../decorators";
 import {
     NullableBooleanFilter, 
     NullableStringFilter,
     NullableDateFilter,
     NullableNumberFilter,
-    StringFilter
+    StringFilter,
+    NumberFilter
 } from "../../../lib/query";
 import { BaseQueryRequest } from "../../bases";
 
 export class OralDefenseAssessmentInfosQueryRequest extends BaseQueryRequest {
     @IsStringFilterArray()
     studentIdFilter?: StringFilter[];
+
+    @IsNumberFilterArray()
+    attemptNoFilter?: NumberFilter[];
 
     @IsNullableStringFilterArray()
     surnameFilter?: NullableStringFilter[];

@@ -16,6 +16,7 @@ import { anyChanges } from "../utils/crud-helpers";
 import { wrapUniqueConstraint } from "../utils/prisma-helpers";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BachelorThesisEvaluationRepoInterface } from "../interfaces";
+import { createBachelorThesisOrOralDefenseQueryModel } from "../utils/query-helpers";
 
 @injectable()
 export class BachelorThesisEvaluationRepo implements BachelorThesisEvaluationRepoInterface {
@@ -52,8 +53,19 @@ export class BachelorThesisEvaluationRepo implements BachelorThesisEvaluationRep
 
     async create(createRequest: BachelorThesisEvaluationCreateRequest): Promise<BachelorThesisEvaluationDto> {
         const impl = async () => {
+            const { studentId, attemptNo, ...createData } = createRequest;
             const record = await this.prisma.bachelorThesisEvaluation.create({
-                data: createRequest,
+                data: {
+                    ...createData,
+                    studentAttempt: {
+                        connect: {
+                            studentId_attemptNo: {
+                                studentId: studentId,
+                                attemptNo: attemptNo
+                            }
+                        }
+                    }
+                },
                 include:  bachelorThesisEvaluationInclude
             });
             return this.plainTransformer.toBachelorThesisEvaluation(record);
@@ -106,12 +118,10 @@ export class BachelorThesisEvaluationRepo implements BachelorThesisEvaluationRep
 
     private createPrismaQuery(queryRequest: AutoQueryCreatable) {
         const fieldMap = {
-            surname: 'student.surname',
-            forename: 'student.forename',
-            thesisTitle: 'thesis.title',
-            supervisorTitle: 'supervisor.title',
+            thesisTitle: 'studentAttempt.thesis.title',
+            supervisorTitle: 'studentAttempt.thesis.creator.title',
         };
-        const model = this.queryCreator.createQueryModel(BachelorThesisEvaluation);
+        const model = createBachelorThesisOrOralDefenseQueryModel(BachelorThesisEvaluation, this.queryCreator);
         return this.queryCreator.createQueryObject(model, queryRequest, { fieldMap });
     }
 }

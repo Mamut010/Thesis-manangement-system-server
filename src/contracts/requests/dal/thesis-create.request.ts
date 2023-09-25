@@ -1,5 +1,5 @@
-import { Expose, Type } from "class-transformer";
-import { IsBoolean, IsDate, IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { Expose } from "class-transformer";
+import { IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class ThesisCreateRequest {
     @Expose()
@@ -18,43 +18,17 @@ export class ThesisCreateRequest {
     creatorId!: string;
 
     @Expose()
-    @IsOptional()
+    @IsDefined()
     @IsString()
-    title?: string;
+    title!: string;
 
     @Expose()
     @IsOptional()
     @IsNumber()
-    slot: number = 0;
+    slot?: number;
 
     @Expose()
     @IsOptional()
     @IsNumber()
     slotLimit?: number;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    activateRegistration: boolean = false;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    activateDefense: boolean = false;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    submissionDeadline?: Date;
-
-    @Expose()
-    @IsOptional()
-    @IsNumber()
-    numberHardCopies?: number;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    printRequirements?: string;
 }

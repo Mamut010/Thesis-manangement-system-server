@@ -9,28 +9,8 @@ export class OralDefenseRegistration {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    thesisId!: number;
-
-    @Expose()
-    @IsDefined()
     @IsString()
-    studentId!: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    adminId!: string | null;
+    studentAttemptId!: string;
 
     @Expose()
     @IsOptional()
@@ -54,8 +34,8 @@ export class OralDefenseRegistration {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    concernedAgreed!: number | null;
+    @IsBoolean()
+    concernedAgreed!: boolean | null;
 
     @Expose()
     @IsOptional()
@@ -68,9 +48,14 @@ export class OralDefenseRegistration {
     admissionDate!: Date | null;
 
     @Expose()
-    @IsOptional()
+    @IsDefined()
     @IsBoolean()
-    adminAllowed!: boolean | null;
+    studentConfirmed!: boolean;
+
+    @Expose()
+    @IsDefined()
+    @IsBoolean()
+    adminConfirmed!: boolean;
 
     @Expose()
     @IsDefined()

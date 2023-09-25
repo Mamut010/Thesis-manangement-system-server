@@ -15,6 +15,11 @@ export class OralDefenseRegistrationInfoDto {
     @Expose()
     @IsDefined()
     @IsNumber()
+    attemptNo!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
     thesisId!: number;
 
     @Expose()
@@ -74,8 +79,8 @@ export class OralDefenseRegistrationInfoDto {
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    concernedAgreed?: number | null;
+    @IsBoolean()
+    concernedAgreed?: boolean | null;
 
     @Expose()
     @IsOptional()
@@ -88,17 +93,7 @@ export class OralDefenseRegistrationInfoDto {
     admissionDate?: Date | null;
 
     @Expose()
-    @IsOptional()
-    @IsString()
-    adminTitle?: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminAllowed?: boolean | null;
-
-    @Expose()
-    @IsOptional()
-    @IsBoolean()
-    adminConfirmed?: boolean | null;
+    @IsDefined()
+    @IsString({ each: true })
+    updatableFields: string[] = [];
 }

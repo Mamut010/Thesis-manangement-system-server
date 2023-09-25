@@ -15,6 +15,11 @@ export class BachelorThesisAssessmentInfoDto {
     @Expose()
     @IsDefined()
     @IsNumber()
+    attemptNo!: number;
+
+    @Expose()
+    @IsDefined()
+    @IsNumber()
     thesisId!: number;
 
     @Expose()
@@ -81,4 +86,9 @@ export class BachelorThesisAssessmentInfoDto {
     @IsOptional()
     @IsDate()
     assessmentDate?: Date | null;
+
+    @Expose()
+    @IsDefined()
+    @IsString({ each: true })
+    updatableFields: string[] = [];
 }

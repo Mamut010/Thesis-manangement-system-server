@@ -17,10 +17,13 @@ export class RequestDataRepo implements RequestDataRepoInterface {
 
     }
 
-    async findManyByRequestId(requestId: string): Promise<RequestDataDto[]> {
+    async findMany(requestId: string, names?: string[]): Promise<RequestDataDto[]> {
         const records = await this.prisma.requestData.findMany({
             where: {
-                requestId: requestId
+                requestId: requestId,
+                name: names ? {
+                    in: names
+                } : undefined,
             }
         });
         return records.map(item => this.plainTransformer.toRequestData(item));
@@ -41,10 +44,40 @@ export class RequestDataRepo implements RequestDataRepoInterface {
                 data: { 
                     requestId: requestId,
                     name: nameValuePair.name,
-                    value: nameValuePair.value
+                    value: nameValuePair.value,
                 }
             });
             return this.plainTransformer.toRequestData(record);
+        }
+
+        return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.RequestAlreadyConnectedDataWithName);
+    }
+
+    async createMany(requestId: string, nameValuePairs: NameValuePair[]): Promise<RequestDataDto[]> {
+        const impl = async () => {
+            const names: string[] = [];
+            const values: string[] = [];
+            const records = await this.prisma.$transaction(async (tx) => {
+                await tx.requestData.createMany({
+                    data: nameValuePairs.map(({ name, value }) => {
+                        names.push(name);
+                        values.push(value);
+                        return { requestId, name, value };
+                    }),
+                });
+                return tx.requestData.findMany({
+                    where: {
+                        requestId: requestId,
+                        name: {
+                            in: names,
+                        },
+                        value: {
+                            in: values,
+                        }
+                    }
+                })
+            });
+            return records.map(item => this.plainTransformer.toRequestData(item));
         }
 
         return wrapUniqueConstraint(impl, ERROR_MESSAGES.UniqueConstraint.RequestAlreadyConnectedDataWithName);

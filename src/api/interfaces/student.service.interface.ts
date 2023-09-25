@@ -1,6 +1,7 @@
 import { StudentInfoUpdateRequest, StudentInfosQueryRequest } from "../../contracts/requests";
 import { ThesisRequestCreateRequest } from "../../contracts/requests/api/thesis-request-create.request";
 import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
+import { AuthorizedUser } from "../../core/auth-checkers";
 import { 
     BachelorThesisAssessmentInfoDto, 
     BachelorThesisEvaluationInfoDto, 
@@ -18,19 +19,19 @@ export interface StudentServiceInterface {
 
     getStudentInfo(studentId: string): Promise<StudentInfoDto>;
 
-    getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationInfoDto>;
+    getStudentBachelorThesisRegistrations(studentId: string): Promise<BachelorThesisRegistrationInfoDto[]>;
 
-    getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentInfoDto>;
+    getStudentBachelorThesisAssessments(studentId: string): Promise<BachelorThesisAssessmentInfoDto[]>;
 
-    getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationInfoDto>;
+    getStudentBachelorThesisEvaluations(studentId: string): Promise<BachelorThesisEvaluationInfoDto[]>;
 
-    getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationInfoDto>;
+    getStudentOralDefenseRegistrations(studentId: string): Promise<OralDefenseRegistrationInfoDto[]>;
 
-    getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentInfoDto>;
+    getStudentOralDefenseAssessments(studentId: string): Promise<OralDefenseAssessmentInfoDto[]>;
 
     updateStudentInfo(studentId: string, updateRequest: StudentInfoUpdateRequest): Promise<StudentInfoDto>;
 
-    createThesisRequest(userId: string, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto>;
+    createThesisRequest(user: AuthorizedUser, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto>;
     
     getLatestCreatedRequestState(userId: string): Promise<RequestStateInfoDto>;
 }

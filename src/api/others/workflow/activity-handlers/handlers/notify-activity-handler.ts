@@ -20,12 +20,10 @@ export class NotifyActivityHandler extends BaseNotifyActivityHandler {
     }
 
     protected async execute(requestId: string, receiverIds: string[], activityInput: ActivityHandlerInput): Promise<void> {
-        await Promise.all(receiverIds.map(async (receiverId) => {
-            await this.notificationService.sendNotification({
-                receiverId,
-                title: DEFAULTS.Notification.Title,
-                content: stringFormat(DEFAULT_FORMATS.Activity.Notification.Content, requestId)
-            });
-        }));
+        await this.notificationService.sendNotification({
+            receiverId: receiverIds,
+            title: DEFAULTS.Notification.Title,
+            content: stringFormat(DEFAULT_FORMATS.Activity.Notification.Content, requestId),
+        })
     }
 }

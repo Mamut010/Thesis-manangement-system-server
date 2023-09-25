@@ -27,8 +27,8 @@ export class StudentRepo implements StudentRepoInterface {
         const count = await this.prisma.student.count({ where: prismaQuery.where });
         const students = await this.prisma.student.findMany({
             ...prismaQuery,
-            include: studentInclude
-        })
+            include: studentInclude,
+        });
 
         const response = new StudentsQueryResponse();
         response.content = students.map(item => this.plainTransformer.toStudent(item));
@@ -63,6 +63,7 @@ export class StudentRepo implements StudentRepoInterface {
                     signature: updateRequest.signature,
                     surname: updateRequest.surname,
                     forename: updateRequest.forename,
+                    sex: updateRequest.sex,
                     user: updateRequest.email ? {
                         update: {
                             email: updateRequest.email,

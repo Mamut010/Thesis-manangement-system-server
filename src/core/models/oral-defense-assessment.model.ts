@@ -9,23 +9,8 @@ export class OralDefenseAssessment {
 
     @Expose()
     @IsDefined()
-    @IsNumber()
-    thesisId!: number;
-
-    @Expose()
-    @IsDefined()
     @IsString()
-    studentId!: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id!: string | null;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id!: string | null;
+    studentAttemptId!: string;
 
     @Expose()
     @IsOptional()
@@ -71,6 +56,16 @@ export class OralDefenseAssessment {
     @IsOptional()
     @IsDate()
     assessmentDate!: Date | null;
+
+    @Expose()
+    @IsDefined()
+    @IsBoolean()
+    supervisor1Confirmed!: boolean;
+
+    @Expose()
+    @IsDefined()
+    @IsBoolean()
+    supervisor2Confirmed!: boolean;
 
     @Expose()
     @IsDefined()

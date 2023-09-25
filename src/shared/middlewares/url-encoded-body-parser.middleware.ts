@@ -6,7 +6,9 @@ import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 @Middleware({ type: 'before' })
 @injectable()
 export class UrlEncodedBodyParserMiddleware implements ExpressMiddlewareInterface {
+    private handler = bodyParser.urlencoded({ extended: true });
+
     public use(req: express.Request, res: express.Response, next: express.NextFunction): any {
-        return bodyParser.urlencoded({ extended: true })(req, res, next);
+        return this.handler(req, res, next);
     }
 }

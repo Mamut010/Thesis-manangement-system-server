@@ -64,6 +64,7 @@ import {
     RequestRepoInterface, 
     RequestStakeholderRepoInterface, 
     RoleRepoInterface, 
+    StudentAttemptRepoInterface, 
     StudentRepoInterface, 
     ThesisRepoInterface, 
     TopicRepoInterface, 
@@ -91,7 +92,8 @@ import {
     ProcessRepo,
     GroupRepo,
     RequestDataRepo,
-    RequestStakeholderRepo
+    RequestStakeholderRepo,
+    StudentAttemptRepo
 } from '../dal/repositories';
 import {
     MailServiceInterface,
@@ -126,9 +128,19 @@ import {
     AddStakeholdersActivityHandler,
     ApplyThesisActionHandler, 
     ApproveActionHandler, 
+    ApproveBTEActionHandler, 
+    ApproveBTRActionHandler, 
+    ApprovePermissionBTRActionHandler, 
+    ApprovePermissionODRActionHandler, 
     BackActionHandler, 
+    BackAssessmentsActionHandler, 
+    BackBTRActionHandler, 
+    BackODRActionHandler, 
     CancelActionHandler, 
     ConfirmActionHandler, 
+    ConfirmAssessmentsActionHandler, 
+    ConfirmBTRActionHandler, 
+    ConfirmODRActionHandler, 
     ConfirmThesisActionHandler, 
     DenyActionHandler, 
     InformAdminGroupActionHandler, 
@@ -136,6 +148,7 @@ import {
     InviteSupervisor2ActionHandler, 
     NotifyActivityHandler, 
     RejectActionHandler, 
+    RejectBTRActionHandler, 
     RejectThesisActionHandler, 
     RemoveStakeholdersActivityHandler, 
     RequestAdminGroupActionHandler, 
@@ -155,6 +168,7 @@ import {
     WorkflowRequestDataProcessorInterface
 } from '../api/others/workflow';
 import { WorkflowCommandInvoker } from '../api/others/workflow/command-invokers/invokers/workflow-command-invoker';
+
 export const configInversify: Configuration<Container> = (container: Container, settings?: BootstrapSettingInterface) => {
     configConstants(container, settings);
     configLogger(container, settings);
@@ -247,6 +261,11 @@ function configRepos(container: Container, settings?: BootstrapSettingInterface)
     container
         .bind<StudentRepoInterface>(INJECTION_TOKENS.StudentRepo)
         .to(StudentRepo)
+        .inRequestScope();
+
+    container
+        .bind<StudentAttemptRepoInterface>(INJECTION_TOKENS.StudentAttemptRepo)
+        .to(StudentAttemptRepo)
         .inRequestScope();
 
     container
@@ -551,6 +570,17 @@ function configWorkflow(container: Container, settings?: BootstrapSettingInterfa
     container.bind(RequestSupervisor1ActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisor2ActionHandler).toSelf().inRequestScope();
     container.bind(RequestSupervisorsActionHandler).toSelf().inRequestScope();
+    container.bind(ApproveBTEActionHandler).toSelf().inRequestScope();
+    container.bind(ApproveBTRActionHandler).toSelf().inRequestScope();
+    container.bind(ApprovePermissionBTRActionHandler).toSelf().inRequestScope();
+    container.bind(ApprovePermissionODRActionHandler).toSelf().inRequestScope();
+    container.bind(BackAssessmentsActionHandler).toSelf().inRequestScope();
+    container.bind(BackBTRActionHandler).toSelf().inRequestScope();
+    container.bind(BackODRActionHandler).toSelf().inRequestScope();
+    container.bind(ConfirmAssessmentsActionHandler).toSelf().inRequestScope();
+    container.bind(ConfirmBTRActionHandler).toSelf().inRequestScope();
+    container.bind(ConfirmODRActionHandler).toSelf().inRequestScope();
+    container.bind(RejectBTRActionHandler).toSelf().inRequestScope();
     
     container.bind(NotifyActivityHandler).toSelf().inRequestScope();
     container.bind(SendEmailActivityHandler).toSelf().inRequestScope();

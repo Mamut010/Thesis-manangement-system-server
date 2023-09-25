@@ -1,63 +1,53 @@
 import { Expose, Type } from "class-transformer";
-import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsOptional, IsString } from "class-validator";
 
 export class OralDefenseRegistrationUpdateRequest {
     @Expose()
     @IsOptional()
-    @IsNumber()
-    thesisId?: number;
-
-    @Expose()
-    @IsOptional()
     @IsString()
-    studentId?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor1Id?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    supervisor2Id?: string;
-
-    @Expose()
-    @IsOptional()
-    @IsString()
-    room?: string;
+    room?: string | null;
 
     @Expose()
     @IsOptional()
     @IsBoolean()
-    areSpectatorsAllowed?: boolean;
+    areSpectatorsAllowed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    proposedDate?: Date;
+    proposedDate?: Date | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    actualDate?: Date;
+    actualDate?: Date | null;
 
     @Expose()
     @IsOptional()
-    @IsNumber()
-    concernedAgreed?: number;
-
-    @Expose()
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    dateReceived?: Date;
+    @IsBoolean()
+    concernedAgreed?: boolean | null;
 
     @Expose()
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    admissionDate?: Date;
+    dateReceived?: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    admissionDate?: Date | null;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    studentConfirmed?: boolean;
+
+    @Expose()
+    @IsOptional()
+    @IsBoolean()
+    adminConfirmed?: boolean;
 }

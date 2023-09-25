@@ -50,25 +50,26 @@ export class ThesisController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    @Authorized([Role.Lecturer1_1, Role.Lecturer1_2])
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Post()
     @ResponseSchema(ThesisInfoDto)
     createThesis(@CurrentUser() user: AuthorizedUser, @Body({ required: true }) createRequest: ThesisInfoCreateRequest) {
-        return this.thesisService.createThesis(user.userId, createRequest);
+        return this.thesisService.createThesis(user, createRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Authorized([Role.Lecturer1_1, Role.Lecturer1_2])
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Patch('/:id')
     @ResponseSchema(ThesisInfoDto)
-    updateThesis(@Param('id') id: number, @Body({ required: true }) updateRequest: ThesisInfoUpdateRequest) {
-        return this.thesisService.updateThesis(id, updateRequest);
+    updateThesis(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
+        @Body({ required: true }) updateRequest: ThesisInfoUpdateRequest) {
+        return this.thesisService.updateThesis(user, id, updateRequest);
     }
 
-    @Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
-    deleteThesis(@Param('id') id: number) {
-        return this.thesisService.deleteThesis(id);
+    deleteThesis(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {
+        return this.thesisService.deleteThesis(user, id);
     }
 }

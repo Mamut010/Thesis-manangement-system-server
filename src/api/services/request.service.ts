@@ -1,11 +1,11 @@
 import { inject, injectable } from "inversify";
 import { GroupsQueryRequest, RequestInfosQueryRequest, RequestsQueryRequest } from "../../contracts/requests";
-import { RequestInfosQueryResponse } from "../../contracts/responses";
+import { RequestAssociatedFormsResponse, RequestInfosQueryResponse } from "../../contracts/responses";
 import { RequestServiceInterface } from "../interfaces/request.service.interface";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
-import { GroupRepoInterface, ProcessRepoInterface, RequestRepoInterface } from "../../dal/interfaces";
+import { GroupRepoInterface, RequestRepoInterface, StudentAttemptRepoInterface } from "../../dal/interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
-import { RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
+import { RequestDto, RequestInfoDto, RequestStateInfoDto } from "../../shared/dtos";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
@@ -13,6 +13,7 @@ import { ForbiddenError } from "routing-controllers";
 import { isAdmin } from "../../utils/role-predicates";
 import { 
     RequestStateDto,
+    StateType,
     WorkflowCommandFactoryInterface, 
     WorkflowCommandInvokerInterface, 
     WorkflowEngineInterface 
@@ -21,14 +22,17 @@ import { RequestActionSubmitRequest } from "../../contracts/requests/api/request
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { OrderBy, StringFilter } from "../../lib/query";
 import { makeArray } from "../../utils/array-helpers";
-import { getThesisProcessOrThrow } from "../../utils/process-helpers";
+import { ConflictError } from "../../contracts/errors/conflict.error";
+import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 
 @injectable()
 export class RequestService implements RequestServiceInterface {
+    private static NON_DELETABLE_STATE_TYPES = [StateType.Initial, StateType.Normal] as const;
+
     constructor(
         @inject(INJECTION_TOKENS.RequestRepo) private requestRepo: RequestRepoInterface,
-        @inject(INJECTION_TOKENS.ProcessRepo) private processRepo: ProcessRepoInterface,
         @inject(INJECTION_TOKENS.GroupRepo) private groupRepo: GroupRepoInterface,
+        @inject(INJECTION_TOKENS.StudentAttemptRepo) private studentAttemptRepo: StudentAttemptRepoInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface,
         @inject(INJECTION_TOKENS.WorkflowEngine) private workflowEngine: WorkflowEngineInterface,
         @inject(INJECTION_TOKENS.WorkflowCommandFactory) private workflowCommandFactory: WorkflowCommandFactoryInterface,
@@ -51,7 +55,11 @@ export class RequestService implements RequestServiceInterface {
             stakeholderIdFilter
         });
         return {
-            content: this.mapper.map(RequestInfoDto, response.content),
+            content: response.content.map(item => {
+                const dto = this.mapper.map(RequestInfoDto, item);
+                dto.isDeletable = this.isDeletableStateType(dto.stateType);
+                return dto;
+            }),
             count: response.count,
         }
     }
@@ -65,10 +73,17 @@ export class RequestService implements RequestServiceInterface {
     }
 
     async deleteRequest(user: AuthorizedUser, id: string): Promise<void> {
-        const record = await this.ensureRecordExists(id);
-        // Only admin or the creator is allowed to delete the request
-        if (!isAdmin(user) && record.creatorId !== user.userId) {
-            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
+        // Admin is freely to delete a request
+        if (!isAdmin(user)) {
+            // Otherwise
+            const record = await this.ensureRecordExists(id);
+            // Only the creator is allowed to delete the request
+            if (record.creatorId !== user.userId) {
+                throw new ForbiddenError(ERROR_MESSAGES.Forbidden.RequestDenied);
+            }
+            else if (!this.isDeletableStateType(record.stateType)) {
+                throw new ConflictError(ERROR_MESSAGES.Conflict.RequestCurrentlyUndeletable);
+            }
         }
 
         await this.requestRepo.delete(id);
@@ -84,7 +99,7 @@ export class RequestService implements RequestServiceInterface {
             data: request.data,
         });
         if (!command) {
-            throw new BadRequestError(ERROR_MESSAGES.Invalid.InputInvalid);
+            throw new UnexpectedError(ERROR_MESSAGES.Unexpected.CommandNotFound);
         }
 
         this.workflowCommandInvoker.setCommand(command);
@@ -98,11 +113,10 @@ export class RequestService implements RequestServiceInterface {
         return this.makeRequestStateInfo(record, requestState);
     }
 
-    async createThesisRequest(userId: string, requestTitle: string): Promise<RequestStateInfoDto | undefined> {
-        const process = await getThesisProcessOrThrow(this.processRepo);
-
+    async createRequest(userId: string, processId: string, requestTitle: string)
+        : Promise<RequestStateInfoDto | undefined> {
         const requestState = await this.workflowEngine.createRequest({
-            processId: process.id,
+            processId: processId,
             userId: userId,
             title: requestTitle
         });
@@ -133,6 +147,23 @@ export class RequestService implements RequestServiceInterface {
         const requestStates = await this.workflowEngine.getRequestStates(creatorId, content.map(item => item.id));
 
         return content.map((request, index) => this.makeRequestStateInfo(request, requestStates[index]));
+    }
+
+    async getRequestAssociatedForms(user: AuthorizedUser, requestId: string): Promise<RequestAssociatedFormsResponse> {
+        const request = await this.ensureRecordExists(requestId);
+        await this.ensureValidRequestAccess(user, request.userStakeholderIds, request.groupStakeholderIds);
+
+        const record = await this.studentAttemptRepo.findOneByRequestId(requestId);
+        if (!record) {
+            throw new NotFoundError(ERROR_MESSAGES.NotFound.AttemptAssociatedWithRequestNotFound);
+        }
+        return {
+            bachelorThesisRegistrationId: record.bachelorThesisRegistrationId ?? undefined,
+            oralDefenseRegistrationId: record.oralDefenseRegistrationId ?? undefined,
+            bachelorThesisAssessmentId: record.bachelorThesisAssessmentId ?? undefined,
+            oralDefenseAssessmentId: record.oralDefenseAssessmentId ?? undefined,
+            bachelorThesisEvaluationId: record.bachelorThesisEvaluationId ?? undefined,
+        }
     }
 
     private async ensureRecordExists(id: string) {
@@ -175,9 +206,14 @@ export class RequestService implements RequestServiceInterface {
         return content.find(item => item.memberIds.includes(userId)) !== undefined;
     }
 
-    private makeRequestStateInfo(request: RequestInfoDto, requestState: RequestStateDto | null) {
+    private makeRequestStateInfo(request: RequestDto, requestState: RequestStateDto | null) {
         const result = this.mapper.map(RequestStateInfoDto, request);
         result.actionTypes = requestState?.actionTypes ?? [];
+        result.isDeletable = this.isDeletableStateType(request.stateType);
         return result;
+    }
+
+    private isDeletableStateType(requestStateType: StateType) {
+        return !RequestService.NON_DELETABLE_STATE_TYPES.some(item => item === requestStateType);
     }
 }

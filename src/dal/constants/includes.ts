@@ -5,6 +5,11 @@ export const userInclude = {
 export const studentInclude = {
     user: true,
     program: true,
+    _count: {
+        select: {
+            studentAttempts: true
+        }
+    },
 } as const;
 
 export const roleInclude = {
@@ -20,24 +25,65 @@ export const userWithRoleInclude = {
 } as const;
 
 export const bachelorThesisAndOralDefenseInclude = {
-    student: true,
-    thesis: true,
-    supervisor1: true,
-    supervisor2: true,
+    studentAttempt: {
+        include: {
+            student: true,
+            thesis: {
+                include: {
+                    creator: true
+                }
+            },
+            supervisor2: true,
+        }
+    }
 } as const;
 
-export const bachelorThesisAndOralDefenseWithAdminInclude = {
-    student: true,
-    thesis: true,
-    supervisor1: true,
-    supervisor2: true,
-    admin: true
+export const bachelorThesisAndOralDefenseWithProgramInclude = {
+    studentAttempt: {
+        include: {
+            student: {
+                include: {
+                    program: {
+                        select: {
+                            programAdminGroup: {
+                                select: {
+                                    group: {
+                                        select: {
+                                            id: true,
+                                            users: {
+                                                select: {
+                                                    userId: true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } 
+                    }
+                }
+            },
+            thesis: {
+                include: {
+                    creator: true
+                }
+            },
+            supervisor2: true,
+        }
+    }
 } as const;
 
 export const bachelorThesisEvaluationInclude = {
-    student: true,
-    supervisor: true,
-    thesis: true,
+    studentAttempt: {
+        include: {
+            student: true,
+            thesis: {
+                include: {
+                    creator: true
+                }
+            },
+        }
+    }
 } as const;
 
 export const thesisInclude = {
@@ -45,6 +91,40 @@ export const thesisInclude = {
     topic: true,
     field: true,
 } as const;
+
+export const studentAttemptInclude = {
+    thesis: true,
+    bachelorThesisRegistration: {
+        select: {
+            id: true,
+        }
+    },
+    oralDefenseRegistration: {
+        select: {
+            id: true,
+        }
+    },
+    bachelorThesisAssessment: {
+        select: {
+            id: true,
+        }
+    },
+    oralDefenseAssessment: {
+        select: {
+            id: true,
+        }
+    },
+    bachelorThesisEvaluation: {
+        select: {
+            id: true,
+        }
+    },
+    studentAttemptRequest: {
+        select: {
+            requestId: true,
+        }
+    }
+}
 
 export const requestInclude = {
     state: {

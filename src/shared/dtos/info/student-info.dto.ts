@@ -1,5 +1,6 @@
 import { Expose } from "class-transformer";
-import { IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDefined, IsIn, IsNumber, IsOptional, IsString } from "class-validator";
+import { Sex, Sexes } from "../../../core/constants/sex";
 
 export class StudentInfoDto {
     @Expose()
@@ -26,6 +27,11 @@ export class StudentInfoDto {
     @IsOptional()
     @IsString()
     forename?: string | null;
+
+    @Expose()
+    @IsDefined()
+    @IsIn(Sexes)
+    sex!: Sex;
 
     @Expose()
     @IsDefined()

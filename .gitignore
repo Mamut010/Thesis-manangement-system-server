@@ -12,3 +12,6 @@ dist/*
 
 public/*
 !public/assets/
+
+# Ignore Extension folders
+.VSCodeCounter

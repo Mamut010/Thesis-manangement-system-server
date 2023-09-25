@@ -28,6 +28,11 @@ export class Student {
     forename!: string | null;
 
     @Expose()
+    @IsDefined()
+    @IsNumber()
+    sex!: number;
+
+    @Expose()
     @IsOptional()
     @IsNumber()
     intake!: number | null;

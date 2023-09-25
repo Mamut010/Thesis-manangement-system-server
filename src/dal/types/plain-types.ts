@@ -12,6 +12,7 @@ import {
     OralDefenseRegistration, 
     Process, 
     Program, 
+    ProgramAdminGroup, 
     RefreshToken, 
     Request, 
     RequestData, 
@@ -19,6 +20,8 @@ import {
     Role, 
     State, 
     Student, 
+    StudentAttempt, 
+    StudentAttemptRequest, 
     Thesis, 
     Topic, 
     User, 
@@ -40,6 +43,9 @@ export type PlainAdmin = Admin & {
 export type PlainStudent = Student & {
     user: User,
     program: Program | null,
+    _count: {
+        studentAttempts: number
+    },
 };
 
 export type PlainLecturer = Lecturer & {
@@ -74,21 +80,60 @@ export type PlainStudentWithThesis = {
     thesis: Thesis,
 }
 
-export type PlainBachelorThesisRegistration = BachelorThesisRegistration & PlainStudentWithThesis & Supervisors & {
-    admin: Admin | null
+export type PlainStudentAttempt = StudentAttempt & {
+    thesis: Thesis,
+    bachelorThesisRegistration: Pick<BachelorThesisRegistration, 'id'> | null,
+    oralDefenseRegistration: Pick<OralDefenseRegistration, 'id'> | null,
+    bachelorThesisAssessment: Pick<BachelorThesisAssessment, 'id'> | null,
+    oralDefenseAssessment: Pick<OralDefenseAssessment, 'id'> | null,
+    bachelorThesisEvaluation: Pick<BachelorThesisEvaluation, 'id'> | null,
+    studentAttemptRequest: Pick<StudentAttemptRequest, 'requestId'> | null,
+};
+export type ProgramOnlyGroupAndMemberIds = {
+    programAdminGroup: {
+        group: WithGroupId & {
+            users: WithUserId[]
+        }
+    } | null
+}
+
+export type PlainDetailedStudentAttempt = StudentAttempt & {
+    student: Student,
+    thesis: Thesis & {
+        creator: Lecturer,
+    },
+    supervisor2: Lecturer,
 };
 
-export type PlainOralDefenseRegistration = OralDefenseRegistration & PlainStudentWithThesis & Supervisors;
-
-export type PlainBachelorThesisAssessment = BachelorThesisAssessment & PlainStudentWithThesis & Supervisors;
-
-export type PlainOralDefenseAssessment = OralDefenseAssessment & PlainStudentWithThesis & Supervisors;
-
-export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & PlainStudentWithThesis & {
-    supervisor: Lecturer
+export type PlainDetailedStudentAttemptWithProgram = PlainDetailedStudentAttempt & {
+    student: Student & {
+        program: ProgramOnlyGroupAndMemberIds | null
+    },
 };
 
-export type WithUserId = Pick<User, 'userId'>; 
+export type PlainBachelorThesisRegistration = BachelorThesisRegistration & {
+    studentAttempt: PlainDetailedStudentAttemptWithProgram
+};
+
+export type PlainOralDefenseRegistration = OralDefenseRegistration & {
+    studentAttempt: PlainDetailedStudentAttemptWithProgram
+};
+
+export type PlainBachelorThesisAssessment = BachelorThesisAssessment & {
+    studentAttempt: PlainDetailedStudentAttempt
+};
+
+export type PlainOralDefenseAssessment = OralDefenseAssessment & {
+    studentAttempt: PlainDetailedStudentAttempt
+};
+
+export type PlainBachelorThesisEvaluation = BachelorThesisEvaluation & {
+    studentAttempt: Omit<PlainDetailedStudentAttempt, 'supervisor2'>
+};
+
+export type WithUserId = Pick<User, 'userId'>;
+
+export type WithGroupId = Pick<Group, 'id'>;
 
 export type PlainProcess = Process;
 

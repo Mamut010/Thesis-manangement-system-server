@@ -7,25 +7,36 @@ import { ActionType } from "../../types/action-type";
 import { WorkflowCommandFactoryInterface } from "../interfaces/workflow-command-factory.interface";
 import { 
     ApplyThesisCommand,
+    ApproveBTECommand,
+    ApproveBTRCommand,
     ApproveCommand,
+    ApprovePermissionBTRCommand,
+    ApprovePermissionODRCommand,
+    BackAssessmentsCommand,
+    BackBTRCommand,
     BackCommand,
+    BackODRCommand,
     CancelCommand,
+    ConfirmAssessmentsCommand,
+    ConfirmBTRCommand,
     ConfirmCommand,
+    ConfirmODRCommand,
     ConfirmThesisCommand,
     DenyCommand,
     InformAdminGroupCommand,
     InformRequesterCommand,
     InviteSupervisor2Command,
+    RejectBTRCommand,
     RejectCommand,
     RejectThesisCommand,
     RequestAdminGroupCommand,
     RequestAdvanceCommandInput, 
     RequestAdvanceCommandInterface,
     RequestSupervisor1Command,
-    RequestSupervisor2Command
+    RequestSupervisor2Command,
+    RequestSupervisorsCommand
 } from "../../commands";
 
-@injectable()
 export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
     createCommand(engine: WorkflowEngineInterface, actionType: ActionType, commandInput: RequestAdvanceCommandInput)
         : RequestAdvanceCommandInterface | undefined {
@@ -77,6 +88,42 @@ export class WorkflowCommandFactory implements WorkflowCommandFactoryInterface {
 
             case ActionType.RequestSupervisor2:
                 return new RequestSupervisor2Command(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.RequestSupervisors:
+                    return new RequestSupervisorsCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.ApprovePermissionBachelorThesisRegistration:
+                return new ApprovePermissionBTRCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.ApprovePermissionOralDefenseRegistration:
+                return new ApprovePermissionODRCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.RejectBachelorThesisRegistration:
+                return new RejectBTRCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.ApproveBachelorThesisRegistration:
+                return new ApproveBTRCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.ApproveBachelorThesisEvaluation:
+                return new ApproveBTECommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.BackBachelorThesisRegistration:
+                return new BackBTRCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.BackOralDefenseRegistration:
+                return new BackODRCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.BackAssessments:
+                return new BackAssessmentsCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.ConfirmBachelorThesisRegistration:
+                return new ConfirmBTRCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.ConfirmOralDefenseRegistration:
+                return new ConfirmODRCommand(engine, commandInput.actionerId, commandInput.requestId);
+
+            case ActionType.ConfirmAssessments:
+                return new ConfirmAssessmentsCommand(engine, commandInput.actionerId, commandInput.requestId);
         }
     }
 

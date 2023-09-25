@@ -8,6 +8,7 @@ export * from './oral-defense-assessment-infos-query.response';
 export * from './oral-defense-registration-infos-query.response';
 export * from './student-detail.response';
 export * from './student-infos-query.response';
-
 export * from './request-infos-query.response';
 export * from './group-infos-query.response';
+
+export * from './request-associated-forms.response';

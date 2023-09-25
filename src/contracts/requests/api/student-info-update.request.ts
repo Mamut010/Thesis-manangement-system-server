@@ -1,5 +1,6 @@
 import { Expose } from "class-transformer";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsIn, IsNumber, IsOptional, IsString } from "class-validator";
+import { Sex, Sexes } from "../../../core/constants/sex";
 
 export class StudentInfoUpdateRequest {
     @Expose()
@@ -16,6 +17,11 @@ export class StudentInfoUpdateRequest {
     @IsOptional()
     @IsString()
     forename?: string;
+
+    @Expose()
+    @IsOptional()
+    @IsIn(Sexes)
+    sex?: Sex;
 
     @Expose()
     @IsOptional()

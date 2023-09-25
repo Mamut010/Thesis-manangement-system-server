@@ -15,7 +15,7 @@ import {
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { HTTP_CODES } from "../../core/constants/http-codes";
-import { RequestInfosQueryResponse } from "../../contracts/responses";
+import { RequestAssociatedFormsResponse, RequestInfosQueryResponse } from "../../contracts/responses";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { RequestInfosQueryRequest } from "../../contracts/requests";
 import { RequestServiceInterface } from "../interfaces";
@@ -60,5 +60,12 @@ export class RequestController {
     submitAction(@CurrentUser() user: AuthorizedUser, 
         @Body({ required: true }) actionSubmitRequest: RequestActionSubmitRequest) {
         return this.requestService.submitAction(user, actionSubmitRequest);
+    }
+
+    @HttpCode(HTTP_CODES.Ok)
+    @Get('/:id/associated-forms')
+    @ResponseSchema(RequestAssociatedFormsResponse)
+    getRequestAssociatedForms(@CurrentUser() user: AuthorizedUser, @Param('id') id: string) {
+        return this.requestService.getRequestAssociatedForms(user, id);
     }
 }

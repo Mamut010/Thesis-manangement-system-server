@@ -1,16 +1,13 @@
 import { inject, injectable } from "inversify";
 import { 
-    Authorized, 
-    Body, 
+    Authorized,
     CurrentUser, 
     Delete, 
     Get, 
     HttpCode, 
     JsonController, 
     OnUndefined, 
-    Param, 
-    Patch, 
-    Post, 
+    Param,
     QueryParams 
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -18,9 +15,7 @@ import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { BachelorThesisEvaluationServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { 
-    BachelorThesisEvaluationsQueryRequest,
-    BachelorThesisEvaluationCreateRequest,
-    BachelorThesisEvaluationUpdateRequest
+    BachelorThesisEvaluationInfosQueryRequest,
 } from "../../../contracts/requests";
 import { BachelorThesisEvaluationInfoDto } from "../../../shared/dtos";
 import { Role } from "../../../core/constants/roles";
@@ -28,7 +23,7 @@ import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisEvaluationInfosQueryResponse } from "../../../contracts/responses";
 
 @JsonController('bachelor-thesis-evaluations')
-//@Authorized()
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
@@ -44,7 +39,7 @@ export class BachelorThesisEvaluationController {
     @Get()
     @ResponseSchema(BachelorThesisEvaluationInfosQueryResponse)
     getBachelorThesisEvaluations(@CurrentUser() user: AuthorizedUser, 
-        @QueryParams() queryRequest: BachelorThesisEvaluationsQueryRequest) {
+        @QueryParams() queryRequest: BachelorThesisEvaluationInfosQueryRequest) {
         return this.bachelorThesisEvaluationService.getBachelorThesisEvaluations(user, queryRequest);
     }
 
@@ -55,26 +50,8 @@ export class BachelorThesisEvaluationController {
         return this.bachelorThesisEvaluationService.getBachelorThesisEvaluation(user, id);
     }
 
-    @HttpCode(HTTP_CODES.Created)
-    //@Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
-    @Post()
-    @ResponseSchema(BachelorThesisEvaluationInfoDto)
-    createBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser, 
-        @Body({ required: true }) createRequest: BachelorThesisEvaluationCreateRequest) {
-        return this.bachelorThesisEvaluationService.createBachelorThesisEvaluation(user, createRequest);
-    }
-
-    @HttpCode(HTTP_CODES.Ok)
-    //@Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
-    @Patch('/:id')
-    @ResponseSchema(BachelorThesisEvaluationInfoDto)
-    updateBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
-        @Body({ required: true }) updateRequest: BachelorThesisEvaluationUpdateRequest) {
-        return this.bachelorThesisEvaluationService.updateBachelorThesisEvaluation(user, id, updateRequest);
-    }
-
-    //@Authorized([Role.Admin, Role.Lecturer1_1, Role.Lecturer1_2])
     @Delete('/:id')
+    @Authorized(Role.Admin)
     @OnUndefined(HTTP_CODES.NoContent)
     deleteBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {
         return this.bachelorThesisEvaluationService.deleteBachelorThesisEvaluation(user, id);

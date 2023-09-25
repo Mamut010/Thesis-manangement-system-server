@@ -20,6 +20,9 @@ export class StudentInfosQueryRequest extends BaseQueryRequest {
     @IsNullableStringFilterArray()
     forenameFilter?: NullableStringFilter[];
 
+    @IsNumberFilterArray()
+    sexFilter?: NumberFilter[];
+
     @IsNullableNumberFilterArray()
     intakeFilter?: NullableNumberFilter[];
 

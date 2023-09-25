@@ -1,24 +1,19 @@
 import { Expose } from "class-transformer"
-import { IsDate, IsDefined, IsNumber, IsString } from "class-validator"
+import { IsDefined, IsNumber, IsString } from "class-validator"
 
 export class RefreshToken {
     @Expose()
     @IsDefined()
     @IsNumber()
-    id!: number
+    id!: number;
 
     @Expose()
     @IsDefined()
     @IsString()
-    userId!: string
+    userId!: string;
 
     @Expose()
     @IsDefined()
     @IsString()
-    token!: string
-
-    @Expose()
-    @IsDefined()
-    @IsDate()
-    exp!: Date
+    token!: string;
 }

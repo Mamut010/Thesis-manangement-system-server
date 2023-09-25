@@ -9,8 +9,7 @@ import {
     JsonController, 
     OnUndefined, 
     Param, 
-    Patch, 
-    Post, 
+    Patch,
     QueryParams 
 } from "routing-controllers";
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
@@ -18,9 +17,8 @@ import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { OralDefenseAssessmentServiceInterface } from "../../interfaces";
 import { HTTP_CODES } from "../../../core/constants/http-codes";
 import { 
-    OralDefenseAssessmentsQueryRequest, 
-    OralDefenseAssessmentCreateRequest, 
-    OralDefenseAssessmentUpdateRequest 
+    OralDefenseAssessmentInfosQueryRequest, 
+    OralDefenseAssessmentInfoUpdateRequest 
 } from "../../../contracts/requests";
 import { OralDefenseAssessmentInfoDto } from "../../../shared/dtos";
 import { Role } from "../../../core/constants/roles";
@@ -44,7 +42,7 @@ export class OralDefenseAssessmentController {
     @Get()
     @ResponseSchema(OralDefenseAssessmentInfosQueryResponse)
     getOralDefenseAssessments(@CurrentUser() user: AuthorizedUser, 
-        @QueryParams() queryRequest: OralDefenseAssessmentsQueryRequest) {
+        @QueryParams() queryRequest: OralDefenseAssessmentInfosQueryRequest) {
         return this.oralDefenseAssessmentService.getOralDefenseAssessments(user, queryRequest);
     }
 
@@ -55,21 +53,12 @@ export class OralDefenseAssessmentController {
         return this.oralDefenseAssessmentService.getOralDefenseAssessment(user, id);
     }
 
-    @HttpCode(HTTP_CODES.Created)
-    //@Authorized(Role.Admin)
-    @Post()
-    @ResponseSchema(OralDefenseAssessmentInfoDto)
-    createOralDefenseAssessment(@CurrentUser() user: AuthorizedUser, 
-        @Body({ required: true }) createRequest: OralDefenseAssessmentCreateRequest) {
-        return this.oralDefenseAssessmentService.createOralDefenseAssessment(user, createRequest);
-    }
-
     @HttpCode(HTTP_CODES.Ok)
     //@Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(OralDefenseAssessmentInfoDto)
     updateOralDefenseAssessment(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
-        @Body({ required: true }) updateRequest: OralDefenseAssessmentUpdateRequest) {
+        @Body({ required: true }) updateRequest: OralDefenseAssessmentInfoUpdateRequest) {
         return this.oralDefenseAssessmentService.updateOralDefenseAssessment(user, id, updateRequest);
     }
 

@@ -14,17 +14,23 @@ import { firstOrDefault } from "../../utils/array-helpers";
 import { UnexpectedError } from "../../contracts/errors/unexpected.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { ThesisRequestCreateRequest } from "../../contracts/requests/api/thesis-request-create.request";
-import { StudentRepoInterface } from "../../dal/interfaces";
+import { ProcessRepoInterface, StudentAttemptRepoInterface, StudentRepoInterface } from "../../dal/interfaces";
 import { AssetsServiceInterface, RequestServiceInterface } from "../interfaces";
 import { MapperServiceInterface } from "../../shared/interfaces";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { StudentInfoUpdateRequest, StudentInfosQueryRequest } from "../../contracts/requests";
 import { StudentDetailResponse, StudentInfosQueryResponse } from "../../contracts/responses";
+import { getThesisProcessOrThrow } from "../../utils/process-helpers";
+import { AuthorizedUser } from "../../core/auth-checkers";
+import { ConflictError } from "../../contracts/errors/conflict.error";
+import { getElementWithLatestAttemptNo } from "../../utils/attempt-helpers";
 
 @injectable()
 export class StudentService implements StudentServiceInterface {
     constructor(
         @inject(INJECTION_TOKENS.StudentRepo) private studentRepo: StudentRepoInterface,
+        @inject(INJECTION_TOKENS.StudentAttemptRepo) private studentAttemptRepo: StudentAttemptRepoInterface,
+        @inject(INJECTION_TOKENS.ProcessRepo) private processRepo: ProcessRepoInterface,
         @inject(INJECTION_TOKENS.AssetsService) private assetsService: AssetsServiceInterface,
         @inject(INJECTION_TOKENS.RequestService) private requestService: RequestServiceInterface,
         @inject(INJECTION_TOKENS.MapperService) private mapper: MapperServiceInterface) {
@@ -48,71 +54,72 @@ export class StudentService implements StudentServiceInterface {
         const response = new StudentDetailResponse();
         response.studentInfo = await this.getStudentInfo(studentId);
 
-        const btrPromise = this.getStudentBachelorThesisRegistrationInner(studentId);
-        const btaPromise = this.getStudentBachelorThesisAssessmentInner(studentId);
-        const btePromise = this.getStudentBachelorThesisEvaluationInner(studentId);
-        const odrPromise = this.getStudentOralDefenseRegistrationInner(studentId);
-        const odaPromise = this.getStudentOralDefenseAssessmentInner(studentId);
+        const btrPromise = this.getStudentBachelorThesisRegistrations(studentId);
+        const btaPromise = this.getStudentBachelorThesisAssessments(studentId);
+        const btePromise = this.getStudentBachelorThesisEvaluations(studentId);
+        const odrPromise = this.getStudentOralDefenseRegistrations(studentId);
+        const odaPromise = this.getStudentOralDefenseAssessments(studentId);
 
-        response.bachelorThesisRegistration = await btrPromise;
-        response.bachelorThesisAssessment = await btaPromise;
-        response.bachelorThesisEvaluation = await btePromise;
-        response.oralDefenseRegistration = await odrPromise;
-        response.oralDefenseAssessment = await odaPromise;
+        response.bachelorThesisRegistrations = await btrPromise;
+        response.bachelorThesisAssessments = await btaPromise;
+        response.bachelorThesisEvaluations = await btePromise;
+        response.oralDefenseRegistrations = await odrPromise;
+        response.oralDefenseAssessments = await odaPromise;
 
         return response;
     }
 
-    async getStudentBachelorThesisRegistration(studentId: string): Promise<BachelorThesisRegistrationInfoDto> {
-        await this.ensureStudentExists(studentId);
-
-        const result = await this.getStudentBachelorThesisRegistrationInner(studentId);
-        if (!result) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisRegistrationNotFound);
+    async getStudentBachelorThesisRegistrations(studentId: string, checkStudent: boolean = true)
+        : Promise<BachelorThesisRegistrationInfoDto[]> {
+        if (checkStudent) {
+            await this.ensureStudentExists(studentId);
         }
-        return result;
+
+        const result = await this.assetsService.getStudentBachelorThesisRegistrations(studentId);
+
+        return result.map(item => this.mapper.map(BachelorThesisRegistrationInfoDto, item));
     }
 
-    async getStudentBachelorThesisAssessment(studentId: string): Promise<BachelorThesisAssessmentInfoDto> {
-        await this.ensureStudentExists(studentId);
-
-        const result = await this.getStudentBachelorThesisAssessmentInner(studentId);
-        if (!result) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisAssessmentNotFound);
+    async getStudentBachelorThesisAssessments(studentId: string, checkStudent: boolean = true)
+        : Promise<BachelorThesisAssessmentInfoDto[]> {
+        if (checkStudent) {
+            await this.ensureStudentExists(studentId);
         }
-        return result;
+
+        const result = await this.assetsService.getStudentBachelorThesisAssessments(studentId);
+
+        return result.map(item => this.mapper.map(BachelorThesisAssessmentInfoDto, item));
     }
 
-    async getStudentBachelorThesisEvaluation(studentId: string): Promise<BachelorThesisEvaluationInfoDto> {
-        await this.ensureStudentExists(studentId);
-
-        const result = await this.getStudentBachelorThesisEvaluationInner(studentId);
-        if (!result) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.BachelorThesisEvaluationNotFound);
+    async getStudentBachelorThesisEvaluations(studentId: string, checkStudent: boolean = true)
+        : Promise<BachelorThesisEvaluationInfoDto[]> {
+        if (checkStudent) {
+            await this.ensureStudentExists(studentId);
         }
-        return result;
+
+        const result = await this.assetsService.getStudentBachelorThesisEvaluations(studentId);
+
+        return result.map(item => this.mapper.map(BachelorThesisEvaluationInfoDto, item));
     }
 
-    async getStudentOralDefenseRegistration(studentId: string): Promise<OralDefenseRegistrationInfoDto> {
+    async getStudentOralDefenseRegistrations(studentId: string, checkStudent: boolean = true)
+        : Promise<OralDefenseRegistrationInfoDto[]> {
+        if (checkStudent) {
+            await this.ensureStudentExists(studentId);
+        }
+        
+        const result = await this.assetsService.getStudentOralDefenseRegistrations(studentId);
+
+        return result.map(item => this.mapper.map(OralDefenseRegistrationInfoDto, item));
+    }
+
+    async getStudentOralDefenseAssessments(studentId: string, checkStudent: boolean = true)
+        : Promise<OralDefenseAssessmentInfoDto[]> {
         await this.ensureStudentExists(studentId);
         
-        const result = await this.getStudentOralDefenseRegistrationInner(studentId);
-        if (!result) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseRegistrationNotFound);
-        }
+        const result = await this.assetsService.getStudentOralDefenseAssessments(studentId);
 
-        return result;
-    }
-
-    async getStudentOralDefenseAssessment(studentId: string): Promise<OralDefenseAssessmentInfoDto> {
-        await this.ensureStudentExists(studentId);
-        
-        const result = await this.getStudentOralDefenseAssessmentInner(studentId);
-        if (!result) {
-            throw new NotFoundError(ERROR_MESSAGES.NotFound.OralDefenseAssessmentNotFound);
-        }
-
-        return result;
+        return result.map(item => this.mapper.map(OralDefenseAssessmentInfoDto, item));
     }
 
     async updateStudentInfo(studentId: string, updateRequest: StudentInfoUpdateRequest): Promise<StudentInfoDto> {
@@ -124,8 +131,11 @@ export class StudentService implements StudentServiceInterface {
         return this.mapper.map(StudentInfoDto, result);
     }
 
-    async createThesisRequest(userId: string, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto> {
-        const createdRequest = await this.requestService.createThesisRequest(userId, request.title);
+    async createThesisRequest(user: AuthorizedUser, request: ThesisRequestCreateRequest): Promise<RequestStateInfoDto> {
+        await this.ensureLatestRequestDeletable(user);
+
+        const process = await getThesisProcessOrThrow(this.processRepo);
+        const createdRequest = await this.requestService.createRequest(user.userId, process.id, request.title);
         if (!createdRequest) {
             throw new UnexpectedError(ERROR_MESSAGES.Unexpected.RequestCreationFailed);
         }
@@ -151,33 +161,16 @@ export class StudentService implements StudentServiceInterface {
         return result;
     }
 
-    private async getStudentBachelorThesisRegistrationInner(studentId: string)
-        : Promise<BachelorThesisRegistrationInfoDto | null> {
-        const result = await this.assetsService.getStudentBachelorThesisRegistration(studentId);
-        return result ? this.mapper.map(BachelorThesisRegistrationInfoDto, result) : null;
-    }
+    private async ensureLatestRequestDeletable(user: AuthorizedUser) {
+        const attempts = await this.studentAttemptRepo.findManyByStudentId(user.userId);
+        const latestAttempt = getElementWithLatestAttemptNo(attempts, attempt => attempt.attemptNo);
+        if (!latestAttempt || typeof latestAttempt.requestId !== 'string') {
+            return;
+        }
 
-    private async getStudentBachelorThesisAssessmentInner(studentId: string)
-        : Promise<BachelorThesisAssessmentInfoDto | null> {
-        const result = await this.assetsService.getStudentBachelorThesisAssessment(studentId);
-        return result ? this.mapper.map(BachelorThesisAssessmentInfoDto, result) : null;
-    }
-
-    private async getStudentBachelorThesisEvaluationInner(studentId: string)
-        : Promise<BachelorThesisEvaluationInfoDto | null> {
-        const result = await this.assetsService.getStudentBachelorThesisEvaluation(studentId);
-        return result ? this.mapper.map(BachelorThesisEvaluationInfoDto, result) : null;
-    }
-
-    private async getStudentOralDefenseRegistrationInner(studentId: string)
-        : Promise<OralDefenseRegistrationInfoDto | null> {
-        const result = await this.assetsService.getStudentOralDefenseRegistration(studentId);
-        return result ? this.mapper.map(OralDefenseRegistrationInfoDto, result) : null;
-    }
-
-    private async getStudentOralDefenseAssessmentInner(studentId: string)
-        : Promise<OralDefenseAssessmentInfoDto | null> {
-        const result = await this.assetsService.getStudentOralDefenseAssessment(studentId);
-        return result ? this.mapper.map(OralDefenseAssessmentInfoDto, result) : null;
+        const request = await this.requestService.getRequestState(user, latestAttempt.requestId);
+        if (!request.isDeletable) {
+            throw new ConflictError(ERROR_MESSAGES.Conflict.LatestAttemptRequestIsInProgress);
+        }
     }
 }

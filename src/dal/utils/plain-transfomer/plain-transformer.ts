@@ -20,6 +20,7 @@ import {
     RequestStakeholderDto, 
     RequestUserStakeholderDto, 
     RoleDto, 
+    StudentAttemptDto, 
     StudentDto,
     ThesisDto,
     TopicDto,
@@ -27,11 +28,12 @@ import {
 } from "../../../shared/dtos";
 import { plainToInstanceExactMatch } from "../../../utils/class-transformer-helpers";
 import { flattenObject } from "../../../utils/object-helpers";
-import { 
+import {
     PlainAdmin,
     PlainBachelorThesisAssessment,
     PlainBachelorThesisEvaluation,
     PlainBachelorThesisRegistration, 
+    PlainDetailedStudentAttempt, 
     PlainField, 
     PlainGroup, 
     PlainLecturer, 
@@ -46,9 +48,11 @@ import {
     PlainRequestStakeholder, 
     PlainRole, 
     PlainStudent,
+    PlainStudentAttempt,
     PlainThesis,
     PlainTopic,
-    PlainUser
+    PlainUser,
+    ProgramOnlyGroupAndMemberIds
 } from "../../types/plain-types";
 import { PlainTransformerInterface } from "./plain-transformer.interface";
 import { StateType } from "../../../api/others/workflow";
@@ -56,12 +60,10 @@ import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { CryptoServiceInterface } from "../../../shared/interfaces";
 import { wrapDecryptionError } from "../../../utils/wrap";
 import { RequestData } from "@prisma/client";
+import { getSexFromNumericCode, sexToTitle } from "../../../utils/sex-helpers";
 
 @injectable()
 export class PlainTransformer implements PlainTransformerInterface {
-    private static readonly bachelorThesisAndOralDefenseRelations 
-        = ['thesis', 'admin', 'supervisor', 'supervisor1', 'supervisor2'];
-
     constructor(@inject(INJECTION_TOKENS.CryptoService) private cryptoService: CryptoServiceInterface) {
 
     }
@@ -100,6 +102,8 @@ export class PlainTransformer implements PlainTransformerInterface {
 
         this.tryDecryptingEmail(dto);
         dto.studentId = plain.userId;
+        dto.sex = getSexFromNumericCode(plain.sex);
+        dto.numberOfAttempts = plain._count.studentAttempts;
         
         return dto;
     }
@@ -152,35 +156,68 @@ export class PlainTransformer implements PlainTransformerInterface {
         return dto;
     }
 
+    public toStudentAttempt(plain: PlainStudentAttempt): StudentAttemptDto {
+        const dto = plainToInstanceExactMatch(StudentAttemptDto, flattenObject(plain, {
+            keepDuplicate: true,
+        }));
+        
+        dto.supervisor1Id = plain.thesis.creatorId;
+        dto.bachelorThesisRegistrationId = plain.bachelorThesisRegistration?.id ?? null;
+        dto.oralDefenseRegistrationId = plain.oralDefenseRegistration?.id ?? null;
+        dto.bachelorThesisAssessmentId = plain.bachelorThesisAssessment?.id ?? null;
+        dto.oralDefenseAssessmentId = plain.oralDefenseAssessment?.id ?? null;
+        dto.bachelorThesisEvaluationId = plain.bachelorThesisEvaluation?.id ?? null;
+        dto.requestId = plain.studentAttemptRequest?.requestId ?? null;
+
+        return dto;
+    }
+
     public toBachelorThesisRegistration(plain: PlainBachelorThesisRegistration): BachelorThesisRegistrationDto {
-        const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisRegistrationDto, plain);
-        dto.studentSignature = plain.student.signature;
-        dto.adminSignature = plain.admin?.signature ?? null;
+        let dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisRegistrationDto, plain);
+    
+        const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
+        const programAdminGroup = this.mapProgramGroupAndMemberIds(plain.studentAttempt.student.program);
+        dto = { ...dto, ...studentAttempt, ...programAdminGroup };
+
         return dto;
     }
 
     public toOralDefenseRegistration(plain: PlainOralDefenseRegistration): OralDefenseRegistrationDto {
-        const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseRegistrationDto, plain);
-        dto.studentSignature = plain.student.signature;
+        let dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseRegistrationDto, plain);
+
+        const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
+        const programAdminGroup = this.mapProgramGroupAndMemberIds(plain.studentAttempt.student.program);
+        dto = { ...dto, ...studentAttempt, ...programAdminGroup };
+
         return dto;
     }
 
     public toBachelorThesisAssessment(plain: PlainBachelorThesisAssessment): BachelorThesisAssessmentDto {
-        const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisAssessmentDto, plain);
-        dto.studentSignature = plain.student.signature;
-        dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
+        let dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisAssessmentDto, plain);
+
+        const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
+        dto = { ...dto, ...studentAttempt };
+
         return dto;
     }
 
     public toOralDefenseAssessment(plain: PlainOralDefenseAssessment): OralDefenseAssessmentDto {
-        const dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseAssessmentDto, plain);
-        dto.studentSignature = plain.student.signature;
-        dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
+        let dto = this.toBachelorThesisOrOralDefenseDto(OralDefenseAssessmentDto, plain);
+
+        const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
+        dto = { ...dto, ...studentAttempt };
+
         return dto;
     }
 
     public toBachelorThesisEvaluation(plain: PlainBachelorThesisEvaluation): BachelorThesisEvaluationDto {
         const dto = this.toBachelorThesisOrOralDefenseDto(BachelorThesisEvaluationDto, plain);
+
+        dto.title = sexToTitle(getSexFromNumericCode(plain.studentAttempt.student.sex));
+        dto.supervisorId = plain.studentAttempt.thesis.creatorId;
+        dto.supervisorTitle = plain.studentAttempt.thesis.creator.title;
+        dto.supervisorSignature = plain.studentAttempt.thesis.creator.signature;
+
         return dto;
     }
 
@@ -250,11 +287,28 @@ export class PlainTransformer implements PlainTransformerInterface {
         return { requestId, userStakeholders, groupStakeholders };
     }
 
-    private toBachelorThesisOrOralDefenseDto<T>(cls: new (...args: any[]) => T, plain: object): T {
+    private toBachelorThesisOrOralDefenseDto<T extends object>(cls: new (...args: any[]) => T, plain: object): T {
         return plainToInstanceExactMatch(cls, flattenObject(plain, {
             keepDuplicate: true,
-            transformedProps: PlainTransformer.bachelorThesisAndOralDefenseRelations,
         }));
+    }
+
+    private mapDetailedStudentAttempt(plain: PlainDetailedStudentAttempt) {
+        return {
+            supervisor1Id: plain.thesis.creatorId,
+            supervisor1Title: plain.thesis.creator.title,
+            supervisor1Signature: plain.thesis.creator.signature,
+            supervisor2Title: plain.supervisor2.title,
+            supervisor2Signature: plain.supervisor2.signature,
+            studentSignature: plain.student.signature,
+        }
+    }
+
+    private mapProgramGroupAndMemberIds(plain: ProgramOnlyGroupAndMemberIds | null) {
+        return {
+            programAdminGroupId: plain ? plain.programAdminGroup?.group.id : null,
+            programAdminGroupMemberIds: plain?.programAdminGroup?.group.users.map(item => item.userId),
+        }
     }
 
     private computeOverallGrade(...grades: (number | null | undefined)[]) {

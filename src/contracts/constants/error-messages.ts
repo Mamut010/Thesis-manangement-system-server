@@ -29,6 +29,7 @@ export const ERROR_MESSAGES = {
 
         GroupNotFound: 'Group not found',
         RequestNotFound: 'Request not found',
+        AttemptAssociatedWithRequestNotFound: 'No attempt associated with request',
     },
     Unexpected: {
         DefaultMessage: 'Unexpected error has occurred',
@@ -37,13 +38,20 @@ export const ERROR_MESSAGES = {
         UserCreationFailed: 'Unable to create new user',
         RequestCreationFailed: 'Unable to create new request',
         ThesisProcessRetrievalFailed: 'Unable to retrieve thesis process',
-        MissingRequiredStringRequestData: 'Unable retrieve necessary string request data',
+        MissingRequiredStringRequestData: 'Unable to retrieve necessary string request data',
+        MissingRequiredNumberRequestData: 'Unable to retrieve necessary number request data',
         MultipleSimultaneousFulfilledTransitions: 'Unexpected multiple fulfilled transitions at the same time',
+        RequesterNotStudent: 'Unexpected requester of the request not a student',
+        RequestNotAssociatedWithStudentAttempt: 'Unexpected request not associated with any student attempt',
+        RequestAlreadyAssociatedWithForm: 'Unexpected request already associated with an expected-to-not-exist form',
+        MaxAttemptReached: 'Student has reached max attempts',
+        CommandNotFound: 'Unable to identify the operation',
     },
     UniqueConstraint: {
         RoleAlreadyExists: 'The role already exists',
         UserAlreadyExists: 'The user already exists',
         ProgramAlreadyExists: 'The program already exists',
+        StudentWithAttemptAlreadyExists: 'The student with attempt already exists.',
         StudentAlreadyConnectedBachelorThesisRegistration: 'The student already associates with a bachelor thesis registration',
         StudentAlreadyConnectedBachelorThesisAssessment: 'The student already associates with a bachelor thesis assessment',
         StudentAlreadyConnectedBachelorThesisEvaluation: 'The student already associates with a bachelor thesis evaluation',
@@ -55,6 +63,11 @@ export const ERROR_MESSAGES = {
         RoleCreationNotAllowed: 'Role creation is not allowed',
         RoleDeletionNotAllowed: 'Role deletion is not allowed',
     },
+    Conflict: {
+        UserAlreadyExists: 'User already exists',
+        RequestCurrentlyUndeletable: 'Request is currently undeletable',
+        LatestAttemptRequestIsInProgress: 'Latest attempt\'s request is in progress',
+    },
     Forbidden: {
         DefaultMessage: 'Access is denied',
         DefaultResourceMessage: 'Access to resource is denied',
@@ -65,16 +78,19 @@ export const ERROR_MESSAGES = {
         BachelorThesisEvaluationDenied: 'Access to bachelor thesis evaluation is denied',
         OralDefenseRegistrationDenied: 'Access to oral defense registration is denied',
         OralDefenseAssessmentDenied: 'Access to oral defense assessment is denied',
-
         RequestDenied: 'Access to request is denied',
+
+        CannotAssignOwnThesisToTheOthers: 'Cannot assign own thesis to other lecturers',
+        CannotDeleteOthersTheses: 'Cannot delete others\'s theses',
     },
     Invalid: {
         RoleInvalid: 'Invalid role',
         InputInvalid: 'Invalid input',
-        Supervisor2MustNotBeSupervisor1: 'Supervisor2 must not be Supervisor1',
+        Supervisor2MustNotBeSupervisor1: 'Supervisor1 and Supervisor2 must not be the same',
     },
     BadRequest: {
         DataMustBeNumber: 'Passed data must be number',
+        MissingCreatorId: 'Missing creator ID',
         MissingRequiredStringRequestData: 'Missing required string request data',
         UsersMustBeAdmin: 'Group members must be admin',
     }

@@ -54,38 +54,38 @@ export class StudentActorController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/bachelor-thesis-registration')
-    @ResponseSchema(BachelorThesisRegistrationInfoDto)
+    @Get('/bachelor-thesis-registrations')
+    @ResponseSchema(BachelorThesisRegistrationInfoDto, { isArray: true })
     getStudentBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentBachelorThesisRegistration(user.userId);
+        return this.studentService.getStudentBachelorThesisRegistrations(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/bachelor-thesis-assessment')
-    @ResponseSchema(BachelorThesisAssessmentInfoDto)
+    @Get('/bachelor-thesis-assessments')
+    @ResponseSchema(BachelorThesisAssessmentInfoDto, { isArray: true })
     getStudentBachelorThesisAssessment(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentBachelorThesisAssessment(user.userId);
+        return this.studentService.getStudentBachelorThesisAssessments(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/bachelor-thesis-evaluation')
-    @ResponseSchema(BachelorThesisEvaluationInfoDto)
+    @Get('/bachelor-thesis-evaluations')
+    @ResponseSchema(BachelorThesisEvaluationInfoDto, { isArray: true })
     getStudentBachelorThesisEvaluation(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentBachelorThesisEvaluation(user.userId);
+        return this.studentService.getStudentBachelorThesisEvaluations(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/oral-defense-registration')
-    @ResponseSchema(OralDefenseRegistrationInfoDto)
+    @Get('/oral-defense-registrations')
+    @ResponseSchema(OralDefenseRegistrationInfoDto, { isArray: true })
     getStudentOralDefenseRegistration(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentOralDefenseRegistration(user.userId);
+        return this.studentService.getStudentOralDefenseRegistrations(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    @Get('/oral-defense-assessment')
-    @ResponseSchema(OralDefenseAssessmentInfoDto)
+    @Get('/oral-defense-assessments')
+    @ResponseSchema(OralDefenseAssessmentInfoDto, { isArray: true })
     getStudentOralDefenseAssessment(@CurrentUser() user: AuthorizedUser) {
-        return this.studentService.getStudentOralDefenseAssessment(user.userId);
+        return this.studentService.getStudentOralDefenseAssessments(user.userId);
     }
 
     @HttpCode(HTTP_CODES.Ok)
@@ -101,7 +101,7 @@ export class StudentActorController {
     @ResponseSchema(RequestStateInfoDto)
     createThesisRequest(@CurrentUser() user: AuthorizedUser,
         @Body({ required: true }) createRequest: ThesisRequestCreateRequest) {
-        return this.studentService.createThesisRequest(user.userId, createRequest);
+        return this.studentService.createThesisRequest(user, createRequest);
     }
 
     @HttpCode(HTTP_CODES.Ok)
