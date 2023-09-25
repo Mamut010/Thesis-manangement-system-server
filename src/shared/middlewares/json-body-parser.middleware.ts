@@ -5,8 +5,10 @@ import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 
 @Middleware({ type: 'before' })
 @injectable()
-export class UrlEncodedBodyParserMiddleware implements ExpressMiddlewareInterface {
+export class JsonBodyParserMiddleware implements ExpressMiddlewareInterface {
+    private handler = bodyParser.json();
+
     public use(req: express.Request, res: express.Response, next: express.NextFunction): any {
-        return bodyParser.json()(req, res, next);
+        return this.handler(req, res, next);
     }
 }

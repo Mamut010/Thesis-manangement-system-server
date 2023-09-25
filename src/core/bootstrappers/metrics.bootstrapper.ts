@@ -2,7 +2,7 @@ import { Application, Request, Response, RequestHandler } from "express";
 import { BootstrapSettingInterface, Bootstrapper } from "../../lib/bootstrapper";
 import { BOOTSTRAP_SETTINGS_KEY } from "../../settings/bootstrap-settings";
 import { env } from "../../env";
-import { Container, interfaces } from "inversify";
+import { Container } from "inversify";
 import { PrismaClient } from "@prisma/client";
 import { INJECTION_TOKENS } from "../constants/injection-tokens";
 import { register } from "prom-client";
@@ -44,7 +44,8 @@ export const bootstrapMetrics: Bootstrapper = (settings?: BootstrapSettingInterf
 
     // Add app metrics handler to the container for later use
     container
-        ?.bind<RequestHandler>(INJECTION_TOKENS.AppMetricsHandler).toDynamicValue((context: interfaces.Context) => {
+        ?.bind<RequestHandler>(INJECTION_TOKENS.AppMetricsHandler)
+        .toDynamicValue(() => {
             return express_prom_bundle({
                 customLabels,
                 autoregister: false, // metrics output is processed manually with the above metricsHandler

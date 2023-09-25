@@ -11,11 +11,12 @@ import { AUTH_SETTINGS } from '../../settings/auth-settings';
 @Middleware({ type: 'before' })
 @injectable()
 export class SecurityHstsMiddleware implements ExpressMiddlewareInterface {
+    private handler = helmet.hsts({
+        maxAge: AUTH_SETTINGS.Helmet.HstsMaxAge,
+        includeSubDomains: true,
+    });
 
     public use(req: express.Request, res: express.Response, next: express.NextFunction): any {
-        return helmet.hsts({
-            maxAge: AUTH_SETTINGS.Helmet.HstsMaxAge,
-            includeSubDomains: true,
-        })(req, res, next);
+        return this.handler(req, res, next);
     }
 }

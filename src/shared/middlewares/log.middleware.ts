@@ -14,15 +14,17 @@ import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';
 @Middleware({ type: 'before' })
 @injectable()
 export class LogMiddleware implements ExpressMiddlewareInterface {
-    constructor(@inject(INJECTION_TOKENS.Logger) private log: LoggerInterface) {
+    private handler;
 
+    constructor(@inject(INJECTION_TOKENS.Logger) log: LoggerInterface) {
+        this.handler = morgan(env.log.output, {
+            stream: {
+                write: log.info.bind(log),
+            },
+        });
     }
 
     public use(req: express.Request, res: express.Response, next: express.NextFunction): any {
-        return morgan(env.log.output, {
-            stream: {
-                write: this.log.info.bind(this.log),
-            },
-        })(req, res, next);
+        return this.handler(req, res, next);
     }
 }
