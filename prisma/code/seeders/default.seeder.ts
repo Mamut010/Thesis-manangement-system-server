@@ -233,6 +233,7 @@ const Id = {
         StudentFilledODRForm: 'State-StudentFilledODRForm',
         RequestFinalizeODRFormSentToAdmin: 'State-RequestFinalizeODRFormSentToAdmin',
         AdminFinalizedODRForm: 'State-AdminFinalizedODRForm',
+        ODRDetailSentToStudent: 'State-ODRDetailSentToStudent',
         RequestAssessmentsSentToSups: 'State-RequestAssessmentsSentToSups',
         Sup1ConfirmedAssessmentsAwaitingSup2: 'State-Sup1ConfirmedAssessmentsAwaitingSup2',
         Sup2ConfirmedAssessmentsAwaitingSup1: 'State-Sup2ConfirmedAssessmentsAwaitingSup1',
@@ -284,7 +285,8 @@ const Id = {
         StudentFilledODRForm_RequestFinalizeODRFormSentToAdmin: 'Transition-StudentFilledODRForm_RequestFinalizeODRFormSentToAdmin',
         RequestFinalizeODRFormSentToAdmin_AdminFinalizedODRForm: 'Transition-RequestFinalizeODRFormSentToAdmin_AdminFinalizedODRForm',
         AdminFinalizedODRForm_RequestFinalizeODRFormSentToAdmin: 'Transition-AdminFinalizedODRForm_RequestFinalizeODRFormSentToAdmin',
-        AdminFinalizedODRForm_RequestAssessmentsSentToSups: 'Transition-AdminFinalizedODRForm_RequestAssessmentsSentToSups',
+        AdminFinalizedODRForm_ODRDetailSentToStudent: 'Transition-AdminFinalizedODRForm_ODRDetailSentToStudent',
+        ODRDetailSentToStudent_RequestAssessmentsSentToSups: 'Transition-ODRDetailSentToStudent_RequestAssessmentsSentToSups',
         RequestAssessmentsSentToSups_Sup1ConfirmedAssessmentsAwaitingSup2: 'Transition-RequestAssessmentsSentToSups_Sup1ConfirmedAssessmentsAwaitingSup2',
         RequestAssessmentsSentToSups_Sup2ConfirmedAssessmentsAwaitingSup1: 'Transition-RequestAssessmentsSentToSups_Sup2ConfirmedAssessmentsAwaitingSup1',
         Sup1ConfirmedAssessmentsAwaitingSup2_RequestAssessmentsSentToSups: 'Transition-Sup1ConfirmedAssessmentsAwaitingSup2_RequestAssessmentsSentToSups',
@@ -682,6 +684,12 @@ function seedThesisWorkflow(prisma: PrismaClient) {
                     processId: Id.Process.Thesis,
                     stateTypeId: Id.StateType.Normal,
                     name: 'Admin finalized oral defense registration form',
+                },
+                {
+                    id: Id.State.ODRDetailSentToStudent,
+                    processId: Id.Process.Thesis,
+                    stateTypeId: Id.StateType.Normal,
+                    name: 'Oral Defense Registration detail sent to student',
                 },
                 {
                     id: Id.State.RequestAssessmentsSentToSups,
@@ -1301,7 +1309,23 @@ function configThesisWorkflow(prisma: PrismaClient) {
         }),
         prisma.transition.update({
             where: {
-                id: Id.Transition.AdminFinalizedODRForm_RequestAssessmentsSentToSups
+                id: Id.Transition.AdminFinalizedODRForm_ODRDetailSentToStudent
+            },
+            data: {
+                actions: {
+                    connect: { id: Id.Action.AdminGroup_InformRequester }
+                },
+                activities: {
+                    connect: [
+                        { id: Id.Activity.Notify_Stakeholders },
+                        { id: Id.Activity.SendEmail_Requester },
+                    ]
+                }
+            }
+        }),
+        prisma.transition.update({
+            where: {
+                id: Id.Transition.ODRDetailSentToStudent_RequestAssessmentsSentToSups
             },
             data: {
                 actions: {
