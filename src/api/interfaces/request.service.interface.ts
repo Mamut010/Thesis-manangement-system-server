@@ -1,6 +1,6 @@
 import { RequestInfosQueryRequest } from "../../contracts/requests";
 import { RequestActionSubmitRequest } from "../../contracts/requests/api/request-action-submit.request";
-import { RequestAssociatedFormsResponse, RequestInfosQueryResponse } from "../../contracts/responses";
+import { RequestAssociatedDataResponse, RequestInfosQueryResponse } from "../../contracts/responses";
 import { AuthorizedUser } from "../../core/auth-checkers";
 import { RequestStateInfoDto } from "../../shared/dtos";
 
@@ -13,5 +13,5 @@ export interface RequestServiceInterface {
     submitAction(user: AuthorizedUser, request: RequestActionSubmitRequest): Promise<RequestStateInfoDto | undefined>;
     getCreatedRequestStatesLatestToOldest(creatorId: string): Promise<RequestStateInfoDto[]>;
 
-    getRequestAssociatedForms(user: AuthorizedUser, requestId: string): Promise<RequestAssociatedFormsResponse>;
+    getRequestAssociatedData(user: AuthorizedUser, requestId: string): Promise<RequestAssociatedDataResponse>;
 }

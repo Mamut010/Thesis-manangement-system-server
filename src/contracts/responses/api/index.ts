@@ -11,4 +11,4 @@ export * from './student-infos-query.response';
 export * from './request-infos-query.response';
 export * from './group-infos-query.response';
 
-export * from './request-associated-forms.response';
+export * from './request-associated-data.response';

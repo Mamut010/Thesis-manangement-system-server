@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { GroupsQueryRequest, RequestInfosQueryRequest, RequestsQueryRequest } from "../../contracts/requests";
-import { RequestAssociatedFormsResponse, RequestInfosQueryResponse } from "../../contracts/responses";
+import { RequestAssociatedDataResponse, RequestInfosQueryResponse } from "../../contracts/responses";
 import { RequestServiceInterface } from "../interfaces/request.service.interface";
 import { INJECTION_TOKENS } from "../../core/constants/injection-tokens";
 import { GroupRepoInterface, RequestRepoInterface, StudentAttemptRepoInterface } from "../../dal/interfaces";
@@ -149,7 +149,7 @@ export class RequestService implements RequestServiceInterface {
         return content.map((request, index) => this.makeRequestStateInfo(request, requestStates[index]));
     }
 
-    async getRequestAssociatedForms(user: AuthorizedUser, requestId: string): Promise<RequestAssociatedFormsResponse> {
+    async getRequestAssociatedData(user: AuthorizedUser, requestId: string): Promise<RequestAssociatedDataResponse> {
         const request = await this.ensureRecordExists(requestId);
         await this.ensureValidRequestAccess(user, request.userStakeholderIds, request.groupStakeholderIds);
 
@@ -157,13 +157,18 @@ export class RequestService implements RequestServiceInterface {
         if (!record) {
             throw new NotFoundError(ERROR_MESSAGES.NotFound.AttemptAssociatedWithRequestNotFound);
         }
-        return {
+
+        const response = this.mapper.map(RequestAssociatedDataResponse, record);
+        response.forms = {
             bachelorThesisRegistrationId: record.bachelorThesisRegistrationId ?? undefined,
             oralDefenseRegistrationId: record.oralDefenseRegistrationId ?? undefined,
             bachelorThesisAssessmentId: record.bachelorThesisAssessmentId ?? undefined,
             oralDefenseAssessmentId: record.oralDefenseAssessmentId ?? undefined,
             bachelorThesisEvaluationId: record.bachelorThesisEvaluationId ?? undefined,
-        }
+        };
+        response.startedAt = record.createdAt;
+
+        return response;
     }
 
     private async ensureRecordExists(id: string) {
