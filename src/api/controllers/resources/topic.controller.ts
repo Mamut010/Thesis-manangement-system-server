@@ -22,7 +22,7 @@ import { TopicDto } from "../../../shared/dtos";
 import { Role } from "../../../core/constants/roles";
 
 @JsonController('topics')
-//@Authorized()
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
@@ -48,7 +48,7 @@ export class TopicController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized([Role.Admin, Role.Lecturer1_1])
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Post()
     @ResponseSchema(TopicDto)
     createTopic(@Body({ required: true }) createRequest: TopicCreateRequest) {
@@ -56,14 +56,14 @@ export class TopicController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(Role.Admin)
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Patch('/:id')
     @ResponseSchema(TopicDto)
     updateTopic(@Param('id') id: number, @Body({ required: true }) updateRequest: TopicUpdateRequest) {
         return this.topicService.updateTopic(id, updateRequest);
     }
 
-    //@Authorized(Role.Admin)
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteTopic(@Param('id') id: number) {

@@ -22,7 +22,7 @@ import { FieldDto } from "../../../shared/dtos";
 import { Role } from "../../../core/constants/roles";
 
 @JsonController('fields')
-//@Authorized()
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
@@ -48,7 +48,7 @@ export class FieldController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized(Role.Admin)
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Post()
     @ResponseSchema(FieldDto)
     createField(@Body({ required: true }) createRequest: FieldCreateRequest) {
@@ -56,14 +56,14 @@ export class FieldController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(Role.Admin)
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Patch('/:id')
     @ResponseSchema(FieldDto)
     updateField(@Param('id') id: number, @Body({ required: true }) updateRequest: FieldUpdateRequest) {
         return this.fieldService.updateField(id, updateRequest);
     }
 
-    //@Authorized(Role.Admin)
+    @Authorized([Role.Admin, Role.Lecturer1_1])
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteField(@Param('id') id: number) {

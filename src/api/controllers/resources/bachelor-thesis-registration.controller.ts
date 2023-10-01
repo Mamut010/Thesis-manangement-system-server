@@ -26,7 +26,7 @@ import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses";
 
 @JsonController('bachelor-thesis-registrations')
-//@Authorized()
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]

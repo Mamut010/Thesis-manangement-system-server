@@ -22,7 +22,7 @@ import { ProgramDto } from "../../../shared/dtos";
 import { Role } from "../../../core/constants/roles";
 
 @JsonController('programs')
-//@Authorized()
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
@@ -48,7 +48,7 @@ export class ProgramController {
     }
 
     @HttpCode(HTTP_CODES.Created)
-    //@Authorized(Role.Admin)
+    @Authorized(Role.Admin)
     @Post()
     @ResponseSchema(ProgramDto)
     createProgram(@Body({ required: true }) createRequest: ProgramCreateRequest) {
@@ -56,14 +56,14 @@ export class ProgramController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(Role.Admin)
+    @Authorized(Role.Admin)
     @Patch('/:id')
     @ResponseSchema(ProgramDto)
     updateProgram(@Param('id') id: number, @Body({ required: true }) updateRequest: ProgramUpdateRequest) {
         return this.programService.updateProgram(id, updateRequest);
     }
 
-    //@Authorized(Role.Admin)
+    @Authorized(Role.Admin)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteProgram(@Param('id') id: number) {

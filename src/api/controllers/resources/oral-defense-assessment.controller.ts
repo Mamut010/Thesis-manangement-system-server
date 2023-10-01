@@ -26,7 +26,7 @@ import { AuthorizedUser } from "../../../core/auth-checkers";
 import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/responses";
 
 @JsonController('oral-defense-assessments')
-//@Authorized()
+@Authorized()
 @injectable()
 @OpenAPI({
     security: [{ bearerAuth: [] }]
