@@ -93,5 +93,6 @@ export const ERROR_MESSAGES = {
         MissingCreatorId: 'Missing creator ID',
         MissingRequiredStringRequestData: 'Missing required string request data',
         UsersMustBeAdmin: 'Group members must be admin',
+        OnlyUpdatableFieldsAllowed: 'Only updatable fields are allowed',
     }
 } as const;

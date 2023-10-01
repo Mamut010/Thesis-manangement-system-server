@@ -15,6 +15,7 @@ import { OralDefenseAssessmentInfosQueryResponse } from "../../../contracts/resp
 import { MapperServiceInterface } from "../../../shared/interfaces";
 import { isAdmin } from "../../../utils/role-predicates";
 import { isValidFormUpdate } from "../../../utils/forms-helpers";
+import { BadRequestError } from "../../../contracts/errors/bad-request.error";
 
 @injectable()
 export class OralDefenseAssessmentService implements OralDefenseAssessmentServiceInterface {
@@ -76,7 +77,7 @@ export class OralDefenseAssessmentService implements OralDefenseAssessmentServic
         const updatableFields = this.getUpdatableFields(user.userId, record);
 
         if (!isValidFormUpdate(updateRequest, updatableFields)) {
-            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.OralDefenseAssessmentDenied);
+            throw new BadRequestError(ERROR_MESSAGES.BadRequest.OnlyUpdatableFieldsAllowed);
         }
     }
 

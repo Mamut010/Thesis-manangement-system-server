@@ -21,7 +21,7 @@ import {
     BachelorThesisAssessmentInfoUpdateRequest
 } from "../../../contracts/requests";
 import { BachelorThesisAssessmentInfoDto } from "../../../shared/dtos";
-import { Role } from "../../../core/constants/roles";
+import { LecturerRoles } from "../../../core/constants/roles";
 import { AuthorizedUser } from "../../../core/auth-checkers";
 import { BachelorThesisAssessmentInfosQueryResponse } from "../../../contracts/responses";
 
@@ -54,7 +54,7 @@ export class BachelorThesisAssessmentController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(Role.Admin)
+    @Authorized(LecturerRoles)
     @Patch('/:id')
     @ResponseSchema(BachelorThesisAssessmentInfoDto)
     updateBachelorThesisAssessment(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
@@ -62,7 +62,7 @@ export class BachelorThesisAssessmentController {
         return this.bachelorThesisAssessmentService.updateBachelorThesisAssessment(user, id, updateRequest);
     }
 
-    //@Authorized([Role.Admin, Role.Student])
+    @Authorized(LecturerRoles)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteBachelorThesisAssessment(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {

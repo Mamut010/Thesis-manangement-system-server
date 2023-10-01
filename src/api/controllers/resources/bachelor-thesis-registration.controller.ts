@@ -54,7 +54,7 @@ export class BachelorThesisRegistrationController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(Role.Admin)
+    @Authorized([Role.Admin, Role.Student])
     @Patch('/:id')
     @ResponseSchema(BachelorThesisRegistrationInfoDto)
     updateBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
@@ -62,7 +62,7 @@ export class BachelorThesisRegistrationController {
         return this.bachelorThesisRegistrationService.updateBachelorThesisRegistration(user, id, updateRequest);
     }
 
-    //@Authorized([Role.Admin, Role.Student])
+    @Authorized(Role.Admin)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteBachelorThesisRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {

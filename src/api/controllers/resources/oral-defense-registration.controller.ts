@@ -54,7 +54,7 @@ export class OralDefenseRegistrationController {
     }
 
     @HttpCode(HTTP_CODES.Ok)
-    //@Authorized(Role.Admin)
+    @Authorized([Role.Admin, Role.Student])
     @Patch('/:id')
     @ResponseSchema(OralDefenseRegistrationInfoDto)
     updateOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number, 
@@ -62,7 +62,7 @@ export class OralDefenseRegistrationController {
         return this.oralDefenseRegistrationService.updateOralDefenseRegistration(user, id, updateRequest);
     }
 
-    //@Authorized([Role.Admin, Role.Student])
+    @Authorized(Role.Admin)
     @Delete('/:id')
     @OnUndefined(HTTP_CODES.NoContent)
     deleteOralDefenseRegistration(@CurrentUser() user: AuthorizedUser, @Param('id') id: number) {

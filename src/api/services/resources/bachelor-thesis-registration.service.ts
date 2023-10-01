@@ -15,6 +15,7 @@ import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts
 import { MapperServiceInterface } from "../../../shared/interfaces";
 import { isAdmin } from "../../../utils/role-predicates";
 import { isValidFormUpdate } from "../../../utils/forms-helpers";
+import { BadRequestError } from "../../../contracts/errors/bad-request.error";
 
 @injectable()
 export class BachelorThesisRegistrationService implements BachelorThesisRegistrationServiceInterface {
@@ -75,7 +76,7 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
         const updatableFields = this.getUpdatableFields(user.userId, record);
 
         if (!isValidFormUpdate(updateRequest, updatableFields)) {
-            throw new ForbiddenError(ERROR_MESSAGES.Forbidden.BachelorThesisRegistrationDenied);
+            throw new BadRequestError(ERROR_MESSAGES.BadRequest.OnlyUpdatableFieldsAllowed);
         }
     }
 
