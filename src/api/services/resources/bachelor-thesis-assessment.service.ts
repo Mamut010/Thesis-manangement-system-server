@@ -14,6 +14,7 @@ import { BachelorThesisAssessmentRepoInterface } from "../../../dal/interfaces";
 import { BachelorThesisAssessmentInfosQueryResponse } from "../../../contracts/responses";
 import { MapperServiceInterface } from "../../../shared/interfaces";
 import { isAdmin } from "../../../utils/role-predicates";
+import { isValidFormUpdate } from "../../../utils/forms-helpers";
 
 @injectable()
 export class BachelorThesisAssessmentService implements BachelorThesisAssessmentServiceInterface {
@@ -72,14 +73,8 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
     private ensureValidUpdate(user: AuthorizedUser, record: BachelorThesisAssessmentDto, 
         updateRequest: BachelorThesisAssessmentInfoUpdateRequest) {
         const updatableFields = this.getUpdatableFields(user.userId, record);
-        const updatableFieldSet = new Set(updatableFields);
 
-        const isValid = Object.entries(updateRequest).every(entry => {
-            return typeof entry[1] === 'undefined' 
-                || updatableFieldSet.has(entry[0] as keyof BachelorThesisAssessmentInfoUpdateRequest);
-        });
-
-        if (!isValid) {
+        if (!isValidFormUpdate(updateRequest, updatableFields)) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.BachelorThesisAssessmentDenied);
         }
     }
@@ -97,7 +92,7 @@ export class BachelorThesisAssessmentService implements BachelorThesisAssessment
         return infoDto;
     }
 
-    private getUpdatableFields(userId: string, dto: BachelorThesisAssessmentDto) {
+    private getUpdatableFields(userId: string, dto: BachelorThesisAssessmentDto): readonly string[] {
         // Supervisor1's perspective
         if (dto.supervisor1Id === userId && !dto.supervisor1Confirmed) {
             return BachelorThesisAssessmentService.SUPERVISOR1_UPDATABLE_FIELDS;

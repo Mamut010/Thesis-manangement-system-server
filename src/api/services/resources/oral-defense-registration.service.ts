@@ -14,6 +14,7 @@ import { OralDefenseRegistrationRepoInterface } from "../../../dal/interfaces";
 import { OralDefenseRegistrationInfosQueryResponse } from "../../../contracts/responses";
 import { MapperServiceInterface } from "../../../shared/interfaces";
 import { isAdmin } from "../../../utils/role-predicates";
+import { isValidFormUpdate } from "../../../utils/forms-helpers";
 
 @injectable()
 export class OralDefenseRegistrationService implements OralDefenseRegistrationServiceInterface {
@@ -72,14 +73,8 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
     private ensureValidUpdate(user: AuthorizedUser, record: OralDefenseRegistrationDto, 
         updateRequest: OralDefenseRegistrationInfoUpdateRequest) {
         const updatableFields = this.getUpdatableFields(user.userId, record);
-        const updatableFieldSet = new Set(updatableFields);
 
-        const isValid = Object.entries(updateRequest).every(entry => {
-            return typeof entry[1] === 'undefined' 
-                || updatableFieldSet.has(entry[0] as keyof OralDefenseRegistrationInfoUpdateRequest);
-        });
-
-        if (!isValid) {
+        if (!isValidFormUpdate(updateRequest, updatableFields)) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.OralDefenseRegistrationDenied);
         }
     }
@@ -97,7 +92,7 @@ export class OralDefenseRegistrationService implements OralDefenseRegistrationSe
         return infoDto;
     }
 
-    private getUpdatableFields(userId: string, dto: OralDefenseRegistrationDto) {
+    private getUpdatableFields(userId: string, dto: OralDefenseRegistrationDto): readonly string[] {
         // Student's perspective
         if (dto.studentId === userId && !dto.studentConfirmed && !dto.adminConfirmed) {
             return OralDefenseRegistrationService.STUDENT_UPDATABLE_FIELDS;

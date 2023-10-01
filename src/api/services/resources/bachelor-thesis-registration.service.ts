@@ -14,6 +14,7 @@ import { BachelorThesisRegistrationRepoInterface } from "../../../dal/interfaces
 import { BachelorThesisRegistrationInfosQueryResponse } from "../../../contracts/responses";
 import { MapperServiceInterface } from "../../../shared/interfaces";
 import { isAdmin } from "../../../utils/role-predicates";
+import { isValidFormUpdate } from "../../../utils/forms-helpers";
 
 @injectable()
 export class BachelorThesisRegistrationService implements BachelorThesisRegistrationServiceInterface {
@@ -72,14 +73,8 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
     private ensureValidUpdate(user: AuthorizedUser, record: BachelorThesisRegistrationDto, 
         updateRequest: BachelorThesisRegistrationInfoUpdateRequest) {
         const updatableFields = this.getUpdatableFields(user.userId, record);
-        const updatableFieldSet = new Set(updatableFields);
 
-        const isValid = Object.entries(updateRequest).every(entry => {
-            return typeof entry[1] === 'undefined' 
-                || updatableFieldSet.has(entry[0] as keyof BachelorThesisRegistrationInfoUpdateRequest);
-        });
-
-        if (!isValid) {
+        if (!isValidFormUpdate(updateRequest, updatableFields)) {
             throw new ForbiddenError(ERROR_MESSAGES.Forbidden.BachelorThesisRegistrationDenied);
         }
     }
@@ -97,7 +92,7 @@ export class BachelorThesisRegistrationService implements BachelorThesisRegistra
         return infoDto;
     }
 
-    private getUpdatableFields(userId: string, dto: BachelorThesisRegistrationDto) {
+    private getUpdatableFields(userId: string, dto: BachelorThesisRegistrationDto): readonly string[] {
         // Student's perspective
         if (dto.studentId === userId && !dto.studentConfirmed && !dto.adminConfirmed) {
             return BachelorThesisRegistrationService.STUDENT_UPDATABLE_FIELDS;
