@@ -197,6 +197,7 @@ export class PlainTransformer implements PlainTransformerInterface {
 
         const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
         dto = { ...dto, ...studentAttempt };
+        dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
 
         return dto;
     }
@@ -206,6 +207,7 @@ export class PlainTransformer implements PlainTransformerInterface {
 
         const studentAttempt = this.mapDetailedStudentAttempt(plain.studentAttempt);
         dto = { ...dto, ...studentAttempt };
+        dto.overallGrade = this.computeOverallGrade(dto.supervisor1Grade, dto.supervisor2Grade);
 
         return dto;
     }
