@@ -39,13 +39,6 @@ export type WhereBinaryFilterObject<TValue, TOperator extends FilterOperator = F
 
 export type WhereListFilterObject<TValue> = ActualFilteringObject<TValue[], ListFilterOperator>;
 
-export type WhereQueryObjectBak = { 
-    [property: string]: WhereBinaryFilterObject<unknown> | WhereListFilterObject<unknown> | WhereQueryObject
-} & {
-    AND?: Omit<WhereQueryObject, 'AND'>[],
-    OR?: Omit<WhereQueryObject, 'AND' | 'OR'>[]
-};
-
 export type WhereQueryObject = { 
     [property: string]: WhereBinaryFilterObject<unknown> | WhereListFilterObject<unknown> | WhereQueryObject
 } & {
