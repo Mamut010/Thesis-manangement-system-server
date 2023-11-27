@@ -7,7 +7,6 @@ import * as path from 'path';
 import {
     getOsEnv, getOsEnvArray, getOsEnvOptional, getOsPaths, normalizePort, toBool, toNumber
 } from './lib/env';
-import { get } from 'http';
 
 /**
  * Load .env file or for tests the .env.test file.
