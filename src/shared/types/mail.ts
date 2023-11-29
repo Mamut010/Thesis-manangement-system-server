@@ -1,4 +1,5 @@
 import Mail from "nodemailer/lib/mailer";
+import { type } from "os";
 import { Readable } from "stream";
 
 export type MailOptions = Mail.Options;
@@ -7,7 +8,7 @@ export type MailWithoutMessageOptions = Omit<MailOptions, 'text' | 'html' | 'wat
 export type Attachment = Mail.Attachment;
 export type MailAddress = Mail.Address;
 
-export interface MessageInfo {
+export type MessageInfo = {
     messageId: string;
     accepted: Array<string | MailAddress>;
     rejected: Array<string | MailAddress>;

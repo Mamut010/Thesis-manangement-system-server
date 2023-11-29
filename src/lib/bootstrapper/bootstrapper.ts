@@ -3,7 +3,7 @@ import { BootstrapSettingInterface } from "./bootstrap-setting.interface";
 
 export type Bootstrapper = (settings?: BootstrapSettingInterface) => Promise<void | undefined> | void | undefined;
 
-export interface BootstrapConfig {
+export type BootstrapConfig = {
     /**
      * Array of bootstrappers to trigger in sequential order.
      */
