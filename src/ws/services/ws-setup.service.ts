@@ -33,6 +33,14 @@ export class WsSetupService implements WsSetupServiceInterface {
         this.ioRoomTimerManager.startTimer(nsp, room, exp, { forceReset: true, ignoreEarlier: true });
     }
 
+    onDisconnect(socket: IODefaultSocket): void {
+        const nsp = socket.nsp.name;
+        const room = this.roomIdGenerator.generate(socket.data.user.userId);
+        
+        // Clear the timer when a client disconnects (if any)
+        this.ioRoomTimerManager.clearTimer(nsp, room);
+    }
+
     async onAuthenticate(socket: IODefaultSocket, request: WsAuthenticateRequest): Promise<WsAuthenticateResponse> {
         // Authenticate the token. If failed, also send the error message
         const token = await this.jwtExtractor.extract(request.token);
@@ -55,13 +63,5 @@ export class WsSetupService implements WsSetupServiceInterface {
         this.ioRoomTimerManager.resetTimer(socket.nsp.name, room, newExp, { ignoreEarlier: true });
 
         return { authenticated: true, message: COMMON_MESSAGES.AuthenticatedSuccessfully };
-    }
-
-    onDisconnect(socket: IODefaultSocket): void {
-        const nsp = socket.nsp.name;
-        const room = this.roomIdGenerator.generate(socket.data.user.userId);
-        
-        // Clear the timer when a client disconnects (if any)
-        this.ioRoomTimerManager.clearTimer(nsp, room);
     }
 }

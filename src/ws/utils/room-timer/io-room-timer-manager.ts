@@ -28,7 +28,7 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
     }
 
     resetTimer(nsp: string, room: string, newExp?: Date, options?: RoomTimerOptions) {
-        const roomData = this.nspRoomEntriesMap.get(nsp)?.get(room);
+        const roomData = this.getRoomDataByNspAndRoom(nsp, room);
         if (!roomData) {
             return false;
         }
@@ -49,7 +49,7 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
     }
 
     pauseTimer(nsp: string, room: string) {
-        const roomData = this.nspRoomEntriesMap.get(nsp)?.get(room);
+        const roomData = this.getRoomDataByNspAndRoom(nsp, room);
         if (!roomData) {
             return false;
         }
@@ -58,7 +58,7 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
     }
 
     unpauseTimer(nsp: string, room: string) {
-        const roomData = this.nspRoomEntriesMap.get(nsp)?.get(room);
+        const roomData = this.getRoomDataByNspAndRoom(nsp, room);
         if (!roomData || roomData.counting || !roomData.exp) {
             return false;
         }
@@ -67,19 +67,22 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
     }
 
     hasTimer(nsp: string, room: string) {
-        return !!this.nspRoomEntriesMap.get(nsp)?.get(room)?.counting;
+        const roomData = this.getRoomDataByNspAndRoom(nsp, room);
+        return roomData ? roomData.counting : false;
     }
 
     getTimerExp(nsp: string, room: string) {
-        const roomData = this.nspRoomEntriesMap.get(nsp)?.get(room);
-        if (!roomData) {
-            return undefined;
-        }
-        return roomData.exp;
+        const roomData = this.getRoomDataByNspAndRoom(nsp, room);
+        return roomData?.exp;
     }
 
     private hasRoomInNsp(nsp: string, room: string) {
-        return !!this.io._nsps.get(nsp)?.adapter.rooms.has(room);
+        const nspObj = this.io._nsps.get(nsp);
+        return nspObj ? nspObj.adapter.rooms.has(room) : false;
+    }
+
+    private getRoomDataByNspAndRoom(nsp: string, room: string) {
+        return this.nspRoomEntriesMap.get(nsp)?.get(room);
     }
 
     private getOrCreateRoomData(nsp: string, room: string) {
@@ -102,15 +105,15 @@ export class IORoomTimerManager implements IORoomTimerManagerInterface {
     }
 
     private start(roomData: RoomData, newExp: Date, options?: RoomTimerOptions) {
-        let isExpCondSatisfied = false;
+        let isExpConditionSatisfied = false;
         if (options?.ignoreEarlier) {
-            isExpCondSatisfied = roomData.exp ? newExp > roomData.exp : true;
+            isExpConditionSatisfied = roomData.exp ? newExp > roomData.exp : true;
         }
         else {
-            isExpCondSatisfied = roomData.exp?.getTime() !== newExp.getTime();
+            isExpConditionSatisfied = roomData.exp?.getTime() !== newExp.getTime();
         }
 
-        if (!roomData.counting || isExpCondSatisfied) {
+        if (!roomData.counting || isExpConditionSatisfied) {
             this.stopIfNeeded(roomData, true);
 
             roomData.counting = true;
