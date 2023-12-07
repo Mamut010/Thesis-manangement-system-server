@@ -17,6 +17,6 @@ export class AcceptStakeholdersActivityHandler extends BaseUserStakeholdersActiv
 
     protected execute(requestId: string, userId: string, activityInput: ActivityHandlerInput)
         : Promise<ActivityHandlerOutput | RequestStakeholderDto | null> {
-        return this.requestStakeholderRepo.setUserStakeholderAccepted(requestId, userId, true);
+        return this.requestStakeholderRepo.setUserStakeholderAccepted(requestId, userId);
     }
 }

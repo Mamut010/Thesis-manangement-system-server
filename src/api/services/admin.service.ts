@@ -5,7 +5,7 @@ import { NotFoundError } from "../../contracts/errors/not-found.error";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { AdminInfoDto } from "../../shared/dtos";
 import { AdminRepoInterface } from "../../dal/interfaces";
-import { AdminInfoUpdateRequest, AdminUpdateRequest } from "../../contracts/requests";
+import { AdminInfoUpdateRequest } from "../../contracts/requests";
 import { MapperServiceInterface } from "../../shared/interfaces";
 
 @injectable()

@@ -34,7 +34,6 @@ import { LecturerRoles } from "../../core/constants/roles";
 import { ERROR_MESSAGES } from "../../contracts/constants/error-messages";
 import { BadRequestError } from "../../contracts/errors/bad-request.error";
 import { NotFoundError } from "../../contracts/errors/not-found.error";
-import { BaseQueryRequest } from "../../contracts/bases";
 import { queryRequestOrDefault } from "../../utils/query-request-helpers";
 
 @injectable()

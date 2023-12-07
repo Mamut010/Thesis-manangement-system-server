@@ -40,17 +40,17 @@ export class RequestStakeholderRepo implements RequestStakeholderRepoInterface {
             updateRequest.addedGroupIds, updateRequest.removedGroupIds, updateRequest.acceptedIds);
     }
 
-    async setStakeholdersAccepted(requestId: string, id: string | string[], accepted: boolean)
+    async setStakeholdersAccepted(requestId: string, id: string | string[], accepted: boolean = true)
         : Promise<RequestStakeholderDto | null> {
         return await this.setAccepted(true, requestId, id, accepted);
     }
 
-    async setUserStakeholderAccepted(requestId: string, userId: string | string[], accepted: boolean)
+    async setUserStakeholderAccepted(requestId: string, userId: string | string[], accepted: boolean = true)
         : Promise<RequestStakeholderDto | null> {
         return await this.setAccepted('userId', requestId, userId, accepted);
     }
 
-    async setGroupStakeholderAccepted(requestId: string, groupId: string | string[], accepted: boolean)
+    async setGroupStakeholderAccepted(requestId: string, groupId: string | string[], accepted: boolean = true)
         : Promise<RequestStakeholderDto | null> {
         return await this.setAccepted('groupId', requestId, groupId, accepted);
     }

@@ -10,12 +10,12 @@ export interface RequestStakeholderRepoInterface {
     updateGroupStakeholders(requestId: string, updateRequest: RequestGroupStakeholdersUpdateRequest)
         : Promise<RequestStakeholderDto | null>;
 
-    setStakeholdersAccepted(requestId: string, id: string | string[], accepted: boolean)
+    setStakeholdersAccepted(requestId: string, id: string | string[], accepted?: boolean)
         : Promise<RequestStakeholderDto | null>;
 
-    setUserStakeholderAccepted(requestId: string, userId: string | string[], accepted: boolean)
+    setUserStakeholderAccepted(requestId: string, userId: string | string[], accepted?: boolean)
         : Promise<RequestStakeholderDto | null>;
 
-    setGroupStakeholderAccepted(requestId: string, groupId: string | string[], accepted: boolean)
+    setGroupStakeholderAccepted(requestId: string, groupId: string | string[], accepted?: boolean)
         : Promise<RequestStakeholderDto | null>;
 }

@@ -25,7 +25,13 @@ import {
     OralDefenseAssessmentsQueryResponse, 
     OralDefenseRegistrationsQueryResponse
 } from "../../contracts/responses";
-import { BachelorThesisAssessmentDto, BachelorThesisEvaluationDto, BachelorThesisRegistrationDto, OralDefenseAssessmentDto, OralDefenseRegistrationDto } from "../../shared/dtos";
+import { 
+    BachelorThesisAssessmentDto, 
+    BachelorThesisEvaluationDto, 
+    BachelorThesisRegistrationDto, 
+    OralDefenseAssessmentDto, 
+    OralDefenseRegistrationDto 
+} from "../../shared/dtos";
 
 @injectable()
 export class AssetsService implements AssetsServiceInterface {

@@ -1,7 +1,7 @@
 import { isDate } from "util/types";
 import { capitalize, trimPrefix, uncapitalize } from "./string-helpers";
 import { arrayIntersection, arrayUnion } from "./array-helpers";
-import { ValueOf } from "./types";
+import { EnumerableObject, ValueOf } from "./types";
 
 /**
  * Make an object become immutable. This operation is irreversible.
@@ -11,7 +11,7 @@ export function makeImmutable<T extends object>(obj: T): Readonly<T> {
     return Object.freeze<T>(obj);
 }
 
-export function isEnumerableObject(obj: unknown): obj is { [property: PropertyKey]: any } {
+export function isEnumerableObject(obj: unknown): obj is EnumerableObject {
     return typeof obj === 'object' 
         && obj !== null
         && !Array.isArray(obj)

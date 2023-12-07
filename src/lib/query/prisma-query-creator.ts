@@ -39,6 +39,8 @@ import {
 import { ClassConstructor, plainToInstance } from "class-transformer";
 import { mergeRecordsOfArray } from "./utils/record-helpers";
 import { BinaryAndListFilters, WhereObjectCreationConfig, WhereWithFieldMap } from "./types/utility-types";
+import { EnumerableObject } from "../../utils/types";
+import { makeArray } from "../../utils/array-helpers";
 
 @injectable()
 export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
@@ -141,16 +143,8 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
 
         for(const key in query) {
             const value: unknown = query[key];
-            const isValueBinaryFilter = isBinaryFilter(value);
-            const isValueBinaryFilterArray = isBinaryFilterArray(value);
-            const isValueListFilter = isListFilter(value);
-            const isValueListFilterArray = isListFilterArray(value);
 
-            if (!isValueBinaryFilter 
-                && !isValueBinaryFilterArray
-                && !isValueListFilter 
-                && !isValueListFilterArray
-                && isEnumerableObject(value)) {
+            if (this.isNoneFilterEnumeratedObject(value)) {
                 const inner = this.getFilterFieldsFromQuery(value, creationOptions); 
                 binaryFilters = mergeRecordsOfArray(inner.binaryFilters, binaryFilters);
                 listFilters = mergeRecordsOfArray(inner.listFilters, listFilters);
@@ -163,17 +157,13 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             }
 
             const finalFieldName = creationOptions.fieldNameMap?.[field] ?? field;
-            if (isValueBinaryFilter) {
-                binaryFilters[finalFieldName] = [value];
+            const valueAsArray = makeArray(value);
+            
+            if (isBinaryFilterArray(valueAsArray)) {
+                binaryFilters[finalFieldName] = valueAsArray;
             }
-            else if (isValueBinaryFilterArray) {
-                binaryFilters[finalFieldName] = value;
-            }
-            else if (isValueListFilter) {
-                listFilters[finalFieldName] = [value];
-            }
-            else if (isValueListFilterArray) {
-                listFilters[finalFieldName] = value;
+            else if (isListFilterArray(valueAsArray)) {
+                listFilters[finalFieldName] = valueAsArray;
             }
         }
 
@@ -181,6 +171,14 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             binaryFilters,
             listFilters
         }
+    }
+
+    private isNoneFilterEnumeratedObject(obj: unknown): obj is EnumerableObject {
+        return !isBinaryFilter(obj)
+            && !isBinaryFilterArray(obj)
+            && !isListFilter(obj)
+            && !isListFilterArray(obj)
+            && isEnumerableObject(obj);
     }
 
     private getFieldNameFromKey(key: string, creationOptions: AutoQueryCreationOptions) {
