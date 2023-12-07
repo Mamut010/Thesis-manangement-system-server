@@ -1,5 +1,11 @@
 import { inject, injectable } from "inversify";
-import { BachelorThesisAssessmentDto, BachelorThesisEvaluationDto, BachelorThesisRegistrationDto, OralDefenseAssessmentDto, OralDefenseRegistrationDto } from "../../../shared/dtos";
+import { 
+    BachelorThesisAssessmentDto, 
+    BachelorThesisEvaluationDto, 
+    BachelorThesisRegistrationDto, 
+    OralDefenseAssessmentDto, 
+    OralDefenseRegistrationDto 
+} from "../../../shared/dtos";
 import { INJECTION_TOKENS } from "../../../core/constants/injection-tokens";
 import { 
     DateField, 
@@ -22,7 +28,7 @@ import { Title } from "../../../contracts/constants/title";
 @injectable()
 export class PdfFormGenerator implements PdfFormGeneratorInterface {
     constructor(
-        @inject(INJECTION_TOKENS.PdfFormFiller) private pdfFormFiller: FormFillerInterface) {
+        @inject(INJECTION_TOKENS.PdfFormFiller) private formFiller: FormFillerInterface) {
 
     }
 
@@ -71,7 +77,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
             data.studentSignature
             ));
 
-        return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisRegistration.path, fields);
+        return this.formFiller.fill(ASSETS.Templates.BachelorThesisRegistration.path, fields);
     }
 
     async generateBachelorThesisAssessment(data: BachelorThesisAssessmentDto): Promise<Buffer> {
@@ -106,7 +112,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
             data.supervisor2Signature
             ));
 
-        return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisAssessment.path, fields);
+        return this.formFiller.fill(ASSETS.Templates.BachelorThesisAssessment.path, fields);
     }
 
     async generateBachelorThesisEvaluation(data: BachelorThesisEvaluationDto): Promise<Buffer> {
@@ -129,7 +135,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new DateField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Date, data.date));
         fields.push(new ImageButtonField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Signature1stExaminer, data.supervisorSignature));
 
-        return this.pdfFormFiller.fill(ASSETS.Templates.BachelorThesisEvaluation.path, fields);
+        return this.formFiller.fill(ASSETS.Templates.BachelorThesisEvaluation.path, fields);
     }
 
     async generateOralDefenseRegistration(data: OralDefenseRegistrationDto): Promise<Buffer> {
@@ -170,7 +176,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
             data.supervisor2Signature
             ));
 
-        return this.pdfFormFiller.fill(ASSETS.Templates.OralDefenseRegistration.path, fields);
+        return this.formFiller.fill(ASSETS.Templates.OralDefenseRegistration.path, fields);
     }
 
     async generateOralDefenseAssessment(data: OralDefenseAssessmentDto): Promise<Buffer> {
@@ -207,7 +213,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
             data.supervisor2Signature
             ));
 
-        return this.pdfFormFiller.fill(ASSETS.Templates.OralDefenseAssessment.path, fields);
+        return this.formFiller.fill(ASSETS.Templates.OralDefenseAssessment.path, fields);
     }
 
     private addThesisTitleToBachelorThesisRegistration(fields: FormField[], data: BachelorThesisRegistrationDto) {
