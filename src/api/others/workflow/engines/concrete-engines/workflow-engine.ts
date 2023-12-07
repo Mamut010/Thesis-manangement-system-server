@@ -63,17 +63,15 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                     state: request.state.name,
                     stateDescription: request.state.description,
                     actionTypes: request.requestActions
-                        .flatMap(item => 
-                            item.action.actionTargets.some(actionTarget => actionTarget.target.name === target)
-                                ? item.action.actionType.name as ActionType
-                                : []
-                        ),
+                        .filter(item => item.action.actionTargets.some(actionTarget => actionTarget.target.name === target))
+                        .map(item => item.action.actionType.name as ActionType),
             }
         });
     }
 
     async getRequestState(actionerId: string, requestId: string): Promise<RequestStateDto | null> {
-        return singleOrDefault(await this.getRequestStates(actionerId, [requestId]), null);
+        const requestStates = await this.getRequestStates(actionerId, [requestId]);
+        return singleOrDefault(requestStates, null);
     }
 
     async createRequest(createOptions: RequestCreateOptions): Promise<RequestStateDto | null> {
@@ -83,6 +81,7 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         }
 
         const activityEffects: ActivityEffect[] = [];
+
         const request = await this.prisma.$transaction(async (tx) => {
             const request = await tx.request.create({
                 data: {
@@ -94,10 +93,13 @@ export class WorkflowEngine implements WorkflowEngineInterface {
                             isAccepted: true,
                         }
                     }
+                },
+                select: {
+                    id: true
                 }
             });
     
-            const stateEffect = await this.handleRequestEnteringState(tx, request.id, request.stateId, {
+            const stateEffect = await this.handleRequestEnteringState(tx, request.id, initialState.id, {
                 requestUsers: {
                     requesterId: createOptions.userId,
                     userStakeholders: [{
@@ -249,15 +251,13 @@ export class WorkflowEngine implements WorkflowEngineInterface {
         const requests = await this.getRequests(requestIds);
         return await Promise.all(requests.map(async (request) => {
             const targetIdentifier = this.coreFactory.createTargetIdentifier();
-            const targetOutput = request 
-                ? await targetIdentifier.identifyTarget(actionerId, { 
+            const targetOutput = await targetIdentifier.identifyTarget(actionerId, { 
                     requestUsers: this.constructRequestUsersDtoFromPlains(request.userId, request.requestStakeholders),
                     requestData: request.data,
-                }) 
-                : undefined;
+                });
             return {
                 request,
-                target: targetOutput?.target
+                target: targetOutput.target
             }
         }));
     }
@@ -478,14 +478,14 @@ export class WorkflowEngine implements WorkflowEngineInterface {
     }
 
     private constructActivityTypeWithTargetsFromActivities(activities: PlainActivity[]): ActivityTypeWithTarget[] {
-        return activities.flatMap(activity => {
-            return activity.activityTargets.map(activityTarget => {
+        return activities.flatMap(activity => 
+            activity.activityTargets.map(activityTarget => {
                 return {
                     activityType: activity.activityType.name as ActivityType,
                     target: activityTarget.target.name as Target,
                 }
-            })
-        });
+            }
+        ));
     }
 
     private constructRequestUsersDtoFromPlains(requesterId: string, plains: PlainRequestStakeholder[]): RequestUsersDto {
