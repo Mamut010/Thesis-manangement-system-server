@@ -1,4 +1,4 @@
-import { IsBoolean, IsDefined, IsIn, IsOptional, IsString, ValidateIf } from "class-validator";
+import { IsBoolean, IsDefined, IsIn, IsOptional, IsString } from "class-validator";
 import { Expose, Type } from "class-transformer";
 import { NullableBoolFilterOperatorValues } from "../../constants/filter-operators";
 import { BinaryFilter } from "../../interfaces/binary-filter";

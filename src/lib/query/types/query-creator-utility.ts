@@ -1,7 +1,7 @@
 import { OrderBy } from "../order-by";
 import { Pagination } from "../pagination";
 
-export interface AutoQueryCreatable {
+export type AutoQueryCreatable = {
     [key: string]: any,
     pagination?: Pagination,
     orderBy?: OrderBy | OrderBy[],
@@ -9,7 +9,7 @@ export interface AutoQueryCreatable {
 
 export type AutoWhereQueryCreatable = Omit<AutoQueryCreatable, 'pagination' | 'orderBy'>;
 
-export interface AutoQueryCreationOptions {
+export type AutoQueryCreationOptions = {
     /**
      * If set, any property with the specified suffix is considered a filter, 
      * and its trimmed suffix name is the field that the filter will apply on.
@@ -59,7 +59,7 @@ export type AutoQueryModel = {
     [property: string]: boolean | AutoQueryModel
 }
 
-export interface OrderByOptions {
+export type OrderByOptions = {
     fieldMap?: Record<string, string>,
     skippedFields?: string[],
     skipUnmapped?: boolean,

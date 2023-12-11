@@ -1,9 +1,9 @@
-export interface NumberFieldOptions {
+export type NumberFieldOptions = {
     locale?: string, 
     format?: Intl.NumberFormatOptions,
 }
 
-export interface DateFieldOptions {
+export type DateFieldOptions = {
     locale?: string, 
     format?: Intl.DateTimeFormatOptions,
 }

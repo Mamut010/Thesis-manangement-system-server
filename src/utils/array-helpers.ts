@@ -1,4 +1,4 @@
-import { SingleOrArray, jsonStringifyCircular } from "./object-helpers";
+import { SingleOrArray, isNullOrUndefined, jsonStringifyCircular } from "./object-helpers";
 
 function getAllAndSharedElements<T = unknown>(arr1: T[], arr2: T[]) {
     const elementSet = new Set(arr1);
@@ -229,8 +229,8 @@ export function sortByKeyArray<T, U>(src: T[], keyArray: U[], keySelector: (item
     });
 }
 
-export function getNonNullableKeys<T, V>(src: T[], keySelector: (item: T) => V | null | undefined): V[] {
+export function getNonNullableKeys<T, V>(src: T[], keySelector: (item: T) => V | null | undefined): NonNullable<V>[] {
     return src
         .map(item => keySelector(item))
-        .filter((key): key is NonNullable<typeof key> => typeof key !== 'undefined' && key !== null);
+        .filter((key): key is NonNullable<typeof key> => !isNullOrUndefined(key));
 }

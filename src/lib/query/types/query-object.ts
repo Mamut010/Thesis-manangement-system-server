@@ -46,12 +46,12 @@ export type WhereQueryObject = {
     OR?: Omit<WhereQueryObject, 'AND' | 'OR'>[]
 };
 
-export interface PaginationQueryObject { 
+export type PaginationQueryObject = { 
     skip?: number, 
     take?: number 
 }
 
-export interface PrismaQuery {
+export type PrismaQuery = {
     where: WhereQueryObject | undefined;
     orderBy: OrderByQueryObject | OrderByQueryObject[] | undefined;
     skip: number | undefined

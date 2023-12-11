@@ -1,5 +1,5 @@
 import { FormField } from "../interfaces/form-field";
 
-export interface FormFillRequest {
+export type FormFillRequest = {
     [property: string]: FormField,
 }

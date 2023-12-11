@@ -1,3 +1,3 @@
-export interface FormFieldHandleOptions {
+export type FormFieldHandleOptions = {
     rejectOnFail?: boolean;
 }

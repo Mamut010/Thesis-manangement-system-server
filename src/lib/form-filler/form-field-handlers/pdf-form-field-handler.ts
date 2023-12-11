@@ -1,7 +1,7 @@
 import { RadioButtonField } from "../form-fields/basic/radio-button-field";
 import { TextField } from "../form-fields/basic/text-field";
 import { FormFieldHandler } from "../interfaces/form-field-handler";
-import { PDFForm } from "pdf-lib";
+import { PDFDocument, PDFForm, PDFRadioGroup } from "pdf-lib";
 import { FormFieldHandleOptions } from "../types/form-field-handle-options";
 import { CheckBoxField } from "../form-fields/basic/check-box-field";
 import { ImageButtonField } from "../form-fields/derived/image-button-field";
@@ -38,12 +38,8 @@ export class PdfFormFieldHandler implements FormFieldHandler {
     handleRadioButton(formField: RadioButtonField, handleOptions?: FormFieldHandleOptions): void {
         const handle = () => {
             const radioGroup = this.form.getRadioGroup(formField.groupName);
-            
-            const isValidTargetOption = (targetOption?: string | null): targetOption is string => {
-                return radioGroup.getOptions().some(option => option === targetOption);
-            }
 
-            if (isValidTargetOption(formField.option)) {
+            if (this.isRadioGroupHavingValidTargetOption(radioGroup, formField.option)) {
                 radioGroup.select(formField.option);
             }
             else {
@@ -64,10 +60,7 @@ export class PdfFormFieldHandler implements FormFieldHandler {
                 return;
             }
 
-            const image = formField.mimeType === ImageMimeType.Png
-                ? await pdfDoc.embedPng(formField.image)
-                : await pdfDoc.embedJpg(formField.image); 
-
+            const image = await this.embedImageFieldIntoPdfByMimeType(pdfDoc, formField);
             button.setImage(image);
         }
         
@@ -83,5 +76,19 @@ export class PdfFormFieldHandler implements FormFieldHandler {
                 throw err;
             }
         }
+    }
+
+    private isRadioGroupHavingValidTargetOption(radioGroup: PDFRadioGroup, targetOption: string | null | undefined):
+        targetOption is string {
+        return radioGroup.getOptions().some(option => option === targetOption);
+    }
+
+    private async embedImageFieldIntoPdfByMimeType(pdfDoc: PDFDocument, imageField: ImageButtonField) {
+        if (!imageField.image) {
+            throw Error("Form field contains no image");
+        }
+        return imageField.mimeType === ImageMimeType.Png
+            ? await pdfDoc.embedPng(imageField.image)
+            : await pdfDoc.embedJpg(imageField.image);
     }
 }

@@ -57,18 +57,20 @@ export function defaultOrGiven<T>(defaulted: T, given?: T, options?: DefaultOrGi
         }
 
         const givenValue = given[key];
-        const skip = options?.skipNestedEnumeration;
-        if(isEnumerableObject(givenValue) 
-            && skip !== true 
-            && !(Array.isArray(skip) && skip?.includes(key))) {
-                result[key] = defaultOrGiven(defaulted[key], givenValue, options);
-        }
-        else {
-            result[key] = givenValue;
-        }
+        result[key] = shouldRecursivelyApplyDefaultOrGiven(key, givenValue, options)
+            ? defaultOrGiven(defaulted[key], givenValue, options)
+            : givenValue;
     }
 
     return result;
+}
+
+function shouldRecursivelyApplyDefaultOrGiven(key: string, value: unknown, options?: DefaultOrGivenOptions):
+    value is EnumerableObject {
+    const skip = options?.skipNestedEnumeration;
+    return isEnumerableObject(value) 
+        && skip !== true
+        && !(Array.isArray(skip) && skip?.includes(key));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +173,7 @@ export function flattenObject<T extends object>(obj: T, flatteningOptions?: Flat
         maxDepth: undefined,
         initialKey: undefined,
         keepDuplicate: undefined,
-        keyTransformer: DefaultKeyTransformers['camelCase'],
+        keyTransformer: DefaultKeyTransformers[DefaultCases.camelCase],
         skip: undefined,
         transformedProps: undefined,
         transformedDepths: undefined,
@@ -185,16 +187,11 @@ export function flattenObject<T extends object>(obj: T, flatteningOptions?: Flat
 function flattenObjectImpl<T extends object>(obj: T, flatteningOptions: FlatteningOptions, currentDepth: number, 
     currentProp?: string) {
     let flattened: Record<string, any> = {};
-    const isNestable = flatteningOptions?.maxDepth ? currentDepth < flatteningOptions?.maxDepth : true;
-
     for(const key in obj) {
         const value = obj[key];
-
-        if (isNestable 
-            && !(currentDepth === 1 && flatteningOptions.skip?.includes(key))
-            && isEnumerableObject(value)) {
-
-            const nestedFlattened = flattenObjectImpl(value, flatteningOptions, currentDepth + 1, key);
+        const keyValuePair = {key, value};
+        if (isNestableKeyValuePair(keyValuePair, currentDepth, flatteningOptions)) {
+            const nestedFlattened = flattenObjectImpl(keyValuePair.value, flatteningOptions, currentDepth + 1, key);
             flattened = assignNestedFlattened(flatteningOptions, currentDepth, flattened, nestedFlattened, key, currentProp);
         }
         else {
@@ -203,6 +200,14 @@ function flattenObjectImpl<T extends object>(obj: T, flatteningOptions: Flatteni
     }
 
     return flattened;
+}
+
+function isNestableKeyValuePair(keyValuePair: { key: string, value: unknown }, currentDepth: number,
+    flatteningOptions: FlatteningOptions): keyValuePair is { key: string, value: EnumerableObject } {
+    const isNestable = flatteningOptions?.maxDepth ? currentDepth < flatteningOptions?.maxDepth : true;
+    return isNestable
+        && !(currentDepth === 1 && flatteningOptions.skip?.includes(keyValuePair.key))
+        && isEnumerableObject(keyValuePair.value)
 }
 
 function assignNestedFlattened<T extends object>(options: FlatteningOptions, depth: number, 
@@ -285,22 +290,21 @@ export function flipMap<T extends PropertyKey, U extends Exclude<PropertyKey, sy
 
 export type NestedNotatedObject<T> = { [property: string]: T | NestedNotatedObject<T> };
 
-export function assignObjectByDotNotation<T>(obj: NestedNotatedObject<T>, dotNotation: string, value: T)
-    : NestedNotatedObject<T> {
+export function assignObjectByDotNotation<T>(obj: NestedNotatedObject<T>, dotNotation: string, value: T): NestedNotatedObject<T> {
     const dot = '.'
     const nestedProps = dotNotation.split(dot);
-    const result: NestedNotatedObject<T> = obj;
-    let current: NestedNotatedObject<T> = result;
+    let current = obj;
     let i = 0;
     while (i < nestedProps.length - 1) {
         const currentProp = nestedProps[i];
-        const inner = objectHasOwnProperty(current, currentProp) ? current[currentProp] : {};
-        current[currentProp] = inner;
-        current = inner as Record<string, any>;
+        if (!objectHasOwnProperty(current, currentProp) || !isEnumerableObject(current[currentProp])) {
+            current[currentProp] = {};
+        }
+        current = current[currentProp] as NestedNotatedObject<T>;
         i++;
     }
     current[nestedProps[i]] = value;
-    return result;
+    return obj;
 }
 
 export function createObjectByDotNotation<T>(dotNotation: string, value: T): NestedNotatedObject<T> {

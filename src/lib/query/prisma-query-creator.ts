@@ -40,7 +40,7 @@ import { ClassConstructor, plainToInstance } from "class-transformer";
 import { mergeRecordsOfArray } from "./utils/record-helpers";
 import { BinaryAndListFilters, WhereObjectCreationConfig, WhereWithFieldMap } from "./types/utility-types";
 import { EnumerableObject } from "../../utils/types";
-import { makeArray } from "../../utils/array-helpers";
+import { getNonNullableKeys, makeArray } from "../../utils/array-helpers";
 
 @injectable()
 export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
@@ -128,8 +128,7 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
     }
 
-    createPaginationObject(pagination?: Pagination)
-        : PaginationQueryObject {
+    createPaginationObject(pagination?: Pagination): PaginationQueryObject {
         return {
             skip: pagination?.skip,
             take: pagination?.take,
@@ -260,20 +259,15 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
     }
 
     private addFilteringObjectsToWhere<T>(filteringObjects: T[], where: WhereQueryObject, dotNotation: string) {
-        const nonUndefinedFilteringObjects = filteringObjects
-            .filter((item): item is NonNullable<typeof item> => typeof item !== 'undefined');
+        const nonNullableFilteringObjects = getNonNullableKeys(filteringObjects, filteringObject => filteringObject);
         
-        if (nonUndefinedFilteringObjects.length > 1) {
-            const OR = nonUndefinedFilteringObjects
-                .map(item => createObjectByDotNotation(dotNotation, item))
-                .reduce((pre: typeof filteringObject[], filteringObject) => {
-                    pre.push(filteringObject);
-                    return pre;
-                }, []);
+        if (nonNullableFilteringObjects.length > 1) {
+            const OR = nonNullableFilteringObjects
+                .map(item => createObjectByDotNotation(dotNotation, item));
             this.addORToWhere(where, OR);
         }
-        else if (nonUndefinedFilteringObjects.length === 1) {
-            assignObjectByDotNotation(where, dotNotation, nonUndefinedFilteringObjects[0]);
+        else if (nonNullableFilteringObjects.length === 1) {
+            assignObjectByDotNotation(where, dotNotation, nonNullableFilteringObjects[0]);
         }
     }
 
@@ -367,8 +361,10 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
             }
 
             const currentDotNotation = config.fieldNamePrefix + key;
+            const actualFieldName = config.reversedFieldNameMap?.[key] ?? key;
+
             this.addFilteringObjectsToWhereByKey(binaryAndListFilters, where, key, currentDotNotation);
-            fieldMap[config.reversedFieldNameMap?.[key] ?? key] = currentDotNotation;
+            fieldMap[actualFieldName] = currentDotNotation;
         }
 
         return {
@@ -379,14 +375,16 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
 
     private constructActualFilteringObject<TValue, TOperator extends FilterActualOperator>
         (binaryFilter: BinaryFilter<TValue, TOperator>): ActualFilteringObject<TValue, TOperator> {
-        return this.handleNullableOperator(binaryFilter) ?? 
+        const nullableBinaryFilteringObject = this.handleNullableOperator(binaryFilter);
+        return nullableBinaryFilteringObject ?? 
             {
                 [binaryFilter.operator]: binaryFilter.value
             } as any;
     }
 
     private constructActualListFilteringObject<TValue>(listFilter: ListFilter<TValue>): ActualListFilteringObject<TValue[]> {
-        return this.handleNullableOperator(listFilter) ?? 
+        const nullableListFilteringObject = this.handleNullableOperator(listFilter);
+        return nullableListFilteringObject ??
             {
                 [listFilter.operator]: listFilter.value
             } as any;
@@ -398,22 +396,27 @@ export class PrismaQueryCreator implements PrismaQueryCreatorInterface {
         }
         
         const actualLocation = orderByOptions.fieldMap?.[orderBy.field];
-        if (!actualLocation) {
-            const simpleOrderBy = {
-                [orderBy.field]: orderBy.dir
-            };
-            return !orderByOptions.skipUnmapped ? simpleOrderBy : undefined;
+        if (actualLocation) {
+            return createObjectByDotNotation(actualLocation, orderBy.dir);
+        }
+        else if (orderByOptions.skipUnmapped) {
+            return undefined;
         }
 
-        return createObjectByDotNotation(actualLocation, orderBy.dir);
+        const simpleOrderBy = {
+            [orderBy.field]: orderBy.dir
+        };
+        return simpleOrderBy;
     }
 
     private handleNullableOperator<T>(filter: (T extends { operator: unknown } ? T : never))
         : NullableFilteringObject | undefined {
-        if (isNullableOperator(filter.operator)) {
-            return {
-                equals: null
-            };
+        if (!isNullableOperator(filter.operator)) {
+            return undefined;
         }
+        const simpleNullableFilteringObject: NullableFilteringObject = {
+            equals: null
+        };
+        return simpleNullableFilteringObject;
     }
 }
