@@ -33,7 +33,7 @@ export class Logger {
     }
 
     constructor(private scope?: string) {
-        this.scope = Logger.parsePathToScope((scope) ? scope : Logger.DEFAULT_SCOPE);
+        this.scope = Logger.parsePathToScope(scope ?? Logger.DEFAULT_SCOPE);
     }
 
     public debug(message: string, ...args: any[]): void {
