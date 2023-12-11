@@ -77,7 +77,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
             data.studentSignature
             ));
 
-        return this.formFiller.fill(ASSETS.Templates.BachelorThesisRegistration.path, fields);
+        return this.generateForm(ASSETS.Templates.BachelorThesisRegistration.path, fields);
     }
 
     async generateBachelorThesisAssessment(data: BachelorThesisAssessmentDto): Promise<Buffer> {
@@ -112,7 +112,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
             data.supervisor2Signature
             ));
 
-        return this.formFiller.fill(ASSETS.Templates.BachelorThesisAssessment.path, fields);
+        return this.generateForm(ASSETS.Templates.BachelorThesisAssessment.path, fields);
     }
 
     async generateBachelorThesisEvaluation(data: BachelorThesisEvaluationDto): Promise<Buffer> {
@@ -122,20 +122,16 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.ThesisTitle, data.thesisTitle));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.MatriculationNo, data.studentId));
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Forename, data.forename));
-        if (data.title === Title.Mr) {
-            fields.push(new RadioButtonField(
-                TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Name,
-                TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Options.Mr));
-        }
-        else if (data.title === Title.Ms) {
-            fields.push(new RadioButtonField(
-                TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Name,
-                TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Options.Ms));
-        }
+        fields.push(new RadioButtonField(
+            TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Name,
+            data.title === Title.Mr
+                ? TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Options.Mr
+                : TEMPLATE_FIELDS.BachelorThesisEvaluation.MrOrMs.Options.Ms
+            ));
         fields.push(new DateField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Date, data.date));
         fields.push(new ImageButtonField(TEMPLATE_FIELDS.BachelorThesisEvaluation.Signature1stExaminer, data.supervisorSignature));
 
-        return this.formFiller.fill(ASSETS.Templates.BachelorThesisEvaluation.path, fields);
+        return this.generateForm(ASSETS.Templates.BachelorThesisEvaluation.path, fields);
     }
 
     async generateOralDefenseRegistration(data: OralDefenseRegistrationDto): Promise<Buffer> {
@@ -176,7 +172,7 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
             data.supervisor2Signature
             ));
 
-        return this.formFiller.fill(ASSETS.Templates.OralDefenseRegistration.path, fields);
+        return this.generateForm(ASSETS.Templates.OralDefenseRegistration.path, fields);
     }
 
     async generateOralDefenseAssessment(data: OralDefenseAssessmentDto): Promise<Buffer> {
@@ -213,10 +209,14 @@ export class PdfFormGenerator implements PdfFormGeneratorInterface {
             data.supervisor2Signature
             ));
 
-        return this.formFiller.fill(ASSETS.Templates.OralDefenseAssessment.path, fields);
+        return this.generateForm(ASSETS.Templates.OralDefenseAssessment.path, fields);
     }
 
     private addThesisTitleToBachelorThesisRegistration(fields: FormField[], data: BachelorThesisRegistrationDto) {
         fields.push(new TextField(TEMPLATE_FIELDS.BachelorThesisRegistration.TitleOfBachelorThesis[0], data.thesisTitle));
+    }
+
+    private generateForm(formPath: string, formFields: FormField[]) {
+        return this.formFiller.fill(formPath, formFields);
     }
 }
