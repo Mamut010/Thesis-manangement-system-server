@@ -1,9 +1,8 @@
 import * as express from 'express';
-import { inject, injectable } from 'inversify';
+import { inject, injectable, optional } from 'inversify';
 import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers';
 import { CryptoServiceInterface } from '../interfaces';
 import { INJECTION_TOKENS } from '../../core/constants/injection-tokens';
-import { env } from '../../env';
 import { BadRequestError } from '../../contracts/errors/bad-request.error';
 import { ERROR_MESSAGES } from '../../contracts/constants/error-messages';
 import { objectHasOwnProperty } from '../../utils/object-helpers';
@@ -15,7 +14,7 @@ export class CredentialsDecryptionMiddleware implements ExpressMiddlewareInterfa
     constructor(
         @inject(INJECTION_TOKENS.CryptoService) private cryptoService: CryptoServiceInterface,
         @inject(INJECTION_TOKENS.EncryptedProps) private readonly encryptedProps: Set<string>,
-        @inject(INJECTION_TOKENS.IgnoreDecryptionProps) private readonly ignoreDecryptionProps: Set<string>) {
+        @inject(INJECTION_TOKENS.IgnoreDecryptionProps) @optional() private readonly ignoreDecryptionProps?: Set<string>) {
 
     }
 
@@ -28,8 +27,9 @@ export class CredentialsDecryptionMiddleware implements ExpressMiddlewareInterfa
         try {
             wrapDecryptionError(() => {
                 const decrypted = this.decrypt(body, this.encryptedProps);
+                
                 Object.entries(decrypted).forEach(([field, decryptedValue]) => {
-                    if (!this.ignoreDecryptionProps.has(field)) {
+                    if (!this.ignoreDecryptionProps?.has(field)) {
                         body[field] = decryptedValue;
                     }
                 });
