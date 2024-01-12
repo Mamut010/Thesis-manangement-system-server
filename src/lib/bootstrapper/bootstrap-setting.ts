@@ -1,12 +1,12 @@
 import { BootstrapSettingInterface } from "./bootstrap-setting.interface";
 
 export class BootstrapSetting implements BootstrapSettingInterface {
-    private _storage = new Map<any, Array<unknown>>();
+    private storage = new Map<any, Array<unknown>>();
 
     public setData(key: any, value: unknown): this {
-        const arr = this._storage.get(key);
+        const arr = this.storage.get(key);
         if (!arr) {
-            this._storage.set(key, [value]);
+            this.storage.set(key, [value]);
         }
         else {
             arr.push(value);
@@ -16,28 +16,26 @@ export class BootstrapSetting implements BootstrapSettingInterface {
     }
 
     public getData<T = unknown>(key: any, index: number = -1): T | undefined {
-        const values = this._storage.get(key);
-        return values 
-            ? values.at(index) as T | undefined 
-            : undefined;
+        const values = this.storage.get(key);
+        return values?.at(index) as T | undefined
     }
 
     public getAllData(key: any): unknown[] {
-        const values = this._storage.get(key);
+        const values = this.storage.get(key);
         return values ? [...values] : [];
     }
 
     public countData(key: any): number {
-        const values = this._storage.get(key);
-        return values ? values.length : 0;
+        const values = this.storage.get(key);
+        return values?.length ?? 0;
     }
 
     public containsData(key: any): boolean {
-        return this._storage.has(key);
+        return this.storage.has(key);
     }
 
     public deleteData<T = unknown>(key: any, index: number = -1): T | undefined {
-        const values = this._storage.get(key);
+        const values = this.storage.get(key);
         if (!values) {
             return undefined;
         }
@@ -49,7 +47,7 @@ export class BootstrapSetting implements BootstrapSettingInterface {
         
         const value = values.splice(index, 1)[0] as T;
         if (values.length === 0) {
-            this._storage.delete(key);
+            this.storage.delete(key);
         }
 
         return value;
