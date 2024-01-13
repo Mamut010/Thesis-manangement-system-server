@@ -4,17 +4,7 @@
 
 import * as path from 'path';
 import * as winston from 'winston';
-
-/**
- * core.Log
- * ------------------------------------------------
- *
- * This is the main Logger Object. You can create a scope logger
- * or directly use the static log methods.
- *
- * By Default it uses the debug-adapter, but you are able to change
- * this in the start up process in the core/index.ts file.
- */
+import { LoggingLevel } from './logging-level';
 
 export class Logger {
 
@@ -37,22 +27,22 @@ export class Logger {
     }
 
     public debug(message: string, ...args: any[]): void {
-        this.log('debug', message, args);
+        this.log(LoggingLevel.DEBUG, message, args);
     }
 
     public info(message: string, ...args: any[]): void {
-        this.log('info', message, args);
+        this.log(LoggingLevel.INFO, message, args);
     }
 
     public warn(message: string, ...args: any[]): void {
-        this.log('warn', message, args);
+        this.log(LoggingLevel.WARN, message, args);
     }
 
     public error(message: string, ...args: any[]): void {
-        this.log('error', message, args);
+        this.log(LoggingLevel.ERROR, message, args);
     }
 
-    private log(level: 'error' | 'warn' | 'info' | 'debug', message: string, args: any[]): void {
+    private log(level: LoggingLevel, message: string, args: any[]): void {
         if (winston) {
             winston[level](`${this.formatScope()} ${message}`, args);
         }
