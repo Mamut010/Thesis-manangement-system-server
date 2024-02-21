@@ -5,22 +5,22 @@ export * from './constants/settings';
 export * from './constants/sort-dirs';
 
 // filters
-export * from './filters/basic/string.filter';
-export * from './filters/basic/number.filter';
-export * from './filters/basic/date.filter';
-export * from './filters/basic/bool.filter';
-export * from './filters/derived/email.filter';
+export * from './filters/string.filter';
+export * from './filters/number.filter';
+export * from './filters/date.filter';
+export * from './filters/bool.filter';
+export * from './filters/email.filter';
 
-export * from './filters/basic/nullable-string.filter';
-export * from './filters/basic/nullable-number.filter';
-export * from './filters/basic/nullable-date.filter';
-export * from './filters/basic/nullable-bool.filter';
-export * from './filters/derived/nullable-email.filter';
+export * from './filters/nullable-string.filter';
+export * from './filters/nullable-number.filter';
+export * from './filters/nullable-date.filter';
+export * from './filters/nullable-bool.filter';
+export * from './filters/nullable-email.filter';
 
-export * from './filters/basic/string-list.filter';
-export * from './filters/basic/number-list.filter';
-export * from './filters/basic/date-list.filter';
-export * from './filters/derived/email-list.filter';
+export * from './filters/string-list.filter';
+export * from './filters/number-list.filter';
+export * from './filters/date-list.filter';
+export * from './filters/email-list.filter';
 
 // interfaces
 export * from './interfaces/prisma-query-creator.interface';

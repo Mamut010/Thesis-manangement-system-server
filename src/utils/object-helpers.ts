@@ -37,7 +37,7 @@ export function isDateObject(obj: unknown, strict?: boolean): obj is Date {
  * @param property The property to check for.
  * @returns True if the given object owns a property. Otherwise, false.
  */
-export function objectHasOwnProperty<T extends object>(obj: T, property: PropertyKey): boolean{
+export function objectHasOwnProperty(obj: object, property: PropertyKey): boolean {
     return Object.prototype.hasOwnProperty.call(obj, property);
 }
 
