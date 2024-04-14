@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Resource } from "@opentelemetry/resources";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import {
@@ -25,7 +26,7 @@ export const initializeTracer = (serviceName: string): { tracer: Tracer | null, 
     const traceExporter = new OTLPTraceExporter({
         url: env.tracer.url
     });
-    const spanProcessor = createSpanProcessor(traceExporter);
+    const spanProcessor = createSpanProcessor(traceExporter) as any;
     const sampler = createSampler();
 
     const sdk = new NodeSDK({
