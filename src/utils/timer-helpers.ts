@@ -1,16 +1,16 @@
-import { Abortable } from 'events';
+import { TimerOptions } from 'timers';
 import { setTimeout } from 'timers/promises';
 
-export async function sleep(ms: number, options?: Abortable): Promise<void> {
-    await setTimeout(ms, undefined, options);
-}
-
-export async function sleepThenValue<T>(ms: number, value: T, options?: Abortable): Promise<T> {
+export function sleepThenValue<T>(ms: number, value: T, options?: TimerOptions): Promise<T> {
     return setTimeout(ms, value, options);
 }
 
-export async function sleepThenCallback<T>(ms: number, callback: () => Promise<T> | T, options?: Abortable)
-    : Promise<T | undefined> {
-    await setTimeout(ms, undefined, options);
+export async function sleep(ms: number, options?: TimerOptions): Promise<void> {
+    await sleepThenValue(ms, undefined, options);
+}
+
+export async function sleepThenCallback<T>(ms: number, callback: () => Promise<T> | T, options?: TimerOptions)
+    : Promise<T> {
+    await sleep(ms, options);
     return await callback();
 }
